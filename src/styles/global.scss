@@ -1,0 +1,113 @@
+@import './variables.scss';
+
+html,
+body {
+  background-color: $challenger;
+  box-sizing: border-box;
+  color: $white;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: $font-size;
+  font-weight: 300;
+  line-height: 1.3em;
+}
+
+* {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $green;
+  line-height: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+p {
+  margin: $space 0;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+a {
+  color: $cyan;
+  text-decoration: none;
+  padding: $space / 2;
+
+  &:hover {
+    font-weight: bold;
+    background-color: $cyan;
+    color: $black;
+  }
+}
+
+ul {
+  list-style: none;
+
+  li {
+    margin: $space 0;
+
+    &:before {
+      content: '»';
+      padding-right: 1em;
+    }
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.space-top {
+  margin-top: $space;
+}
+
+.space-right {
+  margin-right: $space;
+}
+
+.space-bottom {
+  margin-bottom: $space;
+}
+
+.space-left {
+  margin-left: $space;
+}
+
+.x-space-top {
+  margin-top: $x-space;
+}
+
+.x-space-right {
+  margin-right: $x-space;
+}
+
+.x-space-bottom {
+  margin-bottom: $x-space;
+}
+
+.x-space-left {
+  margin-left: $x-space;
+}
