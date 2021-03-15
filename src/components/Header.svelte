@@ -26,6 +26,6 @@
   {/if}
   <Typewriter cascade interval={[40, 35, 60]} cursor='#95ffa4' on:done={handleDone}>
     <h1>spectre_</h1>
-    <h2 class="space-top">» Where collectibles meet DeFi</h2>
+    <h2 class="space-top">» where collectibles meet DeFi</h2>
   </Typewriter>
 </header>
