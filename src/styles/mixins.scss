@@ -1,12 +1,12 @@
 @mixin placeholder() {
-  $selector: '';
+  $selector: "";
   $prefixes: (
-    moz: '::-moz',
-    webkit: '::-webkit',
-    ie: ':-ms',
+    moz: "::-moz",
+    webkit: "::-webkit",
+    ie: ":-ms",
   );
   @each $prop, $value in $prefixes {
-    @if $prop != 'moz' {
+    @if $prop != "moz" {
       $selector: #{$value}-input-placeholder;
     } @else {
       $selector: #{$value}-placeholder;
