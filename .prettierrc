@@ -1,3 +1,5 @@
 {
-  "svelteSortOrder" : "scripts-styles-markup-options"
+  "svelteSortOrder": "scripts-styles-markup-options",
+  "semi": true,
+  "singleQuote": false
 }
