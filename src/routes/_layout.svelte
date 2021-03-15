@@ -5,8 +5,8 @@
 </script>
 
 <style lang="scss" global>
-  @import 'reset.scss';
-  @import 'global.scss';
+  @import "reset.scss";
+  @import "global.scss";
 </style>
 
 <Main><slot {segment} /></Main>

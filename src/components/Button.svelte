@@ -1,7 +1,7 @@
 <script>
   export { _class as class };
 
-  let _class
+  let _class;
 </script>
 
 <style lang="scss">
