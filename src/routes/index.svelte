@@ -17,6 +17,14 @@
   .icons {
     position: relative;
 
+    a {
+      padding: 0;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
     img {
       height: 35px;
       
@@ -41,8 +49,8 @@
     </ul>
     <ASCII class="x-space-top" message="SPECTRE_IS_COMING" />
     <div class="icons x-space-top">
-      <img class="discord" src="/img/discord.svg" alt="discord" >
-      <img class="twitter" src="/img/twitter.svg" alt="twitter" >
+      <a href="https://discord.gg/2svAvzJm" target="_blank"><img class="discord" src="/img/discord.svg" alt="discord" ></a>
+      <a href="https://twitter.com/spectrexyz" target="_blank"><img class="twitter" src="/img/twitter.svg" alt="twitter" ></a>
     </div>
   </div>
 {/if}
