@@ -15,7 +15,7 @@
 
   const _random = (long = true) => {
     const _long = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`';
-    const _short = 'abcdefghijklmnopqrstuvwxyz';
+    const _short = '0123456789abcdefghijklmnopqrstuvwxyz';
 
     if (_long) {
       return _long[Math.floor(Math.random() * _long.length)];
@@ -75,7 +75,7 @@
   }
 
   const square = () => {
-    loop = setInterval(_refresh, 50);
+    loop = setInterval(_refresh, 8);
   
     return {
       destroy() {

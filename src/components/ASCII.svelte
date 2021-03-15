@@ -2,7 +2,7 @@
   export { _class as class };
 
   export let message = '';
-  export let interval = 50;
+  export let interval = 30;
 
   let _class, loop, current = '';
 
