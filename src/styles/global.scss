@@ -5,14 +5,14 @@ body {
   background-color: $challenger;
   box-sizing: border-box;
   color: $white;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: $font-family;
   font-size: $font-size;
-  font-weight: 300;
+  font-weight: $font-weight;
   line-height: 1.3em;
 }
 
 * {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: $font-family;
 }
 
 h1,

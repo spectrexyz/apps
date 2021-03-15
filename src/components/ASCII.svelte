@@ -1,9 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
-
   export { _class as class };
 
-  export let message = 0;
+  export let message = '';
   export let interval = 50;
 
   let _class, loop, current = '';
@@ -15,7 +13,6 @@
   }
 
   const _refresh = () => {
-    console.log('refresh')
     let stop = true, _current = '';
 
     for (let i = 0; i < message.length; i++) {
@@ -32,21 +29,26 @@
     if (stop) clearInterval(loop);
   }
 
-  onMount(() => {
+  const ascii = () => {
     loop = setInterval(_refresh, interval);
-  })
+
+    return {
+      destroy() {
+      }
+    };
+  }
 </script>
 
 <style lang="scss">
   p {
     background: $green;
     color: $black;
-    font-weight: bold;
+    font-weight: $bold;
     padding: 0px calc(1em/3);
     width: fit-content;
   }
 </style>
 
-<p class={_class}>
+<p use:ascii class={_class}>
   {current}
 </p>

@@ -9,7 +9,7 @@
   .emphasize {
     background-color: $cyan;
     color: $black;
-    font-weight: bold;
+    font-weight: $bold;
     padding: 0px calc(1em / 3);
     width: fit-content;
   }
