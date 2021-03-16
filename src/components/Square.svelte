@@ -96,11 +96,11 @@
     height: 300px;
     width: 300px;
     position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateX(50%) translateY(-50%);
+    top: -1 * $GU;
+    left: 6 * $GU;
     overflow: hidden;
     word-wrap: break-word;
+    user-select: none;
   }
 </style>
 

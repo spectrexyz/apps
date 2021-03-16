@@ -1,8 +1,12 @@
 <script>
-  import { ASCII, Header, Square } from "../components";
-  import { fly } from "svelte/transition";
+  import { Appear, ASCII, Header, Square } from "../components";
 
-  let typed = false;
+  const transitions = {
+    header: { delay: 100, scale: 1.4 },
+    content: { delay: 600, scale: 1.1 },
+    soon: { delay: 1400, scale: 1.3 },
+    icons: { delay: 1000, scale: 1.2 },
+  };
 </script>
 
 <style lang="scss">
@@ -35,38 +39,50 @@
       }
     }
   }
+
+  .soon {
+    padding: 4 * $GU 0;
+  }
 </style>
 
-<Header on:done={() => (typed = true)} />
-{#if typed}
-  <div transition:fly={{ y: 100, duration: 600 }}>
-    <ul>
-      <li>
-        <span class="emphasize">Artists</span> Spectralize your NFTs into fungible
-        ERC20s and pre-allocate some to yourself to benefit from your upcoming work
-        appreciation.
-      </li>
-      <li>
-        <span class="emphasize">Owners</span> Own shares of NFTs to gain exposure
-        to exclusive artworks or community-curated NFTs indexes.
-      </li>
-      <li>
-        <span class="emphasize">Traders</span> Track the market dynamics of artworks
-        or artists block per block.
-      </li>
-      <li>
-        <span class="emphasize">Developers</span> Use NFTs spectres as collaterals
-        in any DeFi protocol.
-      </li>
-    </ul>
-    <ASCII class="x-space-top" message="SPECTRE_IS_COMING" />
-    <div class="icons x-space-top">
-      <a href="https://discord.gg/2svAvzJm" target="_blank"
-        ><img class="discord" src="/img/discord.svg" alt="discord" /></a
-      >
-      <a href="https://twitter.com/spectrexyz" target="_blank"
-        ><img class="twitter" src="/img/twitter.svg" alt="twitter" /></a
-      >
-    </div>
+<Appear {...transitions.header}>
+  <Header />
+</Appear>
+
+<Appear {...transitions.content}>
+  <ul>
+    <li>
+      <span class="emphasize">Artists</span> Turn your NFTs into ERC20s and benefit
+      from your upcoming work appreciation.
+    </li>
+    <li>
+      <span class="emphasize">Owners</span> Own shares of NFTs to gain exposure to
+      exclusive artworks or community-curated NFTs indexes.
+    </li>
+    <li>
+      <span class="emphasize">Traders</span> Track the market dynamics of artworks
+      or artists block per block.
+    </li>
+    <li>
+      <span class="emphasize">Developers</span> Use NFTs spectres as collaterals
+      in any DeFi protocol.
+    </li>
+  </ul>
+</Appear>
+
+<Appear {...transitions.soon}>
+  <div class="soon" title="Spectre is coming">
+    <ASCII message="SPECTRE_IS_COMING" />
   </div>
-{/if}
+</Appear>
+
+<Appear {...transitions.icons}>
+  <div class="icons">
+    <a href="https://discord.gg/2svAvzJm" target="_blank"
+      ><img class="discord" src="/img/discord.svg" alt="Discord" /></a
+    >
+    <a href="https://twitter.com/spectrexyz" target="_blank"
+      ><img class="twitter" src="/img/twitter.svg" alt="Twitter" /></a
+    >
+  </div>
+</Appear>

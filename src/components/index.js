@@ -1,3 +1,4 @@
+export { default as Appear } from "./Appear.svelte";
 export { default as ASCII } from "./ASCII.svelte";
 export { default as Button } from "./Button.svelte";
 export { default as Header } from "./Header.svelte";

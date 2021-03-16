@@ -15,8 +15,10 @@
 
 <style lang="scss">
   header {
-    margin: $x-space 0;
-    width: fit-content;
+    display: flex;
+    width: 18 * $GU;
+    height: 19 * $GU;
+    padding-top: 6 * $GU;
     position: relative;
   }
 </style>
