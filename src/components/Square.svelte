@@ -1,31 +1,37 @@
 <script>
-  import { fade } from 'svelte/transition';
+  import { fade } from "svelte/transition";
 
   export let height = 300;
-  export let width  = 300;
+  export let width = 300;
   export let em = 12;
 
-  let columns, lines, loop, middle, current = '';
+  let columns,
+    lines,
+    loop,
+    middle,
+    current = "";
 
   $: {
-    lines = Math.floor(height * 1.6632 / em);
+    lines = Math.floor((height * 1.6632) / em);
     columns = Math.ceil(width / em);
-    middle = Math.ceil(lines * columns / 2);
+    middle = Math.ceil((lines * columns) / 2);
   }
 
   const _random = (long = true) => {
-    const _long = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`';
-    const _short = '0123456789abcdefghijklmnopqrstuvwxyz';
+    const _long =
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`";
+    const _short = "0123456789abcdefghijklmnopqrstuvwxyz";
 
     if (_long) {
       return _long[Math.floor(Math.random() * _long.length)];
     } else {
       return _short[Math.floor(Math.random() * _short.length)];
     }
-  }
+  };
 
   const _refresh = () => {
-    let stop = true, _current = ''
+    let stop = true,
+      _current = "";
 
     const _update = (index, letter, opts = { long: false }) => {
       if (!current[index]) {
@@ -37,51 +43,50 @@
       } else {
         _current += current[index];
       }
-    }
+    };
 
     for (let i = 0; i <= lines * columns; i++) {
       switch (i) {
         case middle:
-          _update(i, 's', { long: true });
+          _update(i, "s", { long: true });
           break;
-        case (middle + 1):
-          _update(i, 'p', { long: true });
+        case middle + 1:
+          _update(i, "p", { long: true });
           break;
-        case (middle + 2):
-          _update(i, 'e', { long: true });
+        case middle + 2:
+          _update(i, "e", { long: true });
           break;
-        case (middle + 3):
-          _update(i, 'c', { long: true });
+        case middle + 3:
+          _update(i, "c", { long: true });
           break;
-        case (middle + 4):
-          _update(i, 't', { long: true });
+        case middle + 4:
+          _update(i, "t", { long: true });
           break;
-        case (middle + 5):
-          _update(i, 'r', { long: true });
+        case middle + 5:
+          _update(i, "r", { long: true });
           break;
-        case (middle + 6):
-          _update(i, 'e', { long: true });
+        case middle + 6:
+          _update(i, "e", { long: true });
           break;
         default:
-          _update(i, '`');
+          _update(i, "`");
       }
     }
 
-    current = _current
+    current = _current;
 
     if (stop) {
       clearInterval(loop);
     }
-  }
+  };
 
   const square = () => {
     loop = setInterval(_refresh, 8);
-  
+
     return {
-      destroy() {
-      }
+      destroy() {},
     };
-  }
+  };
 </script>
 
 <style lang="scss">
@@ -99,6 +104,11 @@
   }
 </style>
 
-<div transition:fade={{duration: 2500 }} id="square" use:square style="height: {height}px; width: {width}px; font-size: {em}px; line-height: {em}px;">
+<div
+  transition:fade={{ duration: 2500 }}
+  id="square"
+  use:square
+  style="height: {height}px; width: {width}px; font-size: {em}px; line-height: {em}px;"
+>
   {current}
 </div>

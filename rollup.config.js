@@ -1,32 +1,33 @@
-import path from 'path';
-import resolve from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
-import commonjs from '@rollup/plugin-commonjs';
-import url from '@rollup/plugin-url';
-import svelte from 'rollup-plugin-svelte';
-import babel from '@rollup/plugin-babel';
-import { terser } from 'rollup-plugin-terser';
-import config from 'sapper/config/rollup.js';
-import preprocess from 'svelte-preprocess';
-import pkg from './package.json';
+import path from "path";
+import resolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
+import commonjs from "@rollup/plugin-commonjs";
+import url from "@rollup/plugin-url";
+import svelte from "rollup-plugin-svelte";
+import babel from "@rollup/plugin-babel";
+import { terser } from "rollup-plugin-terser";
+import config from "sapper/config/rollup.js";
+import preprocess from "svelte-preprocess";
+import pkg from "./package.json";
 
 const mode = process.env.NODE_ENV;
-const dev = mode === 'development';
+const dev = mode === "development";
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
 const _preprocess = {
   scss: {
-    includePaths: ['src/styles'],
+    includePaths: ["src/styles"],
     prependData: `@import 'src/styles/variables.scss'; @import 'src/styles/mixins.scss';`,
   },
   postcss: {
-    plugins: [require('autoprefixer')()],
+    plugins: [require("autoprefixer")()],
   },
 };
 
 const onwarn = (warning, onwarn) =>
-  (warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
-  (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
+  (warning.code === "MISSING_EXPORT" && /'preload'/.test(warning.message)) ||
+  (warning.code === "CIRCULAR_DEPENDENCY" &&
+    /[/\\]@sapper[/\\]/.test(warning.message)) ||
   onwarn(warning);
 
 export default {
@@ -37,8 +38,8 @@ export default {
       replace({
         preventAssignment: true,
         values: {
-          'process.browser': true,
-          'process.env.NODE_ENV': JSON.stringify(mode),
+          "process.browser": true,
+          "process.env.NODE_ENV": JSON.stringify(mode),
         },
       }),
       svelte({
@@ -49,31 +50,31 @@ export default {
         preprocess: preprocess(_preprocess),
       }),
       url({
-        sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
-        publicPath: '/client/',
+        sourceDir: path.resolve(__dirname, "src/node_modules/images"),
+        publicPath: "/client/",
       }),
       resolve({
         browser: true,
-        dedupe: ['svelte'],
+        dedupe: ["svelte"],
       }),
       commonjs(),
       legacy &&
         babel({
-          extensions: ['.js', '.mjs', '.html', '.svelte'],
-          babelHelpers: 'runtime',
-          exclude: ['node_modules/@babel/**'],
+          extensions: [".js", ".mjs", ".html", ".svelte"],
+          babelHelpers: "runtime",
+          exclude: ["node_modules/@babel/**"],
           presets: [
             [
-              '@babel/preset-env',
+              "@babel/preset-env",
               {
-                targets: '> 0.25%, not dead',
+                targets: "> 0.25%, not dead",
               },
             ],
           ],
           plugins: [
-            '@babel/plugin-syntax-dynamic-import',
+            "@babel/plugin-syntax-dynamic-import",
             [
-              '@babel/plugin-transform-runtime',
+              "@babel/plugin-transform-runtime",
               {
                 useESModules: true,
               },
@@ -97,31 +98,33 @@ export default {
       replace({
         preventAssignment: true,
         values: {
-          'process.browser': false,
-          'process.env.NODE_ENV': JSON.stringify(mode),
+          "process.browser": false,
+          "process.env.NODE_ENV": JSON.stringify(mode),
         },
       }),
       svelte({
         compilerOptions: {
           dev,
-          generate: 'ssr',
+          generate: "ssr",
           hydratable: true,
         },
         emitCss: false,
         preprocess: preprocess(_preprocess),
       }),
       url({
-        sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
-        publicPath: '/client/',
+        sourceDir: path.resolve(__dirname, "src/node_modules/images"),
+        publicPath: "/client/",
         emitFiles: false, // already emitted by client build
       }),
       resolve({
-        dedupe: ['svelte'],
+        dedupe: ["svelte"],
       }),
       commonjs(),
     ],
-    external: Object.keys(pkg.dependencies).concat(require('module').builtinModules),
-    preserveEntrySignatures: 'strict',
+    external: Object.keys(pkg.dependencies).concat(
+      require("module").builtinModules
+    ),
+    preserveEntrySignatures: "strict",
     onwarn,
   },
 
@@ -133,8 +136,8 @@ export default {
       replace({
         preventAssignment: true,
         values: {
-          'process.browser': true,
-          'process.env.NODE_ENV': JSON.stringify(mode),
+          "process.browser": true,
+          "process.env.NODE_ENV": JSON.stringify(mode),
         },
       }),
       commonjs(),
