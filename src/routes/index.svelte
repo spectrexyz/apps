@@ -15,7 +15,7 @@
     ],
     [
       "Owners",
-      "Own shares of NFTs to gain exposure to exclusive artworks or community-curated NFTs indexes.",
+      "Own NFT shares and gain exposure to exclusive artworks or curated NFT indexes.",
     ],
     [
       "Traders",
