@@ -20,24 +20,8 @@
 
   .icons {
     position: relative;
-
-    a {
-      padding: 0;
-
-      &:hover {
-        background-color: transparent;
-      }
-    }
-
-    img {
-      height: 35px;
-
-      &.twitter {
-        margin-left: $GU;
-        position: relative;
-        top: -2px;
-      }
-    }
+    display: flex;
+    gap: 1 * $GU;
   }
 
   .soon {
@@ -79,10 +63,20 @@
 <Appear {...transitions.icons}>
   <div class="icons">
     <a href="https://discord.gg/2svAvzJm" target="_blank"
-      ><img class="discord" src="/img/discord.svg" alt="Discord" /></a
+      ><img
+        class="discord"
+        src="/img/discord.svg"
+        height="35"
+        alt="Discord"
+      /></a
     >
     <a href="https://twitter.com/spectrexyz" target="_blank"
-      ><img class="twitter" src="/img/twitter.svg" alt="Twitter" /></a
+      ><img
+        class="twitter"
+        src="/img/twitter.svg"
+        height="35"
+        alt="Twitter"
+      /></a
     >
   </div>
 </Appear>

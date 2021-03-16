@@ -47,11 +47,11 @@ a {
   color: $cyan;
   text-decoration: none;
   padding: $space / 2;
-
-  &:hover {
-    font-weight: bold;
-    background-color: $cyan;
-    color: $black;
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid $green;
   }
 }
 
