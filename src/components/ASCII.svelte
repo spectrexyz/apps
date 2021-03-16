@@ -46,7 +46,8 @@
     background: $green;
     color: $black;
     font-weight: $bold;
-    padding: 0px calc(1em / 3);
+    margin: 0;
+    padding: 0 calc(1em / 3);
     width: fit-content;
   }
 </style>

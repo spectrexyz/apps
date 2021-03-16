@@ -1,11 +1,40 @@
 <script>
-  import { ASCII, Header, Square } from "../components";
-  import { fly } from "svelte/transition";
+  import { Appear, ASCII, Header, Square } from "../components";
 
-  let typed = false;
+  const transitions = {
+    header: () => ({ delay: 100, scale: 1.4 }),
+    item: (index) => ({ delay: 600 + index * 150, scale: 1.1 }),
+    soon: () => ({ delay: 1400, scale: 1.3 }),
+    icon: (index) => ({ delay: 1200 + index * 400, scale: 1.8 }),
+  };
+
+  const items = [
+    [
+      "Artists",
+      "Turn your NFTs into ERC20s and benefit from your upcoming work appreciation.",
+    ],
+    [
+      "Owners",
+      "Own NFT shares and gain exposure to exclusive artworks or curated NFT indexes.",
+    ],
+    [
+      "Traders",
+      "Track the market dynamics of artworks or artists block per block.",
+    ],
+    ["Developers", "Use NFTs spectres as collaterals in any DeFi protocol."],
+  ];
+
+  const icons = [
+    ["Discord", "https://discord.gg/2svAvzJm", "discord.svg"],
+    ["Twitter", "https://twitter.com/spectrexyz", "twitter.svg"],
+  ];
 </script>
 
 <style lang="scss">
+  .content-items li {
+    padding: 0.5 * $GU 0;
+  }
+
   .emphasize {
     background-color: $cyan;
     color: $black;
@@ -16,57 +45,48 @@
 
   .icons {
     position: relative;
-
+    display: flex;
+    gap: 1 * $GU;
     a {
-      padding: 0;
-
-      &:hover {
-        background-color: transparent;
-      }
+      display: flex;
     }
-
     img {
-      height: 35px;
-
-      &.twitter {
-        margin-left: $GU;
-        position: relative;
-        top: -2px;
-      }
+      border-radius: 0.5 * $GU;
     }
+  }
+
+  .soon {
+    padding: 4 * $GU 0;
   }
 </style>
 
-<Header on:done={() => (typed = true)} />
-{#if typed}
-  <div transition:fly={{ y: 100, duration: 600 }}>
-    <ul>
+<Appear {...transitions.header()}>
+  <Header />
+</Appear>
+
+<ul class="content-items">
+  {#each items as item, index}
+    <Appear {...transitions.item(index)}>
       <li>
-        <span class="emphasize">Artists</span> Spectralize your NFTs into fungible
-        ERC20s and pre-allocate some to yourself to benefit from your upcoming work
-        appreciation.
+        <span class="emphasize">{item[0]}</span>
+        {item[1]}
       </li>
-      <li>
-        <span class="emphasize">Owners</span> Own shares of NFTs to gain exposure
-        to exclusive artworks or community-curated NFTs indexes.
-      </li>
-      <li>
-        <span class="emphasize">Traders</span> Track the market dynamics of artworks
-        or artists block per block.
-      </li>
-      <li>
-        <span class="emphasize">Developers</span> Use NFTs spectres as collaterals
-        in any DeFi protocol.
-      </li>
-    </ul>
-    <ASCII class="x-space-top" message="SPECTRE_IS_COMING" />
-    <div class="icons x-space-top">
-      <a href="https://discord.gg/2svAvzJm" target="_blank"
-        ><img class="discord" src="/img/discord.svg" alt="discord" /></a
-      >
-      <a href="https://twitter.com/spectrexyz" target="_blank"
-        ><img class="twitter" src="/img/twitter.svg" alt="twitter" /></a
-      >
-    </div>
+    </Appear>
+  {/each}
+</ul>
+
+<Appear {...transitions.soon()}>
+  <div class="soon" title="Spectre is coming">
+    <ASCII message="SPECTRE_IS_COMING" interval={25} />
   </div>
-{/if}
+</Appear>
+
+<div class="icons">
+  {#each icons as icon, index}
+    <Appear {...transitions.icon(index)}>
+      <a href={icon[1]} title={icon[0]} target="_blank">
+        <img src={`/img/${icon[2]}`} height="35" alt="" />
+      </a>
+    </Appear>
+  {/each}
+</div>

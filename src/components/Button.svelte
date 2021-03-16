@@ -5,7 +5,7 @@
 </script>
 
 <style lang="scss">
-  button/*, input[type="submit"], input[type="reset"]*/ {
+  button {
     // reset
     background: none;
     color: inherit;
