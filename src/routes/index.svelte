@@ -2,14 +2,39 @@
   import { Appear, ASCII, Header, Square } from "../components";
 
   const transitions = {
-    header: { delay: 100, scale: 1.4 },
-    content: { delay: 600, scale: 1.1 },
-    soon: { delay: 1400, scale: 1.3 },
-    icons: { delay: 1000, scale: 1.2 },
+    header: () => ({ delay: 100, scale: 1.4 }),
+    item: (index) => ({ delay: 600 + index * 150, scale: 1.1 }),
+    soon: () => ({ delay: 1400, scale: 1.3 }),
+    icon: (index) => ({ delay: 1200 + index * 400, scale: 1.8 }),
   };
+
+  const items = [
+    [
+      "Artists",
+      "Turn your NFTs into ERC20s and benefit from your upcoming work appreciation.",
+    ],
+    [
+      "Owners",
+      "Own shares of NFTs to gain exposure to exclusive artworks or community-curated NFTs indexes.",
+    ],
+    [
+      "Traders",
+      "Track the market dynamics of artworks or artists block per block.",
+    ],
+    ["Developers", "Use NFTs spectres as collaterals in any DeFi protocol."],
+  ];
+
+  const icons = [
+    ["Discord", "https://discord.gg/2svAvzJm", "discord.svg"],
+    ["Twitter", "https://twitter.com/spectrexyz", "twitter.svg"],
+  ];
 </script>
 
 <style lang="scss">
+  .content-items li {
+    padding: 0.5 * $GU 0;
+  }
+
   .emphasize {
     background-color: $cyan;
     color: $black;
@@ -22,6 +47,12 @@
     position: relative;
     display: flex;
     gap: 1 * $GU;
+    a {
+      display: flex;
+    }
+    img {
+      border-radius: 0.5 * $GU;
+    }
   }
 
   .soon {
@@ -29,54 +60,33 @@
   }
 </style>
 
-<Appear {...transitions.header}>
+<Appear {...transitions.header()}>
   <Header />
 </Appear>
 
-<Appear {...transitions.content}>
-  <ul>
-    <li>
-      <span class="emphasize">Artists</span> Turn your NFTs into ERC20s and benefit
-      from your upcoming work appreciation.
-    </li>
-    <li>
-      <span class="emphasize">Owners</span> Own shares of NFTs to gain exposure to
-      exclusive artworks or community-curated NFTs indexes.
-    </li>
-    <li>
-      <span class="emphasize">Traders</span> Track the market dynamics of artworks
-      or artists block per block.
-    </li>
-    <li>
-      <span class="emphasize">Developers</span> Use NFTs spectres as collaterals
-      in any DeFi protocol.
-    </li>
-  </ul>
-</Appear>
+<ul class="content-items">
+  {#each items as item, index}
+    <Appear {...transitions.item(index)}>
+      <li>
+        <span class="emphasize">{item[0]}</span>
+        {item[1]}
+      </li>
+    </Appear>
+  {/each}
+</ul>
 
-<Appear {...transitions.soon}>
+<Appear {...transitions.soon()}>
   <div class="soon" title="Spectre is coming">
-    <ASCII message="SPECTRE_IS_COMING" />
+    <ASCII message="SPECTRE_IS_COMING" interval={25} />
   </div>
 </Appear>
 
-<Appear {...transitions.icons}>
-  <div class="icons">
-    <a href="https://discord.gg/2svAvzJm" target="_blank"
-      ><img
-        class="discord"
-        src="/img/discord.svg"
-        height="35"
-        alt="Discord"
-      /></a
-    >
-    <a href="https://twitter.com/spectrexyz" target="_blank"
-      ><img
-        class="twitter"
-        src="/img/twitter.svg"
-        height="35"
-        alt="Twitter"
-      /></a
-    >
-  </div>
-</Appear>
+<div class="icons">
+  {#each icons as icon, index}
+    <Appear {...transitions.icon(index)}>
+      <a href={icon[1]} title={icon[0]} target="_blank">
+        <img src={`/img/${icon[2]}`} height="35" alt="" />
+      </a>
+    </Appear>
+  {/each}
+</div>
