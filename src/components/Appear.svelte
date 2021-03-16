@@ -18,8 +18,6 @@
 <style lang="scss">
   .content {
     display: flex;
-    & > div {
-    }
   }
 </style>
 
