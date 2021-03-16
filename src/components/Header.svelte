@@ -20,6 +20,7 @@
     height: 19 * $GU;
     padding-top: 6 * $GU;
     position: relative;
+    user-select: none;
   }
 </style>
 
