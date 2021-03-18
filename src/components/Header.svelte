@@ -35,6 +35,6 @@
     on:done={handleDone}
   >
     <h1>spectre_</h1>
-    <h2 class="space-top">» where collectibles meet DeFi</h2>
+    <h2 class="space-top">» where one becomes multitude</h2>
   </Typewriter>
 </header>
