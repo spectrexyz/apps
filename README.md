@@ -1,6 +1,6 @@
 # spectre.xyz | website
 
-> www.spectre.xyz
+> [spectre.gallery](https://spectre.gallery)
 
 ## Installation
 
