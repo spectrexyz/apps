@@ -1,11 +1,11 @@
 import React from "react"
 import { Global, css } from "@emotion/react"
 import { useViewport, ViewportProvider } from "use-viewport"
-import { GU, colors, fonts, viewports } from "./styles"
+import { GU, colors, fonts, breakpoints } from "./styles"
 
 function Base({ children }) {
   return (
-    <ViewportProvider breakpoints={{ small: 500 }}>
+    <ViewportProvider breakpoints={breakpoints}>
       <BaseStyles>
         <BaseLayout>{children}</BaseLayout>
       </BaseStyles>
@@ -82,11 +82,11 @@ function BaseLayout({ children }) {
       <div
         css={css`
           position: relative;
-          width: ${above(viewports.medium) ? "100vw" : `${viewports.small}px`};
-          max-width: ${above(viewports.medium) ? `${60 * GU}px` : "none"};
+          width: ${above("medium") ? "100vw" : `${breakpoints.small}px`};
+          max-width: ${above("medium") ? `${60 * GU}px` : "none"};
           min-height: 100vh;
           margin: 0 auto;
-          padding: ${above(viewports.medium) ? 2 * GU : 1 * GU}px;
+          padding: ${above("medium") ? 2 * GU : 1 * GU}px;
         `}
       >
         {children}

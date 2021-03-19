@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import { animated } from "react-spring"
 import { useViewport } from "use-viewport"
-import { GU, colors, fonts, viewports, springs } from "./styles"
+import { GU, colors, fonts, springs } from "./styles"
 import { useAppear } from "./utils"
 import Square from "./Square"
 import Type from "./Type"
@@ -17,8 +17,8 @@ function Header({ tagline }) {
         display: flex;
         flex-direction: column;
         width: ${18 * GU}px;
-        height: ${above(viewports.medium) ? `${19 * GU}px` : "auto"};
-        padding-top: ${above(viewports.medium) ? 4.5 * GU : 3 * GU}px;
+        height: ${above("medium") ? `${19 * GU}px` : "auto"};
+        padding-top: ${above("medium") ? 4.5 * GU : 3 * GU}px;
         padding-bottom: ${4 * GU}px;
         position: relative;
         user-select: none;
@@ -34,7 +34,7 @@ function Header({ tagline }) {
     >
       {appearSquare.map(({ progress }, index) => {
         return (
-          above(viewports.medium) && (
+          above("medium") && (
             <animated.div
               key={index}
               style={{ opacity: progress }}

@@ -45,7 +45,7 @@ export const springs = {
   },
 }
 
-export const viewports = {
+export const breakpoints = {
   small: 20 * GU,
   medium: 52 * GU,
 }

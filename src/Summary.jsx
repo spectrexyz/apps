@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import { animated } from "react-spring"
 import { useViewport } from "use-viewport"
-import { viewports, GU, colors, springs } from "./styles"
+import { GU, colors, springs } from "./styles"
 import { useAppear } from "./utils"
 
 function Summary({ items }) {
@@ -28,7 +28,7 @@ function Summary({ items }) {
             }}
             css={css`
               list-style: none;
-              padding: ${above(viewports.medium) ? 0.5 * GU : 1 * GU}px 0;
+              padding: ${above("medium") ? 0.5 * GU : 1 * GU}px 0;
               transform-origin: 50% 50%;
               &:before {
                 content: "»";
