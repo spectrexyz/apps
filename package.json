@@ -1,6 +1,9 @@
 {
-  "name": "spectre-website",
-  "version": "0.0.0",
+  "name": "@spectrexyz/website",
+  "version": "1.0.0",
+  "private": true,
+  "author": "spectre.xyz",
+  "homepage": "https://github.com/spectrexyz/website",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
