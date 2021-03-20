@@ -6,6 +6,69 @@ import { randChar, raf } from "./utils"
 const CHARS_SHORT = "0123456789abcdefghijklmnopqrstuvwxyz"
 const CHARS_LONG =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const PX_RATIO = window.devicePixelRatio
+
+function Square({
+  word = "spectre",
+  placeholder = "`",
+  wordPosition = 0.53, // 0 to 1
+  size = 18.5 * GU,
+  lineHeight = 0.75 * GU,
+  updateInterval = 1000 / 60, // ms
+}) {
+  const canvasRef = useRef()
+
+  useEffect(() => {
+    const ctx = initContext(canvasRef.current, size)
+
+    const { width: charWidth } = ctx.measureText("_")
+    const columns = Math.floor(size / charWidth)
+    const lines = Math.floor(size / lineHeight)
+    const wordIndex = Math.floor(columns * lines * wordPosition)
+
+    const finalGrid = createFinalGrid(
+      lines * columns,
+      placeholder,
+      word,
+      wordIndex
+    )
+
+    let grid = createEmptyGrid(lines * columns)
+    let gridJson = JSON.stringify(grid)
+    const finalGridJson = JSON.stringify(finalGrid)
+
+    const stop = raf(() => {
+      if (gridJson === finalGridJson) {
+        stop()
+        return
+      }
+
+      grid = updateGrid(grid, finalGrid, placeholder, word, wordIndex)
+      gridJson = JSON.stringify(grid)
+
+      if (canvasRef.current) {
+        clearContext(ctx, size)
+        drawGrid(ctx, splitGrid(grid, columns), lineHeight)
+      }
+    }, updateInterval)
+
+    return stop
+  }, [word, placeholder, wordPosition, size, lineHeight, updateInterval])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={size * PX_RATIO}
+      height={size * PX_RATIO}
+      css={css`
+        display: block;
+        width: ${size}px;
+        height: ${size}px;
+        opacity: 0.4;
+      `}
+    />
+  )
+}
 
 function createEmptyGrid(size) {
   return [...Array(size)].fill(" ")
@@ -29,84 +92,41 @@ function updateGrid(grid, finalGrid, placeholder, word, wordIndex) {
   })
 }
 
-// convert a grid to string + add line breaks
-function gridToHtml(grid, columns) {
-  return grid.reduce((html, char, index) => {
-    return html + (index > 0 && index % columns === 0 ? "\n" : "") + char
-  }, "")
+// split a grid into rows
+function splitGrid(grid, columns) {
+  return grid.reduce((rows, char, index) => {
+    if (index % columns === 0) {
+      rows.push("")
+    }
+    rows[rows.length - 1] += char
+    return rows
+  }, [])
 }
 
-function Square({
-  word = "spectre",
-  placeholder = "`",
-  wordPosition = 0.5, // 0 to 1
-  width = 18.5 * GU,
-  height = 18.5 * GU,
-  updateInterval = 1000 / 60, // ms
-}) {
-  const gridRef = useRef()
-  const measureRef = useRef()
+function clearContext(ctx, size) {
+  ctx.fillStyle = colors.challenger
+  ctx.fillRect(0, 0, size, size)
+}
 
-  useEffect(() => {
-    const {
-      width: charWidth,
-      height: charHeight,
-    } = measureRef.current.getBoundingClientRect()
+function initContext(canvas, size) {
+  const ctx = canvas.getContext("2d", { alpha: false })
 
-    const columns = Math.ceil(width / charWidth)
-    const lines = Math.ceil(height / charHeight)
-    const wordIndex = Math.ceil(columns * lines * wordPosition)
-    const finalGrid = createFinalGrid(
-      lines * columns,
-      placeholder,
-      word,
-      wordIndex
-    )
+  ctx.font = `${fonts.sizes.small} ${fonts.family}`
 
-    let gridHtml = ""
-    let grid = createEmptyGrid(lines * columns)
-    const finalGridHtml = gridToHtml(finalGrid, columns)
+  // resets the scale
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
+  ctx.scale(PX_RATIO, PX_RATIO)
 
-    const stop = raf(() => {
-      if (gridHtml === finalGridHtml) {
-        stop()
-        return
-      }
+  clearContext(ctx, size)
 
-      grid = updateGrid(grid, finalGrid, placeholder, word, wordIndex)
-      gridHtml = gridToHtml(grid, columns)
-      if (gridRef.current) {
-        gridRef.current.innerHTML = gridHtml
-      }
-    }, updateInterval)
+  return ctx
+}
 
-    return stop
-  }, [word, placeholder, wordPosition, width, height, updateInterval])
-
-  return (
-    <pre
-      css={css`
-        width: ${width}px;
-        height: ${height}px;
-        font-size: 12px;
-        line-height: 12px;
-        user-select: none;
-        color: ${colors.cyan};
-        opacity: 0.4;
-      `}
-    >
-      <span
-        ref={measureRef}
-        css={css`
-          position: absolute;
-          opacity: 0;
-        `}
-      >
-        m
-      </span>
-      <span ref={gridRef} />
-    </pre>
-  )
+function drawGrid(ctx, grid, lineHeight) {
+  ctx.fillStyle = colors.cyan
+  grid.forEach((row, index) => {
+    ctx.fillText(row, 0, (index + 1) * lineHeight)
+  })
 }
 
 export default Square

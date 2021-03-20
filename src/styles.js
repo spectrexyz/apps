@@ -15,6 +15,7 @@ export const fonts = {
   family: '"IBM Plex Mono", monospace',
   line: "1.5",
   sizes: {
+    small: "12px",
     normal: "14px",
     large: "42px",
   },
