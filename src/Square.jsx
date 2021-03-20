@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
 import { css } from "@emotion/react"
 import { GU, colors, fonts } from "./styles"
+import { randChar, raf } from "./utils"
 
 const CHARS_SHORT = "0123456789abcdefghijklmnopqrstuvwxyz"
 const CHARS_LONG =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-function randChar(from) {
-  return from[Math.floor(Math.random() * from.length)]
-}
 
 function createEmptyGrid(size) {
   return [...Array(size)].fill(" ")
@@ -45,7 +42,7 @@ function Square({
   wordPosition = 0.5, // 0 to 1
   width = 18.5 * GU,
   height = 18.5 * GU,
-  updateEvery = 1000 / 60, // ms
+  updateInterval = 1000 / 60, // ms
 }) {
   const gridRef = useRef()
   const measureRef = useRef()
@@ -65,33 +62,26 @@ function Square({
       word,
       wordIndex
     )
-    const finalGridHtml = gridToHtml(finalGrid, columns)
+
     let gridHtml = ""
-
-    let rafId
     let grid = createEmptyGrid(lines * columns)
-    let lastUpdate = Date.now()
+    const finalGridHtml = gridToHtml(finalGrid, columns)
 
-    const loop = () => {
-      if (gridHtml === finalGridHtml) return
-
-      rafId = requestAnimationFrame(loop)
-      const now = Date.now()
-      const elapsed = now - lastUpdate
-      if (elapsed < updateEvery) return
-      lastUpdate = now
+    const stop = raf(() => {
+      if (gridHtml === finalGridHtml) {
+        stop()
+        return
+      }
 
       grid = updateGrid(grid, finalGrid, placeholder, word, wordIndex)
       gridHtml = gridToHtml(grid, columns)
-
       if (gridRef.current) {
         gridRef.current.innerHTML = gridHtml
       }
-    }
-    loop()
+    }, updateInterval)
 
-    return () => cancelAnimationFrame(rafId)
-  }, [word, placeholder, wordPosition, width, height, updateEvery])
+    return stop
+  }, [word, placeholder, wordPosition, width, height, updateInterval])
 
   return (
     <pre

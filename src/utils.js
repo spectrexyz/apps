@@ -2,6 +2,10 @@ import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { springs } from "./styles"
 
+export function randChar(from) {
+  return from[Math.floor(Math.random() * from.length)]
+}
+
 export function raf(callback, interval = 1000 / 60) {
   let rafId
   let lastUpdate = Date.now()
