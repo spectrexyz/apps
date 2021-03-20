@@ -2,6 +2,10 @@ import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { springs } from "./styles"
 
+export function randomArbitrary(min, max) {
+  return Math.random() * (max - min) + min
+}
+
 export function randChar(from) {
   return from[Math.floor(Math.random() * from.length)]
 }

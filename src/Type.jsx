@@ -1,41 +1,36 @@
 import React, { useEffect, useState, useRef } from "react"
 import { css } from "@emotion/react"
+import { raf, randomArbitrary } from "./utils"
 
 function Type({
   text,
   cursor = "_",
-  interval = 1000 / 30,
   keepCursor = false,
+
+  // use a range for the typing interval, to create a “natural” feel
+  interval = () => randomArbitrary(1000 / 10, 1000 / 30),
 }) {
   const elRef = useRef()
 
   useEffect(() => {
-    let rafId
-    let lastUpdate = Date.now()
     let typed = 0
-    let typingInterval = interval
 
-    const loop = () => {
-      if (typed === text.length) {
-        if (!keepCursor) {
-          elRef.current.innerHTML = text
-        }
+    const stop = raf(() => {
+      if (typed !== text.length) {
+        elRef.current.innerHTML = text.slice(0, ++typed) + cursor
+
+        // keep going
         return
       }
 
-      rafId = requestAnimationFrame(loop)
+      stop()
 
-      const now = Date.now()
-      const elapsed = now - lastUpdate
-      if (elapsed < typingInterval) return
-      lastUpdate = now
-      typingInterval = interval + Math.random() * interval
+      if (!keepCursor) {
+        elRef.current.innerHTML = text
+      }
+    }, interval)
 
-      elRef.current.innerHTML = text.slice(0, ++typed) + cursor
-    }
-    loop()
-
-    return () => cancelAnimationFrame(rafId)
+    return stop
   }, [text])
 
   return <span ref={elRef}>{cursor}</span>
