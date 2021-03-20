@@ -32,20 +32,7 @@ function Ascii({ text = "", updateInterval = 1000 / 60 }) {
     return stop
   }, [updateInterval])
 
-  return (
-    <span
-      ref={elRef}
-      css={css`
-        margin: 0;
-        padding: 0 calc(1em / 3);
-        background: ${colors.green};
-        color: ${colors.black};
-        font-weight: ${colors.bold};
-      `}
-    >
-      {" "}
-    </span>
-  )
+  return <span ref={elRef} />
 }
 
 export default Ascii
