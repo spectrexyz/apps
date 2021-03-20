@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import { animated } from "react-spring"
 import { GU, colors, fonts } from "./styles"
 import { useAppear } from "./utils"
+import Ascii from "./Ascii"
 
 function ComingSoon({ label }) {
   const appearItems = useAppear(1, { delay: 200 })
@@ -27,7 +28,7 @@ function ComingSoon({ label }) {
         background: ${colors.green};
       `}
     >
-      {stylizedLabel}
+      <Ascii text={stylizedLabel} />
     </animated.div>
   ))
 }
