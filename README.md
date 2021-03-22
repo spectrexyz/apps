@@ -1,15 +1,16 @@
 # spectre.xyz | website
 
-> www.spectre.xyz
+> [spectre.gallery](https://spectre.gallery)
 
 ## Installation
 
-```bash
-git clone https://github.com/spectrexyz/website.git && cd website && npm install
+```console
+yarn install
 ```
 
 ## Usage
 
-```bash
-npm run dev
+```console
+yarn dev
 ```
+

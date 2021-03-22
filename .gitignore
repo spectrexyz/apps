@@ -1,9 +1,5 @@
-# npm
-/node_modules/
-
-# sapper
-/__sapper__/
-/src/node_modules/@sapper/
-
-# macOS shit
+node_modules
 .DS_Store
+dist
+dist-ssr
+*.local
