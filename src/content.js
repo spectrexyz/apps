@@ -20,7 +20,7 @@ export default {
   ],
   comingSoonLabel: "Spectre is coming",
   icons: [
-    ["Discord", "https://discord.gg/2svAvzJm", iconDiscord],
+    ["Discord", "https://discord.gg/JzaM5RSg7Q", iconDiscord],
     ["Twitter", "https://twitter.com/spectrexyz", iconTwitter],
   ],
 }
