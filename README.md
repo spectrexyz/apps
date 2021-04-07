@@ -1,16 +1,5 @@
-# spectre.xyz | website
+# [spectre.xyz](https://spectre.xyz/) apps
 
-> [spectre.xyz](https://spectre.xyz/)
+Apps list:
 
-## Installation
-
-```console
-yarn install
-```
-
-## Usage
-
-```console
-yarn dev
-```
-
+- [website](./pkg/website)
