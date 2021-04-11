@@ -1098,12 +1098,12 @@ __metadata:
   resolution: "@spectrexyz/website@workspace:pkg/website"
   dependencies:
     "@emotion/react": ^11.1.5
-    "@vitejs/plugin-react-refresh": ^1.3.1
-    react: ^17.0.0
-    react-dom: ^17.0.0
-    react-spring: ^9.0.0-rc.3
+    "@vitejs/plugin-react-refresh": ^1.3.2
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-spring: ^9.0.0
     use-viewport: "git://github.com/aragon/use-viewport.git#master"
-    vite: ^2.1.0
+    vite: ^2.1.5
   languageName: unknown
   linkType: soft
 
@@ -1451,7 +1451,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.20.0, @typescript-eslint/eslint-plugin@npm:^4.21.0":
+"@typescript-eslint/eslint-plugin@npm:^4.21.0":
   version: 4.21.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.21.0"
   dependencies:
@@ -1489,7 +1489,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.20.0, @typescript-eslint/parser@npm:^4.21.0":
+"@typescript-eslint/parser@npm:^4.21.0":
   version: 4.21.0
   resolution: "@typescript-eslint/parser@npm:4.21.0"
   dependencies:
@@ -1551,7 +1551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react-refresh@npm:^1.3.1":
+"@vitejs/plugin-react-refresh@npm:^1.3.2":
   version: 1.3.2
   resolution: "@vitejs/plugin-react-refresh@npm:1.3.2"
   dependencies:
@@ -11939,7 +11939,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.0, react-dom@npm:^17.0.2":
+"react-dom@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -11982,7 +11982,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-spring@npm:^9.0.0-rc.3":
+"react-spring@npm:^9.0.0":
   version: 9.0.0
   resolution: "react-spring@npm:9.0.0"
   dependencies:
@@ -11996,7 +11996,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.0, react@npm:^17.0.2":
+"react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -12548,7 +12548,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rollpkg@npm:^0.5.3":
+"rollpkg@npm:^0.5.5":
   version: 0.5.5
   resolution: "rollpkg@npm:0.5.5"
   dependencies:
@@ -13463,29 +13463,6 @@ resolve@^2.0.0-next.3:
 "spectre-apps@workspace:.":
   version: 0.0.0-use.local
   resolution: "spectre-apps@workspace:."
-  languageName: unknown
-  linkType: soft
-
-"spectre-uikit@workspace:pkg/uikit":
-  version: 0.0.0-use.local
-  resolution: "spectre-uikit@workspace:pkg/uikit"
-  dependencies:
-    "@types/react": ^17.0.3
-    "@types/react-dom": ^17.0.3
-    "@typescript-eslint/eslint-plugin": ^4.20.0
-    "@typescript-eslint/parser": ^4.20.0
-    eslint: ^7.23.0
-    eslint-plugin-import: ^2.22.1
-    eslint-plugin-jsx-a11y: ^6.4.1
-    eslint-plugin-react: ^7.23.1
-    eslint-plugin-react-hooks: ^4.2.0
-    prettier: ^2.2.1
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    rollpkg: ^0.5.3
-    typescript: ^4.2.3
-  peerDependencies:
-    react: ">=17"
   languageName: unknown
   linkType: soft
 
@@ -14632,6 +14609,55 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
+"uikit-demo@workspace:pkg/uikit-demo":
+  version: 0.0.0-use.local
+  resolution: "uikit-demo@workspace:pkg/uikit-demo"
+  dependencies:
+    "@emotion/cache": ^11.1.3
+    "@emotion/react": ^11.1.5
+    "@types/react": ^17.0.3
+    "@types/react-dom": ^17.0.3
+    "@vitejs/plugin-react-refresh": ^1.3.2
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-spring: ^9.0.0
+    typescript: ^4.2.3
+    uikit: "workspace:pkg/uikit"
+    vite: ^2.1.5
+    wouter: ^2.7.4
+  languageName: unknown
+  linkType: soft
+
+"uikit@workspace:pkg/uikit":
+  version: 0.0.0-use.local
+  resolution: "uikit@workspace:pkg/uikit"
+  dependencies:
+    "@types/react": ^17.0.3
+    "@types/react-dom": ^17.0.3
+    "@typescript-eslint/eslint-plugin": ^4.21.0
+    "@typescript-eslint/parser": ^4.21.0
+    eslint: ^7.23.0
+    eslint-plugin-import: ^2.22.1
+    eslint-plugin-jsx-a11y: ^6.4.1
+    eslint-plugin-react: ^7.23.1
+    eslint-plugin-react-hooks: ^4.2.0
+    prettier: ^2.2.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    rollpkg: ^0.5.5
+    typescript: ^4.2.3
+  peerDependencies:
+    "@emotion/cache": 11.x
+    "@emotion/react": 11.x
+    react: 17.x
+    react-dom: 17.x
+    react-spring: 9.x
+    stylis: 2.x
+  bin:
+    uikit-copy-assets: ./bin/copy-assets
+  languageName: unknown
+  linkType: soft
+
 "unbox-primitive@npm:^1.0.0":
   version: 1.0.1
   resolution: "unbox-primitive@npm:1.0.1"
@@ -14955,7 +14981,7 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.1.0":
+"vite@npm:^2.1.5":
   version: 2.1.5
   resolution: "vite@npm:2.1.5"
   dependencies:
@@ -15350,6 +15376,15 @@ typescript@^4.2.3:
   dependencies:
     errno: ~0.1.7
   checksum: eab917530e1feddf157ec749e9c91b73a886142daa7fdf3490bccbf7b548b2576c43ab8d0a98e72ac755cbc101ca8647a7b1ff2485fddb9e8f53c40c77f5a719
+  languageName: node
+  linkType: hard
+
+"wouter@npm:^2.7.4":
+  version: 2.7.4
+  resolution: "wouter@npm:2.7.4"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 03fb517a186fe621f6985eebd9ca11b13d320f2e0ce166e7c11e22b5ccccf90cc5c5c24df8d4364bcec6b7abfbcc679a71864af540402d3b19e479c6bb05cc10
   languageName: node
   linkType: hard
 
