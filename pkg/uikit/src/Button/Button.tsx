@@ -1,7 +1,6 @@
 /** @jsx jsx */
-import { useState } from "react"
 import { jsx, css } from "@emotion/react"
-import { useSpring, animated, to } from "react-spring"
+import { useSpring, animated } from "react-spring"
 import { useMoireBackground } from "../Moire"
 import { colors } from "../styles"
 
@@ -9,35 +8,21 @@ type ButtonProps = {
   label: string
 }
 
-function moireEffectProps() {
-  return {
-    x: Math.random() * 20,
-    y: Math.random() * 20,
-    s: 0.9 + Math.random() * 0.2,
-    r: -1 + Math.random() * 2,
-  }
-}
-
-function useMoireEffect() {
-  const [target, setTarget] = useState(moireEffectProps())
-
-  const props = useSpring({
-    from: moireEffectProps(),
-    to: target,
-    config: { mass: 500, tension: 500, friction: 500 },
-    onRest: ({ finished }) => {
-      if (finished) {
-        setTarget(moireEffectProps())
-      }
-    },
-  })
-
-  return props
+function circlePos(progress: number, radius: number) {
+  const angle = progress * Math.PI * 2
+  return [Math.cos(angle) * radius, Math.sin(angle) * radius]
 }
 
 export function Button({ label }: ButtonProps) {
   const moireBackground = useMoireBackground()
-  const moireEffect = useMoireEffect()
+
+  const { progress } = useSpring({
+    loop: true,
+    from: { progress: 0 },
+    to: { progress: 1 },
+    config: { duration: 6 * 60 * 1000 },
+  })
+
   return (
     <button
       type="button"
@@ -58,7 +43,10 @@ export function Button({ label }: ButtonProps) {
           border: 0;
         }
         &:active .label {
-          transform: translate(2px, 2px);
+          transform: translate(2.5px, 2.5px);
+        }
+        &:active .shadow-active {
+          opacity: 1;
         }
       `}
     >
@@ -90,25 +78,39 @@ export function Button({ label }: ButtonProps) {
           overflow: hidden;
         `}
       >
+        <span
+          className="shadow-active"
+          css={css`
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: ${colors.accent};
+            opacity: 0;
+          `}
+        />
         <animated.span
           style={{
-            transform: to(
-              [moireEffect.x, moireEffect.y, moireEffect.r, moireEffect.s],
-              (x, y, r, s) => `
-                translate3d(${x}px, ${y}px, 0)
-                rotate3d(0, 0, 1, ${r * 10}deg)
-                scale3d(${s}, ${s}, 1)
+            transform: progress.to((p) => {
+              const [x, y] = circlePos(p, 50)
+              return `
+                translate3d(${x}px, calc(-50% + ${y}px), 0)
+                rotate3d(0, 0, 1, ${p * -360}deg)
               `
-            ),
+            }),
           }}
           css={css`
             position: absolute;
-            left: ${-moireBackground.width / 3}px;
-            top: ${-moireBackground.height / 3}px;
-            width: ${moireBackground.width}px;
-            height: ${moireBackground.height}px;
+            z-index: 1;
+            left: -50%;
+            top: 50%;
+            width: 200%;
+            height: 0;
+            padding-top: 200%;
             background: url(${moireBackground.url}) 0 0 no-repeat;
-            transform-origin: 0 0;
+            transform-origin: 50% 50%;
           `}
         />
       </span>

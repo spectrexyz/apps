@@ -22,9 +22,9 @@ export function Moire({ width = 1, height = 1, className }: MoireProps) {
   )
 }
 
-export function useMoireBackground() {
+export function useMoireBackground(alt = false) {
   return {
-    url: useBaseUrl("Moire/moire.svg"),
+    url: useBaseUrl("Moire/" + (alt ? "moire-2.svg" : "moire.svg")),
     width: 600,
     height: 570,
   }
