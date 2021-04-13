@@ -1,5 +1,5 @@
 export { Button } from "./Button/Button"
-export { Moire, useMoireBackground } from "./Moire"
+export { Moire, useMoireImage, useMoireTransform } from "./Moire"
 export { Uikit } from "./Uikit"
 export { BaseUrl, useBaseUrl } from "./BaseUrl"
 export { colors, fonts, gu } from "./styles"
