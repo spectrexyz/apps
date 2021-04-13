@@ -1,30 +1,18 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/react"
-import { useSpring, animated } from "react-spring"
-import { useMoireBackground } from "../Moire"
+import useMeasure from "react-use-measure"
+import { Moire } from "../Moire"
 import { colors } from "../styles"
 
 type ButtonProps = {
   label: string
 }
 
-function circlePos(progress: number, radius: number) {
-  const angle = progress * Math.PI * 2
-  return [Math.cos(angle) * radius, Math.sin(angle) * radius]
-}
-
 export function Button({ label }: ButtonProps) {
-  const moireBackground = useMoireBackground()
-
-  const { progress } = useSpring({
-    loop: true,
-    from: { progress: 0 },
-    to: { progress: 1 },
-    config: { duration: 6 * 60 * 1000 },
-  })
-
+  const [ref, bounds] = useMeasure()
   return (
     <button
+      ref={ref}
       type="button"
       css={css`
         position: relative;
@@ -45,12 +33,12 @@ export function Button({ label }: ButtonProps) {
         &:active .label {
           transform: translate(2.5px, 2.5px);
         }
-        &:active .shadow-active {
+        &:active .active-shadow {
           opacity: 1;
         }
       `}
     >
-      <span
+      <div
         className="label"
         css={css`
           position: relative;
@@ -64,8 +52,8 @@ export function Button({ label }: ButtonProps) {
         `}
       >
         {label}
-      </span>
-      <span
+      </div>
+      <div
         css={css`
           position: absolute;
           z-index: 1;
@@ -75,11 +63,10 @@ export function Button({ label }: ButtonProps) {
           bottom: 0;
           transform: translate(5px, 5px);
           pointer-events: none;
-          overflow: hidden;
         `}
       >
-        <span
-          className="shadow-active"
+        <div
+          className="active-shadow"
           css={css`
             position: absolute;
             z-index: 2;
@@ -91,29 +78,12 @@ export function Button({ label }: ButtonProps) {
             opacity: 0;
           `}
         />
-        <animated.span
-          style={{
-            transform: progress.to((p) => {
-              const [x, y] = circlePos(p, 50)
-              return `
-                translate3d(${x}px, calc(-50% + ${y}px), 0)
-                rotate3d(0, 0, 1, ${p * -360}deg)
-              `
-            }),
-          }}
-          css={css`
-            position: absolute;
-            z-index: 1;
-            left: -50%;
-            top: 50%;
-            width: 200%;
-            height: 0;
-            padding-top: 200%;
-            background: url(${moireBackground.url}) 0 0 no-repeat;
-            transform-origin: 50% 50%;
-          `}
+        <Moire
+          width={bounds.width}
+          height={bounds.height}
+          duration={6 * 60 * 1000}
         />
-      </span>
+      </div>
     </button>
   )
 }
