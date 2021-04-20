@@ -47,7 +47,7 @@ export function Main({ children }: MainProps) {
             font: ${fonts.sizes.normal} / ${fonts.line} ${fontFamily};
           }
           body {
-            color: ${colors.accent};
+            color: ${colors.primary};
             background: ${colors.background};
           }
           button {
@@ -57,13 +57,13 @@ export function Main({ children }: MainProps) {
             padding: 0;
           }
           a {
-            color: ${colors.accent};
+            color: ${colors.secondary};
             text-decoration: none;
             &:focus:not(:focus-visible) {
               outline: none;
             }
             &:focus-visible {
-              outline: 2px solid ${colors.accent};
+              outline: 2px solid ${colors.primary};
             }
           }
 

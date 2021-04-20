@@ -2,7 +2,8 @@
 export const gu = 8
 
 export const colors = {
-  accent: "#AAFFE4",
+  primary: "#AAFFE4",
+  secondary: "#EF79F8",
   background: "#04131F",
 }
 

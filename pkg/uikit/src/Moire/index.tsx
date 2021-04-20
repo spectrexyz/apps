@@ -1,1 +1,1 @@
-export { Moire, useMoireImage, useMoireTransform } from "./Moire"
+export { Moire, useMoireImage } from "./Moire"
