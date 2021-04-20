@@ -10,7 +10,7 @@
     "@emotion/react": "^11.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-spring": "^9.0.0",
+    "react-spring": "^9.1.0",
     "use-viewport": "git://github.com/aragon/use-viewport.git#master"
   },
   "devDependencies": {
