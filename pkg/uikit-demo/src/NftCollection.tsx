@@ -42,8 +42,8 @@ function cardWrapper(
 ) {
   let cardUid = 0
   return function card(nft) {
-    const angle = Math.random * 2
-    const leaveX = Math.random * 2
+    const angle = Math.random() * 2
+    const leaveX = Math.random() * 2
     return {
       id: cardUid++,
       nft,
