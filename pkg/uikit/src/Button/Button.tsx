@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/react"
-import useMeasure from "react-use-measure"
 import { Moire } from "../Moire"
 import { colors } from "../styles"
 
@@ -9,10 +8,8 @@ type ButtonProps = {
 }
 
 export function Button({ label }: ButtonProps) {
-  const [ref, bounds] = useMeasure()
   return (
     <button
-      ref={ref}
       type="button"
       css={css`
         position: relative;
@@ -48,7 +45,7 @@ export function Button({ label }: ButtonProps) {
           height: 100%;
           padding: 0 1.5gu;
           background: ${colors.background};
-          border: 1px solid ${colors.accent};
+          border: 1px solid ${colors.primary};
         `}
       >
         {label}
@@ -74,15 +71,11 @@ export function Button({ label }: ButtonProps) {
             left: 0;
             right: 0;
             bottom: 0;
-            background: ${colors.accent};
+            background: ${colors.primary};
             opacity: 0;
           `}
         />
-        <Moire
-          width={bounds.width}
-          height={bounds.height}
-          duration={6 * 60 * 1000}
-        />
+        <Moire duration={6 * 60 * 1000} />
       </div>
     </button>
   )
