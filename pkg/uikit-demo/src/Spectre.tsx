@@ -30,22 +30,20 @@ export function Gradient({
       y2={y2}
       gradientUnits="userSpaceOnUse"
     >
-      <stop stopColor="#58FFCA" />
-      <stop offset="0" stopColor="#07FFB0" />
       <animated.stop
         offset={gradient.progress.to([0, 1], [0, 0.209])}
         stopColor="#2EFFBD"
-        stopOpacity=".734"
+        stopOpacity={gradient.progress.to([0, 1], [0.734, 0.5])}
       />
       <animated.stop
-        offset={gradient.progress.to([0, 1], [0.438, 0.21])}
-        stopColor="#58FFCA"
+        offset={gradient.progress.to([0, 1], [0.99, 0.21])}
         stopOpacity=".442"
+        stopColor="#58FFCA"
       />
       <animated.stop
         offset={gradient.progress.to([0, 1], [1, 0.439])}
-        stopColor="#58FFCA"
         stopOpacity="0"
+        stopColor="#58FFCA"
       />
     </linearGradient>
   )
@@ -63,12 +61,7 @@ export function Spectre() {
     },
   })
   return (
-    <svg
-      width="841"
-      height="285"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="841" height="285" fill="none">
       <mask
         id="a"
         mask-type="alpha"
