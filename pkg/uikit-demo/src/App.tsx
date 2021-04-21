@@ -1,3 +1,5 @@
+import type { ReactNode } from "react"
+
 import { useState, useEffect } from "react"
 import { Uikit, Button } from "uikit"
 import { css } from "@emotion/react"
@@ -31,7 +33,12 @@ const fetcher = [
   "ethers",
   {
     ethers: { Contract },
-    provider: new providers.CloudflareProvider(),
+    // provider: new providers.CloudflareProvider(),
+    provider: new providers.AlchemyProvider(
+      "homestead",
+      "E7YgkR4GmBg58uKRmXtQ9tJaqM6oE9hu"
+    ),
+    // provider: new providers.InfuraProvider(['homestead', '7236f6a36152476ba61279266233a49c'])
   },
 ]
 
@@ -45,18 +52,12 @@ export function App() {
               width: 100vw;
               height: 100vh;
               padding: 4gu 0;
-              overflow: hidden;
+              overflow-x: hidden;
+              overflow-y: scroll;
             `}
           >
-            <div
-              css={css`
-                display: grid;
-                place-items: center;
-                width: 100%;
-                min-height: 100%;
-              `}
-            >
-              <Route path="/">
+            <Route path="/">
+              <VCenter>
                 <ul>
                   <li>
                     <Link href="#/button">button</Link>
@@ -68,31 +69,50 @@ export function App() {
                     <Link href="#/spectre">spectre</Link>
                   </li>
                 </ul>
-              </Route>
-              <Route path="/:any">
-                <div
-                  css={css`
-                    position: absolute;
-                    top: 1gu;
-                    left: 2gu;
-                  `}
-                >
-                  <Link href="/">back</Link>
-                </div>
-              </Route>
-              <Route path="/cards">
-                <NftCollection count={16} />
-              </Route>
-              <Route path="/spectre">
+              </VCenter>
+            </Route>
+            <Route path="/:any">
+              <div
+                css={css`
+                  position: absolute;
+                  top: 1gu;
+                  left: 2gu;
+                `}
+              >
+                <Link href="/">back</Link>
+              </div>
+            </Route>
+            <Route path="/cards">
+              <NftCollection />
+            </Route>
+            <Route path="/spectre">
+              <VCenter>
                 <Spectre />
-              </Route>
-              <Route path="/button">
+              </VCenter>
+            </Route>
+            <Route path="/button">
+              <VCenter>
                 <Button label="Enable account" />
-              </Route>
-            </div>
+              </VCenter>
+            </Route>
           </div>
         </NftProvider>
       </Uikit>
     </Router>
+  )
+}
+
+function VCenter({ children }: { children: ReactNode }) {
+  return (
+    <div
+      css={css`
+        display: grid;
+        place-items: center;
+        width: 100%;
+        min-height: calc(100% - 4gu * 2);
+      `}
+    >
+      {children}
+    </div>
   )
 }

@@ -1,10 +1,8 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/react"
-
 import type { ReactNode } from "react"
 
 import { Fragment } from "react"
-import { Global, css } from "@emotion/react"
+import { Global, css, jsx } from "@emotion/react"
 import { colors, fonts } from "../styles"
 import { useBaseUrl } from "../BaseUrl"
 

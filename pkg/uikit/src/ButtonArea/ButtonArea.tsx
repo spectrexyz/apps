@@ -3,12 +3,12 @@ import type { DetailedHTMLProps, ButtonHTMLAttributes } from "react"
 
 import { jsx, css } from "@emotion/react"
 
-export function ButtonArea(
-  props: DetailedHTMLProps<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  >
-) {
+export type ButtonAreaProps = DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>
+
+export function ButtonArea(props: ButtonAreaProps) {
   return (
     <button
       {...props}
@@ -29,6 +29,6 @@ export function ButtonArea(
           outline: 2px solid red;
         }
       `}
-    ></button>
+    />
   )
 }

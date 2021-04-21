@@ -3,14 +3,24 @@ import { css } from "@emotion/react"
 import { Moire, colors, fonts, gu } from "uikit"
 import { useNft } from "use-nft"
 
+type NftCardProps = {
+  active: boolean
+  nft: {
+    contract: string
+    tokenId: string
+  }
+}
+
 export const NftCard = React.memo(function NftCard({
   active,
   nft: { contract, tokenId },
-}) {
-  const { nft = { image: "" }, loading, error, reload } = useNft(
-    contract,
-    tokenId
-  )
+}: NftCardProps) {
+  const {
+    nft = { image: "", name: "", description: "" },
+    loading,
+    error,
+    reload,
+  } = useNft(contract, tokenId)
   const author = "@poppy"
   const bid = { current: "2.80 ETH", end: "25 MIN" }
   return (
@@ -32,6 +42,7 @@ export const NftCard = React.memo(function NftCard({
           object-fit: cover;
           object-position: 50% 50%;
           background: ${colors.background};
+          image-rendering: ${active ? "auto" : "crisp-edges"};
         `}
       />
 
@@ -40,14 +51,20 @@ export const NftCard = React.memo(function NftCard({
           padding: 2gu;
         `}
       >
-        <Tag label={nft.name || "Untitled"} animate={active} />
+        <div
+          css={css`
+            height: 3gu;
+          `}
+        >
+          {active && <Tag label={nft.name || "Untitled"} />}
+        </div>
 
         <div
           css={css`
             margin: 2gu 0 1gu;
           `}
         >
-          <a>{author}</a>
+          <a>{active ? author : "_"}</a>
         </div>
 
         <p
@@ -60,7 +77,7 @@ export const NftCard = React.memo(function NftCard({
             height: 9gu;
           `}
         >
-          {nft.description}
+          {nft.description || "−"}
         </p>
 
         <div
@@ -76,7 +93,7 @@ export const NftCard = React.memo(function NftCard({
   )
 })
 
-function Tag({ animate, label }) {
+function Tag({ label }: { label: string }) {
   return (
     <div
       css={css`
@@ -92,15 +109,25 @@ function Tag({ animate, label }) {
         css={css`
           position: relative;
           z-index: 2;
-          display: grid;
-          place-items: center;
+          display: flex;
+          align-items: center;
+          max-width: 100%;
           height: 100%;
           padding: 0 1.5gu;
           color: ${colors.primary};
           background: ${colors.background};
+
+          // truncating
+          overflow: hidden;
+          white-space: nowrap;
+          text-align: left;
+          span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         `}
       >
-        {label}
+        <span>{label}</span>
       </span>
       <div
         css={css`
@@ -114,7 +141,7 @@ function Tag({ animate, label }) {
           pointer-events: none;
         `}
       >
-        <Moire mode="light" animate={animate} label={label} />
+        <Moire mode="light" />
       </div>
     </div>
   )
