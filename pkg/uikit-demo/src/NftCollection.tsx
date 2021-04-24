@@ -171,7 +171,7 @@ function useCardsStack() {
     setStack((stack) => ({
       ...stack,
       grid: !stack.grid,
-      cards: shuffle(cards),
+      cards: stack.grid ? cards : shuffle(cards),
       peek: stack.grid ? -1 : stack.peek,
     }))
   }

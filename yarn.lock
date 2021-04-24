@@ -6253,13 +6253,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-random@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "fast-random@npm:2.0.4"
-  checksum: 57aa3426583bb618703808492847aa29e2fb1a56a153248cd40e09c029f2eb2f5cc3c8e0563adf5be45a771ca94f61b63119e503357f75404b563cf09599226f
-  languageName: node
-  linkType: hard
-
 "fast-safe-stringify@npm:^2.0.7":
   version: 2.0.7
   resolution: "fast-safe-stringify@npm:2.0.7"
@@ -15023,6 +15016,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"twgl.js@npm:^4.19.1":
+  version: 4.19.1
+  resolution: "twgl.js@npm:4.19.1"
+  checksum: 68320d3e403f6c169544b208cbfa68e8f989bb48ec77c2baf30b827a88e3e15f906428b9c4f5941c2467e12c8e3c91ce556fdf4a963d729543b4d699dd40d6db
+  languageName: node
+  linkType: hard
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -15181,6 +15181,7 @@ typescript@^4.2.4:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-spring: ^9.1.0
+    twgl.js: ^4.19.1
     typescript: ^4.2.4
     uikit: "workspace:pkg/uikit"
     use-nft: ^0.5.0
@@ -15202,7 +15203,6 @@ typescript@^4.2.4:
     eslint-plugin-jsx-a11y: ^6.4.1
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
-    fast-random: ^2.0.4
     prettier: ^2.2.1
     react: ^17.0.2
     react-dom: ^17.0.2
