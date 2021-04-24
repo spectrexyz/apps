@@ -1,6 +1,6 @@
-import type { ReactNode } from "react"
+import type { FC, ReactNode } from "react"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Uikit, Button } from "uikit"
 import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
@@ -8,6 +8,14 @@ import { providers, Contract } from "ethers"
 import { NftProvider, FetcherDeclarationEthers } from "use-nft"
 import { Spectre } from "./Spectre"
 import { NftCollection } from "./NftCollection"
+import { Moire } from "./Moire"
+
+const demos = [
+  ["cards", () => <NftCollection />, false],
+  ["spectre", () => <Spectre />, true],
+  ["button", () => <Button label="Enable account" />, true],
+  ["moire", () => <Moire />, true],
+] as [string, FC, boolean][]
 
 function currentLocation() {
   return window.location.hash.replace(/^#/, "") || "/"
@@ -59,15 +67,11 @@ export function App() {
             <Route path="/">
               <VCenter>
                 <ul>
-                  <li>
-                    <Link href="#/button">button</Link>
-                  </li>
-                  <li>
-                    <Link href="#/cards">cards</Link>
-                  </li>
-                  <li>
-                    <Link href="#/spectre">spectre</Link>
-                  </li>
+                  {demos.map(([name]) => (
+                    <li key={name}>
+                      <Link href={`#/${name}`}>{name}</Link>
+                    </li>
+                  ))}
                 </ul>
               </VCenter>
             </Route>
@@ -82,19 +86,19 @@ export function App() {
                 <Link href="/">back</Link>
               </div>
             </Route>
-            <Route path="/cards">
-              <NftCollection />
-            </Route>
-            <Route path="/spectre">
-              <VCenter>
-                <Spectre />
-              </VCenter>
-            </Route>
-            <Route path="/button">
-              <VCenter>
-                <Button label="Enable account" />
-              </VCenter>
-            </Route>
+            <>
+              {demos.map(([name, Element, centered]) => (
+                <Route key={name} path={`/${name}`}>
+                  {centered ? (
+                    <VCenter>
+                      <Element />
+                    </VCenter>
+                  ) : (
+                    <Element />
+                  )}
+                </Route>
+              ))}
+            </>
           </div>
         </NftProvider>
       </Uikit>
@@ -109,7 +113,7 @@ function VCenter({ children }: { children: ReactNode }) {
         display: grid;
         place-items: center;
         width: 100%;
-        min-height: calc(100% - 4gu * 2);
+        height: calc(100vh - 4gu * 2);
       `}
     >
       {children}
