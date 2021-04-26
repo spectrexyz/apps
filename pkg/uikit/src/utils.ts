@@ -1,3 +1,5 @@
+import { useRef } from "react"
+
 export function addSlash(path: string) {
   return path.endsWith("/") ? path : path + "/"
 }
@@ -5,15 +7,15 @@ export function addSlash(path: string) {
 function list(count: number): number[]
 function list<T extends unknown>(
   count: number,
-  callback: (index: number) => T
+  callback: (index: number, steps: number) => T
 ): T[]
 
 function list<T extends unknown>(
   count: number,
-  callback?: (index: number) => T
+  callback?: (index: number, steps: number) => T
 ): T[] {
   const _callback = callback || ((index) => index as T)
-  return Array.from(Array(count), (_, index) => _callback(index))
+  return Array.from(Array(count), (_, index) => _callback(index, count))
 }
 export { list }
 
@@ -38,4 +40,8 @@ export function map(
   ostop: number
 ): number {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
+}
+
+export function useUid(prefix = "uid") {
+  return useRef(`${prefix}-${Math.round(Math.random() * 10 ** 8)}`).current
 }

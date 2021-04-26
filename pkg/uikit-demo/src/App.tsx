@@ -9,12 +9,14 @@ import { NftProvider, FetcherDeclarationEthers } from "use-nft"
 import { Spectre } from "./Spectre"
 import { NftCollection } from "./NftCollection"
 import { Moire } from "./Moire"
+import { Chart } from "./Chart"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
   ["spectre", () => <Spectre />, true],
   ["button", () => <Button label="Enable account" />, true],
-  ["moire", () => <Moire />, true],
+  ["moire", () => <Moire style={{ borderRadius: "50%" }} />, true],
+  ["chart", () => <Chart />, true],
 ] as [string, FC, boolean][]
 
 function currentLocation() {
