@@ -15,8 +15,11 @@ const shader = `
 #extension GL_OES_standard_derivatives : enable
 
 precision mediump float;
+
 uniform vec2 resolution;
 uniform float time;
+uniform float seed;
+
 float t = time * 0.0001;
 
 // snoise() license:
@@ -120,14 +123,14 @@ void main() {
 
   vec2 uv = vec2(-resolution.xy + 2. * gl_FragCoord.xy) / resolution.y * 0.5;
 
-  float gradientNoise = snoise(vec3(uv.x + uv.y / 8.0, uv.y / 8.0, t)) * 0.05;
+  float gradientNoise = snoise(vec3(uv.x + uv.y / 8.0, uv.y / 8.0, t + seed)) * 0.05;
   float gradient = mod(gradientNoise, 0.1) / 0.1;
   gradient = (min(gradient * 0.4, 1.0) - max(gradient - 0.6, 0.0)) * 4.0;
   gradient = clamp(gradient, 0.0, 1.0);
 
   float lineSize = 1. / 180.;
   float lineWeight = mix(0.0, 0.8, 1.2);
-  float lineNoise = snoise(vec3(uv.x, uv.y, t)) * 0.8;
+  float lineNoise = snoise(vec3(uv.x, uv.y, t + seed)) * 0.8;
   lineNoise = mix(lineNoise, dot(uv, vec2(.4, 1.)*.4), 0.9);
 
   float lines = mod(lineNoise, lineSize) / lineSize;
@@ -153,6 +156,7 @@ const VS = `
 
 export function Moire({ width = WIDTH, height = HEIGHT, speed = 1, ...props }) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
+  const seed = useRef(Math.random())
 
   useEffect(() => {
     const canvas = ref.current as HTMLCanvasElement
@@ -178,6 +182,7 @@ export function Moire({ width = WIDTH, height = HEIGHT, speed = 1, ...props }) {
 
       const uniforms = {
         time: time * speed,
+        seed: seed.current * 1000 * speed,
         resolution: [width, height],
       }
       setUniforms(programInfo, uniforms)
