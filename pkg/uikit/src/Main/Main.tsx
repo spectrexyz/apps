@@ -41,7 +41,8 @@ export function Main({ children }: MainProps) {
           h1,
           h2,
           pre,
-          button {
+          button,
+          svg {
             font: ${fonts.sizes.normal} / ${fonts.line} ${fontFamily};
           }
           body {

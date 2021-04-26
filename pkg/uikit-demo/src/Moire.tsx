@@ -8,6 +8,9 @@ import {
   setUniforms,
 } from "twgl.js"
 
+const PX_RATIO = window.devicePixelRatio
+const [WIDTH, HEIGHT] = [500, 500]
+
 const shader = `
 #extension GL_OES_standard_derivatives : enable
 
@@ -111,6 +114,8 @@ float snoise(vec3 v) {
                                 dot(p2,x2), dot(p3,x3) ) );
 }
 
+//  fwidth isolines technique adapted from
+//  https://www.shadertoy.com/view/Xt3yDS
 void main() {
 
   vec2 uv = vec2(-resolution.xy + 2. * gl_FragCoord.xy) / resolution.y * 0.5;
@@ -120,8 +125,8 @@ void main() {
   gradient = (min(gradient * 0.4, 1.0) - max(gradient - 0.6, 0.0)) * 4.0;
   gradient = clamp(gradient, 0.0, 1.0);
 
-  float lineSize = 1. / 120.;
-  float lineWeight = mix(0.0, 0.8, 1.4);
+  float lineSize = 1. / 180.;
+  float lineWeight = mix(0.0, 0.8, 1.2);
   float lineNoise = snoise(vec3(uv.x, uv.y, t)) * 0.8;
   lineNoise = mix(lineNoise, dot(uv, vec2(.4, 1.)*.4), 0.9);
 
@@ -139,9 +144,6 @@ void main() {
 }
 `
 
-const PX_RATIO = window.devicePixelRatio
-const [WIDTH, HEIGHT] = [500, 500]
-
 const VS = `
   attribute vec4 position;
   void main() {
@@ -149,7 +151,7 @@ const VS = `
   } 
 `
 
-export function Moire() {
+export function Moire({ width = WIDTH, height = HEIGHT, speed = 1, ...props }) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
 
   useEffect(() => {
@@ -175,8 +177,8 @@ export function Moire() {
       }
 
       const uniforms = {
-        time,
-        resolution: [WIDTH, HEIGHT],
+        time: time * speed,
+        resolution: [width, height],
       }
       setUniforms(programInfo, uniforms)
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
@@ -191,10 +193,11 @@ export function Moire() {
   return (
     <canvas
       ref={ref}
-      width={WIDTH}
-      height={HEIGHT}
+      width={width}
+      height={height}
+      {...props}
       css={css`
-        border-radius: 50%;
+        display: block;
       `}
     />
   )
