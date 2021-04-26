@@ -2,6 +2,7 @@
 import type { DetailedHTMLProps, ButtonHTMLAttributes } from "react"
 
 import { jsx, css } from "@emotion/react"
+import { colors } from "../styles"
 
 export type ButtonAreaProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -26,7 +27,8 @@ export function ButtonArea(props: ButtonAreaProps) {
           outline: 0;
         }
         &:focus-visible {
-          outline: 2px solid red;
+          outline: 2px solid ${colors.background};
+          box-shadow: 0 0 0 4px ${colors.primary};
         }
       `}
     />
