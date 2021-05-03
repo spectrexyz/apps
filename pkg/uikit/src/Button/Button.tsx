@@ -1,13 +1,20 @@
 /** @jsx jsx */
+import type { MoireMode } from "../Moire/Moire"
+
 import { jsx, css } from "@emotion/react"
 import { Moire } from "../Moire"
-import { colors } from "../styles"
+import { theme } from "../styles"
+
+type ButtonMode = "outline" | "filled" | "outline-alt" | "filled-alt"
 
 type ButtonProps = {
   label: string
+  mode: ButtonMode
 }
 
-export function Button({ label }: ButtonProps) {
+export function Button({ mode = "outline", label }: ButtonProps) {
+  const baseColor = mode.endsWith("-alt") ? theme.secondary : theme.primary
+  const filled = mode.startsWith("filled")
   return (
     <button
       type="button"
@@ -44,8 +51,9 @@ export function Button({ label }: ButtonProps) {
           place-items: center;
           height: 100%;
           padding: 0 1.5gu;
-          background: ${colors.background};
-          border: 1px solid ${colors.primary};
+          color: ${filled ? theme.background : theme.content};
+          background: ${filled ? baseColor : theme.background};
+          border: 1px solid ${baseColor};
         `}
       >
         {label}
@@ -71,12 +79,20 @@ export function Button({ label }: ButtonProps) {
             left: 0;
             right: 0;
             bottom: 0;
-            background: ${colors.primary};
+            background: ${baseColor};
             opacity: 0;
           `}
         />
-        <Moire duration={6 * 60 * 1000} />
+        <Moire mode={moireMode(mode)} duration={6 * 60 * 1000} />
       </div>
     </button>
   )
+}
+
+function moireMode(buttonMode: ButtonMode): MoireMode {
+  if (buttonMode === "outline") return "dark"
+  if (buttonMode === "filled") return "light"
+  if (buttonMode === "outline-alt") return "dark-alt"
+  if (buttonMode === "filled-alt") return "light-alt"
+  throw new Error(`Incorrect button mode: ${buttonMode}`)
 }

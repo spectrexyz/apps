@@ -2,16 +2,36 @@
 export const gu = 8
 
 export const colors = {
-  primary: "#AAFFE4",
-  secondary: "#EF79F8",
-  background: "#04131F",
+  altBlue: "#141D2F",
+  brightGreen: "#58FFCA",
+  darkBlue: "#050E1F",
+  paleMauve: "#C0BBFF",
+  whiteGreen: "#AAFFE4",
+  whitePink: "#EDFCFF",
+}
+
+export const theme = {
+  primary: colors.brightGreen,
+  secondary: colors.paleMauve,
+  background: colors.darkBlue,
+  contrast: colors.altBlue,
+  content: colors.whitePink,
+  contentAlt: colors.whiteGreen,
+  link: colors.paleMauve,
 }
 
 export const fonts = {
   line: "1.5",
   sizes: {
     small: "12px",
-    normal: "18px",
-    large: "42px",
+    normalMono: "16px",
+    normalSans: "18px",
+    largeMono: "20px",
+    largeSans: "22px",
+    xlarge: "44px",
+  },
+  families: {
+    mono: '"IBM Plex Mono", monospace',
+    sans: "Inter, sans-serif",
   },
 }

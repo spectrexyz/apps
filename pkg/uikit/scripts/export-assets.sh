@@ -8,7 +8,7 @@ rsync \
   --include="*/" \
   --include="*.svg" \
   --include="*.png" \
-  --include="*.ttf" \
+  --include="*.woff2" \
   --exclude="*" \
   --prune-empty-dirs \
   "src/" "dist-assets/"
