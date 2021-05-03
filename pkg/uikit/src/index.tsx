@@ -1,7 +1,7 @@
 export { Button } from "./Button"
 export { ButtonArea } from "./ButtonArea"
 export { ButtonIcon } from "./ButtonIcon"
-export { Moire, useMoireImage } from "./Moire"
+export { GLMoire, Moire, useMoireImage } from "./Moire"
 export { Uikit } from "./Uikit"
 export { BaseUrl, useBaseUrl } from "./BaseUrl"
 export { colors, fonts, gu, theme } from "./styles"
