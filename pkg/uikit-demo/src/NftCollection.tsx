@@ -6,7 +6,7 @@ import {
   IconArrowDown,
   IconArrowUp,
   IconCollection,
-  colors,
+  theme,
   gu,
   lerp,
   list,
@@ -492,8 +492,8 @@ function NftCards({
               style={{
                 background: leaving.to((lf) =>
                   grid || id === cards[0].id || lf
-                    ? colors.primary
-                    : colors.background
+                    ? theme.primary
+                    : theme.background
                 ),
                 transform: to(
                   [position, angle, scale],

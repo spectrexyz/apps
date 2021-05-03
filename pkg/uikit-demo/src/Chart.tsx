@@ -10,7 +10,7 @@ import React, {
 } from "react"
 import { css } from "@emotion/react"
 import { useChain, useSpring, useSpringRef, a } from "react-spring"
-import { list, lerp, fonts, colors, smoothPath, useUid, gu } from "uikit"
+import { list, lerp, fonts, theme, smoothPath, useUid, gu } from "uikit"
 import { Moire } from "./Moire"
 
 type Point = [number, number]
@@ -644,6 +644,7 @@ function Curve({
 
   const endPointFrom: Point = [
     curvePoints[curvePoints.length - 1][0],
+    graphPoint(1, 0)[1],
     graphPoint(0, 0)[1],
   ]
   const endPointTo: Point = [
@@ -651,16 +652,17 @@ function Curve({
     curvePoints[curvePoints.length - 1][1],
   ]
 
-  const curvePathInterpolation = showProgress.to(
+  // +4 horizontally to ensure that no gradient is visible during the reveal.
+  const revealRectangleInterpolation = showProgress.to(
     (p) => `
       M
         ${lerp(p, PADDING.sides, width - (width - endPointTo[0]))}
         ${PADDING.top}
       L
-        ${width - (width - endPointTo[0])}
+        ${width - (width - endPointTo[0]) + 4}
         ${PADDING.top}
       L
-        ${width - (width - endPointTo[0])}
+        ${width - (width - endPointTo[0]) + 4}
         ${height - PADDING.bottom}
       L
         ${lerp(p, PADDING.sides, width - (width - endPointTo[0]))}
@@ -676,12 +678,12 @@ function Curve({
         <mask id={uid}>
           <rect width={width} height={height} fill="white" />
           <a.path d={curvePath(1, true)} fill="black" />
-          <a.path d={curvePathInterpolation} fill="white" />
+          <a.path d={revealRectangleInterpolation} fill="white" />
         </mask>
         <rect
           width={width}
           height={height}
-          fill={colors.background}
+          fill={theme.background}
           mask={`url(#${uid})`}
         />
         <VariableStrokePath
@@ -697,14 +699,14 @@ function Curve({
 
       <mask id={`${uid}-reveal-mask`}>
         <rect width={width} height={height} fill="white" />
-        <a.path d={curvePathInterpolation} fill="black" />
+        <a.path d={revealRectangleInterpolation} fill="black" />
       </mask>
 
       <a.rect
         opacity={showProgress.to([0, 0.2, 1], [1, 1, 0])}
         width={width}
         height={height}
-        fill={colors.background}
+        fill={theme.background}
       />
 
       <RectanglePoint
@@ -714,18 +716,19 @@ function Curve({
         `}
         pointFrom={endPointFrom}
         pointTo={endPointTo}
-        showProgress={showProgress}
+        showProgress={showProgress.to([0, 0.8, 1], [0, 0, 1])}
         xEnd={width - PADDING.sides}
         yEnd={height - PADDING.bottom}
       />
 
       <a.g
-        transform={showProgress.to(
+        transform={showProgress.to([0, 0.8, 1], [0, 0, 1]).to(
           (p) => `
             translate(
               ${lerp(p, endPointFrom[0], endPointTo[0])}
               ${lerp(p, endPointFrom[1], endPointTo[1])}
             )
+            scale(${p} ${p})
           `
         )}
       >
