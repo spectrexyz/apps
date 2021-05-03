@@ -4,7 +4,7 @@ import type { ButtonAreaProps } from "../ButtonArea"
 
 import { jsx, css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
-import { colors } from "../styles"
+import { theme } from "../styles"
 
 type ButtonIconProps = ButtonAreaProps & {
   icon: ReactNode
@@ -23,8 +23,8 @@ export function ButtonIcon({
         position: relative;
         width: 5gu;
         height: 5gu;
-        color: ${mode === "outline" ? colors.primary : colors.background};
-        background: ${mode === "outline" ? colors.background : colors.primary};
+        color: ${mode === "outline" ? theme.primary : theme.background};
+        background: ${mode === "outline" ? theme.background : theme.primary};
         &:active {
           transform: translate(1px, 1px);
         }
@@ -36,7 +36,7 @@ export function ButtonIcon({
           left: 0;
           right: 0;
           bottom: 0;
-          border: 3px solid ${colors.primary};
+          border: 3px solid ${theme.primary};
         }
       `}
     >

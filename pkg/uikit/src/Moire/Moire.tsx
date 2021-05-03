@@ -3,10 +3,12 @@ import { css, jsx } from "@emotion/react"
 import { useSpring, animated } from "react-spring"
 import { useBaseUrl } from "../BaseUrl"
 
-type MoireProps = {
+export type MoireMode = "dark" | "light" | "dark-alt" | "light-alt"
+
+export type MoireProps = {
   animate?: boolean
   duration?: number
-  mode?: "dark" | "light"
+  mode?: MoireMode
 }
 
 function circlePos(progress: number, radius: number) {
@@ -35,7 +37,7 @@ function useMoireTransform({
   })
 }
 
-export function useMoireImage(mode: "dark" | "light" = "dark") {
+export function useMoireImage(mode: MoireMode = "dark") {
   return useBaseUrl(`Moire/moire-${mode}.svg`)
 }
 
