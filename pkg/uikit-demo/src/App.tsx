@@ -1,21 +1,20 @@
 import type { FC, ReactNode } from "react"
 
 import React, { useState, useEffect } from "react"
-import { Uikit, Button } from "uikit"
+import { GLMoire, Uikit, Button } from "uikit"
 import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
 import { providers, Contract } from "ethers"
 import { NftProvider, FetcherDeclarationEthers } from "use-nft"
 import { Spectre } from "./Spectre"
 import { NftCollection } from "./NftCollection"
-import { Moire } from "./Moire"
 import { Chart } from "./Chart"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
   ["spectre", () => <Spectre />, true],
   ["button", () => <Button label="Enable account" />, true],
-  ["moire", () => <Moire style={{ borderRadius: "50%" }} />, true],
+  ["moire", () => <GLMoire style={{ borderRadius: "50%" }} />, true],
   ["chart", () => <Chart />, true],
 ] as [string, FC, boolean][]
 
