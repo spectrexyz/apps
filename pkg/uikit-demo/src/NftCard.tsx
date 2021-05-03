@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Moire, colors, fonts, gu } from "uikit"
+import { Moire, theme, fonts, gu } from "uikit"
 import { useNft } from "use-nft"
 
 type NftCardProps = {
@@ -27,8 +27,8 @@ export const NftCard = React.memo(function NftCard({
     <div
       css={css`
         width: 35gu;
-        color: ${colors.background};
-        border: 3px solid ${colors.primary};
+        color: ${theme.background};
+        border: 3px solid ${theme.primary};
         font-size: ${fonts.sizes.small};
       `}
     >
@@ -41,7 +41,7 @@ export const NftCard = React.memo(function NftCard({
           height: 27gu;
           object-fit: cover;
           object-position: 50% 50%;
-          background: ${colors.background};
+          background: ${theme.background};
           image-rendering: ${active ? "auto" : "crisp-edges"};
         `}
       />
@@ -114,8 +114,8 @@ function Tag({ label }: { label: string }) {
           max-width: 100%;
           height: 100%;
           padding: 0 1.5gu;
-          color: ${colors.primary};
-          background: ${colors.background};
+          color: ${theme.primary};
+          background: ${theme.background};
 
           // truncating
           overflow: hidden;
