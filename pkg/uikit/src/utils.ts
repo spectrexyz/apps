@@ -45,3 +45,23 @@ export function map(
 export function useUid(prefix = "uid") {
   return useRef(`${prefix}-${Math.round(Math.random() * 10 ** 8)}`).current
 }
+
+export function raf(callback: (time: number) => void, interval = 1000 / 60) {
+  let rafId: number
+  let lastUpdate = Date.now()
+
+  const loop = (time: number) => {
+    rafId = requestAnimationFrame(loop)
+
+    const now = Date.now()
+    if (now - lastUpdate < interval) {
+      return
+    }
+    lastUpdate = now
+
+    callback(time)
+  }
+  rafId = requestAnimationFrame(loop)
+
+  return () => cancelAnimationFrame(rafId)
+}
