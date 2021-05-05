@@ -3,11 +3,13 @@ node_modules/
 .cache/
 .env
 dist/
+dist-ssr/
+*.local
 
-.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/releases
+!**/.yarn/plugins
+!**/.yarn/sdks
+!**/.yarn/versions
 .pnp.*

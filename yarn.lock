@@ -4136,6 +4136,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"colord@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "colord@npm:1.5.0"
+  checksum: b2761a47ea65ccd267e90170577a2a8d29873cf73f1ca0335abf12c9330565492ca1bcda14bceb6923fd960fdea5887d9ba61736b5054298053276d57f21065e
+  languageName: node
+  linkType: hard
+
 "colorette@npm:^1.2.1, colorette@npm:^1.2.2":
   version: 1.2.2
   resolution: "colorette@npm:1.2.2"
@@ -12584,6 +12591,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-cool-inview@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "react-cool-inview@npm:2.0.4"
+  peerDependencies:
+    react: ">= 16.8.0"
+  checksum: ef377f7390805c28ba443ba9a33e74120d164b72df5ecca96b789339e59b7f0974eb3bc7433b050b91bcbe9680611fb977abc30fca9d2f801695070bd3a18386
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
@@ -15312,6 +15328,7 @@ typescript@^4.2.4:
     "@types/react-dom": ^17.0.3
     "@typescript-eslint/eslint-plugin": ^4.22.0
     "@typescript-eslint/parser": ^4.22.0
+    colord: ^1.5.0
     eslint: ^7.25.0
     eslint-plugin-import: ^2.22.1
     eslint-plugin-jsx-a11y: ^6.4.1
@@ -15951,10 +15968,13 @@ typescript@^4.2.4:
   dependencies:
     "@emotion/react": ^11.1.5
     "@vitejs/plugin-react-refresh": ^1.3.3
+    ethers: ^5.1.4
     react: ^17.0.2
+    react-cool-inview: ^2.0.4
     react-dom: ^17.0.2
     react-spring: ^9.1.2
     uikit: "workspace:pkg/uikit"
+    use-nft: ^0.6.0
     use-viewport: "git://github.com/aragon/use-viewport.git#master"
     vite: ^2.2.3
   languageName: unknown
