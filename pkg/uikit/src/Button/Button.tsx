@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
 import type { MoireMode } from "../Moire/Moire"
 
 import { jsx, css } from "@emotion/react"
@@ -7,22 +8,27 @@ import { theme } from "../styles"
 
 type ButtonMode = "outline" | "filled" | "outline-alt" | "filled-alt"
 
-type ButtonProps = {
+type ButtonProps = DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> & {
   label: string
   mode: ButtonMode
 }
 
-export function Button({ mode = "outline", label }: ButtonProps) {
+export function Button({ mode = "outline", label, ...props }: ButtonProps) {
   const baseColor = mode.endsWith("-alt") ? theme.secondary : theme.primary
   const filled = mode.startsWith("filled")
+
   return (
     <button
       type="button"
+      {...props}
       css={css`
         position: relative;
         display: inline-grid;
         place-items: center;
-        height: 5gu;
+        height: 5.5gu;
         cursor: pointer;
         outline: 0;
         text-align: center;
@@ -49,6 +55,7 @@ export function Button({ mode = "outline", label }: ButtonProps) {
           z-index: 2;
           display: grid;
           place-items: center;
+          width: 100%;
           height: 100%;
           padding: 0 1.5gu;
           color: ${filled ? theme.background : theme.content};
