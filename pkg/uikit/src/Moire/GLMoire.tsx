@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React, { useEffect, useRef } from "react"
 import { jsx, css } from "@emotion/react"
+import { colord } from "colord"
 import {
   createBufferInfoFromArrays,
   createProgramInfo,
@@ -10,7 +11,22 @@ import {
 } from "twgl.js"
 import { raf } from "../utils"
 
-export function GLMoire({ width = 500, height = 500, speed = 1, ...props }) {
+type GLMoireProps = {
+  backgroundColor?: string
+  height?: number
+  linesColor?: string
+  speed?: number
+  width?: number
+}
+
+export function GLMoire({
+  linesColor = "rgb(7, 255, 176)",
+  backgroundColor = "rgb(4, 19, 31)",
+  width = 500,
+  height = 500,
+  speed = 1,
+  ...props
+}: GLMoireProps) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
   const seed = useRef(Math.random())
 
@@ -31,6 +47,9 @@ export function GLMoire({ width = 500, height = 500, speed = 1, ...props }) {
     setBuffersAndAttributes(gl, programInfo, bufferInfo)
     gl.useProgram(programInfo.program)
 
+    const _linesColor = shadersColor(linesColor)
+    const _backgroundColor = shadersColor(backgroundColor)
+
     const stopRaf = raf((time) => {
       if (!ref.current) {
         return
@@ -40,6 +59,8 @@ export function GLMoire({ width = 500, height = 500, speed = 1, ...props }) {
         time: time * speed,
         seed: seed.current * 1000 * speed,
         resolution: [width, height],
+        linesColor: _linesColor,
+        backgroundColor: _backgroundColor,
       }
       setUniforms(programInfo, uniforms)
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
@@ -72,6 +93,8 @@ precision mediump float;
 uniform vec2 resolution;
 uniform float time;
 uniform float seed;
+uniform vec3 linesColor;
+uniform vec3 backgroundColor;
 
 float t = time * 0.0001;
 
@@ -192,11 +215,7 @@ void main() {
   lines -= lineWeight - 1.;
   lines = clamp(lines, 0.0, 1.0);
 
-  vec3 green = vec3(7.0 / 255.0, 1.0, 176.0 / 255.0);
-  vec3 blue = vec3(4.0 / 255.0, 19.0 / 255.0, 31.0 / 255.0);
-  vec3 white = vec3(1.0, 1.0, 1.0);
-
-  gl_FragColor = vec4(mix(mix(green, blue, lines), blue, gradient), 1.0);
+  gl_FragColor = vec4(mix(mix(linesColor, backgroundColor, lines), backgroundColor, gradient), 1.0);
 }
 `
 
@@ -206,3 +225,8 @@ const VS = `
     gl_Position = position;
   } 
 `
+
+function shadersColor(value: string): [number, number, number] {
+  const { r, g, b } = colord(value).toRgb()
+  return [r / 255, g / 255, b / 255]
+}

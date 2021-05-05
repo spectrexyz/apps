@@ -69,7 +69,8 @@ export function Main({ children }: MainProps) {
           h2,
           pre,
           button,
-          svg {
+          svg,
+          input {
             font: ${fonts.sizes.normalMono} / ${fonts.line}
               ${fonts.families.mono};
           }

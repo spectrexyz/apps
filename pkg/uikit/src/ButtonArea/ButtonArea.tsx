@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import type { DetailedHTMLProps, ButtonHTMLAttributes } from "react"
+import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
 
 import { jsx, css } from "@emotion/react"
 import { theme } from "../styles"
