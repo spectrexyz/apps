@@ -10,9 +10,13 @@ import discord from "./discord.svg"
 import mail from "./mail.svg"
 import twitter from "./twitter.svg"
 
+// const MENU_ITEMS = [
+//   ["About", "/about"],
+//   ["Litepaper", "/litepaper"],
+// ]
 const MENU_ITEMS = [
-  ["About", "/about"],
-  ["Litepaper", "/litepaper"],
+  ["About", "/"],
+  ["Litepaper", "/"],
 ]
 
 const ACTIONS = [
@@ -77,7 +81,8 @@ function Actions() {
       `}
     >
       {ACTIONS.map(([label, icon, url], index) => {
-        const targetProp = url.startsWith("#") ? {} : { target: "_blank" }
+        const anchor = url.startsWith("#")
+        const targetProp = anchor ? {} : { target: "_blank" }
         return (
           <a key={index} href={url} {...targetProp}>
             <img
@@ -113,8 +118,8 @@ function Menu({ items }) {
         }
       `}
     >
-      {items.map(([label, path]) => (
-        <li key={path}>
+      {items.map(([label, path], index) => (
+        <li key={index}>
           <Link href={path}>{label}</Link>
         </li>
       ))}

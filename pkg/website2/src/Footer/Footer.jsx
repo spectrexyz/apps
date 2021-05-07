@@ -1,5 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
+import { useLocation, Link } from "wouter"
 import { theme } from "uikit"
 import { useLayoutConstraints } from "../utils.js"
 import { footerLinks } from "../content.js"
@@ -7,6 +8,7 @@ import { footerLinks } from "../content.js"
 import logo from "./footer-logo.png"
 
 export function Footer() {
+  const [location, setLocation] = useLocation()
   const [minWidth, maxWidth] = useLayoutConstraints()
   return (
     <div
@@ -32,9 +34,15 @@ export function Footer() {
           }
         `}
       >
-        <div>
-          <img src={logo} width="125" height="32" alt="" />
-        </div>
+        <a
+          rel="button"
+          onClick={() => {
+            window.location.hash = ""
+            setLocation("/")
+          }}
+        >
+          <img src={logo} width="125" height="32" alt="Spectre" />
+        </a>
         <div
           css={css`
             &:before {
@@ -53,7 +61,7 @@ export function Footer() {
           `}
         >
           {footerLinks.map(({ label, url }) => (
-            <a key={url} href={url}>
+            <a key={url} href={url} target="_blank">
               {label}
             </a>
           ))}

@@ -5,7 +5,7 @@ const GradientContext = createContext(null)
 
 export function Spectre({ animate }) {
   const gradient = useSpring({
-    pause: !animate,
+    cancel: !animate,
     loop: { reverse: true },
     from: { progress: 0 },
     to: { progress: 1 },

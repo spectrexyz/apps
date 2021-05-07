@@ -1,53 +1,27 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/react"
+import { gu } from "../styles"
 
-export function IconCollection({ size = 40, color = "currentColor" }) {
+export function IconCollection({ size = 6 * gu, color = "currentColor" }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 80 80"
+      viewBox="0 0 48 48"
       fill="none"
       css={css`
         display: block;
       `}
     >
-      <path
-        d="M23.7932 16L16.0039 23.7761L24.1603 23.7964V31.9186L32.1535 23.9389V16H23.7932Z"
-        fill={color}
-      />
-      <path
-        d="M23.7932 31.9182L16.0039 39.6943L24.1603 39.7147V47.8368L32.1535 39.8571V31.9182H23.7932Z"
-        fill={color}
-      />
-      <path
-        d="M23.7932 47.8374L16.0039 55.6135L24.1603 55.6338V63.756L32.1535 55.7763V47.8374H23.7932Z"
-        fill={color}
-      />
-      <path
-        d="M39.718 16.1428L31.9287 23.9189L40.0851 23.9393V32.0614L48.0783 24.0818V16.1428H39.718Z"
-        fill={color}
-      />
-      <path
-        d="M39.7171 32.061L31.9277 39.8371L40.0841 39.8575V47.9796L48.0773 40V32.061H39.7171Z"
-        fill={color}
-      />
-      <path
-        d="M39.7171 47.9792L31.9277 55.7553L40.0841 55.7757V63.8978L48.0773 55.9182V47.9792H39.7171Z"
-        fill={color}
-      />
-      <path
-        d="M55.6428 16.2451L47.8535 24.0212L56.0099 24.0416V32.1637L64.0031 24.1841V16.2451H55.6428Z"
-        fill={color}
-      />
-      <path
-        d="M55.6428 32.1628L47.8535 39.9389L56.0099 39.9593V48.0814L64.0031 40.1018V32.1628H55.6428Z"
-        fill={color}
-      />
-      <path
-        d="M55.6428 48.0815L47.8535 55.8576L56.0099 55.878V64.0001L64.0031 56.0205V48.0815H55.6428Z"
-        fill={color}
-      />
+      <rect x="12" y="30" width="6" height="6" fill={color} />
+      <rect x="12" y="21" width="6" height="6" fill={color} />
+      <rect x="12" y="12" width="6" height="6" fill={color} />
+      <rect x="21" y="30" width="6" height="6" fill={color} />
+      <rect x="21" y="21" width="6" height="6" fill={color} />
+      <rect x="21" y="12" width="6" height="6" fill={color} />
+      <rect x="30" y="30" width="6" height="6" fill={color} />
+      <rect x="30" y="21" width="6" height="6" fill={color} />
+      <rect x="30" y="12" width="6" height="6" fill={color} />
     </svg>
   )
 }

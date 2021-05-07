@@ -64,6 +64,9 @@ export function Main({ children }: MainProps) {
           ul {
             margin: 0;
           }
+          html {
+            scroll-behavior: smooth;
+          }
           body,
           h1,
           h2,
@@ -96,14 +99,7 @@ export function Main({ children }: MainProps) {
           }
         `}
       />
-      <div
-        css={css`
-          width: 100vw;
-          height: 100vh;
-        `}
-      >
-        {children}
-      </div>
+      {children}
     </Fragment>
   )
 }

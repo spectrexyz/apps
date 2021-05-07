@@ -1,6 +1,7 @@
 import React from "react"
 import { css } from "@emotion/react"
 import { GLMoire, fonts, theme, gu } from "uikit"
+import useInView from "react-cool-inview"
 import { steps } from "../content.js"
 import { AsciiSquare } from "./AsciiSquare.jsx"
 
@@ -134,8 +135,10 @@ function Visual1() {
 }
 
 function Visual2() {
+  const { observe, inView } = useInView()
   return (
     <div
+      ref={observe}
       css={css`
         position: relative;
         width: 51gu;
@@ -143,6 +146,7 @@ function Visual2() {
       `}
     >
       <GLMoire
+        animate={inView}
         width={51 * 1.5 * gu}
         height={51 * 1.5 * gu}
         speed={0.5}
@@ -166,8 +170,10 @@ function Visual2() {
 }
 
 function Visual3() {
+  const { observe, inView } = useInView()
   return (
     <div
+      ref={observe}
       css={css`
         display: grid;
         place-items: center;
@@ -177,7 +183,7 @@ function Visual3() {
         background: ${theme.contrast};
       `}
     >
-      <AsciiSquare word="" size={50 * gu} />
+      <AsciiSquare word="" size={50 * gu} animate={inView} />
     </div>
   )
 }

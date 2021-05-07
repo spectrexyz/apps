@@ -12,6 +12,7 @@ import {
 import { raf } from "../utils"
 
 type GLMoireProps = {
+  animate?: boolean
   backgroundColor?: string
   height?: number
   linesColor?: string
@@ -20,7 +21,8 @@ type GLMoireProps = {
 }
 
 export function GLMoire({
-  linesColor = "rgb(7, 255, 176)",
+  animate = true,
+  linesColor = "rgb(88, 255, 202)",
   backgroundColor = "rgb(4, 19, 31)",
   width = 500,
   height = 500,
@@ -29,6 +31,11 @@ export function GLMoire({
 }: GLMoireProps) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
   const seed = useRef(Math.random())
+
+  const _animate = useRef(animate)
+  useEffect(() => {
+    _animate.current = animate
+  }, [animate])
 
   useEffect(() => {
     const canvas = ref.current as HTMLCanvasElement
@@ -51,7 +58,7 @@ export function GLMoire({
     const _backgroundColor = shadersColor(backgroundColor)
 
     const stopRaf = raf((time) => {
-      if (!ref.current) {
+      if (!ref.current || !_animate.current) {
         return
       }
 
