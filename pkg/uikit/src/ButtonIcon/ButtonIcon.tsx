@@ -21,8 +21,8 @@ export function ButtonIcon({
       {...props}
       css={css`
         position: relative;
-        width: 5gu;
-        height: 5gu;
+        width: 6gu;
+        height: 6gu;
         color: ${mode === "outline" ? theme.primary : theme.background};
         background: ${mode === "outline" ? theme.background : theme.primary};
         &:active {
