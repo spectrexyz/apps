@@ -1,5 +1,5 @@
-import React from "react"
-import { Route } from "wouter"
+import React, { useEffect, useRef } from "react"
+import { useLocation, Route, Switch } from "wouter"
 import { NftProvider } from "use-nft"
 import { Contract, getDefaultProvider } from "ethers"
 import Base from "./Base.jsx"
@@ -15,17 +15,32 @@ const fetcher = [
   },
 ]
 
+function useResetScroll() {
+  const [{ pathname }] = useLocation()
+  const initialPathname = useRef(true)
+  useEffect(() => {
+    if (initialPathname.current) {
+      initialPathname.current = false
+      return
+    }
+    window.scrollTo(0, 0)
+  }, [pathname])
+}
+
 function App() {
+  useResetScroll()
   return (
     <NftProvider fetcher={fetcher}>
       <Base>
         <Header />
         <main>
-          <Route path="/">
-            <Home />
-          </Route>
-          <Route path="/about">About</Route>
-          <Route path="/litepaper">Litepaper</Route>
+          <Switch>
+            <Route path="/">
+              <Home />
+            </Route>
+            <Route path="/about">About</Route>
+            <Route path="/litepaper">Litepaper</Route>
+          </Switch>
         </main>
         <Footer />
       </Base>

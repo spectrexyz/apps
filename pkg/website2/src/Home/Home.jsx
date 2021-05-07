@@ -15,11 +15,11 @@ export function Home() {
         align-items: center;
       `}
     >
-      {true && <Hero />}
-      {true && <Steps />}
-      {true && <Partnership />}
-      {true && <NftCardsSection />}
-      {true && <Subscribe />}
+      <Hero />
+      <Steps />
+      <Partnership />
+      <NftCardsSection />
+      <Subscribe />
     </div>
   )
 }

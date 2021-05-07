@@ -4,7 +4,7 @@ import { Moire, theme, fonts, gu } from "uikit"
 import { useNft } from "use-nft"
 
 export const NftCard = React.memo(function NftCard({
-  active,
+  inFront,
   contract,
   tokenId,
 }) {
@@ -22,7 +22,7 @@ export const NftCard = React.memo(function NftCard({
     <div
       css={css`
         width: 35gu;
-        color: ${theme.background};
+        color: ${inFront ? theme.background : theme.content};
         border: 2px solid ${theme.primary};
         font-size: ${fonts.sizes.small};
       `}
@@ -38,7 +38,7 @@ export const NftCard = React.memo(function NftCard({
           object-position: 50% 50%;
           background: ${theme.background};
           border: 1px solid ${theme.primary};
-          image-rendering: ${active ? "auto" : "crisp-edges"};
+          image-rendering: ${inFront ? "auto" : "crisp-edges"};
         `}
       />
 
@@ -52,7 +52,7 @@ export const NftCard = React.memo(function NftCard({
             height: 3gu;
           `}
         >
-          {active && <Tag label={nft.name || "Untitled"} />}
+          <Tag label={nft.name || "Untitled"} inFront={inFront} />
         </div>
 
         <div
@@ -60,7 +60,7 @@ export const NftCard = React.memo(function NftCard({
             margin: 2gu 0 1gu;
           `}
         >
-          <a>{active ? author : "_"}</a>
+          <a>{author}</a>
         </div>
 
         <p
@@ -89,7 +89,7 @@ export const NftCard = React.memo(function NftCard({
   )
 })
 
-function Tag({ label }) {
+function Tag({ inFront, label }) {
   return (
     <div
       css={css`
@@ -110,8 +110,8 @@ function Tag({ label }) {
           max-width: 100%;
           height: 100%;
           padding: 0 1.5gu;
-          color: ${theme.primary};
-          background: ${theme.background};
+          color: ${inFront ? theme.primary : theme.background};
+          background: ${inFront ? theme.background : theme.primary};
 
           // truncating
           overflow: hidden;
@@ -137,7 +137,7 @@ function Tag({ label }) {
           pointer-events: none;
         `}
       >
-        <Moire mode="light" />
+        <Moire mode={inFront ? "light" : "dark"} />
       </div>
     </div>
   )

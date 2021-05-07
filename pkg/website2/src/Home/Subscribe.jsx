@@ -79,23 +79,21 @@ export function Subscribe() {
             </div>
           </form>
         </div>
-
-        {inView && (
-          <GLMoire
-            width={90 * gu}
-            height={90 * gu}
-            linesColor={theme.secondary}
-            backgroundColor={theme.background}
-            css={css`
-              position: absolute;
-              z-index: 1;
-              top: 0;
-              right: 0;
-              overflow: hidden;
-              border-radius: 50%;
-            `}
-          />
-        )}
+        <GLMoire
+          animate={inView}
+          width={90 * gu}
+          height={90 * gu}
+          linesColor={theme.secondary}
+          backgroundColor={theme.background}
+          css={css`
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            overflow: hidden;
+            border-radius: 50%;
+          `}
+        />
       </div>
     </div>
   )

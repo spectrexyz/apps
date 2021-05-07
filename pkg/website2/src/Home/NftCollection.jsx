@@ -5,6 +5,7 @@ import {
   ButtonIcon,
   IconArrowDown,
   IconArrowUp,
+  IconCards,
   IconCollection,
   theme,
   gu,
@@ -182,12 +183,17 @@ export function NftCollection({ nfts }) {
   const { gridProgress } = useSpring({ gridProgress: Number(grid) })
 
   return (
-    <div
+    <animated.div
       ref={containerRef}
+      style={{
+        height: gridProgress
+          .to([0, 1], [100 * gu, 125 * gu])
+          .to((v) => v + "px"),
+      }}
       css={css`
         display: grid;
         width: 100%;
-        min-height: 100%;
+        height: 100gu;
       `}
     >
       <div
@@ -243,10 +249,15 @@ export function NftCollection({ nfts }) {
                 gap: 1gu;
               `}
             >
-              <ButtonIcon onClick={toggleGrid} icon={<IconCollection />} />
+              <ButtonIcon
+                onClick={toggleGrid}
+                icon={<IconCollection />}
+                mode="outline"
+              />
               <ButtonIcon
                 onClick={() => rotate(false)}
                 icon={<IconArrowUp />}
+                mode="outline"
               />
               <ButtonIcon
                 onClick={() => rotate(true)}
@@ -267,17 +278,21 @@ export function NftCollection({ nfts }) {
               left: 0;
               z-index: 2;
               transform: translate3d(
-                ${gridBounds.x}px,
+                ${gridBounds.x + gridBounds.width - 6 * gu}px,
                 ${gridBounds.y - 50}px,
                 0
               );
             `}
           >
-            <ButtonIcon onClick={toggleGrid} icon={<IconCollection />} />
+            <ButtonIcon
+              onClick={toggleGrid}
+              icon={<IconCards />}
+              mode="outline"
+            />
           </animated.div>
         )}
       </div>
-    </div>
+    </animated.div>
   )
 }
 
@@ -449,7 +464,8 @@ function NftCards({
               <NftCard
                 contract={nft.contract}
                 tokenId={nft.tokenId}
-                active={grid || cards[0].id === id}
+                inFront={!grid && cards[0].id === id}
+                gridMode={grid}
               />
             </animated.div>
           )

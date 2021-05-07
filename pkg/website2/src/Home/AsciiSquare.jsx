@@ -15,8 +15,14 @@ export function AsciiSquare({
   size = 18.5 * gu,
   lineHeight = 2 * gu,
   updateInterval = 1000 / 60, // ms
+  animate = true,
 }) {
   const canvasRef = useRef()
+
+  const _animate = useRef(animate)
+  useEffect(() => {
+    _animate.current = animate
+  }, [animate])
 
   useEffect(() => {
     const ctx = initContext(canvasRef.current, size)
@@ -38,6 +44,10 @@ export function AsciiSquare({
     const finalGridJson = JSON.stringify(finalGrid)
 
     const stop = raf(() => {
+      if (!_animate.current) {
+        return
+      }
+
       if (gridJson === finalGridJson) {
         stop()
         return
@@ -53,7 +63,7 @@ export function AsciiSquare({
     }, updateInterval)
 
     return stop
-  }, [word, placeholder, wordPosition, size, lineHeight, updateInterval])
+  }, [lineHeight, placeholder, size, updateInterval, word, wordPosition])
 
   return (
     <canvas

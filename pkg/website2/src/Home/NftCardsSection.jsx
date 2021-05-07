@@ -33,13 +33,7 @@ export function NftCardsSection() {
       >
         {formatLineBreaks(nftCardsSection.description)}
       </p>
-      <div
-        css={css`
-          height: 100gu;
-        `}
-      >
-        <NftCollection nfts={nftCardsSection.nfts} />
-      </div>
+      <NftCollection nfts={nftCardsSection.nfts} />
     </section>
   )
 }

@@ -19,9 +19,6 @@ function BaseLayout({ children }) {
   return (
     <div
       css={css`
-        overflow: auto;
-        width: 100vw;
-        height: 100vh;
         background: ${theme.background};
         color: ${theme.content};
       `}
