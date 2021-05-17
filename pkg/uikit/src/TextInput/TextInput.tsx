@@ -17,7 +17,7 @@ export function TextInput(props: TextInputProps) {
         padding: 0 3gu;
         background: ${theme.background};
         border: 1px solid ${theme.secondary};
-        color: white;
+        color: ${theme.content};
         &:focus {
           outline: 2px solid ${theme.link};
         }

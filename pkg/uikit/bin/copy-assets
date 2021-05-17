@@ -12,4 +12,4 @@ const { status } = spawnSync(
   { stdio: "inherit" }
 )
 
-process.exitCode = status || 1
+process.exitCode = status ?? 1

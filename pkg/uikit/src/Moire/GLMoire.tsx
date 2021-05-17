@@ -16,22 +16,28 @@ type GLMoireProps = {
   backgroundColor?: string
   height?: number
   linesColor?: string
+  scale?: number
   speed?: number
   width?: number
 }
 
 export function GLMoire({
   animate = true,
-  linesColor = "rgb(88, 255, 202)",
   backgroundColor = "rgb(4, 19, 31)",
-  width = 500,
   height = 500,
+  linesColor = "rgb(88, 255, 202)",
+  scale = 1,
   speed = 1,
+  width = 500,
   ...props
 }: GLMoireProps) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
   const seed = useRef(Math.random())
 
+  width = Math.round(width)
+  height = Math.round(height)
+
+  const _firstFrameRendered = useRef(false)
   const _animate = useRef(animate)
   useEffect(() => {
     _animate.current = animate
@@ -58,20 +64,26 @@ export function GLMoire({
     const _backgroundColor = shadersColor(backgroundColor)
 
     const stopRaf = raf((time) => {
-      if (!ref.current || !_animate.current) {
+      if (!ref.current) {
+        return
+      }
+
+      if (!_animate.current && _firstFrameRendered.current) {
         return
       }
 
       const uniforms = {
         time: time * speed,
         seed: seed.current * 1000 * speed,
-        resolution: [width, height],
+        resolution: [width * scale, height * scale],
         linesColor: _linesColor,
         backgroundColor: _backgroundColor,
       }
       setUniforms(programInfo, uniforms)
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
       drawBufferInfo(gl, bufferInfo)
+
+      _firstFrameRendered.current = true
     }, 1000 / 60)
 
     return () => {
@@ -95,7 +107,7 @@ export function GLMoire({
 const shader = `
 #extension GL_OES_standard_derivatives : enable
 
-precision mediump float;
+precision highp float;
 
 uniform vec2 resolution;
 uniform float time;
@@ -206,10 +218,10 @@ void main() {
 
   vec2 uv = vec2(-resolution.xy + 2. * gl_FragCoord.xy) / resolution.y * 0.5;
 
-  float gradientNoise = snoise(vec3(uv.x + uv.y / 8.0, uv.y / 8.0, t + seed)) * 0.05;
-  float gradient = mod(gradientNoise, 0.1) / 0.1;
-  gradient = (min(gradient * 0.4, 1.0) - max(gradient - 0.6, 0.0)) * 4.0;
-  gradient = clamp(gradient, 0.0, 1.0);
+  float shadowNoise = snoise(vec3(uv.x + uv.y / 8.0, uv.y / 8.0, t + seed)) * 0.05;
+  float shadow = mod(shadowNoise, 0.1) / 0.1;
+  shadow = (min(shadow * 0.4, 1.0) - max(shadow - 0.6, 0.0)) * 4.0;
+  shadow = clamp(shadow, 0.0, 1.0);
 
   float lineSize = 1. / 180.;
   float lineWeight = mix(0.0, 0.8, 1.2);
@@ -222,7 +234,16 @@ void main() {
   lines -= lineWeight - 1.;
   lines = clamp(lines, 0.0, 1.0);
 
-  gl_FragColor = vec4(mix(mix(linesColor, backgroundColor, lines), backgroundColor, gradient), 1.0);
+  gl_FragColor = vec4(
+    mix(
+      mix(
+        linesColor,
+        backgroundColor,
+        lines
+      ),
+      backgroundColor,
+      shadow),
+    1.0);
 }
 `
 

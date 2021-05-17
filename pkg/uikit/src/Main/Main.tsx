@@ -77,12 +77,20 @@ export function Main({ children }: MainProps) {
             font: ${fonts.sizes.normalMono} / ${fonts.line}
               ${fonts.families.mono};
           }
+          strong,
+          b {
+            font-weight: 600;
+          }
           body {
             color: ${theme.primary};
             background: ${theme.background};
           }
           button {
             color: inherit;
+          }
+          button,
+          [rel="button"] {
+            cursor: pointer;
           }
           ul {
             padding: 0;

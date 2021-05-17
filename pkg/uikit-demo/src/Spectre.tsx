@@ -7,48 +7,6 @@ type GradientProgress = { progress: SpringValue<number> }
 
 const GradientContext = createContext<GradientProgress | null>(null)
 
-export function Gradient({
-  id,
-  x1,
-  y1,
-  x2,
-  y2,
-}: {
-  id: string
-  x1: string
-  y1: string
-  x2: string
-  y2: string
-}) {
-  const gradient = useContext(GradientContext) as GradientProgress
-  return (
-    <linearGradient
-      id={id}
-      x1={x1}
-      y1={y1}
-      x2={x2}
-      y2={y2}
-      gradientUnits="userSpaceOnUse"
-    >
-      <animated.stop
-        offset={gradient.progress.to([0, 1], [0, 0.209])}
-        stopColor="#2EFFBD"
-        stopOpacity={gradient.progress.to([0, 1], [0.734, 0.5])}
-      />
-      <animated.stop
-        offset={gradient.progress.to([0, 1], [0.99, 0.21])}
-        stopOpacity=".442"
-        stopColor="#58FFCA"
-      />
-      <animated.stop
-        offset={gradient.progress.to([0, 1], [1, 0.439])}
-        stopOpacity="0"
-        stopColor="#58FFCA"
-      />
-    </linearGradient>
-  )
-}
-
 export function Spectre() {
   const gradient = useSpring({
     loop: { reverse: true },
@@ -1415,5 +1373,47 @@ export function Spectre() {
         </GradientContext.Provider>
       </defs>
     </svg>
+  )
+}
+
+export function Gradient({
+  id,
+  x1,
+  y1,
+  x2,
+  y2,
+}: {
+  id: string
+  x1: string
+  y1: string
+  x2: string
+  y2: string
+}) {
+  const gradient = useContext(GradientContext) as GradientProgress
+  return (
+    <linearGradient
+      id={id}
+      x1={x1}
+      y1={y1}
+      x2={x2}
+      y2={y2}
+      gradientUnits="userSpaceOnUse"
+    >
+      <animated.stop
+        offset={gradient.progress.to([0, 1], [0, 0.209])}
+        stopColor="#2EFFBD"
+        stopOpacity={gradient.progress.to([0, 1], [0.734, 0.5])}
+      />
+      <animated.stop
+        offset={gradient.progress.to([0, 1], [0.99, 0.21])}
+        stopOpacity=".442"
+        stopColor="#58FFCA"
+      />
+      <animated.stop
+        offset={gradient.progress.to([0, 1], [1, 0.439])}
+        stopOpacity="0"
+        stopColor="#58FFCA"
+      />
+    </linearGradient>
   )
 }

@@ -1,37 +1,6 @@
-import IbmPlexMonoLight from "./assets/IBMPlexMono-Light.ttf"
-import IbmPlexMonoMedium from "./assets/IBMPlexMono-Medium.ttf"
-
-export const GU = 16
-
-export const colors = {
-  black: "#2b2942",
-  challenger: "#1b182c",
-  cyan: "#aaffe4",
-  green: "#95ffa4",
-  white: "#cbe3e7",
-}
-
-export const fonts = {
-  family: '"IBM Plex Mono", monospace',
-  line: "1.5",
-  sizes: {
-    small: "12px",
-    normal: "14px",
-    large: "42px",
-  },
-  faces: [
-    {
-      name: "IBM Plex Mono",
-      src: IbmPlexMonoLight,
-      weight: "400",
-    },
-    {
-      name: "IBM Plex Mono",
-      src: IbmPlexMonoMedium,
-      weight: "600",
-    },
-  ],
-}
+import { useMemo } from "react"
+import { useViewport } from "use-viewport"
+import { gu } from "uikit"
 
 export const springs = {
   appear: {
@@ -47,6 +16,29 @@ export const springs = {
 }
 
 export const breakpoints = {
-  small: 20 * GU,
-  medium: 52 * GU,
+  small: { width: 45 * gu, padding: 3 * gu },
+  medium: { width: 96 * gu, padding: 5 * gu },
+  large: { width: 120 * gu, padding: 8 * gu },
+  xlarge: {
+    width: 180 * gu,
+    padding: 0,
+    content: 138 * gu,
+    contentLarge: 160 * gu,
+  },
+}
+
+export function useLayout() {
+  const { above } = useViewport()
+
+  return useMemo(() => {
+    const breakpointsByLargest = Object.entries(breakpoints).reverse()
+
+    const [name, layout] =
+      breakpointsByLargest.find(([name]) => above(name)) ??
+      breakpointsByLargest[
+        above("xlarge") ? 0 : breakpointsByLargest.length - 1
+      ]
+
+    return { ...layout, name }
+  }, [above])
 }

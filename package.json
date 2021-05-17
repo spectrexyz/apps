@@ -1,6 +1,10 @@
 {
   "name": "spectre-apps",
   "private": true,
+  "scripts": {
+    "uikit:build": "cd pkg/uikit && yarn build",
+    "website:build": "yarn uikit:build && cd pkg/website && yarn uikit-assets && yarn build"
+  },
   "workspaces": {
     "packages": [
       "pkg/*"

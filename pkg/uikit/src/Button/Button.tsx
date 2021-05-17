@@ -40,11 +40,21 @@ export function Button({ mode = "outline", label, ...props }: ButtonProps) {
         &::-moz-focus-inner {
           border: 0;
         }
-        &:active .label {
-          transform: translate(2.5px, 2.5px);
-        }
-        &:active .active-shadow {
-          opacity: 1;
+        &:active {
+          .label {
+            transform: translate(2.5px, 2.5px);
+          }
+          .active-shadow {
+            opacity: 1;
+          }
+          &:disabled {
+            .label {
+              transform: none;
+            }
+            .active-shadow {
+              opacity: 0;
+            }
+          }
         }
       `}
     >

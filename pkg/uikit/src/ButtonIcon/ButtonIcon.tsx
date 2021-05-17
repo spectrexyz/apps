@@ -4,16 +4,18 @@ import type { ButtonAreaProps } from "../ButtonArea"
 
 import { jsx, css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
-import { theme } from "../styles"
+import { theme, gu } from "../styles"
 
 type ButtonIconProps = ButtonAreaProps & {
   icon: ReactNode
   mode?: "solid" | "outline"
+  size?: "medium" | "small"
 }
 
 export function ButtonIcon({
   icon,
   mode = "solid",
+  size = "medium",
   ...props
 }: ButtonIconProps) {
   return (
@@ -21,8 +23,8 @@ export function ButtonIcon({
       {...props}
       css={css`
         position: relative;
-        width: 6gu;
-        height: 6gu;
+        width: ${(size === "small" ? 4 : 6) * gu}px;
+        height: ${(size === "small" ? 4 : 6) * gu}px;
         color: ${mode === "outline" ? theme.primary : theme.background};
         background: ${mode === "outline" ? theme.background : theme.primary};
         &:active {
@@ -36,7 +38,7 @@ export function ButtonIcon({
           left: 0;
           right: 0;
           bottom: 0;
-          border: 3px solid ${theme.primary};
+          border: ${size === "small" ? 1 : 3}px solid ${theme.primary};
         }
       `}
     >

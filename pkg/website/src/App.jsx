@@ -1,19 +1,40 @@
 import React from "react"
+import { useLocation } from "wouter"
+import { NftProvider } from "use-nft"
 import Base from "./Base.jsx"
-import Header from "./Header.jsx"
-import Summary from "./Summary.jsx"
-import ComingSoon from "./ComingSoon.jsx"
-import Footer from "./Footer.jsx"
-import content from "./content"
+import { Footer } from "./Footer/Footer.jsx"
+import { Header } from "./Header/Header.jsx"
+import { Home } from "./Home/Home.jsx"
+import { Litepaper } from "./Litepaper/Litepaper.jsx"
+import { nfts } from "./nfts.js"
+
+const fetcher = {
+  config: null,
+  fetchNft(contract, tokenId) {
+    const nft = nfts.find(({ nft }) => {
+      return nft.contract === contract && nft.tokenId === tokenId
+    })
+    return nft
+  },
+}
 
 function App() {
+  const [location] = useLocation()
+
+  const matchLocation = (path) =>
+    (location === "/" ? "/" : location.replace(/\/$/, "")) === path
+
   return (
-    <Base>
-      <Header tagline={content.tagline} />
-      <Summary items={content.summaryItems} />
-      <ComingSoon label={content.comingSoonLabel} />
-      <Footer icons={content.icons} />
-    </Base>
+    <NftProvider fetcher={fetcher}>
+      <Base>
+        <Header />
+        <main>
+          {matchLocation("/") && <Home />}
+          {matchLocation("/litepaper") && <Litepaper />}
+        </main>
+        <Footer />
+      </Base>
+    </NftProvider>
   )
 }
 

@@ -36,6 +36,7 @@ export const fonts = {
     largeSans: "22px",
     xlarge: "44px",
     xxlarge: "64px",
+    soSoLarge: "72px",
   },
   families: {
     mono: '"IBM Plex Mono", monospace',

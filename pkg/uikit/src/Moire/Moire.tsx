@@ -50,16 +50,17 @@ export function Moire({
   const image = useMoireImage(mode)
   const transform = useMoireTransform({ duration, animate })
   return (
-    <div
+    <span
       {...props}
       css={css`
+        display: block;
         overflow: hidden;
         width: 100%;
         height: 100%;
         position: relative;
       `}
     >
-      <animated.div
+      <animated.span
         style={{ transform }}
         css={css`
           position: absolute;
@@ -73,6 +74,6 @@ export function Moire({
           transform-origin: 50% 50%;
         `}
       />
-    </div>
+    </span>
   )
 }
