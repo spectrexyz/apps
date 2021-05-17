@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import { css } from "@emotion/react"
 import { fonts, gu } from "uikit"
 import { useLayout } from "../styles.js"
@@ -35,6 +35,14 @@ function useStyles() {
 export function Litepaper() {
   const styles = useStyles()
   const layout = useLayout()
+
+  useEffect(() => {
+    document.title = "SPECTRE / Litepaper"
+    return () => {
+      document.title = "SPECTRE"
+    }
+  }, [])
+
   return (
     <div
       css={css`
