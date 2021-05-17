@@ -89,7 +89,7 @@ Let’s note that **sERC20 are ERC20 compliant tokens bundled with additional fe
 
 sERC20 are also gas efficient. They rely on [OpenZeppelin](https://docs.openzeppelin.com/contracts/4.x/erc20) standard and optimized implementation and are deployed through [EIP-1167](https://eips.ethereum.org/EIPS/eip-1167) minimal proxies. This means the cost of bundling sERC20s with extra features has been paid once - at time of base contract deployment - hence it costs nothing more for the end-user to create yet another clone of it.
 
-### Spectralization Boostrapping Pool
+### Spectralization Bootstrapping Pool
 
 In the last couple of months, Balancer’s [Liquidity Bootstrapping Pools](https://docs.balancer.finance/guides/smart-pool-templates-gui/liquidity-bootstrapping-pool#:~:text=Liquidity%20Bootstrapping%20Pools%20(LBPs)%20are,is%20used%20on%20the%20exchange.) - henceforth denominated LBP - have become the *de facto* solution for Initial Distribution Offerings. However, LBPs do not exactly suit the needs of "Initial sERC20 Distributions" - henceforth denominated ISD.
 
@@ -109,7 +109,7 @@ To solve these issues, we have designed a new type of pool AMM for Balancer v2: 
   width={1458}
   height={935}
   src={imgSbpMechanism}
-  alt="Spectralization Boostrapping Pool mechanism"
+  alt="Spectralization Bootstrapping Pool mechanism"
 />
 
 3. In SBPs, weight adjustement is not a function of time but a function of circulating supply / cap supply ratio. This way, the more the sERC20s are minted, the more the pool behaves like a regular Uniswap-like 50/50 pool, constituting a natural and continuous source of liquidity for the whole lifecycle of the sERC20. Moreover, such a mechanism makes it so that minting new sERC20s incurs a downward price pressure, thus enabling a sound and fair price discovery process - as LBP do.
@@ -118,14 +118,14 @@ To solve these issues, we have designed a new type of pool AMM for Balancer v2: 
   width={1458}
   height={958}
   src={imgSbpWeight}
-  alt="Spectralization Boostrapping Pool weight adjustement"
+  alt="Spectralization Bootstrapping Pool weight adjustement"
 />
 
 <Illustration
   width={1458}
   height={1178}
   src={imgSbpTable}
-  alt="Spectralization Boostrapping Pool table"
+  alt="Spectralization Bootstrapping Pool table"
 />
 
 ### Flash Buyout
