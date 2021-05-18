@@ -24,7 +24,7 @@ export const steps = [
   {
     title: "Spectralize your art",
     description: `
-      Fragment the non-fungible into a multitude with Spectres AMMs (Automated
+      Fragment the non-fungible into a multitude with Spectre’s AMMs (Automated
       Market Makers).
     `,
   },
