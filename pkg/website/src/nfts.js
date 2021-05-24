@@ -266,11 +266,31 @@ export const nfts = [
     },
     platform: {
       name: "OpenSea",
-      url: "https://opensea.io/assets/0xdce09254dd3592381b6a5b7a848b29890b656e01/6000002",
+      url:
+        "https://opensea.io/assets/0xdce09254dd3592381b6a5b7a848b29890b656e01/6000002",
     },
     name: "Bison.gif",
     image: "/nfts/15.mp4",
     description:
       ".GIF, 306 frames, 720x576 pixels, 3.9MB, Edition 1 + 1AP, Created 2005, Minted 2021",
+  },
+  {
+    nft: {
+      contract: "0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0",
+      tokenId: "12803",
+    },
+    artist: {
+      name: "Alexander Reben",
+      url: "https://twitter.com/artBoffin",
+    },
+    owner: {
+      name: "Museum of Crypto Art",
+      displayName: "M○C△",
+      url: "https://manifesto.museumofcryptoart.com/",
+    },
+    name: "Deeply Artificial Trees (hands)",
+    image: "/nfts/16.mp4",
+    description:
+      'This work is not endorsed, supported or recommended by Bob Ross Inc. >> "Deeply Artificial Trees (hands)" / 2017 / 1920x1080 PX 25 FPS H.264 AAC / 1 of 1 / V5AZY / $2b$21$q5I7d78jKT.Bnwo3yHpWSeevEt0Y7dNYXuYFAu6hedFVQ9oUBkNDS',
   },
 ]
