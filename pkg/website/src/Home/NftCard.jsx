@@ -53,6 +53,7 @@ export const NftCard = React.memo(function NftCard({
   contract,
   tokenId,
   artist,
+  owner,
   platform,
   gridMode,
 }) {
@@ -63,6 +64,11 @@ export const NftCard = React.memo(function NftCard({
 
   const styles = useStyles()
   const layout = useLayout()
+
+  const artUrl = platform?.url ?? owner?.url
+  const artName = platform?.name ?? owner?.name
+  const artDisplayName = platform?.displayName ?? owner?.displayName ?? artName
+  const artProviderLabel = platform ? "Available on" : "Owned by"
 
   return (
     <div
@@ -155,10 +161,15 @@ export const NftCard = React.memo(function NftCard({
                 text-align: ${layout.name === "small" ? "left" : "right"};
               `}
             >
-              <label>Available on</label>
+              <label>{artProviderLabel}</label>
               <div>
-                <a href={platform.url} target="_blank" rel="noreferrer">
-                  {platform.name}
+                <a
+                  href={artUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={artDisplayName === artName ? undefined : artName}
+                >
+                  {artDisplayName}
                 </a>
               </div>
             </div>

@@ -49,13 +49,14 @@ function cardWrapper(
   { angleMin = 2, angleMax = 12, xMin = 100, xMax = 220 } = {}
 ) {
   let cardUid = 0
-  return function card({ nft, artist, platform }) {
+  return function card({ nft, artist, owner, platform }) {
     const angle = Math.random() * 2
     const leaveX = Math.random() * 2
     return {
       id: cardUid++,
       nft,
       artist,
+      owner,
       platform,
       shift: [
         (Math.random() - 0.5) * CARD_SHIFT_RAND[0],
@@ -442,7 +443,7 @@ function NftCards({
       {transition(
         (
           { leaving, opacity, position, angle, scale },
-          { id, nft, artist, platform },
+          { id, nft, artist, owner, platform },
           t,
           index
         ) => {
@@ -483,6 +484,7 @@ function NftCards({
                 contract={nft.contract}
                 tokenId={nft.tokenId}
                 artist={artist}
+                owner={owner}
                 platform={platform}
                 inFront={!grid && cards[0].id === id}
                 gridMode={grid}
