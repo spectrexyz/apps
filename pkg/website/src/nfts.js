@@ -224,7 +224,7 @@ export const nfts = [
       tokenId: "11278",
     },
     artist: {
-      name: "David41",
+      name: "number41",
       url: "https://linktr.ee/number41",
     },
     platform: {
