@@ -10,8 +10,7 @@ import React, {
 } from "react"
 import { css } from "@emotion/react"
 import { useChain, useSpring, useSpringRef, a } from "react-spring"
-import { list, lerp, fonts, theme, smoothPath, useUid, gu } from "uikit"
-import { Moire } from "./Moire"
+import { Moire, list, lerp, fonts, theme, smoothPath, useUid, gu } from "uikit"
 
 type Point = [number, number]
 
