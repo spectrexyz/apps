@@ -1,0 +1,1 @@
+export { EthIcon } from "./EthIcon"

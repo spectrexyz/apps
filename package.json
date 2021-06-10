@@ -2,6 +2,7 @@
   "name": "spectre-apps",
   "private": true,
   "scripts": {
+    "kit:build": "cd pkg/kit && yarn build",
     "kit-legacy:build": "cd pkg/kit-legacy && yarn build",
     "website:build": "yarn kit-legacy:build && cd pkg/website && yarn copy-kit-assets && yarn build"
   },
