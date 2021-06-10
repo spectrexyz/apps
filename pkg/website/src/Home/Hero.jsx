@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
 import useInView from "react-cool-inview"
-import { Button, gu } from "uikit"
+import { Button, gu } from "kit-legacy"
 import { Spectre } from "./Spectre.jsx"
 import { useLayout } from "../styles.js"
 import { tagline, readLitepaper } from "../content.jsx"

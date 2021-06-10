@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
-import { gu, theme } from "uikit"
+import { gu, theme } from "kit-legacy"
 import { useLayout } from "../styles.js"
 import { footerLinks } from "../content.jsx"
 import { Subscribe } from "../Subscribe.jsx"

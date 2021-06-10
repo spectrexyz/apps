@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { fonts, theme, gu } from "uikit"
+import { fonts, theme, gu } from "kit-legacy"
 import { useLayout } from "../styles.js"
 import { kebabCase } from "../utils.js"
 

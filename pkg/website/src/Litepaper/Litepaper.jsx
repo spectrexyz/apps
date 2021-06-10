@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from "react"
 import { css } from "@emotion/react"
-import { fonts, gu } from "uikit"
+import { fonts, gu } from "kit-legacy"
 import { useLayout } from "../styles.js"
-import LitepaperMdx from "./litepaper.mdx"
+import LitepaperGenerated from "./litepaper-content-generated.jsx"
 
 function useStyles() {
   const layout = useLayout()
@@ -89,6 +89,7 @@ export function Litepaper() {
             }
             li {
               list-style-position: inside;
+              padding: 0 0 1.5gu;
             }
             a {
               text-decoration: underline;
@@ -107,7 +108,7 @@ export function Litepaper() {
           }
         `}
       >
-        <LitepaperMdx layout={layout} />
+        <LitepaperGenerated layout={layout} />
       </div>
     </div>
   )

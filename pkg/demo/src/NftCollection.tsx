@@ -12,7 +12,7 @@ import {
   list,
   shuffle,
   useMeasure,
-} from "uikit"
+} from "kit-legacy"
 import { NftCard } from "./NftCard"
 import nfts from "./nfts"
 

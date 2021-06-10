@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
 import useInView from "react-cool-inview"
-import { Button, GLMoire, TextInput, gu, theme, fonts } from "uikit"
+import { Button, Moire, TextInput, gu, theme, fonts } from "kit-legacy"
 import { subscribeSection } from "./content.jsx"
 import { useLayout } from "./styles.js"
 import { useNetlifyForm } from "./netlify-form.js"
@@ -180,7 +180,7 @@ export const Subscribe = React.memo(function Subscribe() {
             </form>
           )}
         </div>
-        <GLMoire
+        <Moire
           animate={inView}
           width={styles.moireSize}
           height={styles.moireSize}

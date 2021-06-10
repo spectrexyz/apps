@@ -11,7 +11,7 @@ import {
 } from "twgl.js"
 import { raf } from "../utils"
 
-type GLMoireProps = {
+type MoireProps = {
   animate?: boolean
   backgroundColor?: string
   height?: number
@@ -21,7 +21,7 @@ type GLMoireProps = {
   width?: number
 }
 
-export function GLMoire({
+export function Moire({
   animate = true,
   backgroundColor = "rgb(4, 19, 31)",
   height = 500,
@@ -30,7 +30,7 @@ export function GLMoire({
   speed = 1,
   width = 500,
   ...props
-}: GLMoireProps) {
+}: MoireProps) {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
   const seed = useRef(Math.random())
 
@@ -75,7 +75,7 @@ export function GLMoire({
       const uniforms = {
         time: time * speed,
         seed: seed.current * 1000 * speed,
-        resolution: [width * scale, height * scale],
+        resolution: [400 * scale, 400 * scale],
         linesColor: _linesColor,
         backgroundColor: _backgroundColor,
       }
@@ -89,7 +89,7 @@ export function GLMoire({
     return () => {
       stopRaf()
     }
-  }, [])
+  }, [width, height, backgroundColor, linesColor, scale, speed])
 
   return (
     <canvas

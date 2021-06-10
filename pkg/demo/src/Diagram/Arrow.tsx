@@ -1,6 +1,6 @@
 import React from "react"
 import { a } from "react-spring"
-import { lerp } from "uikit"
+import { lerp } from "kit-legacy"
 
 function path(direction, progress, x1, y1, x2, y2) {
   const ip = (a, b) => lerp(progress, a, b)

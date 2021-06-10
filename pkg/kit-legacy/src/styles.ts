@@ -1,4 +1,4 @@
-// 1 grid unit = 8 (px)
+// 1 grid unit = 8px
 export const gu = 8
 
 export const colors = {

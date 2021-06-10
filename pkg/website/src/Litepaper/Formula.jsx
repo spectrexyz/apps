@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { fonts } from "uikit"
+import { fonts } from "kit-legacy"
 
 export function Formula({ color, value }) {
   return (

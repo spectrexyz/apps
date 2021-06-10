@@ -1,4 +1,4 @@
-import { shuffle } from "uikit"
+import { shuffle } from "kit-legacy"
 import { nfts } from "./nfts.js"
 
 export const tagline = "Where one becomes multitude"

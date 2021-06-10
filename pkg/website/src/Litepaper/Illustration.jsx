@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { theme } from "uikit"
+import { theme } from "kit-legacy"
 
 export function Illustration({ description, width, height, src, alt }) {
   return (

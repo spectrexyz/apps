@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from "react"
 
 import React, { useState, useEffect } from "react"
-import { Moire, Uikit, Button } from "uikit"
+import { Moire, Uikit, Button } from "kit-legacy"
 import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
 import { providers, Contract } from "ethers"
@@ -56,7 +56,7 @@ const fetcher = [
 export function App() {
   return (
     <Router hook={useHashLocation}>
-      <Uikit baseUrl="/uikit/">
+      <Uikit baseUrl="/kit-legacy/">
         <NftProvider fetcher={fetcher as FetcherDeclarationEthers}>
           <div
             css={css`
