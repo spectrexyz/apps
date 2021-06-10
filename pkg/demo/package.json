@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "uikit-assets": "yarn uikit-copy-assets ./public/uikit"
+    "kit-legacy-assets": "yarn kit-legacy-copy-assets ./public/kit-legacy"
   },
   "dependencies": {
     "@emotion/cache": "^11.4.0",
@@ -16,7 +16,7 @@
     "react-spring": "^9.2.2",
     "stylis": "^4.0.10",
     "twgl.js": "^4.19.1",
-    "uikit": "workspace:pkg/uikit",
+    "kit-legacy": "workspace:pkg/kit-legacy",
     "use-nft": "^0.9.0",
     "wouter": "^2.7.4"
   },

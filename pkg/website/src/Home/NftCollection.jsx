@@ -11,7 +11,7 @@ import {
   gu,
   shuffle,
   useMeasure,
-} from "uikit"
+} from "kit-legacy"
 import { useLayout } from "../styles.js"
 import { NftCard } from "./NftCard.jsx"
 

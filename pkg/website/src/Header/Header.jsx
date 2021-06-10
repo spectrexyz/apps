@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
-import { gu, theme } from "uikit"
+import { gu, theme } from "kit-legacy"
 import { useLocation, Link } from "wouter"
 import { useLayout } from "../styles.js"
 import { Actions } from "../Actions.jsx"

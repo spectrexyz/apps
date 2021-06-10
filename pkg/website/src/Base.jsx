@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "@emotion/react"
 import { ViewportProvider } from "use-viewport"
-import { Uikit, theme } from "uikit"
+import { Uikit, theme } from "kit-legacy"
 import { breakpoints } from "./styles"
 
 const viewportBreakpoints = Object.entries(breakpoints).reduce(
@@ -11,7 +11,7 @@ const viewportBreakpoints = Object.entries(breakpoints).reduce(
 
 function Base({ children }) {
   return (
-    <Uikit baseUrl="/uikit/">
+    <Uikit baseUrl="/kit-legacy/">
       <ViewportProvider breakpoints={viewportBreakpoints}>
         <BaseLayout>{children}</BaseLayout>
       </ViewportProvider>

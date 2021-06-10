@@ -1,6 +1,6 @@
 import React, { memo, useRef } from "react"
 import { a, useSpring, to } from "react-spring"
-import { colors } from "uikit"
+import { colors } from "kit-legacy"
 import { Label } from "./Label"
 import { spFast, spSlow, WIDTH } from "./shared"
 

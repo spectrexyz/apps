@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Moire, theme, useMeasure } from "uikit"
+import { Moire, theme, useMeasure } from "kit-legacy"
 import { kebabCase } from "../utils.js"
 
 export function H2({ label }) {

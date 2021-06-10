@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { theme, gu, fonts } from "uikit"
+import { theme, gu, fonts } from "kit-legacy"
 import { useLayout } from "../styles.js"
 import { team } from "../content.jsx"
 

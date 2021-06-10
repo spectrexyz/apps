@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { css } from "@emotion/react"
-import { gu, theme, fonts } from "uikit"
+import { gu, theme, fonts } from "kit-legacy"
 import { randChar, raf } from "../utils"
 
 const CHARS_SHORT = "0123456789abcdefghijklmnopqrstuvwxyz"

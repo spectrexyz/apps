@@ -1,15 +1,15 @@
 {
-  "name": "uikit",
+  "name": "kit-legacy",
   "private": true,
-  "main": "dist/uikit.cjs.js",
-  "module": "dist/uikit.esm.js",
+  "main": "dist/kit-legacy.cjs.js",
+  "module": "dist/kit-legacy.esm.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "dist"
   ],
   "bin": {
-    "uikit-copy-assets": "./bin/copy-assets"
+    "kit-legacy-copy-assets": "./bin/copy-assets"
   },
   "scripts": {
     "build": "yarn export-assets && rollpkg build --noStats",

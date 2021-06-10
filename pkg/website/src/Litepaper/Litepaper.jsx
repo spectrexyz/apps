@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react"
 import { css } from "@emotion/react"
-import { fonts, gu } from "uikit"
+import { fonts, gu } from "kit-legacy"
 import { useLayout } from "../styles.js"
 import LitepaperMdx from "./litepaper.mdx"
 

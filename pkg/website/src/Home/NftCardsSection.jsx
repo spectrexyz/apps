@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
-import { gu, fonts, theme } from "uikit"
+import { gu, fonts, theme } from "kit-legacy"
 import { NftCollection } from "./NftCollection.jsx"
 import { nftCardsSection } from "../content.jsx"
 import { formatLineBreaks } from "../utils.js"

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
 import { useSpring, animated, config as springConfig } from "react-spring"
-import { Moire, fonts, theme, gu } from "uikit"
+import { Moire, fonts, theme, gu } from "kit-legacy"
 import useInView from "react-cool-inview"
 import { useLayout } from "../styles.js"
 import { steps } from "../content.jsx"

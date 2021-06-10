@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { theme } from "uikit"
+import { theme } from "kit-legacy"
 
 import tldr from "./tldr.svg"
 

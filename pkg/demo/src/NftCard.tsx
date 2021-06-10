@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Moire, theme, fonts, gu } from "uikit"
+import { Moire, theme, fonts, gu } from "kit-legacy"
 import { useNft } from "use-nft"
 
 type NftCardProps = {

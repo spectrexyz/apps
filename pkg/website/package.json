@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vite build && mkdir -p dist/litepaper && cp dist/index.html dist/litepaper",
     "serve": "vite preview",
-    "uikit-assets": "yarn uikit-copy-assets ./public/uikit",
+    "kit-legacy-assets": "yarn kit-legacy-copy-assets ./public/kit-legacy",
     "lint": "eslint --ext .jsx,.js src/"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "react-dom": "^17.0.2",
     "react-spring": "^9.2.2",
     "stylis": "^4.0.10",
-    "uikit": "workspace:pkg/uikit",
+    "kit-legacy": "workspace:pkg/kit-legacy",
     "use-nft": "^0.9.0",
     "use-viewport": "git://github.com/bpierre/use-viewport.git#master"
   },
