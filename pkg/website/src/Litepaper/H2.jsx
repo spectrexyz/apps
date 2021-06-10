@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { GLMoire, theme, useMeasure } from "uikit"
+import { Moire, theme, useMeasure } from "uikit"
 import { kebabCase } from "../utils.js"
 
 export function H2({ label }) {
@@ -51,7 +51,7 @@ export function H2({ label }) {
           `}
         >
           {bounds.width > 0 && bounds.height > 0 && (
-            <GLMoire
+            <Moire
               width={bounds.width}
               height={bounds.height}
               linesColor={theme.lightBackground}

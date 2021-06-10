@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
-import type { MoireMode } from "../Moire/Moire"
 
 import { jsx, css } from "@emotion/react"
+import useMeasure from "react-use-measure"
 import { Moire } from "../Moire"
 import { theme } from "../styles"
 
@@ -19,10 +19,12 @@ type ButtonProps = DetailedHTMLProps<
 export function Button({ mode = "outline", label, ...props }: ButtonProps) {
   const baseColor = mode.endsWith("-alt") ? theme.secondary : theme.primary
   const filled = mode.startsWith("filled")
+  const [buttonRef, buttonBounds] = useMeasure()
 
   return (
     <button
       type="button"
+      ref={buttonRef}
       {...props}
       css={css`
         position: relative;
@@ -100,16 +102,12 @@ export function Button({ mode = "outline", label, ...props }: ButtonProps) {
             opacity: 0;
           `}
         />
-        <Moire mode={moireMode(mode)} duration={6 * 60 * 1000} />
+        <Moire
+          width={buttonBounds.width}
+          height={buttonBounds.height}
+          scale={0.8}
+        />
       </div>
     </button>
   )
-}
-
-function moireMode(buttonMode: ButtonMode): MoireMode {
-  if (buttonMode === "outline") return "dark"
-  if (buttonMode === "filled") return "light"
-  if (buttonMode === "outline-alt") return "dark-alt"
-  if (buttonMode === "filled-alt") return "light-alt"
-  throw new Error(`Incorrect button mode: ${buttonMode}`)
 }

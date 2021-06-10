@@ -89,6 +89,7 @@ export function Litepaper() {
             }
             li {
               list-style-position: inside;
+              padding: 0 0 1.5gu;
             }
             a {
               text-decoration: underline;
