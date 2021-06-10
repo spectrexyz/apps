@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "kit-legacy:build": "cd pkg/kit-legacy && yarn build",
-    "website:build": "yarn kit-legacy:build && cd pkg/website && yarn kit-legacy-assets && yarn build"
+    "website:build": "yarn kit-legacy:build && cd pkg/website && yarn copy-kit-assets && yarn build"
   },
   "workspaces": {
     "packages": [
