@@ -5,7 +5,7 @@
     "dev": "yarn build:litepaper && vite",
     "build": "yarn build:litepaper && vite build && mkdir -p dist/litepaper && cp dist/index.html dist/litepaper",
     "serve": "vite preview",
-    "kit-legacy-assets": "yarn kit-legacy-copy-assets ./public/kit-legacy",
+    "copy-kit-assets": "yarn kit-legacy-copy-assets ./public/kit-legacy",
     "build:litepaper": "node scripts/build-litepaper.js > ./src/Litepaper/litepaper-content-generated.jsx",
     "lint": "eslint --ext .jsx,.js src/"
   },
