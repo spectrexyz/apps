@@ -1,18 +1,8 @@
-import { defineConfig } from "vite"
 import reactRefresh from "@vitejs/plugin-react-refresh"
-import mdx from "vite-plugin-mdx"
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    reactRefresh(),
-
-    // https://mdxjs.com/advanced/plugins
-    mdx({
-      remarkPlugins: [],
-      rehypePlugins: [],
-    }),
-  ],
+export default {
+  plugins: [reactRefresh()],
   build: {
     target: "es2019",
   },
@@ -20,4 +10,4 @@ export default defineConfig({
     jsxFactory: "jsx",
     jsxInject: `import { jsx } from '@emotion/react'`,
   },
-})
+}

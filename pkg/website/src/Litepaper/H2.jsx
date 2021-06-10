@@ -56,7 +56,7 @@ export function H2({ label }) {
               height={bounds.height}
               linesColor={theme.lightBackground}
               backgroundColor={theme.background}
-              scale={4}
+              scale={0.5}
             />
           )}
         </span>
