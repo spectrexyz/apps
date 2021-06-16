@@ -13,11 +13,13 @@ type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   disabled: boolean
   label: string
   mode: ButtonMode
+  onClick?: () => void
 }
 
 export function Button({
-  mode = "primary",
   label,
+  mode = "primary",
+  onClick = () => {},
   ...props
 }: ButtonProps): JSX.Element {
   const [buttonRef, buttonBounds] = useMeasure()
@@ -30,6 +32,7 @@ export function Button({
     <ButtonArea
       type="button"
       ref={buttonRef}
+      onClick={onClick}
       {...props}
       css={css`
         position: relative;
@@ -41,6 +44,10 @@ export function Button({
         white-space: nowrap;
         &:focus-visible {
           outline: 0;
+          .surface {
+            outline: 2px solid ${colors.focus};
+            outline-offset: -1px;
+          }
         }
         &:active {
           .surface {
@@ -51,10 +58,6 @@ export function Button({
           }
           .active-shadow {
             opacity: 1;
-          }
-          &:focus-visible {
-            outline: 0;
-            border-color: ${colors.focus};
           }
           &:disabled {
             .surface {

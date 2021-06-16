@@ -1,16 +1,14 @@
 import "@emotion/react"
 
-type StringDict = {
-  [name: string]: string
-}
+type Dict<T> = { [name: string]: T }
 
 declare module "@emotion/react" {
   export interface Theme {
-    colors: StringDict
+    colors: Dict<string>
     fonts: {
       line: string
-      sizes: StringDict
-      families: StringDict
+      sizes: Dict<string>
+      families: Dict<string>
     }
   }
 }

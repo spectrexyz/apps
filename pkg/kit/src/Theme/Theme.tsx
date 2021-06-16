@@ -41,10 +41,10 @@ const colors = {
   negative: "#FE6D6D",
 }
 
-type Palette = { [name: string]: string }
+type Palette<T> = { [name: string]: T }
 
 type ThemeContextValue = {
-  colors: Palette
+  colors: Palette<string>
   fonts: {
     line: string
     sizes: {

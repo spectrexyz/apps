@@ -1,5 +1,3 @@
-import { useRef } from "react"
-
 export function addSlash(path: string): string {
   return path.endsWith("/") ? path : path + "/"
 }
@@ -40,10 +38,6 @@ export function map(
   ostop: number
 ): number {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
-}
-
-export function useUid(prefix = "uid"): string {
-  return useRef(`${prefix}-${Math.round(Math.random() * 10 ** 8)}`).current
 }
 
 export function raf(
@@ -87,4 +81,8 @@ export function shortenAddress(address: string, charsLength = 4): string {
 const addressRe = /^0x[0-9a-fA-F]{40}$/
 export function isAddress(address: string): boolean {
   return addressRe.test(address)
+}
+
+export function uid(prefix = "uid"): string {
+  return `${prefix}-${Math.round(Math.random() * 10 ** 8)}`
 }
