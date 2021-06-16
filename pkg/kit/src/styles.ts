@@ -25,4 +25,9 @@ export const springs = {
     tension: 400,
     friction: 30,
   },
+  lazy: {
+    mass: 0.5,
+    tension: 350,
+    friction: 35,
+  },
 }

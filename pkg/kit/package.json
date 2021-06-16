@@ -12,10 +12,12 @@
     "kit-copy-assets": "./bin/copy-assets"
   },
   "scripts": {
-    "build": "yarn export-assets && rollpkg build --noStats",
-    "dev": "yarn export-assets && rollpkg watch",
+    "build": "rollpkg build --noStats",
+    "build:all": "yarn export:assets && yarn build:icons && yarn build",
+    "build:icons": "./scripts/build-icons.sh",
+    "export:assets": "./scripts/export-assets.sh",
+    "dev": "rollpkg watch",
     "lint": "eslint src",
-    "export-assets": "./scripts/export-assets.sh",
     "prepublishOnly": "yarn build"
   },
   "peerDependencies": {
@@ -35,6 +37,7 @@
     "preset": "rollpkg"
   },
   "devDependencies": {
+    "@svgr/cli": "^5.5.0",
     "@types/react": "^17.0.11",
     "@types/react-blockies": "^1.4.0",
     "@types/react-dom": "^17.0.7",

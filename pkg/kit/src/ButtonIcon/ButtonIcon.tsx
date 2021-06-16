@@ -37,10 +37,7 @@ export const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(
             display: ${mode === "outline" ? "block" : "none"};
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             border: ${size === "small" ? 1 : 3}px solid ${colors.primary};
           }
         `}

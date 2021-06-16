@@ -1,28 +1,25 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/react"
-import { ButtonArea } from "../ButtonArea"
 import { EthIcon } from "../EthIcon"
 import { shortenAddress } from "../utils"
 
 type AddressBadgeProps = {
   address: string
   error?: boolean
-  onClick: () => void
 }
 
 export function AddressBadge({
   address,
   error = false,
-  onClick = () => {},
 }: AddressBadgeProps): JSX.Element {
   return (
-    <ButtonArea
-      onClick={onClick}
+    <div
       css={({ colors }) => css`
         display: flex;
         align-items: center;
         height: 4gu;
         padding: 0 10px 0 4px;
+        user-select: none;
         color: ${colors.accent};
         background: ${error ? colors.negative : colors.layer1};
       `}
@@ -47,6 +44,6 @@ export function AddressBadge({
         </div>
       </div>
       <div>{shortenAddress(address)}</div>
-    </ButtonArea>
+    </div>
   )
 }

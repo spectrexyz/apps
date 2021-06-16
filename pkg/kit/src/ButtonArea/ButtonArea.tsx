@@ -16,7 +16,7 @@ export const ButtonArea = forwardRef<HTMLButtonElement, ButtonAreaProps>(
         onClick={onClick}
         {...props}
         css={({ colors }) => css`
-          display: block;
+          display: flex;
           padding: 0;
           border: 0;
           outline: 0;
