@@ -32,6 +32,7 @@ const colors = {
   outline: "#525B70",
   outline2: "#242D40",
   accent: "#58FFCA",
+  accentContent: "#050E1F",
   link: "#C0BBFF",
   focus: "#C0BBFF",
   content: "#EDFCFF",

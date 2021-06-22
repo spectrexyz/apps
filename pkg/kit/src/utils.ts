@@ -2,6 +2,12 @@ export function addSlash(path: string): string {
   return path.endsWith("/") ? path : path + "/"
 }
 
+export function stripTrailingSlashes(path: string): string {
+  const startWithSlash = path.startsWith("/")
+  path = path.replace(/\/+$/, "")
+  return !path && startWithSlash ? "/" : path
+}
+
 function list(count: number): number[]
 function list<T extends unknown>(
   count: number,

@@ -66,15 +66,17 @@ export function Main({ children }: MainProps): JSX.Element {
           html {
             scroll-behavior: smooth;
           }
-          body,
+          body {
+            font: ${fonts.sizes.normalMono} / ${fonts.line}
+              ${fonts.families.mono};
+          }
           h1,
           h2,
           pre,
           button,
           svg,
           input {
-            font: ${fonts.sizes.normalMono} / ${fonts.line}
-              ${fonts.families.mono};
+            font: inherit;
           }
           strong,
           b {
@@ -84,7 +86,8 @@ export function Main({ children }: MainProps): JSX.Element {
             color: ${colors.content};
             background: ${colors.background};
           }
-          button {
+          button,
+          input {
             color: inherit;
           }
           button,
@@ -103,6 +106,11 @@ export function Main({ children }: MainProps): JSX.Element {
             &:focus-visible {
               outline: 2px solid ${colors.link};
             }
+          }
+          a,
+          button {
+            /* removes the 300ms delay */
+            touch-action: manipulation;
           }
         `}
       />
