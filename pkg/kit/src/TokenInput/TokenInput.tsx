@@ -20,7 +20,7 @@ export function TokenInput({
 }: TokenInputProps): JSX.Element {
   const handleChange = useCallback(
     (event) => {
-      const value = event.target.value.trim()
+      const value = event.currentTarget.value.trim()
       if (/^[0-9]*\.?[0-9]*$/.test(value)) {
         onChange(value)
       }

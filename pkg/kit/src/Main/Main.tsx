@@ -75,7 +75,8 @@ export function Main({ children }: MainProps): JSX.Element {
           pre,
           button,
           svg,
-          input {
+          input,
+          textarea {
             font: inherit;
           }
           strong,
