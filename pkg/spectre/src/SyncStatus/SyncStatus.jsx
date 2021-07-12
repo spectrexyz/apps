@@ -2,7 +2,7 @@ import React from "react"
 import { css } from "@emotion/react"
 import { useBlockNumber } from "../Ethereum"
 
-export function SyncStatus() {
+export function SyncStatus({ full = false }) {
   const { data, isError, isLoading } = useBlockNumber()
   return (
     <div
@@ -11,8 +11,10 @@ export function SyncStatus() {
         align-items: center;
         height: 4gu;
         padding: 0 1.5gu;
+        font-size: 14px;
         color: ${colors.content};
         background: ${colors.layer2};
+        user-select: none;
         &:before {
           content: "";
           width: 1gu;
@@ -24,6 +26,15 @@ export function SyncStatus() {
         }
       `}
     >
+      {full && (
+        <span
+          css={css`
+            text-transform: uppercase;
+          `}
+        >
+          Block:&nbsp;
+        </span>
+      )}
       {(() => {
         if (isError) return "error."
         if (isLoading) return "syncing…"

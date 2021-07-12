@@ -73,25 +73,6 @@ export function usePath() {
   ]
 }
 
-// From https://dev.to/nucliweb/detect-avif-image-support-to-use-in-your-css-4pen
-const avifCheckData =
-  "data:image/avif;base64,AAAAFGZ0eXBhdmlmAAAAAG1pZjEAAACgbWV0YQAAAAAAAA" +
-  "AOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAC8AAAAGwAAACNpaW5mAAA" +
-  "AAAABAAAAFWluZmUCAAAAAAEAAGF2MDEAAAAARWlwcnAAAAAoaXBjbwAAABRpc3BlAAAA" +
-  "AAAAAAQAAAAEAAAADGF2MUOBAAAAAAAAFWlwbWEAAAAAAAAAAQABAgECAAAAI21kYXQSA" +
-  "AoIP8R8hAQ0BUAyDWeeUy0JG+QAACANEkA="
-export async function supportsAvif() {
-  if (typeof createImageBitmap === "undefined") {
-    return false
-  }
-  return createImageBitmap(
-    await fetch(avifCheckData).then((r) => r.blob())
-  ).then(
-    () => true,
-    () => false
-  )
-}
-
 export function isValidEmail(value) {
   return /(.+)@(.+){2,}\.(.+){2,}/.test(value)
 }

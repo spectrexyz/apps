@@ -3831,6 +3831,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"attr-accept@npm:^2.2.1":
+  version: 2.2.2
+  resolution: "attr-accept@npm:2.2.2"
+  checksum: 496f7249354ab53e522510c1dc8f67a1887382187adde4dc205507d2f014836a247073b05e9d9ea51e2e9c7f71b0d2aa21730af80efa9af2d68303e5f0565c4d
+  languageName: node
+  linkType: hard
+
 "autoprefixer@npm:^9.7.6":
   version: 9.8.6
   resolution: "autoprefixer@npm:9.8.6"
@@ -9295,6 +9302,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-selector@npm:^0.2.2":
+  version: 0.2.4
+  resolution: "file-selector@npm:0.2.4"
+  dependencies:
+    tslib: ^2.0.3
+  checksum: 83341e7416352c7de0caf433b33c8d007d3c298c17d6ba0e70168af82bb045d905ddd6f4bc3ca764a2035c6f18eae7f52223dc6a784056f61b8391c351f88323
+  languageName: node
+  linkType: hard
+
 "file-uri-to-path@npm:1.0.0":
   version: 1.0.0
   resolution: "file-uri-to-path@npm:1.0.0"
@@ -12845,8 +12861,8 @@ fsevents@^1.2.7:
     prettier: ^2.3.1
     react: ^17.0.2
     react-blockies: ^1.4.1
+    react-cool-dimensions: ^2.0.7
     react-dom: ^17.0.2
-    react-use-measure: ^2.0.4
     rollpkg: ^0.5.7
     twgl.js: ^4.19.1
     typescript: ^4.3.2
@@ -17232,6 +17248,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-cool-dimensions@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "react-cool-dimensions@npm:2.0.7"
+  peerDependencies:
+    react: ">= 16.8.0"
+  checksum: a2cb3b86824c7396d433a516704c7c2c8abf24c24040cb78ce4571e97b4ac2c03e00cf8f223f56bcf61604206309e0c0a66ac8ac16f3896ae92838e1263cff9e
+  languageName: node
+  linkType: hard
+
 "react-cool-inview@npm:^2.0.7":
   version: 2.0.7
   resolution: "react-cool-inview@npm:2.0.7"
@@ -17251,6 +17276,19 @@ fsevents@^1.2.7:
   peerDependencies:
     react: 17.0.2
   checksum: 1c1eaa3bca7c7228d24b70932e3d7c99e70d1d04e13bb0843bbf321582bc25d7961d6b8a6978a58a598af2af496d1cedcfb1bf65f6b0960a0a8161cb8dab743c
+  languageName: node
+  linkType: hard
+
+"react-dropzone@npm:^11.3.4":
+  version: 11.3.4
+  resolution: "react-dropzone@npm:11.3.4"
+  dependencies:
+    attr-accept: ^2.2.1
+    file-selector: ^0.2.2
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 16.8"
+  checksum: 602ac4e41a39d9ef8b475faed0c5d5429116150c2cdd1cceb98992d741769865212ceb9d379e9886c4c101b8a65d06f16395dee530e949830bf0bb60d46d29b4
   languageName: node
   linkType: hard
 
@@ -19148,6 +19186,7 @@ resolve@^2.0.0-next.3:
     react: ^17.0.2
     react-cool-inview: ^2.0.7
     react-dom: ^17.0.2
+    react-dropzone: ^11.3.4
     react-query: ^3.16.1
     react-spring: ^9.2.3
     stylis: ^4.0.10
@@ -19155,6 +19194,7 @@ resolve@^2.0.0-next.3:
     use-viewport: "git://github.com/bpierre/use-viewport.git#master"
     vite: ^2.3.7
     web3-react: ^5.0.5
+    zustand: ^3.5.5
   languageName: unknown
   linkType: soft
 
@@ -20357,6 +20397,13 @@ resolve@^2.0.0-next.3:
   version: 2.2.0
   resolution: "tslib@npm:2.2.0"
   checksum: a48c9639f7496fa701ea8ffe0561070fcb44c104a59632f7f845c0af00825c99b6373575ec59b2b5cdbfd7505875086dbe5dc83312304d8979f22ce571218ca3
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.0.3":
+  version: 2.3.0
+  resolution: "tslib@npm:2.3.0"
+  checksum: 8869694c26e4a7b56d449662fd54a4f9ba872c889d991202c74462bd99f10e61d5bd63199566c4284c0f742277736292a969642cc7b590f98727a7cae9529122
   languageName: node
   linkType: hard
 
@@ -22459,6 +22506,18 @@ typescript@^4.3.2:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^3.5.5":
+  version: 3.5.5
+  resolution: "zustand@npm:3.5.5"
+  peerDependencies:
+    react: ">=16.8"
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: e3a84e09c61a29c09a3e2cb254ce3cf600f9d2e53dba293875c1f9cb5cafe516175341b221b29a73de098603b578c19e6299f96256964c91394cfd289f639cfe
   languageName: node
   linkType: hard
 
