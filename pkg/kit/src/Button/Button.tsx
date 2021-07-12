@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
-import { createContext, useContext } from "react"
+import { createContext, useContext, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { ButtonArea } from "../ButtonArea"
@@ -10,10 +10,12 @@ import { gu } from "../styles"
 import { useTheme } from "../Theme"
 
 export const ICON_SIZE_DEFAULT = 3 * gu
+export const ICON_SIZE_DEFAULT_SMALL = 2.5 * gu
+export const ICON_SIZE_DEFAULT_COMPACT = 2.5 * gu
 
 const SHADOW_OFFSET = 3
 
-const ButtonContext = createContext(false)
+const ButtonContext = createContext<null | { size: string }>(null)
 
 type ButtonMode =
   | "primary"
@@ -22,7 +24,11 @@ type ButtonMode =
   | "flat"
   | "flat-2"
   | "flat-3" // dark blue
-type ButtonSize = "medium" | "small"
+  | "outline"
+type ButtonSize =
+  | "medium"
+  | "compact" // "compact" is a small button with large text
+  | "small"
 type ShadowInBox = false | true | "width" | "height"
 
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
@@ -54,19 +60,31 @@ export function Button({
 }: ButtonProps): JSX.Element {
   const { colors } = useTheme()
   const shadowBounds = useDimensions()
-  const flat = mode === "flat" || mode === "flat-2" || mode === "flat-3"
+  const flat = mode.startsWith("flat")
 
   const hShift = shadowInBox === "width" || shadowInBox === true
   const vShift = shadowInBox === "height" || shadowInBox === true
 
-  const heightBase = size === "small" ? 4 * gu : 5.5 * gu
-  const fontSize = size === "small" ? "14px" : "18px"
-  if (horizontalPadding === undefined) {
-    horizontalPadding = size === "small" ? 1.5 * gu : 2 * gu
-  }
+  const fontSize = useMemo(() => {
+    if (size === "small") return "14px"
+    return "18px"
+  }, [size])
+
+  const heightBase = useMemo(() => {
+    if (size === "small") return 4 * gu
+    if (size === "compact") return 4 * gu
+    return 5.5 * gu
+  }, [size])
+
+  const _horizontalPadding = useMemo(() => {
+    if (horizontalPadding !== undefined) return horizontalPadding
+    if (size === "small") return 1.5 * gu
+    if (size === "compact") return 1.25 * gu
+    return 2 * gu
+  }, [size, horizontalPadding])
 
   return (
-    <ButtonContext.Provider value={true}>
+    <ButtonContext.Provider value={{ size }}>
       <ButtonArea
         type="button"
         onClick={onClick}
@@ -138,7 +156,7 @@ export function Button({
               align-items: center;
               width: 100%;
               height: 100%;
-              padding: 0 ${horizontalPadding}px;
+              padding: 0 ${_horizontalPadding}px;
               font-size: ${fontSize};
               color: ${(() => {
                 if (mode === "flat") return colors.accent
@@ -194,7 +212,7 @@ export function Button({
               {label}
             </div>
           </div>
-          {!flat && (
+          {!flat && mode !== "outline" && (
             <div
               css={css`
                 position: absolute;
