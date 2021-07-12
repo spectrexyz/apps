@@ -58,7 +58,7 @@
     "colord": "^2.0.1",
     "focus-trap-react": "^8.5.1",
     "react-blockies": "^1.4.1",
-    "react-use-measure": "^2.0.4",
+    "react-cool-dimensions": "^2.0.7",
     "twgl.js": "^4.19.1"
   }
 }

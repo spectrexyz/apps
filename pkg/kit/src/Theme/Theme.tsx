@@ -32,6 +32,9 @@ const colors = {
   outline: "#525B70",
   outline2: "#242D40",
   accent: "#58FFCA",
+  accent2: "#C0BBFF",
+  accentContent: "#050E1F",
+  accent2Content: "#050E1F",
   link: "#C0BBFF",
   focus: "#C0BBFF",
   content: "#EDFCFF",
@@ -39,6 +42,10 @@ const colors = {
   contentDimmed: "#A0A8C2",
   positive: "#58FFCA",
   negative: "#FE6D6D",
+
+  // semantic colors
+  yellow: "#F8FFA6",
+  pink: "#FFBBE4",
 }
 
 type Palette<T> = { [name: string]: T }
