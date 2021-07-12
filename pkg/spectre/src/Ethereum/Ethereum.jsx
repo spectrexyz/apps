@@ -10,19 +10,15 @@ const EthereumContext = createContext()
 const ethersProvider = new providers.InfuraProvider(CHAIN_ID, INFURA_PROJECT_ID)
 
 export function Ethereum({ children }) {
-  const context = useMemo(() => ({ ethersProvider }), [ethersProvider])
   return (
-    <Wallet>
-      <EthereumContext.Provider value={context}>
-        {children}
-      </EthereumContext.Provider>
-    </Wallet>
+    <Web3ReactProvider getLibrary={useCallback((p) => p, [])}>
+      <EthereumProvider>{children}</EthereumProvider>
+    </Web3ReactProvider>
   )
 }
 
-export function useEthereum() {
+function EthereumProvider({ children }) {
   const wallet = useWeb3React()
-  const ethereumContext = useContext(EthereumContext)
 
   const connect = useCallback(
     (connectorId) => {
@@ -36,6 +32,7 @@ export function useEthereum() {
         wallet.activate(
           new InjectedConnector({ supportedChainIds: [CHAIN_ID] })
         )
+        // Disabling WalletConnect for now (doesn’t work with Vite)
         // wallet.activate(
         //   new WalletConnectConnector({
         //     qrcode: true,
@@ -55,18 +52,28 @@ export function useEthereum() {
     [wallet]
   )
 
-  return {
-    ...ethereumContext,
-    account: wallet.account,
-    connect,
-    wallet,
-  }
+  const disconnect = useCallback(() => {
+    wallet.deactivate()
+  }, [wallet])
+
+  const value = useMemo(
+    () => ({
+      account: wallet.account,
+      connect,
+      disconnect,
+      ethersProvider,
+      wallet,
+    }),
+    [connect, disconnect, ethersProvider, wallet]
+  )
+
+  return (
+    <EthereumContext.Provider value={value}>
+      {children}
+    </EthereumContext.Provider>
+  )
 }
 
-function Wallet({ children }) {
-  return (
-    <Web3ReactProvider getLibrary={useCallback((p) => p, [])}>
-      {children}
-    </Web3ReactProvider>
-  )
+export function useEthereum() {
+  return useContext(EthereumContext)
 }

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { useTheme, gu, ButtonArea, IconClose, Modal } from "kit"
+import { useTheme, gu, ButtonArea, Modal } from "kit"
 import { useEthereum } from "../Ethereum"
 
 import metaMask from "./assets/web3-providers/metamask.svg"

@@ -16,19 +16,13 @@ export const springs = {
 }
 
 export const breakpoints = {
-  small: { width: 45 * gu, padding: 3 * gu },
-  medium: { width: 96 * gu, padding: 5 * gu },
-  large: { width: 120 * gu, padding: 8 * gu },
-  xlarge: {
-    width: 180 * gu,
-    padding: 0,
-    content: 138 * gu,
-    contentLarge: 160 * gu,
-  },
+  small: { width: 45 * gu },
+  medium: { width: 96 * gu },
+  large: { width: 120 * gu },
 }
 
 export function useLayout() {
-  const { above } = useViewport()
+  const { above, below } = useViewport()
 
   return useMemo(() => {
     const breakpointsByLargest = Object.entries(breakpoints).reverse()
@@ -36,9 +30,9 @@ export function useLayout() {
     const [name, layout] =
       breakpointsByLargest.find(([name]) => above(name)) ??
       breakpointsByLargest[
-        above("xlarge") ? 0 : breakpointsByLargest.length - 1
+        above("large") ? 0 : breakpointsByLargest.length - 1
       ]
 
-    return { ...layout, name }
-  }, [above])
+    return { above, below, ...layout, name }
+  }, [above, below])
 }

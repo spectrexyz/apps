@@ -1,59 +1,52 @@
 import { useMemo } from "react"
-import { Kit } from "kit"
+import { Kit, stripTrailingSlashes, FlatTree } from "kit"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { useLocation } from "wouter"
-import { BlockNumber, Ethereum } from "../Ethereum"
-import { TopBar } from "../TopBar/TopBar.jsx"
-import { StatusBar } from "../StatusBar/StatusBar.jsx"
-import { AppLayout } from "./AppLayout.jsx"
+import { Switch, Route } from "wouter"
+import { BlockNumber, EthBalance, Ethereum } from "../Ethereum"
+import { AppLayout } from "../AppLayout/AppLayout.jsx"
+import { ScreenHome } from "../ScreenHome/ScreenHome.jsx"
+import { ScreenSwap } from "../ScreenSwap/ScreenSwap.jsx"
+import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize.jsx"
 import { AppReady } from "./AppReady.jsx"
-import { AppScreen } from "./AppScreen.jsx"
 import { AppScroll } from "./AppScroll.jsx"
 import { AppViewport } from "./AppViewport.jsx"
 
 function App() {
-  const [location] = useLocation()
-
-  const matchLocation = (path) =>
-    (location === "/" ? "/" : location.replace(/\/$/, "")) === path
-
   return (
     <AppProviders>
-      <AppScreen header={<div>header</div>}>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <p key={index} style={{ padding: "10px 0" }}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-            Lorem ipsum dolor sit amet.
-          </p>
-        ))}
-      </AppScreen>
+      <Switch>
+        <Route path="/">
+          <ScreenHome />
+        </Route>
+        <Route path="/spectralize">
+          <ScreenSpectralize />
+        </Route>
+        <Route path="/nfts/:id/buy">
+          <ScreenSwap />
+        </Route>
+        <Route>Wrong path?</Route>
+      </Switch>
     </AppProviders>
   )
 }
 
 function AppProviders({ children }) {
-  const queryClient = useMemo(() => new QueryClient(), [])
   return (
-    <Kit baseUrl="/kit/">
-      <QueryClientProvider client={queryClient}>
-        <Ethereum>
-          <BlockNumber>
-            <AppScroll>
-              <AppReady>
-                <AppViewport>
-                  <AppLayout topBar={<TopBar />} bottomBar={<StatusBar />}>
-                    {children}
-                  </AppLayout>
-                </AppViewport>
-              </AppReady>
-            </AppScroll>
-          </BlockNumber>
-        </Ethereum>
-      </QueryClientProvider>
-    </Kit>
+    <FlatTree
+      items={[
+        [Kit, { baseUrl: "/kit/" }],
+        [QueryClientProvider, { client: useMemo(() => new QueryClient(), []) }],
+        Ethereum,
+        BlockNumber,
+        EthBalance,
+        AppScroll,
+        AppViewport,
+        AppReady,
+        AppLayout,
+      ]}
+    >
+      {children}
+    </FlatTree>
   )
 }
 

@@ -3,13 +3,92 @@ import { css } from "@emotion/react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useLocation } from "wouter"
 import { gu, springs, ButtonArea, FocusTrap, IconList, IconX } from "kit"
+import { menuLinks } from "../content.jsx"
 import { Menu } from "../Menu/Menu.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
 import { useAppScroll } from "../App/AppScroll.jsx"
 
 import logo from "./logo.png"
 
-export function TopBar() {
+export function AppLayoutTopBar({ compact }) {
+  return compact ? <TopBarCompact /> : <TopBarLarge />
+}
+
+export function TopBarLarge() {
+  const [_, setLocation] = useLocation()
+  const { appReadyTransition } = useAppReady()
+  return (
+    <div
+      css={css`
+        position: relative;
+        max-width: calc(142gu + 4gu * 2);
+        height: 16gu;
+        margin: 0 auto;
+      `}
+    >
+      {appReadyTransition(
+        ({ progress, topBarTransform }, ready) =>
+          ready && (
+            <a.div
+              style={{ opacity: progress, transform: topBarTransform }}
+              css={css`
+                position: absolute;
+                inset: 3gu 0 3gu;
+                display: flex;
+                align-items: center;
+                height: 10gu;
+                padding: 0 4gu;
+              `}
+            >
+              <ul
+                css={({ colors }) => css`
+                  display: flex;
+                  list-style: none;
+                  li {
+                    padding-left: 4gu;
+                  }
+                  li:first-of-type {
+                    padding: 0;
+                  }
+                  a {
+                    color: ${colors.content};
+                  }
+                  a.active {
+                    color: ${colors.accent};
+                  }
+                `}
+              >
+                {menuLinks.map(({ active, label, url }) => (
+                  <li key={url}>
+                    <a href={url} className={active ? "active" : ""}>
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <ButtonArea
+                title="Home"
+                onClick={() => setLocation("/")}
+                css={css`
+                  position: absolute;
+                  inset: 50%;
+                  transform: translate(-50%, -50%);
+                  align-items: center;
+                  height: 100%;
+                  padding: 0 10px;
+                  outline-offset: -2px;
+                `}
+              >
+                <img src={logo} alt="" width="64" height="76" />
+              </ButtonArea>
+            </a.div>
+          )
+      )}
+    </div>
+  )
+}
+
+export function TopBarCompact() {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
 
@@ -23,12 +102,14 @@ export function TopBar() {
     innerTransform: hide ? "translate3d(0, -100%, 0)" : "translate3d(0, 0%, 0)",
   })
 
-  const [menuOpened, setMenuOpened] = useState(false)
-  const menuIconTransition = useTransition(menuOpened, {
+  const [menuOpened, setMenuOpened] = useState(null) // null is used to detect the initial value
+  const menuIconTransition = useTransition(Boolean(menuOpened), {
     config: springs.appear,
     from: {
       opacity: 0,
-      transform: menuOpened ? "rotate(-90deg)" : "rotate(90deg)",
+      transform: `rotate(${
+        menuOpened === null ? 0 : 90 * (menuOpened ? -1 : 1)
+      }deg)`,
     },
     enter: { opacity: 1, transform: "rotate(0deg)" },
     leave: {
@@ -39,7 +120,7 @@ export function TopBar() {
 
   return (
     <FocusTrap
-      active={menuOpened}
+      active={Boolean(menuOpened)}
       focusTrapOptions={{
         onDeactivate() {
           setMenuOpened(false)
@@ -112,7 +193,7 @@ export function TopBar() {
               </a.div>
             )
         )}
-        <Menu opened={menuOpened} />
+        <Menu opened={Boolean(menuOpened)} />
       </div>
     </FocusTrap>
   )
