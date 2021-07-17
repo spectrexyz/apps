@@ -39,6 +39,7 @@ const colors = {
   focus: "#C0BBFF",
   content: "#EDFCFF",
   contentHeading: "#FCFAFA",
+  contentHeading2: "#AAFFE4",
   contentDimmed: "#A0A8C2",
   positive: "#58FFCA",
   negative: "#FE6D6D",
