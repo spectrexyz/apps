@@ -48,9 +48,9 @@ const colors = {
   pink: "#FFBBE4",
 }
 
-type Palette<T> = { [name: string]: T }
+export type Palette<T> = { [name: string]: T }
 
-type ThemeContextValue = {
+export type ThemeContextValue = {
   colors: Palette<string>
   fonts: {
     line: string
