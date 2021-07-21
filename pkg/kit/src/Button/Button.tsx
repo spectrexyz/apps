@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import type { ThemeContextValue } from "../Theme/Theme"
 
 import { createContext, useCallback, useContext, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
@@ -84,10 +85,58 @@ export function Button({
     return external ? { ...props, target: "_blank" } : props
   }, [disabled, external])
 
+  const sharedCssStyles = ({ colors }: ThemeContextValue) => css`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: ${wide ? "100%" : "auto"};
+    height: ${heightBase + (vShift ? SHADOW_OFFSET : 0)}px;
+    text-decoration: none;
+    white-space: nowrap;
+    padding-right: ${hShift ? SHADOW_OFFSET : 0}px;
+    padding-bottom: ${vShift ? SHADOW_OFFSET : 0}px;
+    &:focus-visible {
+      outline: 0;
+      .surface {
+        outline: 2px solid ${colors.focus};
+        outline-offset: -1px;
+      }
+      .shadow {
+        opacity: 0;
+      }
+      .active-shadow {
+        opacity: 1;
+        background: ${colors.focus};
+      }
+    }
+    &:active {
+      .surface {
+        transform: translate(1.5px, 1.5px);
+      }
+      .shadow {
+        opacity: 0;
+      }
+      .active-shadow {
+        opacity: 1;
+      }
+      &:disabled {
+        .surface {
+          transform: none;
+        }
+        .active-shadow {
+          opacity: 0;
+        }
+        .shadow {
+          opacity: 1;
+        }
+      }
+    }
+  `
+
   return (
     <ButtonContext.Provider value={{ size }}>
       {href ? (
-        <a {...anchorProps()}>
+        <a href={href} {...anchorProps()} css={sharedCssStyles}>
           <ButtonIn
             adjustLabelAlignment={adjustLabelAlignment}
             horizontalPadding={horizontalPadding}
@@ -103,53 +152,7 @@ export function Button({
           type="button"
           onClick={onClick}
           {...props}
-          css={({ colors }) => css`
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: ${wide ? "100%" : "auto"};
-            height: ${heightBase + (vShift ? SHADOW_OFFSET : 0)}px;
-            text-decoration: none;
-            white-space: nowrap;
-            padding-right: ${hShift ? SHADOW_OFFSET : 0}px;
-            padding-bottom: ${vShift ? SHADOW_OFFSET : 0}px;
-            &:focus-visible {
-              outline: 0;
-              .surface {
-                outline: 2px solid ${colors.focus};
-                outline-offset: -1px;
-              }
-              .shadow {
-                opacity: 0;
-              }
-              .active-shadow {
-                opacity: 1;
-                background: ${colors.focus};
-              }
-            }
-            &:active {
-              .surface {
-                transform: translate(1.5px, 1.5px);
-              }
-              .shadow {
-                opacity: 0;
-              }
-              .active-shadow {
-                opacity: 1;
-              }
-              &:disabled {
-                .surface {
-                  transform: none;
-                }
-                .active-shadow {
-                  opacity: 0;
-                }
-                .shadow {
-                  opacity: 1;
-                }
-              }
-            }
-          `}
+          css={sharedCssStyles}
         >
           <ButtonIn
             adjustLabelAlignment={adjustLabelAlignment}
