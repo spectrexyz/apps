@@ -92,3 +92,21 @@ export function isAddress(address: string): boolean {
 export function uid(prefix = "uid"): string {
   return `${prefix}-${Math.round(Math.random() * 10 ** 8)}`
 }
+
+export function formatDate(date: string | Date, full = false): string {
+  if (typeof date === "string") date = new Date(date)
+  return date.toLocaleString(
+    "en-US",
+    full
+      ? {
+          dateStyle: "full",
+          timeStyle: "medium",
+        }
+      : {
+          month: "long",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+  )
+}
