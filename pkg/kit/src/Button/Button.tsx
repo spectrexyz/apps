@@ -2,7 +2,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import type { ThemeContextValue } from "../Theme/Theme"
 
-import { createContext, useCallback, useContext, useMemo } from "react"
+import { createContext, useContext, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { ButtonArea } from "../ButtonArea"
@@ -22,8 +22,8 @@ type ButtonMode =
   | "primary"
   | "primary-2"
   | "secondary"
-  | "flat"
-  | "flat-2"
+  | "flat" // layer1
+  | "flat-2" // layer2 (lighter)
   | "flat-3" // dark blue
   | "outline"
 type ButtonSize =
@@ -32,22 +32,23 @@ type ButtonSize =
   | "small"
 type ShadowInBox = false | true | "width" | "height"
 
-type ButtonProps = ComponentPropsWithoutRef<"button"> & {
-  // adjust the label alignment (i.e. makes all caps button labels appear centered)
-  adjustLabelAlignment?: boolean
-  disabled?: boolean
-  external?: boolean
-  horizontalPadding?: number
-  href?: ComponentPropsWithoutRef<"a">["href"]
-  icon?: ReactNode
-  label: string
-  mode: ButtonMode
-  onClick?: () => void
-  // wether the shadow should be part of the button box or not
-  shadowInBox?: ShadowInBox
-  size?: ButtonSize
-  wide?: boolean
-}
+type ButtonProps = ComponentPropsWithoutRef<"button"> &
+  ComponentPropsWithoutRef<"a"> & {
+    // adjust the label alignment (i.e. makes all caps button labels appear centered)
+    adjustLabelAlignment?: boolean
+    disabled?: boolean
+    external?: boolean
+    horizontalPadding?: number
+    href?: ComponentPropsWithoutRef<"a">["href"]
+    icon?: ReactNode
+    label: string
+    mode: ButtonMode
+    onClick?: () => void
+    // wether the shadow should be part of the button box or not
+    shadowInBox?: ShadowInBox
+    size?: ButtonSize
+    wide?: boolean
+  }
 
 export function Button({
   adjustLabelAlignment = true,
@@ -58,7 +59,7 @@ export function Button({
   icon,
   label,
   mode = "secondary",
-  onClick = () => {},
+  onClick,
   shadowInBox = false,
   size = "medium",
   wide = false,
@@ -73,97 +74,79 @@ export function Button({
     return 5.5 * gu
   }, [size])
 
-  const anchorProps = useCallback<() => ComponentPropsWithoutRef<"a">>(() => {
-    if (disabled) {
-      return {}
-    }
-    const props = {
-      href,
-      onClick,
-      rel: "noopener noreferrer",
-    }
-    return external ? { ...props, target: "_blank" } : props
-  }, [disabled, external])
-
-  const sharedCssStyles = ({ colors }: ThemeContextValue) => css`
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: ${wide ? "100%" : "auto"};
-    height: ${heightBase + (vShift ? SHADOW_OFFSET : 0)}px;
-    text-decoration: none;
-    white-space: nowrap;
-    padding-right: ${hShift ? SHADOW_OFFSET : 0}px;
-    padding-bottom: ${vShift ? SHADOW_OFFSET : 0}px;
-    &:focus-visible {
-      outline: 0;
-      .surface {
-        outline: 2px solid ${colors.focus};
-        outline-offset: -1px;
-      }
-      .shadow {
-        opacity: 0;
-      }
-      .active-shadow {
-        opacity: 1;
-        background: ${colors.focus};
-      }
-    }
-    &:active {
-      .surface {
-        transform: translate(1.5px, 1.5px);
-      }
-      .shadow {
-        opacity: 0;
-      }
-      .active-shadow {
-        opacity: 1;
-      }
-      &:disabled {
-        .surface {
-          transform: none;
-        }
-        .active-shadow {
-          opacity: 0;
-        }
-        .shadow {
-          opacity: 1;
-        }
-      }
-    }
-  `
+  const fontSize = useMemo(() => {
+    if (size === "small") return "14px"
+    return "18px"
+  }, [size])
 
   return (
     <ButtonContext.Provider value={{ size }}>
-      {href ? (
-        <a href={href} {...anchorProps()} css={sharedCssStyles}>
-          <ButtonIn
-            adjustLabelAlignment={adjustLabelAlignment}
-            horizontalPadding={horizontalPadding}
-            icon={icon}
-            label={label}
-            mode={mode}
-            size={size}
-          />
-        </a>
-      ) : (
-        <ButtonArea
-          disabled={disabled}
-          type="button"
-          onClick={onClick}
-          {...props}
-          css={sharedCssStyles}
-        >
-          <ButtonIn
-            adjustLabelAlignment={adjustLabelAlignment}
-            horizontalPadding={horizontalPadding}
-            icon={icon}
-            label={label}
-            mode={mode}
-            size={size}
-          />
-        </ButtonArea>
-      )}
+      <ButtonArea
+        disabled={disabled}
+        external={external}
+        href={href}
+        onClick={onClick}
+        type={href ? undefined : "button"}
+        {...props}
+        css={({ colors, fonts }: ThemeContextValue) => css`
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: ${wide ? "100%" : "auto"};
+          height: ${heightBase + (vShift ? SHADOW_OFFSET : 0)}px;
+          padding-right: ${hShift ? SHADOW_OFFSET : 0}px;
+          padding-bottom: ${vShift ? SHADOW_OFFSET : 0}px;
+          text-decoration: none;
+          white-space: nowrap;
+          font-size: ${fontSize};
+          font-family: ${fonts.families.mono};
+          &:focus-visible {
+            outline: 0;
+            .surface {
+              outline: 2px solid ${colors.focus};
+              outline-offset: -1px;
+            }
+            .shadow {
+              opacity: 0;
+            }
+            .active-shadow {
+              opacity: 1;
+              background: ${colors.focus};
+            }
+          }
+          &:active {
+            .surface {
+              transform: translate(1.5px, 1.5px);
+            }
+            .shadow {
+              opacity: 0;
+            }
+            .active-shadow {
+              opacity: 1;
+            }
+            &:disabled {
+              .surface {
+                transform: none;
+              }
+              .active-shadow {
+                opacity: 0;
+              }
+              .shadow {
+                opacity: 1;
+              }
+            }
+          }
+        `}
+      >
+        <ButtonIn
+          adjustLabelAlignment={adjustLabelAlignment}
+          horizontalPadding={horizontalPadding}
+          icon={icon}
+          label={label}
+          mode={mode}
+          size={size}
+        />
+      </ButtonArea>
     </ButtonContext.Provider>
   )
 }
@@ -187,11 +170,6 @@ function ButtonIn({
   const shadowBounds = useDimensions()
   const { colors } = useTheme()
 
-  const fontSize = useMemo(() => {
-    if (size === "small") return "14px"
-    return "18px"
-  }, [size])
-
   const _horizontalPadding = useMemo(() => {
     if (horizontalPadding !== undefined) return horizontalPadding
     if (size === "small") return 1.5 * gu
@@ -212,7 +190,7 @@ function ButtonIn({
     >
       <div
         className="surface"
-        css={({ colors, fonts }) => css`
+        css={({ colors }) => css`
           position: relative;
           z-index: 2;
           display: flex;
@@ -220,8 +198,6 @@ function ButtonIn({
           width: 100%;
           height: 100%;
           padding: 0 ${_horizontalPadding}px;
-          font-size: ${fontSize};
-          font-family: ${fonts.families.mono};
           color: ${(() => {
             if (mode === "flat") return colors.accent
             if (mode === "flat-2") return colors.accent
