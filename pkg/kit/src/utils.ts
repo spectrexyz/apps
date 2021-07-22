@@ -110,3 +110,5 @@ export function formatDate(date: string | Date, full = false): string {
         }
   )
 }
+
+export function noop() {}
