@@ -3,7 +3,7 @@ import { a, useTransition } from "react-spring"
 import { css } from "@emotion/react"
 import { springs } from "kit"
 
-import logo from "../TopBar/logo.png"
+import logo from "./splash-logo.png"
 
 const AppReadyContext = createContext()
 

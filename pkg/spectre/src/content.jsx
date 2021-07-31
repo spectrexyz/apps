@@ -14,7 +14,5 @@ export const footerLinks = [twitter, discord, github]
 export const menuLinks = [
   { label: "Litepaper", url: "https://spectre.xyz/litepaper" },
   { label: "FAQ", url: "https://spectre.xyz/faq" },
-  { label: "App", url: "https://spectre.xyz/app", active: true },
-  // { label: "Website", url: "https://spectre.xyz/" },
-  // { label: "Blog", url: "https://spectre.xyz/blog" },
+  { label: "App", url: null },
 ]

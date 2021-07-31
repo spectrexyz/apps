@@ -56,21 +56,7 @@ export function kebabCase(value) {
 
 export function usePath() {
   const [location, setLocation] = useLocation()
-  return [
-    location,
-    useCallback(
-      (path) => {
-        setLocation(path)
-        setTimeout(() => {
-          window.document.documentElement.style.scrollBehavior = "auto"
-          window.scrollTo(0, 0)
-          window.document.documentElement.style.scrollBehavior = null
-          setLocation(path)
-        }, 100)
-      },
-      [setLocation]
-    ),
-  ]
+  return [location, setLocation]
 }
 
 export function isValidEmail(value) {

@@ -9,7 +9,39 @@ import { SyncStatus } from "../SyncStatus"
 import { Actions } from "../Actions/Actions.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
 
-export function AppLayoutBottomBar() {
+export function AppLayoutBottomBar({ compact }) {
+  return compact ? <BottomBarCompact /> : <BottomBarLarge />
+}
+
+function BottomBarLarge() {
+  return (
+    <div
+      css={css`
+        position: relative;
+        max-width: 160gu;
+        height: 14gu;
+        padding: 5gu 0;
+        margin: 0 auto;
+      `}
+    >
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          height: 4gu;
+        `}
+      >
+        <div>
+          <SyncStatus />
+        </div>
+        <Actions />
+      </div>
+    </div>
+  )
+}
+
+function BottomBarCompact() {
   const [connectionModalOpened, setConnectionModalOpened] = useState(false)
   const [drawerOpened, setDrawerOpened] = useState(false)
   const { account, wallet, disconnect } = useEthereum()

@@ -22,6 +22,8 @@ export function ScreenHome() {
         <h1>Spectre</h1>
         {[
           ["Spectralize", "/spectralize"],
+          ["NFT #1", "/nfts/1"],
+          ["TOKEN #1", "/nfts/1/serc20"],
           ["Buy token", "/nfts/1/buy"],
         ].map(([label, path]) => (
           <div
