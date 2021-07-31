@@ -11,7 +11,7 @@ function defaultTemplate({ template }, opts, { componentName, jsx, exports }) {
   return typeScriptTpl.ast`import type { SVGProps } from 'react'
 
 import React from 'react'
-import { useIconSize } from '../icons-utils'
+import { useIconSize, useIconColor } from '../icons-utils'
 
 type ${propsTypeName} = SVGProps<SVGSVGElement> & {
   color?: string
@@ -19,10 +19,11 @@ type ${propsTypeName} = SVGProps<SVGSVGElement> & {
 }
 
 export default function ${componentName}({
-  color = "currentColor",
+  color,
   size,
   ...props
 }: ${propsTypeName}) {
+  color = useIconColor(color)
   size = useIconSize(size)
   return ${jsx};
 }

@@ -1,15 +1,16 @@
 import type { SVGProps } from "react"
 import React from "react"
-import { useIconSize } from "../icons-utils"
+import { useIconSize, useIconColor } from "../icons-utils"
 type IconArrowsDownUpProps = SVGProps<SVGSVGElement> & {
   color?: string,
   size?: number,
 }
 export default function IconArrowsDownUp({
-  color = "currentColor",
+  color,
   size,
   ...props
 }: IconArrowsDownUpProps) {
+  color = useIconColor(color)
   size = useIconSize(size)
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>

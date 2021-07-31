@@ -1,15 +1,12 @@
 import type { SVGProps } from "react"
 import React from "react"
-import { useIconSize } from "../icons-utils"
+import { useIconSize, useIconColor } from "../icons-utils"
 type IconChecksProps = SVGProps<SVGSVGElement> & {
   color?: string,
   size?: number,
 }
-export default function IconChecks({
-  color = "currentColor",
-  size,
-  ...props
-}: IconChecksProps) {
+export default function IconChecks({ color, size, ...props }: IconChecksProps) {
+  color = useIconColor(color)
   size = useIconSize(size)
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>

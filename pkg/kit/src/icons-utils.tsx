@@ -12,12 +12,21 @@ import {
   useInsideButtonIcon,
   ICON_SIZE_DEFAULT as BUTTON_ICON_ICON_SIZE_DEFAULT,
 } from "./ButtonIcon"
+import {
+  useInfoTitleIconColor,
+  useInfoTitleIconSize,
+  useInsideInfoTitle,
+} from "./Info"
 import { gu } from "./styles"
 
 export function useIconSize(size?: number): number {
   const isInsideButton = useInsideButton()
+
   const isInsideButtonText = useInsideButtonText()
   const isInsideButtonIcon = useInsideButtonIcon()
+
+  const isInsideInfoTitle = useInsideInfoTitle()
+  const infoTitleIconSize = useInfoTitleIconSize()
 
   if (size !== undefined) return size
 
@@ -31,5 +40,18 @@ export function useIconSize(size?: number): number {
   if (isInsideButtonText) return BUTTON_TEXT_ICON_SIZE_DEFAULT
   if (isInsideButtonIcon) return BUTTON_ICON_ICON_SIZE_DEFAULT
 
+  if (isInsideInfoTitle) return infoTitleIconSize
+
   return 4 * gu
+}
+
+export function useIconColor(color?: string) {
+  const isInsideInfoTitle = useInsideInfoTitle()
+  const infoTitleIconColor = useInfoTitleIconColor()
+
+  if (color !== undefined) return color
+
+  if (isInsideInfoTitle) return infoTitleIconColor
+
+  return "currentColor"
 }
