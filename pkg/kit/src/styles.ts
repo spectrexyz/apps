@@ -20,6 +20,11 @@ export const fonts = {
 }
 
 export const springs = {
+  swift: {
+    mass: 0.5,
+    tension: 800,
+    friction: 30,
+  },
   appear: {
     mass: 0.5,
     tension: 400,
