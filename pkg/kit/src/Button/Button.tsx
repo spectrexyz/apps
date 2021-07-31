@@ -2,7 +2,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import type { ThemeContextValue } from "../Theme/Theme"
 
-import { createContext, useContext, useMemo } from "react"
+import { createContext, forwardRef, useContext, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { ButtonArea } from "../ButtonArea"
@@ -50,21 +50,27 @@ type ButtonProps = ComponentPropsWithoutRef<"button"> &
     wide?: boolean
   }
 
-export function Button({
-  adjustLabelAlignment = true,
-  disabled,
-  external,
-  horizontalPadding,
-  href,
-  icon,
-  label,
-  mode = "secondary",
-  onClick,
-  shadowInBox = false,
-  size = "medium",
-  wide = false,
-  ...props
-}: ButtonProps): JSX.Element {
+export const Button = forwardRef<
+  HTMLButtonElement & HTMLAnchorElement,
+  ButtonProps
+>(function Button(
+  {
+    adjustLabelAlignment = true,
+    disabled,
+    external,
+    horizontalPadding,
+    href,
+    icon,
+    label,
+    mode = "secondary",
+    onClick,
+    shadowInBox = false,
+    size = "medium",
+    wide = false,
+    ...props
+  },
+  ref
+): JSX.Element {
   const hShift = shadowInBox === "width" || shadowInBox === true
   const vShift = shadowInBox === "height" || shadowInBox === true
 
@@ -82,6 +88,7 @@ export function Button({
   return (
     <ButtonContext.Provider value={{ size }}>
       <ButtonArea
+        ref={ref}
         disabled={disabled}
         external={external}
         href={href}
@@ -100,6 +107,15 @@ export function Button({
           white-space: nowrap;
           font-size: ${fontSize};
           font-family: ${fonts.families.mono};
+          color: ${(() => {
+            if (mode === "flat") return colors.accent
+            if (mode === "flat-2") return colors.accent
+            if (mode === "flat-3") return colors.accent
+            if (mode === "primary") return colors.accentContent
+            if (mode === "primary-2") return colors.accent2Content
+            // secondary
+            return colors.accent
+          })()};
           &:focus-visible {
             outline: 0;
             .surface {
@@ -149,7 +165,7 @@ export function Button({
       </ButtonArea>
     </ButtonContext.Provider>
   )
-}
+})
 
 function ButtonIn({
   adjustLabelAlignment,
@@ -174,7 +190,7 @@ function ButtonIn({
     if (horizontalPadding !== undefined) return horizontalPadding
     if (size === "small") return 1.5 * gu
     if (size === "compact") return 1.25 * gu
-    return 2 * gu
+    return 3 * gu
   }, [size, horizontalPadding])
 
   return (
@@ -198,15 +214,6 @@ function ButtonIn({
           width: 100%;
           height: 100%;
           padding: 0 ${_horizontalPadding}px;
-          color: ${(() => {
-            if (mode === "flat") return colors.accent
-            if (mode === "flat-2") return colors.accent
-            if (mode === "flat-3") return colors.accent
-            if (mode === "primary") return colors.accentContent
-            if (mode === "primary-2") return colors.accent2Content
-            // secondary
-            return colors.accent
-          })()};
           background: ${(() => {
             if (mode === "flat") return colors.layer2
             if (mode === "flat-2") return colors.layer1
