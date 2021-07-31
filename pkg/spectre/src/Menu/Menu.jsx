@@ -47,9 +47,7 @@ export function Menu({ opened }) {
               `}
             >
               {menuLinks.map(({ label, url }) => (
-                <li key={url}>
-                  <a href={url}>{label}</a>
-                </li>
+                <li key={url}>{url && <a href={url}>{label}</a>}</li>
               ))}
             </ul>
           </a.nav>

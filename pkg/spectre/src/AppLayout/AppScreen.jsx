@@ -7,7 +7,13 @@ import { useAppScroll } from "../App/AppScroll.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
 import { AppScreenCompactHeader } from "./AppScreenCompactHeader.jsx"
 
-export function AppScreen({ onBack, title, contextual, children }) {
+export function AppScreen({
+  onBack,
+  title,
+  contextual,
+  children,
+  mode = "normal",
+}) {
   const { colors } = useTheme()
   const { appReadyTransition } = useAppReady()
 
@@ -99,7 +105,7 @@ export function AppScreen({ onBack, title, contextual, children }) {
               css={css`
                 display: flex;
                 width: 100%;
-                max-width: calc(142gu + 4gu * 2);
+                max-width: calc(160gu + 4gu * 2);
                 margin: 0 auto;
                 padding: 5.25gu 4gu 0;
               `}
@@ -121,12 +127,14 @@ export function AppScreen({ onBack, title, contextual, children }) {
               flex-grow: 1;
               transform-origin: 50% 0;
               width: 100%;
-              max-width: ${fullWidth ? "none" : "500px"};
+              max-width: ${fullWidth || mode === "minimal" ? "none" : "500px"};
               margin: 0 auto;
-              background: ${fullWidth ? "none" : colors.background};
+              background: ${fullWidth || mode === "minimal"
+                ? "none"
+                : colors.background};
             `}
           >
-            {!compactMenu && (
+            {!compactMenu && mode !== "minimal" && (
               <div
                 css={css`
                   display: flex;
@@ -142,12 +150,24 @@ export function AppScreen({ onBack, title, contextual, children }) {
                 >
                   {title}
                 </h1>
-                <div>{contextual}</div>
+                <div
+                  css={css`
+                    height: 100%;
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                  `}
+                >
+                  {contextual}
+                </div>
               </div>
             )}
             <div
               css={css`
-                padding: ${compactMenu ? 2 * gu : 4 * gu}px;
+                padding: ${mode === "minimal"
+                  ? 0
+                  : compactMenu
+                  ? 2 * gu
+                  : 4 * gu}px;
               `}
             >
               {children}

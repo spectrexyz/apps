@@ -1,8 +1,16 @@
 import { useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring, useTransition } from "react-spring"
-import { useLocation } from "wouter"
-import { gu, springs, ButtonArea, FocusTrap, IconList, IconX } from "kit"
+import { Link, useLocation } from "wouter"
+import {
+  Button,
+  ButtonArea,
+  FocusTrap,
+  IconList,
+  IconX,
+  gu,
+  springs,
+} from "kit"
 import { menuLinks } from "../content.jsx"
 import { Menu } from "../Menu/Menu.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
@@ -21,7 +29,7 @@ export function TopBarLarge() {
     <div
       css={css`
         position: relative;
-        max-width: calc(142gu + 4gu * 2);
+        max-width: calc(160gu + 4gu * 2);
         height: 16gu;
         margin: 0 auto;
       `}
@@ -36,6 +44,7 @@ export function TopBarLarge() {
                 inset: 3gu 0 3gu;
                 display: flex;
                 align-items: center;
+                justify-content: space-between;
                 height: 10gu;
                 padding: 0 4gu;
               `}
@@ -58,11 +67,15 @@ export function TopBarLarge() {
                   }
                 `}
               >
-                {menuLinks.map(({ active, label, url }) => (
+                {menuLinks.map(({ label, url }) => (
                   <li key={url}>
-                    <a href={url} className={active ? "active" : ""}>
-                      {label}
-                    </a>
+                    {url ? (
+                      <a href={url}>{label}</a>
+                    ) : (
+                      <Link href="/" className="active">
+                        {label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -81,6 +94,12 @@ export function TopBarLarge() {
               >
                 <img src={logo} alt="" width="64" height="76" />
               </ButtonArea>
+              <div>
+                <Button
+                  label="Connect account"
+                  onClick={() => {}}
+                />
+              </div>
             </a.div>
           )
       )}

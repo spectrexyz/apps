@@ -10,16 +10,7 @@ export function ScreenSwap() {
     <AppScreen
       title="Buy MAGIC"
       onBack={() => setLocation("/")}
-      contextual={
-        <ButtonIcon
-          icon={<IconGearSix />}
-          label="Back"
-          css={css`
-            height: 100%;
-            padding: 0 2gu;
-          `}
-        />
-      }
+      contextual={<ButtonIcon icon={<IconGearSix />} label="Settings" />}
     >
       <div
         css={css`

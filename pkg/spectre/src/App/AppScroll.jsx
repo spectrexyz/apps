@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react"
+import { useLocation } from "wouter"
 
 const AppScrollContext = createContext()
 
@@ -22,13 +23,27 @@ export function AppScroll({ children }) {
     callbacks.current.forEach((cb) => cb(value))
   }, [])
 
+  // keep a reference to the scrollable element so it can be shared
+  const appScrollRef = useRef()
+
   return (
     <AppScrollContext.Provider
-      value={{ updateAppScroll, addCallback, removeCallback }}
+      value={{ appScrollRef, updateAppScroll, addCallback, removeCallback }}
     >
-      {children}
+      <ResetScrollOnPathChange>{children}</ResetScrollOnPathChange>
     </AppScrollContext.Provider>
   )
+}
+
+function ResetScrollOnPathChange({ children }) {
+  const [pathname] = useLocation()
+  const { appScrollRef } = useAppScrollUpdater()
+
+  useEffect(() => {
+    appScrollRef.current.scrollTo(0, 0)
+  }, [appScrollRef, pathname])
+
+  return children
 }
 
 export function useAppScroll(callback) {
@@ -47,5 +62,6 @@ export function useAppScroll(callback) {
 }
 
 export function useAppScrollUpdater() {
-  return useContext(AppScrollContext).updateAppScroll
+  const { appScrollRef, updateAppScroll } = useContext(AppScrollContext)
+  return { appScrollRef, updateAppScroll }
 }
