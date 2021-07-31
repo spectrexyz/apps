@@ -13,12 +13,18 @@ type TabItem = {
 }
 
 type TabsProps = {
+  fullWidth?: boolean
   items: TabItem[]
   onSelect: (index: number) => void
   selected: number
 }
 
-export function Tabs({ items, selected, onSelect }: TabsProps): JSX.Element {
+export function Tabs({
+  fullWidth = false,
+  items,
+  onSelect,
+  selected,
+}: TabsProps): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const isFocused = useRef(false)
 
@@ -62,15 +68,17 @@ export function Tabs({ items, selected, onSelect }: TabsProps): JSX.Element {
         justify-content: center;
         align-items: center;
         height: 5gu;
+        width: ${fullWidth ? "100%" : "auto"};
       `}
     >
       <div
         css={({ colors }) => css`
           display: flex;
           align-items: center;
+          width: ${fullWidth ? "100%" : "auto"};
           height: 100%;
           color: ${colors.accent};
-          background: ${colors.background};
+          background: ${colors.layer2};
           border: 1px solid ${colors.accent};
           .selected {
             color: ${colors.accentContent};
@@ -95,7 +103,9 @@ export function Tabs({ items, selected, onSelect }: TabsProps): JSX.Element {
             role="tab"
             tabIndex={selected === index ? 0 : -1}
             css={({ colors }) => css`
+              flex: 1 1 0;
               align-items: center;
+              justify-content: center;
               height: 100%;
               padding: 0 4gu;
               border-left: 1px solid ${colors.accent};
