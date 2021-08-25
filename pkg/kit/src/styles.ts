@@ -20,6 +20,7 @@ export const fonts = {
 }
 
 export const springs = {
+  debug: { mass: 1, tension: 10, friction: 40 },
   swift: {
     mass: 0.5,
     tension: 800,
