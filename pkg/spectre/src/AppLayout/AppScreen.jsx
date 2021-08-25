@@ -5,7 +5,6 @@ import { Button, ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
 import { useLayout } from "../styles.js"
 import { useAppScroll } from "../App/AppScroll.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
-import { AppScreenCompactHeader } from "./AppScreenCompactHeader.jsx"
 
 export function AppScreen({
   onBack,
@@ -72,7 +71,7 @@ export function AppScreen({
                     user-select: none;
                   `}
                 >
-                  <AppScreenCompactHeader
+                  <HeaderCompact
                     title={title}
                     start={
                       onBack && (
@@ -81,8 +80,8 @@ export function AppScreen({
                           icon={<IconArrowLeft color={colors.accent} />}
                           label="Back"
                           css={css`
+                            width: 7gu;
                             height: 100%;
-                            padding: 0 2gu;
                           `}
                         />
                       )
@@ -175,5 +174,61 @@ export function AppScreen({
           </a.div>
         </div>
       )
+  )
+}
+
+function HeaderCompact({ start, title, end }) {
+  return (
+    <div
+      css={css`
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+      `}
+    >
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 100%;
+        `}
+      >
+        {start && (
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              height: 100%;
+            `}
+          >
+            {start}
+          </div>
+        )}
+        <div
+          css={({ fonts }) => css`
+            font-family: ${fonts.families.mono};
+            font-size: 16px;
+            text-transform: uppercase;
+          `}
+        >
+          {title}
+        </div>
+      </div>
+      {end && (
+        <div
+          css={css`
+            display: flex;
+            width: 7gu;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+          `}
+        >
+          {end}
+        </div>
+      )}
+    </div>
   )
 }

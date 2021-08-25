@@ -4,13 +4,22 @@ import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen.jsx"
 import { SwapModule } from "./SwapModule.jsx"
 
-export function ScreenSwap() {
+export function ScreenBuy() {
   const [_, setLocation] = useLocation()
   return (
     <AppScreen
       title="Buy MAGIC"
       onBack={() => setLocation("/")}
-      contextual={<ButtonIcon icon={<IconGearSix />} label="Settings" />}
+      contextual={
+        <ButtonIcon
+          icon={<IconGearSix />}
+          label="Settings"
+          css={css`
+            width: 7gu;
+            height: 100%;
+          `}
+        />
+      }
     >
       <div
         css={css`
@@ -19,7 +28,7 @@ export function ScreenSwap() {
       >
         <div
           css={({ colors }) => css`
-            width: calc(100% - 4gu);
+            width: 100%;
             margin: 0 auto;
             padding: 2gu 1gu 3gu;
             background: ${colors.layer2};

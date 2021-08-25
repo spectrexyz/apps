@@ -1,20 +1,28 @@
-import { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring, useTransition } from "react-spring"
 import { Link, useLocation } from "wouter"
 import {
+  AddressBadge,
   Button,
   ButtonArea,
+  ButtonText,
   FocusTrap,
+  IconArrowSquareOut,
+  IconCopy,
   IconList,
   IconX,
+  Root,
   gu,
   springs,
 } from "kit"
-import { menuLinks } from "../content.jsx"
+import { AccountWindow } from "../Account"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount.jsx"
 import { Menu } from "../Menu/Menu.jsx"
+import { menuLinks } from "../content.jsx"
 import { useAppReady } from "../App/AppReady.jsx"
 import { useAppScroll } from "../App/AppScroll.jsx"
+import { useEthereum } from "../Ethereum"
 
 import logo from "./logo.png"
 
@@ -25,85 +33,120 @@ export function AppLayoutTopBar({ compact }) {
 export function TopBarLarge() {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
+  const [connectAccountOpened, setConnectAccountOpened] = useState(false)
+  const [accountOpened, setAccountOpened] = useState(false)
+  const connectButtonRef = useRef()
+  const { account, disconnect } = useEthereum()
+
+  useEffect(() => {
+    if (account) {
+      setConnectAccountOpened(false)
+    } else {
+      setAccountOpened(false)
+    }
+  }, [account])
+
   return (
-    <div
-      css={css`
-        position: relative;
-        max-width: calc(160gu + 4gu * 2);
-        height: 16gu;
-        margin: 0 auto;
-      `}
-    >
-      {appReadyTransition(
-        ({ progress, topBarTransform }, ready) =>
-          ready && (
-            <a.div
-              style={{ opacity: progress, transform: topBarTransform }}
-              css={css`
-                position: absolute;
-                inset: 3gu 0 3gu;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 10gu;
-                padding: 0 4gu;
-              `}
-            >
-              <ul
-                css={({ colors }) => css`
-                  display: flex;
-                  list-style: none;
-                  li {
-                    padding-left: 4gu;
-                  }
-                  li:first-of-type {
-                    padding: 0;
-                  }
-                  a {
-                    color: ${colors.content};
-                  }
-                  a.active {
-                    color: ${colors.accent};
-                  }
-                `}
-              >
-                {menuLinks.map(({ label, url }) => (
-                  <li key={url}>
-                    {url ? (
-                      <a href={url}>{label}</a>
-                    ) : (
-                      <Link href="/" className="active">
-                        {label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <ButtonArea
-                title="Home"
-                onClick={() => setLocation("/")}
+    <>
+      <div
+        css={css`
+          position: relative;
+          max-width: calc(160gu + 4gu * 2);
+          height: 16gu;
+          margin: 0 auto;
+        `}
+      >
+        {appReadyTransition(
+          ({ progress, topBarTransform }, ready) =>
+            ready && (
+              <a.div
+                style={{ opacity: progress, transform: topBarTransform }}
                 css={css`
                   position: absolute;
-                  inset: 50%;
-                  transform: translate(-50%, -50%);
+                  inset: 3gu 0 3gu;
+                  display: flex;
                   align-items: center;
-                  height: 100%;
-                  padding: 0 10px;
-                  outline-offset: -2px;
+                  justify-content: space-between;
+                  height: 10gu;
+                  padding: 0 4gu;
                 `}
               >
-                <img src={logo} alt="" width="64" height="76" />
-              </ButtonArea>
-              <div>
-                <Button
-                  label="Connect account"
-                  onClick={() => {}}
-                />
-              </div>
-            </a.div>
-          )
-      )}
-    </div>
+                <ul
+                  css={({ colors }) => css`
+                    display: flex;
+                    list-style: none;
+                    li {
+                      padding-left: 4gu;
+                    }
+                    li:first-of-type {
+                      padding: 0;
+                    }
+                    a {
+                      color: ${colors.content};
+                    }
+                    a.active {
+                      color: ${colors.accent};
+                    }
+                  `}
+                >
+                  {menuLinks.map(({ label, url }) => (
+                    <li key={url}>
+                      {url ? (
+                        <a href={url}>{label}</a>
+                      ) : (
+                        <Link href="/" className="active">
+                          {label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <ButtonArea
+                  title="Home"
+                  onClick={() => setLocation("/")}
+                  css={css`
+                    position: absolute;
+                    inset: 50%;
+                    transform: translate(-50%, -50%);
+                    align-items: center;
+                    height: 100%;
+                    padding: 0 10px;
+                    outline-offset: -2px;
+                  `}
+                >
+                  <img src={logo} alt="" width="64" height="76" />
+                </ButtonArea>
+                <div>
+                  {account ? (
+                    <ButtonArea
+                      title="Open Account"
+                      onClick={() => setAccountOpened(true)}
+                    >
+                      <AddressBadge address={account} />
+                    </ButtonArea>
+                  ) : (
+                    <Button
+                      ref={connectButtonRef}
+                      label="Connect account"
+                      onClick={() => setConnectAccountOpened(true)}
+                    />
+                  )}
+                </div>
+              </a.div>
+            )
+        )}
+      </div>
+      <ConnectAccount
+        opener={connectButtonRef}
+        visible={connectAccountOpened}
+        onClose={() => setConnectAccountOpened(false)}
+      />
+
+      <AccountWindow
+        visible={accountOpened}
+        onClose={() => setAccountOpened(false)}
+      />
+    </>
   )
 }
 

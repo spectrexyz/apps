@@ -14,6 +14,7 @@ import {
 } from "kit"
 import { Link } from "wouter"
 import { SNFTS } from "../demo-data"
+import { Distribution } from "../Distribution/Distribution.jsx"
 import { PanelDetails } from "./PanelDetails.jsx"
 import { PanelSection } from "./PanelSection.jsx"
 import { ViewArea } from "./ViewArea.jsx"
@@ -77,11 +78,6 @@ export function NftPanel({ id }) {
               </div>
               <Button label="Create buyout proposal" mode="primary" />
             </PanelSection>
-            <MoreNfts snftFrom={snft} />
-          </>
-        }
-        secondary={
-          <>
             <PanelSection title="Authenticity">
               <div
                 css={css`
@@ -104,6 +100,14 @@ export function NftPanel({ id }) {
                   </div>
                 ))}
               </div>
+            </PanelSection>
+            <MoreNfts snftFrom={snft} />
+          </>
+        }
+        secondary={
+          <>
+            <PanelSection title="Collective ownership distribution">
+              <Distribution values={snft.token.distribution} />
             </PanelSection>
             <PanelSection title="History">
               {snft.history.map(({ date, event }, index) => (
