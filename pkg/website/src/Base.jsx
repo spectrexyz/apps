@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { ViewportProvider } from "use-viewport"
+import { ViewportProvider } from "@bpierre/use-viewport"
 import { Uikit, theme } from "kit-legacy"
 import { breakpoints } from "./styles"
 

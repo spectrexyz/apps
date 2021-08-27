@@ -9,6 +9,7 @@
     "lint": "eslint --ext .jsx,.js src/"
   },
   "dependencies": {
+    "@bpierre/use-viewport": "^0.3.0",
     "@elchininet/isometric": "^2.5.3",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.1",
@@ -25,7 +26,6 @@
     "react-spring": "^9.2.4",
     "stylis": "^4.0.10",
     "use-nft": "^0.10.1",
-    "use-viewport": "git://github.com/bpierre/use-viewport.git#master",
     "web3-react": "^5.0.5",
     "zustand": "^3.5.10"
   },

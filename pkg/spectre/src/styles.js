@@ -1,6 +1,6 @@
 import { gu } from "kit"
 import { useMemo } from "react"
-import { useViewport } from "use-viewport"
+import { useViewport } from "@bpierre/use-viewport"
 
 export const springs = {
   appear: {
