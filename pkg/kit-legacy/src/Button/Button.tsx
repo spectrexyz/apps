@@ -103,9 +103,10 @@ export function Button({ mode = "outline", label, ...props }: ButtonProps) {
           `}
         />
         <Moire
-          width={buttonBounds.width}
           height={buttonBounds.height}
+          linesColor={theme.secondary}
           scale={0.8}
+          width={buttonBounds.width}
         />
       </div>
     </button>
