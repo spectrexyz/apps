@@ -10,6 +10,7 @@ import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
 import { NftCollection } from "./NftCollection"
 import { Spectre } from "./Spectre"
+import { Popup } from "./Popup"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
@@ -18,7 +19,8 @@ const demos = [
   ["moire", () => <Moire style={{ borderRadius: "50%" }} />, true],
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
-] as [string, FC, boolean][]
+  ["popup", () => <Popup />, true],
+] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
   return window.location.hash.replace(/^#/, "") || "/"

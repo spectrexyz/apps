@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
-import type { ThemeContextValue } from "../Theme/Theme"
 
 import { createContext, forwardRef, useContext, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
@@ -42,7 +41,7 @@ type ButtonProps = ComponentPropsWithoutRef<"button"> &
     href?: ComponentPropsWithoutRef<"a">["href"]
     icon?: ReactNode
     label: string
-    mode: ButtonMode
+    mode?: ButtonMode
     onClick?: () => void
     // wether the shadow should be part of the button box or not
     shadowInBox?: ShadowInBox
@@ -95,7 +94,7 @@ export const Button = forwardRef<
         onClick={onClick}
         type={href ? undefined : "button"}
         {...props}
-        css={({ colors, fonts }: ThemeContextValue) => css`
+        css={({ colors, fonts }) => css`
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -167,6 +166,12 @@ export const Button = forwardRef<
   )
 })
 
+type ButtonInProps = Pick<
+  ButtonProps,
+  "adjustLabelAlignment" | "horizontalPadding" | "icon" | "label" | "size"
+> &
+  Pick<Required<ButtonProps>, "mode">
+
 function ButtonIn({
   adjustLabelAlignment,
   horizontalPadding,
@@ -174,14 +179,7 @@ function ButtonIn({
   label,
   mode,
   size,
-}: {
-  adjustLabelAlignment: ButtonProps["adjustLabelAlignment"]
-  horizontalPadding: ButtonProps["horizontalPadding"]
-  icon: ButtonProps["icon"]
-  label: ButtonProps["label"]
-  mode: ButtonProps["mode"]
-  size: ButtonProps["size"]
-}) {
+}: ButtonInProps) {
   const flat = mode.startsWith("flat")
   const shadowBounds = useDimensions()
   const { colors } = useTheme()

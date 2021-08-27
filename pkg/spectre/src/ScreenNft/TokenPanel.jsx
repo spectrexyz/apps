@@ -10,7 +10,7 @@ import {
   Info,
   MoireLabel,
   Slashes,
-  Tooltip,
+  Popup,
   formatDate,
   gu,
   useTheme,
@@ -144,7 +144,7 @@ export function TokenPanel({ id }) {
 }
 
 function Parameter({ label, value }) {
-  const [tooltipVisible, setTooltipVisible] = useState(false)
+  const [popupVisible, setPopupVisible] = useState(false)
   const labelRef = useRef()
   return (
     <>
@@ -152,16 +152,16 @@ function Parameter({ label, value }) {
         ref={labelRef}
         label={`${label}: ${value}`}
         mode="flat"
-        onClick={() => setTooltipVisible(true)}
+        onClick={() => setPopupVisible(true)}
         css={({ colors, fonts }) => css`
           font-family: ${fonts.families.sans};
           color: ${colors.contentHeading};
         `}
       />
-      <Tooltip
-        onClose={useCallback(() => setTooltipVisible(false), [])}
+      <Popup
+        onClose={useCallback(() => setPopupVisible(false), [])}
         opener={labelRef}
-        visible={tooltipVisible}
+        visible={popupVisible}
       >
         <section
           css={css`
@@ -186,7 +186,7 @@ function Parameter({ label, value }) {
             {PARAMETER_DESC}
           </p>
         </section>
-      </Tooltip>
+      </Popup>
     </>
   )
 }

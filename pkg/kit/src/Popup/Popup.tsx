@@ -15,7 +15,7 @@ import { useTheme } from "../Theme"
 import { gu, springs } from "../styles"
 import { checkBackdropFilterSupport } from "../utils"
 
-type TooltipProps = {
+type PopupProps = {
   children: ReactNode
   closeButton?: boolean
   focusableContainer?: boolean
@@ -37,7 +37,7 @@ function offset({
   return [reference.width / 2, -reference.height * 0.2]
 }
 
-export const Tooltip = memo(function Tooltip({
+export const Popup = memo(function Popup({
   children,
   closeButton = false,
   focusableContainer = true,
@@ -46,7 +46,7 @@ export const Tooltip = memo(function Tooltip({
   opener,
   visible,
   width = 40 * gu,
-}: TooltipProps): JSX.Element {
+}: PopupProps): JSX.Element {
   const { colors } = useTheme()
 
   const visibility = useTransition(visible, {

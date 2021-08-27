@@ -13,6 +13,8 @@
 This repository is using the [pnpm](https://pnpm.io/) package manager.
 
 ```
+npm i -g pnpm # if not done already
+
 pnpm i
 pnpm kit:dev
 pnpm spectre:dev

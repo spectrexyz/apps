@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { useTheme, gu, ButtonArea, Modal, Tooltip } from "kit"
+import { useTheme, gu, ButtonArea, Modal, Popup } from "kit"
 import { useEthereum } from "../Ethereum"
 
 import metaMask from "./assets/web3-providers/metamask.svg"
@@ -12,7 +12,7 @@ const PROVIDERS = [
 
 export function ConnectAccount({ onClose, visible, opener = null }) {
   return opener ? (
-    <Tooltip
+    <Popup
       closeButton={true}
       focusableContainer={false}
       mode="translucid"
@@ -22,7 +22,7 @@ export function ConnectAccount({ onClose, visible, opener = null }) {
       width={45 * gu}
     >
       <ConnectAccountInside />
-    </Tooltip>
+    </Popup>
   ) : (
     <Modal visible={visible} onClose={onClose} mode="translucid">
       <ConnectAccountInside />
