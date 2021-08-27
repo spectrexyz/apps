@@ -1,4 +1,6 @@
 import { css } from "@emotion/react"
+import { a } from "react-spring"
+import { useViewport } from "@bpierre/use-viewport"
 import {
   ButtonArea,
   ButtonText,
@@ -11,8 +13,6 @@ import {
   co,
   gu,
 } from "kit"
-import { a } from "react-spring"
-import { useViewport } from "use-viewport"
 import { SyncStatus } from "../SyncStatus"
 
 export function AccountDrawer({ opened, transition, onClose }) {

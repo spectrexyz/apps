@@ -1,4 +1,4 @@
-import { ViewportProvider } from "use-viewport"
+import { ViewportProvider } from "@bpierre/use-viewport"
 import { breakpoints } from "../styles.js"
 
 const viewportBreakpoints = Object.entries(breakpoints).reduce(

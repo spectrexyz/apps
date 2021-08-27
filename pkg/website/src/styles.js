@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { useViewport } from "use-viewport"
+import { useViewport } from "@bpierre/use-viewport"
 import { gu } from "kit-legacy"
 
 export const springs = {
