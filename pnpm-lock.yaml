@@ -192,6 +192,7 @@ importers:
 
   pkg/website:
     specifiers:
+      '@emotion/cache': ^11.4.0
       '@emotion/react': ^11.4.1
       '@mdx-js/mdx': ^1.6.22
       '@mdx-js/react': ^1.6.22
@@ -204,10 +205,12 @@ importers:
       react-cool-inview: ^2.0.7
       react-dom: ^17.0.2
       react-spring: ^9.2.4
+      stylis: ^4.0.10
       use-nft: ^0.10.1
       use-viewport: git://github.com/bpierre/use-viewport.git#master
       vite: ^2.5.1
     dependencies:
+      '@emotion/cache': 11.4.0
       '@emotion/react': 11.4.1_react@17.0.2
       '@mdx-js/mdx': 1.6.22
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -216,6 +219,7 @@ importers:
       react-cool-inview: 2.0.7_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-spring: 9.2.4_react-dom@17.0.2+react@17.0.2
+      stylis: 4.0.10
       use-nft: 0.10.1_react@17.0.2
       use-viewport: github.com/bpierre/use-viewport/537acf68660adb939ead4f6eba8d95b4e68694fa_react@17.0.2
     devDependencies:
