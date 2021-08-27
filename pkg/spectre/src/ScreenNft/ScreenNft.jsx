@@ -12,16 +12,31 @@ import {
 import { useLayout } from "../styles.js"
 import { useAppReady } from "../App/AppReady.jsx"
 import { AppScreen } from "../AppLayout/AppScreen.jsx"
+import { SNFTS } from "../demo-data"
 import { NftPanel } from "./NftPanel.jsx"
 import { TokenPanel } from "./TokenPanel.jsx"
+
+function useAdjacentNfts(_id) {
+  const index = SNFTS.findIndex(({ id }) => id === _id)
+  return [SNFTS?.[index - 1], SNFTS?.[index + 1]]
+}
 
 export function ScreenNft({ id, panel }) {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
   const layout = useLayout()
   const fullWidth = layout.below(601)
-
   const tokenPanel = panel === "serc20"
+
+  const [nftPrev, nftNext] = useAdjacentNfts(id)
+
+  const handlePrevNft = useCallback(() => {
+    setLocation(`/nfts/${nftPrev.id}${panel === "serc20" ? "/serc20" : ""}`)
+  }, [nftPrev, panel, setLocation])
+
+  const handleNextNft = useCallback(() => {
+    setLocation(`/nfts/${nftNext.id}${panel === "serc20" ? "/serc20" : ""}`)
+  }, [nftNext, panel, setLocation])
 
   const handleSelectPanel = useCallback(
     (index) => {
@@ -63,8 +78,27 @@ export function ScreenNft({ id, panel }) {
             gap: 1.5gu;
           `}
         >
-          <ButtonIcon icon={<IconArrowLeft />} mode="outline" />
-          <ButtonIcon icon={<IconArrowRight />} mode="outline" />
+          {nftPrev ? (
+            <ButtonIcon
+              icon={<IconArrowLeft />}
+              mode="outline"
+              onClick={handlePrevNft}
+            />
+          ) : (
+            <div
+              css={css`
+                width: 5gu;
+                height: 5gu;
+              `}
+            />
+          )}
+          {nftNext && (
+            <ButtonIcon
+              icon={<IconArrowRight />}
+              mode="outline"
+              onClick={handleNextNft}
+            />
+          )}
         </div>
         <div
           css={css`

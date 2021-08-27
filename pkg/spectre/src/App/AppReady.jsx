@@ -35,7 +35,7 @@ export function AppReady({ children }) {
   const splashTransition = useTransition(!ready, {
     config: springs.appear,
     from: {
-      opacity: 0,
+      opacity: 1,
       logoTransform: "scale3d(0.9, 0.9, 1) rotate3d(0, 0, 1, -180deg)",
     },
     enter: {

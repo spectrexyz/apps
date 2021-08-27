@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import type { ReactNode } from "react"
 
+import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
 import { a, useTransition } from "react-spring"
 import { css, jsx } from "@emotion/react"
@@ -9,10 +10,12 @@ import { IconX } from "../icons"
 import { ButtonArea } from "../ButtonArea"
 import { Root } from "../Root"
 import { useTheme } from "../Theme"
+import { checkBackdropFilterSupport } from "../utils"
 
 type ModalProps = {
   children: ReactNode
   onClose: () => void
+  mode?: "normal" | "translucid"
   visible: boolean
 }
 
@@ -20,20 +23,27 @@ export function Modal({
   children,
   onClose,
   visible,
+  mode = "normal",
 }: ModalProps): JSX.Element | null {
   const { colors } = useTheme()
 
   const visibility = useTransition(visible, {
     config: springs.appear,
-    from: { opacity: 0, transform: "scale3d(0.9, 0.9, 1)" },
-    enter: { opacity: 1, transform: "scale3d(1, 1, 1)" },
-    leave: { opacity: 0, transform: "scale3d(1.1, 1.1, 1)" },
+    from: { blur: 0, opacity: 0, transform: "scale3d(0.9, 0.9, 1)" },
+
+    // blur: 1 as a separate step is being used to reveal the blurred
+    // background, after having let enough time for engines to render it.
+    enter: [{ opacity: 1, transform: "scale3d(1, 1, 1)" }, { blur: 1 }],
+
+    leave: { blur: 0, opacity: 0, transform: "scale3d(1.1, 1.1, 1)" },
   })
+
+  const supportsBackdropFilters = checkBackdropFilterSupport()
 
   return (
     <Root>
       {visibility(
-        ({ opacity, transform }, item) =>
+        ({ blur, opacity, transform }, item) =>
           item && (
             <a.section
               style={{ opacity, pointerEvents: visible ? "auto" : "none" }}
@@ -59,6 +69,7 @@ export function Modal({
                 `}
               >
                 <FocusTrap
+                  active={visible}
                   focusTrapOptions={{
                     onDeactivate: onClose,
                     allowOutsideClick: true,
@@ -70,33 +81,66 @@ export function Modal({
                       css`
                         max-width: 360px;
                         padding: 3gu;
-                        background: ${colors.layer1};
+                        ${mode === "translucid"
+                          ? css`
+                              background: ${colord(colors.translucid)
+                                .alpha(supportsBackdropFilters ? 0.6 : 1)
+                                .toHex()};
+                              backdrop-filter: blur(40px);
+                              border-radius: 6px;
+                            `
+                          : css`
+                              background: ${colors.layer1};
+                            `}
                       `
                     }
                   >
+                    <a.div
+                      style={{
+                        opacity: blur.to((v) => 1 - v),
+                      }}
+                      css={css`
+                        display: ${mode === "translucid" &&
+                        supportsBackdropFilters
+                          ? "block"
+                          : "none"};
+                        position: absolute;
+                        z-index: 1;
+                        inset: 0;
+                        background: rgb(43, 44, 97);
+                        border-radius: 6px;
+                      `}
+                    />
                     <div
                       css={css`
-                        display: flex;
-                        justify-content: flex-end;
+                        position: relative;
+                        z-index: 2;
                       `}
                     >
-                      <ButtonArea
-                        onClick={onClose}
+                      <div
                         css={css`
-                          position: relative;
                           display: flex;
-                          width: 2.5gu;
-                          height: 2.5gu;
-                          &:active {
-                            top: 1px;
-                            left: 1px;
-                          }
+                          justify-content: flex-end;
                         `}
                       >
-                        <IconX size={2.5 * gu} color={colors.contentDimmed} />
-                      </ButtonArea>
+                        <ButtonArea
+                          onClick={onClose}
+                          css={css`
+                            position: relative;
+                            display: flex;
+                            width: 2.5gu;
+                            height: 2.5gu;
+                            &:active {
+                              top: 1px;
+                              left: 1px;
+                            }
+                          `}
+                        >
+                          <IconX size={2.5 * gu} color={colors.contentDimmed} />
+                        </ButtonArea>
+                      </div>
+                      {children}
                     </div>
-                    {children}
                   </a.div>
                 </FocusTrap>
               </div>

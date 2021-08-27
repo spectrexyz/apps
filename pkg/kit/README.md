@@ -5,8 +5,8 @@
 Run these commands:
 
 ```
-yarn
-yarn dev
+pnpm
+pnpm dev
 ```
 
 ## Add an icon
@@ -16,5 +16,5 @@ yarn dev
 - Export the icon as SVG, and drop the resulting file into `pkg/kit/icons` (not `pkg/kit/src/icons`).
 - If the icon comes from the “Fill” page, add `Filled` to the file name, e.g. `Arrow.svg` => `ArrowFilled.svg`.
 - Please keep the original name otherwise.
-- Run `yarn build:icons` to generate the components in `pkg/kit/src/icons`.
+- Run `pnpm build:icons` to generate the components in `pkg/kit/src/icons`.
 - Done!

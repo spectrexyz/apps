@@ -1,11 +1,14 @@
+import type { SpringValue } from "react-spring"
+
 import { memo } from "react"
 import { a, useSpring } from "react-spring"
-import { colors } from "kit-legacy"
 import { Label } from "./Label"
 import { Nft } from "./Nft"
 import { WIDTH, spSlow } from "./shared"
 
-export const Item3 = memo(function Item3({ progress }) {
+type Props = { progress: SpringValue<number> }
+
+export const Item3 = memo(function Item3({ progress }: Props) {
   const text = useSpring({
     delay: 400,
     config: spSlow,
@@ -60,13 +63,13 @@ export const Item3 = memo(function Item3({ progress }) {
         y={110 / 2 - 90 / 2 - 1}
         width="90"
         height="90"
-        fill={colors.blackBlue}
+        fill={"#343C50"}
         opacity={progress}
         transform-origin="50 50"
         transform={progress.to([0, 1], [0.7, 1]).to((v) => `scale(${v})`)}
       />
       <g transform={`translate(${55 / 2}, ${55 / 2})`}>
-        <Nft progress={progress} />
+        <Nft />
       </g>
     </a.g>
   )

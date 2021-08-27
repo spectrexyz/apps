@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Moire, theme, fonts, gu } from "kit-legacy"
 import { useNft } from "use-nft"
+import { fonts, Moire, useDimensions, useTheme } from "kit"
 
 type NftCardProps = {
   active: boolean
@@ -15,33 +15,31 @@ export const NftCard = React.memo(function NftCard({
   active,
   nft: { contract, tokenId },
 }: NftCardProps) {
-  const {
-    nft = { image: "", name: "", description: "" },
-    loading,
-    error,
-    reload,
-  } = useNft(contract, tokenId)
+  const { nft = { image: "", name: "", description: "" } } = useNft(
+    contract,
+    tokenId
+  )
   const author = "@poppy"
   const bid = { current: "2.80 ETH", end: "25 MIN" }
   return (
     <div
-      css={css`
+      css={({ colors }) => css`
         width: 35gu;
-        color: ${theme.background};
-        border: 3px solid ${theme.primary};
+        color: ${colors.background};
+        border: 3px solid ${colors.primary};
         font-size: ${fonts.sizes.small};
       `}
     >
       <img
         alt=""
         src={nft.image}
-        css={css`
+        css={({ colors }) => css`
           display: block;
           width: 100%;
           height: 27gu;
           object-fit: cover;
           object-position: 50% 50%;
-          background: ${theme.background};
+          background: ${colors.background};
           image-rendering: ${active ? "auto" : "crisp-edges"};
         `}
       />
@@ -94,6 +92,8 @@ export const NftCard = React.memo(function NftCard({
 })
 
 function Tag({ label }: { label: string }) {
+  const bounds = useDimensions()
+  const { colors } = useTheme()
   return (
     <div
       css={css`
@@ -106,7 +106,7 @@ function Tag({ label }: { label: string }) {
       `}
     >
       <span
-        css={css`
+        css={({ colors }) => css`
           position: relative;
           z-index: 2;
           display: flex;
@@ -114,8 +114,8 @@ function Tag({ label }: { label: string }) {
           max-width: 100%;
           height: 100%;
           padding: 0 1.5gu;
-          color: ${theme.primary};
-          background: ${theme.background};
+          color: ${colors.primary};
+          background: ${colors.background};
 
           // truncating
           overflow: hidden;
@@ -130,6 +130,7 @@ function Tag({ label }: { label: string }) {
         <span>{label}</span>
       </span>
       <div
+        ref={bounds.observe}
         css={css`
           position: absolute;
           z-index: 1;
@@ -141,7 +142,12 @@ function Tag({ label }: { label: string }) {
           pointer-events: none;
         `}
       >
-        <Moire mode="light" />
+        <Moire
+          height={bounds.height}
+          width={bounds.width}
+          linesColor={colors.background}
+          backgroundColor={colors.primary}
+        />
       </div>
     </div>
   )

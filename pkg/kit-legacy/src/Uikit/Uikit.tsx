@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { jsx } from "@emotion/react"
-import { CacheProvider } from "@emotion/react"
+import { CacheProvider, jsx } from "@emotion/react"
 import createCache from "@emotion/cache"
 import { prefixer } from "stylis"
 import { cssUnitPlugin } from "../emotion-plugin-css-unit"
@@ -16,7 +15,7 @@ type UikitProps = {
 }
 
 const emotionCache = createCache({
-  key: "uitk",
+  key: "k",
   stylisPlugins: [cssUnitPlugin(gu, "gu"), prefixer],
 })
 

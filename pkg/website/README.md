@@ -5,12 +5,11 @@
 ## Installation
 
 ```console
-yarn install
+pnpm install
 ```
 
 ## Usage
 
 ```console
-yarn dev
+pnpm dev
 ```
-

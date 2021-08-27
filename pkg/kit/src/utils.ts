@@ -111,4 +111,16 @@ export function formatDate(date: string | Date, full = false): string {
   )
 }
 
+// This should be removed whenever Firefox supports backdrop-filter by
+// default. As of Firefox 92.0a1, it is only available behind an about:config
+// flag (layout.css.backdrop-filter.enabled = true).
+// See https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter#browser_compatibility
+let supportsBackdropFilters: boolean
+export function checkBackdropFilterSupport(): boolean {
+  if (supportsBackdropFilters === undefined) {
+    supportsBackdropFilters = CSS.supports("backdrop-filter", "blur(1px)")
+  }
+  return supportsBackdropFilters
+}
+
 export function noop() {}

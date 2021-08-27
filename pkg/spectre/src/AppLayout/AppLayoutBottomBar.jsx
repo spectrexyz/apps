@@ -3,7 +3,7 @@ import { css } from "@emotion/react"
 import { AddressBadge, Button, ButtonArea, springs } from "kit"
 import { a, useSpring, useTransition } from "react-spring"
 import { useEthereum } from "../Ethereum"
-import { ConnectionModal } from "../StatusBar/ConnectionModal.jsx"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount.jsx"
 import { AccountDrawer } from "../StatusBar/AccountDrawer.jsx"
 import { SyncStatus } from "../SyncStatus"
 import { Actions } from "../Actions/Actions.jsx"
@@ -14,6 +14,7 @@ export function AppLayoutBottomBar({ compact }) {
 }
 
 function BottomBarLarge() {
+  const { appReadyTransition } = useAppReady()
   return (
     <div
       css={css`
@@ -24,32 +25,45 @@ function BottomBarLarge() {
         margin: 0 auto;
       `}
     >
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          height: 4gu;
-        `}
-      >
-        <div>
-          <SyncStatus />
-        </div>
-        <Actions />
-      </div>
+      {appReadyTransition(
+        ({ progress: appReadyProgress, bottomBarTransform }, ready) => {
+          if (!ready) {
+            return false
+          }
+          return (
+            <a.div
+              style={{
+                opacity: appReadyProgress,
+                transform: bottomBarTransform,
+              }}
+              css={css`
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                height: 4gu;
+              `}
+            >
+              <div>
+                <SyncStatus />
+              </div>
+              <Actions />
+            </a.div>
+          )
+        }
+      )}
     </div>
   )
 }
 
 function BottomBarCompact() {
-  const [connectionModalOpened, setConnectionModalOpened] = useState(false)
+  const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [drawerOpened, setDrawerOpened] = useState(false)
   const { account, wallet, disconnect } = useEthereum()
   const { appReadyTransition } = useAppReady()
 
   useEffect(() => {
     if (account) {
-      setConnectionModalOpened(false)
+      setConnectAccountOpened(false)
     }
   }, [account])
 
@@ -110,10 +124,10 @@ function BottomBarCompact() {
                   account={account}
                   drawerOpened={drawerOpened}
                   onOpenDrawer={() => setDrawerOpened(true)}
-                  onConnect={() => setConnectionModalOpened(true)}
+                  onConnect={() => setConnectAccountOpened(true)}
                   onDisconnect={() => {
                     setDrawerOpened(false)
-                    setConnectionModalOpened(false)
+                    setConnectAccountOpened(false)
                     disconnect()
                   }}
                 />
@@ -122,9 +136,9 @@ function BottomBarCompact() {
           }
         )}
       </div>
-      <ConnectionModal
-        visible={connectionModalOpened}
-        onClose={() => setConnectionModalOpened(false)}
+      <ConnectAccount
+        visible={connectAccountOpened}
+        onClose={() => setConnectAccountOpened(false)}
       />
     </>
   )
@@ -153,18 +167,13 @@ function BarArea({
     >
       <ButtonBar
         onClick={account && !drawerOpened && onOpenDrawer}
-        start={() => {
-          if (!account) {
-            return (
-              <Button
-                label="Connect account"
-                onClick={onConnect}
-                size="small"
-              />
-            )
-          }
-          return <AddressBadge address={account} />
-        }}
+        start={() =>
+          account ? (
+            <AddressBadge address={account} />
+          ) : (
+            <Button label="Connect account" onClick={onConnect} size="small" />
+          )
+        }
         end={() => {
           if (!account) {
             return <Actions />

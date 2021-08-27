@@ -1,10 +1,13 @@
+import type { SpringValue } from "react-spring"
+
 import React, { memo, useRef } from "react"
 import { a, useSpring, to } from "react-spring"
-import { colors } from "kit-legacy"
 import { Label } from "./Label"
-import { spFast, spSlow, WIDTH } from "./shared"
+import { spSlow, WIDTH } from "./shared"
 
-export const Item2 = memo(function Item2({ progress }) {
+type Props = { progress: SpringValue<number> }
+
+export const Item2 = memo(function Item2({ progress }: Props) {
   const id = useRef(`clip_${Math.random()}`)
 
   const text = useSpring({

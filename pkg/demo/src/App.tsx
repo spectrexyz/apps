@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from "react"
 
 import React, { useState, useEffect } from "react"
-import { Moire, Uikit, Button } from "kit-legacy"
+import { Moire, Kit, Button } from "kit"
 import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
 import { providers, Contract } from "ethers"
@@ -44,19 +44,17 @@ const fetcher = [
   "ethers",
   {
     ethers: { Contract },
-    // provider: new providers.CloudflareProvider(),
     provider: new providers.AlchemyProvider(
       "homestead",
       "E7YgkR4GmBg58uKRmXtQ9tJaqM6oE9hu"
     ),
-    // provider: new providers.InfuraProvider(['homestead', '7236f6a36152476ba61279266233a49c'])
   },
 ]
 
 export function App() {
   return (
     <Router hook={useHashLocation}>
-      <Uikit baseUrl="/kit-legacy/">
+      <Kit baseUrl="/kit/">
         <NftProvider fetcher={fetcher as FetcherDeclarationEthers}>
           <div
             css={css`
@@ -104,7 +102,7 @@ export function App() {
             </>
           </div>
         </NftProvider>
-      </Uikit>
+      </Kit>
     </Router>
   )
 }

@@ -28,12 +28,28 @@ const EVENT_1 = [
   " channeled 400 $TOKEN to liquidity pool.",
 ]
 
+function randomDistribution() {
+  const { random, floor, max } = Math
+  let distribution = []
+  let remaining = 100
+
+  while (remaining > 0) {
+    const size = max(1, floor(random() * random() * random() * remaining))
+    distribution.push(size)
+    remaining -= size
+  }
+
+  distribution.sort((a, b) => b - a)
+
+  return distribution
+}
+
 export const SNFTS = NFT_IMAGES.map((image, index) => ({
   id: `${index + 1}`,
   image,
   title: `Untitled #${index + 1}`,
   description: NFT_DESCRIPTION_1,
-  token: { name: `$TOKEN${index + 1}` },
+  token: { name: `$TOKEN${index + 1}`, distribution: randomDistribution() },
   creator: [0, 5, 6, 7, 8].includes(index)
     ? {
         address: "0xfabe062eb33af3e68eb3329818d0507949c14142",

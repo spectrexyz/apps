@@ -7,31 +7,33 @@ import { AppLayout } from "../AppLayout/AppLayout.jsx"
 import { ScreenHome } from "../ScreenHome/ScreenHome.jsx"
 import { ScreenNft } from "../ScreenNft/ScreenNft.jsx"
 import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize.jsx"
-import { ScreenSwap } from "../ScreenSwap/ScreenSwap.jsx"
+import { ScreenBuy } from "../ScreenBuy/ScreenBuy.jsx"
 import { AppReady } from "./AppReady.jsx"
 import { AppScroll } from "./AppScroll.jsx"
 import { AppViewport } from "./AppViewport.jsx"
 
-function App() {
+export default function App() {
   return (
-    <Switch>
-      <Route path="/">
-        <ScreenHome />
-      </Route>
-      <Route path="/spectralize">
-        <ScreenSpectralize />
-      </Route>
-      <Route path="/nfts/:id/serc20">
-        {({ id }) => <ScreenNft id={id} panel="serc20" />}
-      </Route>
-      <Route path="/nfts/:id">
-        {({ id }) => <ScreenNft id={id} panel="nft" />}
-      </Route>
-      <Route path="/nfts/:id/buy">
-        <ScreenSwap />
-      </Route>
-      <Route>Not found</Route>
-    </Switch>
+    <AppProviders>
+      <Switch>
+        <Route path="/">
+          <ScreenHome />
+        </Route>
+        <Route path="/spectralize">
+          <ScreenSpectralize />
+        </Route>
+        <Route path="/nfts/:id/serc20">
+          {({ id }) => <ScreenNft id={id} panel="serc20" />}
+        </Route>
+        <Route path="/nfts/:id">
+          {({ id }) => <ScreenNft id={id} panel="nft" />}
+        </Route>
+        <Route path="/nfts/:id/buy">
+          <ScreenBuy />
+        </Route>
+        <Route>Not found</Route>
+      </Switch>
+    </AppProviders>
   )
 }
 
@@ -52,13 +54,5 @@ function AppProviders({ children }) {
     >
       {children}
     </FlatTree>
-  )
-}
-
-export default function AppWithProviders() {
-  return (
-    <AppProviders>
-      <App />
-    </AppProviders>
   )
 }

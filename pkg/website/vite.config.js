@@ -10,4 +10,9 @@ export default {
     jsxFactory: "jsx",
     jsxInject: `import { jsx } from '@emotion/react'`,
   },
+  resolve: {
+    dedupe: [
+      "@emotion/react",
+    ],
+  },
 }

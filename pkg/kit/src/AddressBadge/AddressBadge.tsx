@@ -6,44 +6,53 @@ import { shortenAddress } from "../utils"
 type AddressBadgeProps = {
   address: string
   error?: boolean
+  size?: "medium" | "large"
+  transparent?: boolean
 }
 
 export function AddressBadge({
   address,
   error = false,
+  transparent = false,
+  size = "medium",
 }: AddressBadgeProps): JSX.Element {
+  const iconSize = size === "large" ? 32 : 20
   return (
     <div
       css={({ colors }) => css`
         display: flex;
         align-items: center;
         height: 4gu;
-        padding: 0 10px 0 4px;
+        padding: ${transparent ? "0" : css`0 1gu`};
         user-select: none;
         color: ${colors.accent};
-        background: ${error ? colors.negative : colors.layer1};
+        background: ${error
+          ? colors.negative
+          : transparent
+          ? "none"
+          : colors.layer1};
       `}
     >
       <div
         css={css`
           display: flex;
           align-items: center;
-          width: 20px;
-          height: 20px;
-          margin-right: 1.5gu;
+          width: ${iconSize}px;
+          height: ${iconSize}px;
+          margin-right: ${size === "large" ? css`2gu` : css`1.25gu`};
         `}
       >
-        <div
-          css={css`
-            display: flex;
-            transform-origin: 50% 50%;
-            transform: scale(${20 / 24});
-          `}
-        >
-          <EthIcon address={address} />
-        </div>
+        <EthIcon address={address} size={iconSize} />
       </div>
-      <div>{shortenAddress(address)}</div>
+      <div
+        title={address}
+        css={({ fonts }) => css`
+          font-family: ${fonts.families.mono};
+          font-size: ${size === "large" ? "24px" : "16px"};
+        `}
+      >
+        {shortenAddress(address)}
+      </div>
     </div>
   )
 }

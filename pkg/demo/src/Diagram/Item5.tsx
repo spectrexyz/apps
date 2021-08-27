@@ -1,15 +1,13 @@
 import React, { memo } from "react"
 import { a, useSpring, useTransition } from "react-spring"
-import { colors } from "kit-legacy"
 import { Label } from "./Label"
-import { Nft } from "./Nft"
-import { WIDTH, HEIGHT, spSlow, spFast } from "./shared"
+import { WIDTH, HEIGHT, spSlow } from "./shared"
 import { Serc20 } from "./Serc20"
 
 const X = WIDTH / 2 - 105 / 2
 const Y = HEIGHT - 250 + 40 + 12.5
 
-export const Item5 = memo(function Item5({ progress }) {
+export const Item5 = memo(function Item5() {
   const text = useSpring({
     delay: 300,
     config: spSlow,

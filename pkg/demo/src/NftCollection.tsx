@@ -1,18 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
-import { animated, useSpring, useTransition, config, to } from "react-spring"
+import { animated, useSpring, useTransition, to } from "react-spring"
 import {
   ButtonIcon,
   IconArrowDown,
   IconArrowUp,
-  IconCollection,
-  theme,
+  IconSquaresFour,
   gu,
-  lerp,
-  list,
   shuffle,
-  useMeasure,
-} from "kit-legacy"
+  useDimensions,
+  useTheme,
+} from "kit"
 import { NftCard } from "./NftCard"
 import nfts from "./nfts"
 
@@ -190,19 +188,8 @@ function useCardsStack() {
   }
 }
 
-function useActiveCard() {
-  const [position, setPosition] = useState(0)
-  return useMemo(
-    () => ({
-      updateActiveCard: setPosition,
-      activeCard: position,
-    }),
-    [position]
-  )
-}
-
 export function NftCollection() {
-  const [containerRef, containerBounds] = useMeasure()
+  const bounds = useDimensions()
   const [stackBounds, setStackBounds] = useState(STACK_BOUNDS_DEFAULT)
   const {
     direction,
@@ -221,14 +208,14 @@ export function NftCollection() {
     cardWidth: stackBounds.cardWidth,
     cardHeight: stackBounds.cardHeight,
     cardsCount: cards.length,
-    containerWidth: containerBounds.width,
+    containerWidth: bounds.width,
   })
 
   const { gridProgress } = useSpring({ gridProgress: Number(grid) })
 
   return (
     <div
-      ref={containerRef}
+      ref={bounds.observe}
       css={css`
         display: grid;
         width: 100%;
@@ -259,7 +246,7 @@ export function NftCollection() {
             pickCard={pick}
             picked={picked}
             cards={cards}
-            containerBounds={containerBounds}
+            containerBounds={bounds}
           />
         </div>
         {!grid && (
@@ -273,10 +260,8 @@ export function NftCollection() {
               left: 0;
               z-index: 2;
               transform: translate3d(
-                ${containerBounds.width / 2 +
-                stackBounds.cardWidth / 2 +
-                5 * gu}px,
-                ${containerBounds.height / 2}px,
+                ${bounds.width / 2 + stackBounds.cardWidth / 2 + 5 * gu}px,
+                ${bounds.height / 2}px,
                 0
               );
             `}
@@ -288,7 +273,7 @@ export function NftCollection() {
                 gap: 1gu;
               `}
             >
-              <ButtonIcon onClick={toggleGrid} icon={<IconCollection />} />
+              <ButtonIcon onClick={toggleGrid} icon={<IconSquaresFour />} />
               <ButtonIcon
                 onClick={() => rotate(false)}
                 icon={<IconArrowUp />}
@@ -318,7 +303,7 @@ export function NftCollection() {
               );
             `}
           >
-            <ButtonIcon onClick={toggleGrid} icon={<IconCollection />} />
+            <ButtonIcon onClick={toggleGrid} icon={<IconSquaresFour />} />
           </animated.div>
         )}
       </div>
@@ -357,7 +342,7 @@ function NftCards({
   cards: cardsBeforePosition,
   containerBounds,
 }: NftCardsProps) {
-  const [cardRef, cardBounds] = useMeasure()
+  const cardBounds = useDimensions()
   const stackBounds = useRef<StackBounds>(STACK_BOUNDS_DEFAULT)
 
   const xShift = containerBounds.width / 2 - stackBounds.current.cardWidth / 2
@@ -456,7 +441,6 @@ function NftCards({
       return
     }
 
-    const first = cards[0].position
     const last = cards[cards.length - 1].position
 
     stackBounds.current = {
@@ -470,7 +454,9 @@ function NftCards({
     onStackBounds(stackBounds.current as StackBounds)
   }, [cardBounds, onStackBounds, cards])
 
-  const { cardWidth, cardHeight } = stackBounds.current
+  const { cardWidth } = stackBounds.current
+
+  const { colors } = useTheme()
 
   return (
     <div
@@ -488,12 +474,12 @@ function NftCards({
         ) => {
           return (
             <animated.div
-              ref={index === 0 && cardWidth === -1 ? cardRef : null}
+              ref={index === 0 && cardWidth === -1 ? cardBounds.observe : null}
               style={{
                 background: leaving.to((lf) =>
                   grid || id === cards[0].id || lf
-                    ? theme.primary
-                    : theme.background
+                    ? colors.primary
+                    : colors.background
                 ),
                 transform: to(
                   [position, angle, scale],

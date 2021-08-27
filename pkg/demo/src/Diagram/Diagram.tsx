@@ -1,22 +1,9 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import type { ReactNode } from "react"
+import type { SpringValue } from "react-spring"
+
+import { useState } from "react"
 import { css } from "@emotion/react"
-import {
-  a,
-  useChain,
-  useSpring,
-  useSpringRef,
-  useTrail,
-  useTransition,
-} from "react-spring"
-import { HEIGHT, ITEMS, PADDING, WIDTH, spFast, spSlow } from "./shared"
+import { a, useTransition } from "react-spring"
 import { Arrow } from "./Arrow"
 import { Chain } from "./Chain"
 import { Item1 } from "./Item1"
@@ -26,8 +13,9 @@ import { Item4 } from "./Item4"
 import { Item5 } from "./Item5"
 import { Item6 } from "./Item6"
 import { Serc20 } from "./Serc20"
+import { HEIGHT, WIDTH } from "./shared"
 
-const animatedItems = [
+const animatedItems: Array<(p: SpringValue<number>) => ReactNode> = [
   (p) => <Item1 progress={p} />,
   (p) => (
     <Arrow
@@ -67,9 +55,9 @@ const animatedItems = [
       />
     </g>
   ),
-  (p) => (
+  () => (
     <g transform="translate(0, -30)">
-      <Item5 progress={p} />
+      <Item5 />
     </g>
   ),
   (p) => (
@@ -106,8 +94,6 @@ const animatedItems = [
 
 const startedAnims = animatedItems.map(() => false)
 
-const AnimContext = createContext(startedAnims)
-
 export function Diagram() {
   const [started, setStarted] = useState(startedAnims)
 
@@ -121,7 +107,7 @@ export function Diagram() {
     },
     from: { progress: 0 },
     enter: { progress: 1 },
-    onStart(result, spring, item) {
+    onStart(_result, _spring, item) {
       setStarted((started) =>
         started.map((value, index) =>
           index === animatedItems.indexOf(item) ? true : value
