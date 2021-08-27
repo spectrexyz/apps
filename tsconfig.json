@@ -1,5 +1,5 @@
 {
-  "extends": "rollpkg/configs/tsconfig.json",
+  "extends": "./node_modules/rollpkg/configs/tsconfig.json",
   "compilerOptions": {
     "target": "ES2018",
     "lib": ["DOM", "ESNext"],

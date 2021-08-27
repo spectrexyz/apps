@@ -12,11 +12,11 @@
     "kit-legacy-copy-assets": "./bin/copy-assets"
   },
   "scripts": {
-    "build": "yarn export-assets && rollpkg build --noStats",
-    "dev": "yarn export-assets && rollpkg watch",
+    "build": "pnpm export-assets && rollpkg build --noStats",
+    "dev": "pnpm export-assets && rollpkg watch",
     "lint": "eslint src",
     "export-assets": "./scripts/export-assets.sh",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
     "@emotion/cache": "11.x",
@@ -35,24 +35,24 @@
     "preset": "rollpkg"
   },
   "devDependencies": {
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
-    "eslint": "^7.28.0",
-    "eslint-plugin-import": "^2.23.4",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.3.1",
+    "prettier": "^2.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rollpkg": "^0.5.7",
-    "typescript": "^4.3.2"
+    "typescript": "^4.4.2"
   },
   "dependencies": {
-    "colord": "^2.0.1",
+    "colord": "^2.7.0",
     "react-use-measure": "^2.0.4",
-    "twgl.js": "^4.19.1"
+    "twgl.js": "^4.19.2"
   }
 }

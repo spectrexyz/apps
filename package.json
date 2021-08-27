@@ -2,13 +2,14 @@
   "name": "spectre-apps",
   "private": true,
   "scripts": {
-    "kit:build": "cd pkg/kit && yarn build:all",
-    "kit-legacy:build": "cd pkg/kit-legacy && yarn build",
-    "website:build": "yarn kit-legacy:build && cd pkg/website && yarn copy-kit-assets && yarn build"
+    "kit:build": "cd pkg/kit && pnpm build:all",
+    "kit:dev": "cd pkg/kit && pnpm dev",
+    "kit-legacy:build": "cd pkg/kit-legacy && pnpm build",
+    "spectre:build": "cd pkg/spectre && pnpm import:kit-assets && pnpm build",
+    "spectre:dev": "cd pkg/spectre && pnpm import:kit-assets && pnpm dev",
+    "website:build": "pnpm kit-legacy:build && cd pkg/website && pnpm copy-kit-assets && pnpm build"
   },
-  "workspaces": {
-    "packages": [
-      "pkg/*"
-    ]
+  "devDependencies": {
+    "prettier": "^2.3.2"
   }
 }

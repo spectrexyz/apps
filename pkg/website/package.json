@@ -2,32 +2,32 @@
   "name": "website",
   "private": true,
   "scripts": {
-    "dev": "yarn build:litepaper && vite",
-    "build": "yarn build:litepaper && vite build && mkdir -p dist/litepaper && cp dist/index.html dist/litepaper",
+    "dev": "pnpm build:litepaper && vite",
+    "build": "pnpm build:litepaper && vite build && mkdir -p dist/litepaper && cp dist/index.html dist/litepaper",
     "serve": "vite preview",
-    "copy-kit-assets": "yarn kit-legacy-copy-assets ./public/kit-legacy",
+    "copy-kit-assets": "pnpm kit-legacy-copy-assets ./public/kit-legacy",
     "build:litepaper": "node scripts/build-litepaper.js > ./src/Litepaper/litepaper-content-generated.jsx",
     "lint": "eslint --ext .jsx,.js src/"
   },
   "dependencies": {
     "@emotion/cache": "^11.4.0",
-    "@emotion/react": "^11.4.0",
-    "@mdx-js/mdx": "next",
+    "@emotion/react": "^11.4.1",
+    "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "kit-legacy": "workspace:pkg/kit-legacy",
+    "kit-legacy": "workspace:*",
     "react": "^17.0.2",
     "react-cool-inview": "^2.0.7",
     "react-dom": "^17.0.2",
-    "react-spring": "^9.2.3",
+    "react-spring": "^9.2.4",
     "stylis": "^4.0.10",
-    "use-nft": "^0.9.0",
+    "use-nft": "^0.10.1",
     "use-viewport": "git://github.com/bpierre/use-viewport.git#master"
   },
   "devDependencies": {
-    "@vitejs/plugin-react-refresh": "^1.3.3",
-    "eslint": "^7.28.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
+    "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "vite": "^2.3.7"
+    "vite": "^2.5.1"
   }
 }
