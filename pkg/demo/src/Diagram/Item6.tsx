@@ -1,15 +1,17 @@
+import type { SpringValue } from "react-spring"
+
 import React, { memo } from "react"
 import { a, useSpring, useTransition } from "react-spring"
-import { colors } from "kit-legacy"
 import { Label } from "./Label"
-import { Nft } from "./Nft"
-import { WIDTH, HEIGHT, spSlow, spFast } from "./shared"
+import { HEIGHT, spSlow } from "./shared"
 import { Serc20 } from "./Serc20"
+
+type Props = { progress: SpringValue<number> }
 
 const X = 84
 const Y = HEIGHT - 250 + 40 + 2.5
 
-export const Item6 = memo(function Item6({ progress }) {
+export const Item6 = memo(function Item6({ progress }: Props) {
   const text = useSpring({
     delay: 300,
     config: spSlow,

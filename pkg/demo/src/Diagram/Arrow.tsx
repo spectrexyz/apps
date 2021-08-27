@@ -1,9 +1,16 @@
-import React from "react"
+import type { SpringValue } from "react-spring"
 import { a } from "react-spring"
-import { lerp } from "kit-legacy"
+import { lerp } from "kit"
 
-function path(direction, progress, x1, y1, x2, y2) {
-  const ip = (a, b) => lerp(progress, a, b)
+function path(
+  direction: "ltr" | "rtl",
+  progress: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) {
+  const ip = (a: number, b: number) => lerp(progress, a, b)
   if (direction === "rtl") {
     return `
       M ${x2} ${y2}
@@ -24,17 +31,23 @@ function path(direction, progress, x1, y1, x2, y2) {
 
 export function Arrow({
   direction = "ltr",
-  progressRef,
   progress,
   x1,
   y1,
   x2,
   y2,
+}: {
+  direction?: "ltr" | "rtl"
+  progress: SpringValue<number>
+  x1: number
+  y1: number
+  x2: number
+  y2: number
 }) {
   return (
     <a.path
       opacity={progress}
-      d={progress.to((p) => path(direction, p, x1, y1, x2, y2))}
+      d={progress.to((p: number) => path(direction, p, x1, y1, x2, y2))}
       strokeWidth="1"
       stroke="white"
       fill="none"

@@ -1,6 +1,4 @@
-import React from "react"
-import { a, useChain, useSpringRef, useTransition } from "react-spring"
-import { spFast } from "./shared"
+import { a, useTransition } from "react-spring"
 
 export function Nft() {
   const items = [<Icon3 />, <Icon2 />, <Icon1 />, <Icon4 />]

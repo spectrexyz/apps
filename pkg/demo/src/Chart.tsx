@@ -1,18 +1,13 @@
 import type { ReactNode } from "react"
-import type { SpringValue } from "react-spring"
+import type { Interpolation, SpringValue } from "react-spring"
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-} from "react"
+import React, { useCallback, useMemo } from "react"
 import { css } from "@emotion/react"
 import { useChain, useSpring, useSpringRef, a } from "react-spring"
-import { Moire, list, lerp, fonts, theme, smoothPath, useUid, gu } from "kit-legacy"
+import { Moire, gu, lerp, list, smoothPath, useTheme, useUid } from "kit"
 
 type Point = [number, number]
+type Interpolable<T> = SpringValue<T> | Interpolation<T>
 
 const BORDER = 1.5
 const PADDING = {
@@ -43,21 +38,8 @@ const AXES_DEFAULTS = {
     label: () => "",
     steps: 19,
     values: [
-      0.35,
-      0.45,
-      0.5,
-      0.44,
-      0.42,
-      0.5,
-      0.55,
-      0.4,
-      0.5,
-      0.55,
-      0.67,
-      0.74,
-      0.5,
-      0.4,
-      0.5,
+      0.35, 0.45, 0.5, 0.44, 0.42, 0.5, 0.55, 0.4, 0.5, 0.55, 0.67, 0.74, 0.5,
+      0.4, 0.5,
     ],
   },
 }
@@ -436,13 +418,13 @@ function RectanglePoint({
   pointTo: Point
   xEnd: number
   yEnd: number
-  showProgress: SpringValue<number>
+  showProgress: Interpolable<number>
 }) {
   return (
     <g>
       <a.path
         d={showProgress.to(
-          (p) => `
+          (p: number) => `
             M ${lerp(p, fromX, toX)} ${yEnd}
             L ${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)}
             L ${xEnd} ${lerp(p, fromY, toY)}
@@ -488,7 +470,7 @@ function LinePoint({
   yEnd: number
   label: string
   labelPosition: "start" | "end"
-  showProgress: SpringValue<number>
+  showProgress: Interpolable<number>
 }) {
   const uid = useUid()
   const startPos = labelPosition === "start"
@@ -507,7 +489,7 @@ function LinePoint({
         stroke={color}
         strokeWidth="2"
         d={showProgress.to(
-          (p) => `
+          (p: number) => `
             M ${start[0]} ${start[1]}
             L ${lerp(p, start[0], end[0])} ${lerp(p, start[1], end[1])}
           `
@@ -515,7 +497,7 @@ function LinePoint({
       />
       <a.g
         transform={showProgress.to(
-          (p) =>
+          (p: number) =>
             `
               translate(
                 ${startPos ? start[0] : lerp(p, start[0], end[0])}
@@ -533,7 +515,7 @@ function LinePoint({
 
       <a.g
         transform={showProgress.to(
-          (p) => `
+          (p: number) => `
             translate(${lerp(p, start[0], end[0])}, ${lerp(
             p,
             start[1],
@@ -557,12 +539,13 @@ function TwoLinesLabel({
   label: string
   pointFrom: Point
   pointTo: Point
-  showProgress: SpringValue<number>
+  showProgress: Interpolable<number>
 }) {
   return (
     <a.g
       transform={showProgress.to(
-        (p) => `translate(${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)})`
+        (p: number) =>
+          `translate(${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)})`
       )}
     >
       <Label color="white" textAnchor="middle" dominantBaseline="auto">
@@ -604,7 +587,7 @@ function Curve({
 }: {
   width: number
   height: number
-  showProgress: SpringValue<number>
+  showProgress: Interpolable<number>
   values: number[]
   steps: number
   graphPoint: (x: number, y: number) => Point
@@ -644,7 +627,6 @@ function Curve({
   const endPointFrom: Point = [
     curvePoints[curvePoints.length - 1][0],
     graphPoint(1, 0)[1],
-    graphPoint(0, 0)[1],
   ]
   const endPointTo: Point = [
     curvePoints[curvePoints.length - 1][0],
@@ -653,7 +635,7 @@ function Curve({
 
   // +4 horizontally to ensure that no gradient is visible during the reveal.
   const revealRectangleInterpolation = showProgress.to(
-    (p) => `
+    (p: number) => `
       M
         ${lerp(p, PADDING.sides, width - (width - endPointTo[0]))}
         ${PADDING.top}
@@ -671,6 +653,8 @@ function Curve({
     `
   )
 
+  const { colors } = useTheme()
+
   return (
     <g>
       <g>
@@ -682,7 +666,7 @@ function Curve({
         <rect
           width={width}
           height={height}
-          fill={theme.background}
+          fill={colors.background}
           mask={`url(#${uid})`}
         />
         <VariableStrokePath
@@ -705,7 +689,7 @@ function Curve({
         opacity={showProgress.to([0, 0.2, 1], [1, 1, 0])}
         width={width}
         height={height}
-        fill={theme.background}
+        fill={colors.background}
       />
 
       <RectanglePoint
@@ -724,8 +708,8 @@ function Curve({
         transform={showProgress.to([0, 0.8, 1], [0, 0, 1]).to(
           (p) => `
             translate(
-              ${lerp(p, endPointFrom[0], endPointTo[0])}
-              ${lerp(p, endPointFrom[1], endPointTo[1])}
+              ${lerp(p as number, endPointFrom[0], endPointTo[0])}
+              ${lerp(p as number, endPointFrom[1], endPointTo[1])}
             )
             scale(${p} ${p})
           `
