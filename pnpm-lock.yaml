@@ -137,6 +137,7 @@ importers:
 
   pkg/spectre:
     specifiers:
+      '@bpierre/use-viewport': ^0.3.0
       '@elchininet/isometric': ^2.5.3
       '@emotion/cache': ^11.4.0
       '@emotion/react': ^11.4.1
@@ -158,11 +159,11 @@ importers:
       react-spring: ^9.2.4
       stylis: ^4.0.10
       use-nft: ^0.10.1
-      use-viewport: git://github.com/bpierre/use-viewport.git#master
       vite: ^2.5.1
       web3-react: ^5.0.5
       zustand: ^3.5.10
     dependencies:
+      '@bpierre/use-viewport': 0.3.0_react@17.0.2
       '@elchininet/isometric': 2.5.3
       '@emotion/cache': 11.4.0
       '@emotion/react': 11.4.1_react@17.0.2
@@ -179,7 +180,6 @@ importers:
       react-spring: 9.2.4_react-dom@17.0.2+react@17.0.2
       stylis: 4.0.10
       use-nft: 0.10.1_ethers@5.4.5+react@17.0.2
-      use-viewport: github.com/bpierre/use-viewport/537acf68660adb939ead4f6eba8d95b4e68694fa_react@17.0.2
       web3-react: 5.0.5_ec29c015e6401e0f21d5aced1b2ee2c3
       zustand: 3.5.10_react@17.0.2
     devDependencies:
@@ -192,6 +192,7 @@ importers:
 
   pkg/website:
     specifiers:
+      '@bpierre/use-viewport': ^0.3.0
       '@emotion/cache': ^11.4.0
       '@emotion/react': ^11.4.1
       '@mdx-js/mdx': ^1.6.22
@@ -207,9 +208,9 @@ importers:
       react-spring: ^9.2.4
       stylis: ^4.0.10
       use-nft: ^0.10.1
-      use-viewport: git://github.com/bpierre/use-viewport.git#master
       vite: ^2.5.1
     dependencies:
+      '@bpierre/use-viewport': 0.3.0_react@17.0.2
       '@emotion/cache': 11.4.0
       '@emotion/react': 11.4.1_react@17.0.2
       '@mdx-js/mdx': 1.6.22
@@ -221,7 +222,6 @@ importers:
       react-spring: 9.2.4_react-dom@17.0.2+react@17.0.2
       stylis: 4.0.10
       use-nft: 0.10.1_react@17.0.2
-      use-viewport: github.com/bpierre/use-viewport/537acf68660adb939ead4f6eba8d95b4e68694fa_react@17.0.2
     devDependencies:
       '@vitejs/plugin-react-refresh': 1.3.6
       eslint: 7.32.0
@@ -816,6 +816,16 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@bpierre/use-viewport/0.3.0_react@17.0.2:
+    resolution: {integrity: sha512-JnNTBsjgsLxY2wIvsRyxbEEr58Ncm8ak7VPCg4pQc/dSn94uLMgjvM6Dmnq4XHUrFj2oJUvZGJ8rjMKnhEtL1Q==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: 17.x
+    dependencies:
+      lodash-es: 4.17.21
+      react: 17.0.2
+    dev: false
 
   /@cnakazawa/watch/1.0.4:
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
@@ -16862,21 +16872,6 @@ packages:
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
-    dev: false
-
-  github.com/bpierre/use-viewport/537acf68660adb939ead4f6eba8d95b4e68694fa_react@17.0.2:
-    resolution: {tarball: https://codeload.github.com/bpierre/use-viewport/tar.gz/537acf68660adb939ead4f6eba8d95b4e68694fa}
-    id: github.com/bpierre/use-viewport/537acf68660adb939ead4f6eba8d95b4e68694fa
-    name: use-viewport
-    version: 0.2.0
-    engines: {node: '>=10'}
-    prepare: true
-    requiresBuild: true
-    peerDependencies:
-      react: 17.x
-    dependencies:
-      lodash-es: 4.17.21
-      react: 17.0.2
     dev: false
 
   github.com/ethereumjs/ethereumjs-abi/ee3994657fa7a427238e6ba92a84d0b529bbcde0:
