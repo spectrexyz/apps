@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
 import React from "react"
 import { useIconSize, useIconColor } from "../icons-utils"
@@ -9,7 +10,7 @@ export default function IconArrowSquareOut({
   color,
   size,
   ...props
-}: IconArrowSquareOutProps) {
+}: IconArrowSquareOutProps): JSX.Element {
   color = useIconColor(color)
   size = useIconSize(size)
   return (

@@ -1,4 +1,6 @@
 /** @jsx jsx */
+import type { ChangeEvent } from "react"
+
 import { useCallback } from "react"
 import { jsx, css } from "@emotion/react"
 import { gu } from "../styles"
@@ -19,7 +21,7 @@ export function TokenInput({
   value,
 }: TokenInputProps): JSX.Element {
   const handleChange = useCallback(
-    (event) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.currentTarget.value.trim()
       if (/^[0-9]*\.?[0-9]*$/.test(value)) {
         onChange(value)

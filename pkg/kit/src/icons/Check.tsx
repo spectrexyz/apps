@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
 import React from "react"
 import { useIconSize, useIconColor } from "../icons-utils"
@@ -5,7 +6,11 @@ type IconCheckProps = SVGProps<SVGSVGElement> & {
   color?: string,
   size?: number,
 }
-export default function IconCheck({ color, size, ...props }: IconCheckProps) {
+export default function IconCheck({
+  color,
+  size,
+  ...props
+}: IconCheckProps): JSX.Element {
   color = useIconColor(color)
   size = useIconSize(size)
   return (

@@ -40,7 +40,7 @@ export const ButtonIcon = forwardRef<
       rel: "noopener noreferrer",
     }
     return external ? { ...props, target: "_blank" } : props
-  }, [disabled, external])
+  }, [disabled, external, href, onClick])
 
   const sharedCssStyles = ({ colors }: ThemeContextValue) => css`
     display: inline-flex;
@@ -79,6 +79,6 @@ export const ButtonIcon = forwardRef<
   )
 })
 
-export function useInsideButtonIcon() {
+export function useInsideButtonIcon(): boolean {
   return useContext(ButtonIconContext)
 }

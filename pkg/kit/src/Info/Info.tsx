@@ -70,14 +70,14 @@ export function Info({ children, icon, title }: InfoProps): JSX.Element {
   )
 }
 
-export function useInsideInfoTitle() {
+export function useInsideInfoTitle(): boolean {
   return useContext(InfoTitleContext)
 }
 
-export function useInfoTitleIconSize() {
+export function useInfoTitleIconSize(): number {
   return 3 * gu
 }
 
-export function useInfoTitleIconColor() {
+export function useInfoTitleIconColor(): string {
   return useTheme().colors.accent
 }

@@ -4,7 +4,7 @@ import { createElement, useEffect, useRef } from "react"
 import { uid } from "./utils"
 import { KEY_ESC } from "./keys"
 
-export function useEsc(callback: () => void, condition: boolean) {
+export function useEsc(callback: () => void, condition: boolean): void {
   const _cb = useRef(callback)
   useEffect(() => {
     if (!condition) {

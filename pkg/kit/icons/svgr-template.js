@@ -18,11 +18,12 @@ type ${propsTypeName} = SVGProps<SVGSVGElement> & {
   size?: number
 }
 
+// eslint-disable-next-line import/no-default-export
 export default function ${componentName}({
   color,
   size,
   ...props
-}: ${propsTypeName}) {
+}: ${propsTypeName}): JSX.Element {
   color = useIconColor(color)
   size = useIconSize(size)
   return ${jsx};

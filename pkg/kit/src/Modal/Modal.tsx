@@ -56,8 +56,10 @@ export function Modal({
                 justify-content: center;
               `}
             >
+              {/* No need for keyboard support here since this is handled elsewhere */}
+              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
               <div
-                onClick={({ target, currentTarget }) => {
+                onMouseDown={({ target, currentTarget }) => {
                   if (target === currentTarget) {
                     onClose()
                   }
@@ -144,8 +146,10 @@ export function Modal({
                   </a.div>
                 </FocusTrap>
               </div>
+              {/* No need for keyboard support here since this is handled elsewhere */}
+              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
               <div
-                onClick={() => onClose()}
+                onMouseDown={() => onClose()}
                 css={({ colors }) => css`
                   position: fixed;
                   z-index: 1;

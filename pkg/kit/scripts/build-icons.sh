@@ -38,8 +38,14 @@ cat <<'EOF' >> "$DIR_OUT/index.ts"
 EOF
 
 for icon in $icons; do
+  # Fill the icons/index.ts file
   name=$(basename -s .svg $icon)
   echo "export { default as Icon${name} } from './${name}'" >> "$DIR_OUT/index.ts"
+
+  # Disable the no-default-import ESLint rule (svgr strips comments so we can’t
+  # have it in the template)
+  path="${DIR_OUT}/${name}.tsx"
+  printf '%s\n%s\n' "/* eslint-disable import/no-default-export */" "$(cat "$path")" >"${path}"
 done
 
 echo "Done."
