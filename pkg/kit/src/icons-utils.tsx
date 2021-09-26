@@ -45,7 +45,7 @@ export function useIconSize(size?: number): number {
   return 4 * gu
 }
 
-export function useIconColor(color?: string) {
+export function useIconColor(color?: string): string {
   const isInsideInfoTitle = useInsideInfoTitle()
   const infoTitleIconColor = useInfoTitleIconColor()
 
