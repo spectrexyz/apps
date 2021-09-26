@@ -50,6 +50,6 @@ export const ButtonText = forwardRef<
   )
 })
 
-export function useInsideButtonText() {
+export function useInsideButtonText(): boolean {
   return useContext(ButtonTextContext)
 }

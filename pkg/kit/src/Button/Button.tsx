@@ -15,7 +15,9 @@ export const ICON_SIZE_DEFAULT_COMPACT = 2.5 * gu
 
 const SHADOW_OFFSET = 3
 
-const ButtonContext = createContext<null | { size: string }>(null)
+type ButtonContextType = { size: string }
+
+const ButtonContext = createContext<null | ButtonContextType>(null)
 
 type ButtonMode =
   | "primary"
@@ -300,6 +302,12 @@ function ButtonIn({
   )
 }
 
-export function useInsideButton() {
-  return useContext(ButtonContext)
+export function useInsideButton(): ButtonContextType {
+  const context = useContext(ButtonContext)
+  if (context === null) {
+    throw new Error(
+      "useInsideButton() requires to be called inside of a Button"
+    )
+  }
+  return context
 }

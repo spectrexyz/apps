@@ -8,6 +8,7 @@ import type {
 
 import { useCallback } from "react"
 import { jsx, css } from "@emotion/react"
+import { noop } from "../utils"
 
 type InputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
@@ -38,13 +39,18 @@ export function TextInput(
 
 export function TextInput({
   multiline = false,
-  onChange = () => {},
+  onChange = noop,
   value = "",
   ...props
 }: TextInputProps): JSX.Element {
   const sharedProps = {
     onChange: useCallback(
-      (event) => onChange(event.currentTarget.value, event),
+      (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        const value = event?.currentTarget?.value
+        if (typeof value === "string") {
+          onChange(value, event)
+        }
+      },
       [onChange]
     ),
     value: value,

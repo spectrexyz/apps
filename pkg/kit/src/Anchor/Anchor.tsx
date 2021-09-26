@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import type { ComponentPropsWithoutRef } from "react"
+import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
 import { forwardRef, useMemo } from "react"
 import { jsx, css } from "@emotion/react"
 
 export type AnchorProps = ComponentPropsWithoutRef<"button"> &
   ComponentPropsWithoutRef<"a"> & {
+    children: ReactNode
     disabled?: boolean
     external?: boolean
     href?: string
@@ -16,7 +17,7 @@ export const Anchor = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   AnchorProps
 >(function Anchor(
-  { disabled = false, href, external, onClick, ...props },
+  { disabled = false, href, external, onClick, children, ...props },
   ref
 ) {
   if (onClick !== undefined && (href !== undefined || external !== undefined)) {
@@ -35,7 +36,7 @@ export const Anchor = forwardRef<
       rel: "noopener noreferrer",
     }
     return external ? { ...props, target: "_blank" } : props
-  }, [href, disabled, external])
+  }, [href, disabled, external, onClick])
 
   return href ? (
     <a
@@ -52,7 +53,9 @@ export const Anchor = forwardRef<
           outline: 2px solid ${colors.focus};
         }
       `}
-    />
+    >
+      {children}
+    </a>
   ) : (
     <button
       ref={ref}
@@ -75,6 +78,8 @@ export const Anchor = forwardRef<
           outline: 2px solid ${colors.focus};
         }
       `}
-    />
+    >
+      {children}
+    </button>
   )
 })

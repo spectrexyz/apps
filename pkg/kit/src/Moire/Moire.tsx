@@ -1,4 +1,6 @@
 /** @jsx jsx */
+import type { ComponentPropsWithoutRef } from "react"
+
 import React, { useEffect, useRef } from "react"
 import { jsx, css } from "@emotion/react"
 import { colord } from "colord"
@@ -11,7 +13,7 @@ import {
 } from "twgl.js"
 import { raf } from "../utils"
 
-type MoireProps = {
+type MoireProps = ComponentPropsWithoutRef<"canvas"> & {
   animate?: boolean
   backgroundColor?: string
   height?: number
@@ -30,7 +32,7 @@ export function Moire({
   speed = 1,
   width = 500,
   ...props
-}: MoireProps): JSX.Element  {
+}: MoireProps): JSX.Element {
   const ref = useRef() as React.MutableRefObject<HTMLCanvasElement>
   const seed = useRef(Math.random())
 
@@ -51,7 +53,7 @@ export function Moire({
 
     gl.getExtension("OES_standard_derivatives")
 
-    const programInfo = createProgramInfo(gl, [VS, shader])
+    const programInfo = createProgramInfo(gl, [vs, shader])
     const arrays = {
       position: [-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0],
     }
@@ -72,23 +74,20 @@ export function Moire({
         return
       }
 
-      const uniforms = {
+      setUniforms(programInfo, {
         time: time * speed,
         seed: seed.current * 1000 * speed,
         resolution: [400 * scale, 400 * scale],
         linesColor: _linesColor,
         backgroundColor: _backgroundColor,
-      }
-      setUniforms(programInfo, uniforms)
+      })
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
       drawBufferInfo(gl, bufferInfo)
 
       _firstFrameRendered.current = true
     }, 1000 / 60)
 
-    return () => {
-      stopRaf()
-    }
+    return stopRaf
   }, [width, height, backgroundColor, linesColor, scale, speed])
 
   return (
@@ -247,7 +246,7 @@ void main() {
 }
 `
 
-const VS = `
+const vs = `
   attribute vec4 position;
   void main() {
     gl_Position = position;

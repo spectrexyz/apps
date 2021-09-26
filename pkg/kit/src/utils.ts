@@ -123,4 +123,6 @@ export function checkBackdropFilterSupport(): boolean {
   return supportsBackdropFilters
 }
 
-export function noop() {}
+export function noop(): void {
+  // do nothing
+}
