@@ -71,7 +71,7 @@ export const nftCardsSection = {
 }
 
 export const subscribeSection = {
-  title: "Spectre is launching this summer",
+  title: "Spectre is launching this fall",
   description: `
     Let’s morph art ownership into a collective form.
     Drop us your email to get a shout out when we launch!
