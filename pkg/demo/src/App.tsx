@@ -11,6 +11,7 @@ import { Diagram } from "./Diagram/Diagram"
 import { NftCollection } from "./NftCollection"
 import { Spectre } from "./Spectre"
 import { Popup } from "./Popup"
+import { Distribution } from "./Distribution"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
@@ -20,6 +21,7 @@ const demos = [
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
   ["popup", () => <Popup />, true],
+  ["distribution", () => <Distribution />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
