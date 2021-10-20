@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { jsx, css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { KEY_LEFT, KEY_RIGHT } from "../keys"
@@ -13,6 +13,8 @@ type TabItem = {
 }
 
 type TabsProps = {
+  align?: "center" | "start" | "end"
+  bordered?: boolean
   fullWidth?: boolean
   items: TabItem[]
   onSelect: (index: number) => void
@@ -20,6 +22,8 @@ type TabsProps = {
 }
 
 export function Tabs({
+  align = "center",
+  bordered = false,
   fullWidth = false,
   items,
   onSelect,
@@ -46,7 +50,7 @@ export function Tabs({
     return () => {
       document.removeEventListener("keydown", onKeyDown)
     }
-  }, [items, selected])
+  }, [items, onSelect, selected])
 
   useEffect(() => {
     if (!isFocused.current) {
@@ -59,16 +63,23 @@ export function Tabs({
     selectedButton?.focus()
   }, [selected])
 
+  const justifyContent = useMemo(() => {
+    if (align === "start") return "flex-start"
+    if (align === "end") return "flex-end"
+    return "center"
+  }, [align])
+
   return (
     <div
       ref={container}
       role="tablist"
-      css={css`
+      css={({ colors }) => css`
         display: flex;
-        justify-content: center;
+        justify-content: ${justifyContent};
         align-items: center;
         height: 5gu;
         width: ${fullWidth ? "100%" : "auto"};
+        border-bottom: ${Number(bordered)}px solid ${colors.accent2};
       `}
     >
       <div
@@ -77,12 +88,12 @@ export function Tabs({
           align-items: center;
           width: ${fullWidth ? "100%" : "auto"};
           height: 100%;
-          color: ${colors.accent};
+          color: ${colors.accent2};
           background: ${colors.layer2};
-          border: 1px solid ${colors.accent};
+          border: 1px solid ${colors.accent2};
           .selected {
             color: ${colors.accentContent};
-            background: ${colors.accent};
+            background: ${colors.accent2};
           }
         `}
         onFocus={() => {
@@ -108,7 +119,7 @@ export function Tabs({
               justify-content: center;
               height: 100%;
               padding: 0 4gu;
-              border-left: 1px solid ${colors.accent};
+              border-left: 1px solid ${colors.accent2};
               &:first-of-type {
                 border-left: 0;
               }
