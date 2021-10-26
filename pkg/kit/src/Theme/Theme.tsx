@@ -35,6 +35,8 @@ const colors = {
   accent2: "#C0BBFF",
   accentContent: "#050E1F",
   accent2Content: "#050E1F",
+  accentInverted: "#242D40",
+  accentInvertedContent: "#AAFFE4",
   link: "#C0BBFF",
   focus: "#C0BBFF",
   content: "#EDFCFF",

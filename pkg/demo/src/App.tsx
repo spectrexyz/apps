@@ -8,10 +8,12 @@ import { providers, Contract } from "ethers"
 import { NftProvider, FetcherDeclarationEthers } from "use-nft"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
-import { NftCollection } from "./NftCollection"
-import { Spectre } from "./Spectre"
-import { Popup } from "./Popup"
 import { Distribution } from "./Distribution"
+import { Icon } from "./Icon"
+import { NftCollection } from "./NftCollection"
+import { Popup } from "./Popup"
+import { Spectre } from "./Spectre"
+import { Steps } from "./Steps"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
@@ -22,6 +24,8 @@ const demos = [
   ["diagram", () => <Diagram />, true],
   ["popup", () => <Popup />, true],
   ["distribution", () => <Distribution />, true],
+  ["steps", () => <Steps />, true],
+  ["icon", () => <Icon />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
