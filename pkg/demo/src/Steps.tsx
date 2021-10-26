@@ -3,8 +3,7 @@ import { css } from "@emotion/react"
 import { Button, Steps } from "kit"
 
 function StepsDemo() {
-  const [step, setStep] = useState(0)
-  const [steps, setSteps] = useState(3)
+  const [[step, steps], setSteps] = useState([0, 3]) // current, total
   return (
     <div>
       <div
@@ -18,27 +17,51 @@ function StepsDemo() {
       <div
         css={css`
           display: flex;
+          gap: 1gu;
         `}
       >
-        <Button
-          label="Prev"
-          onClick={() => setStep((v) => Math.max(0, v - 1))}
-        />
-        <Button
-          label="Next"
-          onClick={() => setStep((v) => Math.min(steps - 1, v + 1))}
-        />
-      </div>
-      <div
-        css={css`
-          display: flex;
-        `}
-      >
-        <Button
-          label="Less"
-          onClick={() => setSteps((v) => Math.max(1, v - 1))}
-        />
-        <Button label="More" onClick={() => setSteps((v) => v + 1)} />
+        <div
+          css={css`
+            display: flex;
+            gap: 1gu;
+          `}
+        >
+          <Button
+            label="Prev"
+            onClick={() =>
+              setSteps(([step, steps]) => [Math.max(0, step - 1), steps])
+            }
+          />
+          <Button
+            label="Next"
+            onClick={() =>
+              setSteps(([step, steps]) => [
+                Math.min(steps - 1, step + 1),
+                steps,
+              ])
+            }
+          />
+        </div>
+        <div
+          css={css`
+            display: flex;
+            gap: 1gu;
+          `}
+        >
+          <Button
+            label="Less"
+            onClick={() =>
+              setSteps(([step, steps]) => [
+                Math.min(steps - 2, step),
+                Math.max(1, steps - 1),
+              ])
+            }
+          />
+          <Button
+            label="More"
+            onClick={() => setSteps(([step, steps]) => [step, steps + 1])}
+          />
+        </div>
       </div>
     </div>
   )
