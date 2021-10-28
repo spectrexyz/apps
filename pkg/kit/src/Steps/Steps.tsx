@@ -9,19 +9,31 @@ import { gu, springs } from "../styles"
 
 type StepsProps = {
   current: number
+  direction?: "horizontal" | "vertical"
   steps: number
 }
 
-export function Steps({ steps, current }: StepsProps): JSX.Element {
+export function Steps({
+  current,
+  direction = "horizontal",
+  steps,
+}: StepsProps): JSX.Element {
+  steps = Math.round(steps)
+  if (steps < 2) {
+    throw new Error(
+      `Steps: the number of steps should be greater than 1 (received ${steps}).`
+    )
+  }
   return (
     <div
       css={css`
         display: flex;
+        flex-direction: ${direction === "horizontal" ? "row" : "column"};
         justify-content: space-between;
         align-items: center;
-        width: 100%;
-        height: 8gu;
-        padding: 0 2gu;
+        width: ${direction === "horizontal" ? "100%" : css`8gu`};
+        height: ${direction === "horizontal" ? css`8gu` : "100%"};
+        padding: ${direction === "horizontal" ? css`0 2gu` : css`2gu 0`};
       `}
     >
       {Array.from({ length: steps * 2 - 1 }).map((_, index) => {
@@ -29,13 +41,13 @@ export function Steps({ steps, current }: StepsProps): JSX.Element {
         const step = index - Math.floor(index / 2)
         const active = step <= current
         return bar ? (
-          <StepBar key={index} active={active} />
+          <StepBar key={index} active={active} direction={direction} />
         ) : (
           <StepNumber
             key={index}
             active={active}
             checked={step < current}
-            label={`${step + 1}`}
+            label={String(step + 1)}
           />
         )
       })}
@@ -156,12 +168,20 @@ function StepNumber({
   )
 }
 
-function StepBar({ active }: { active: boolean }) {
+function StepBar({
+  active,
+  direction,
+}: {
+  active: boolean
+  direction: "horizontal" | "vertical"
+}) {
   const { colors } = useTheme()
   const bounds = useDimensions()
   const visibility = useSpring({
     config: springs.lazy,
-    transform: `translateX(${active ? 0 : -50}%)`,
+    transform:
+      (direction === "horizontal" ? "translateX" : "translateY") +
+      `(${active ? 0 : -50}%)`,
     opacity: Number(active),
   })
   return (
@@ -169,11 +189,11 @@ function StepBar({ active }: { active: boolean }) {
       ref={bounds.observe}
       css={css`
         display: flex;
-        width: 100%;
-        height: 0.5gu;
+        width: ${direction === "horizontal" ? "100%" : css`0.5gu`};
+        height: ${direction === "horizontal" ? css`0.5gu` : "100%"};
         background: ${colors.accentInverted};
         border-radius: 0.25gu;
-        margin: 0 1.75gu;
+        margin: ${direction === "horizontal" ? css`0 1.75gu` : css`1.75gu 0`};
         overflow: hidden;
       `}
     >
