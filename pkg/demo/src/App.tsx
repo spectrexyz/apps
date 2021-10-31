@@ -11,7 +11,7 @@ import { Diagram } from "./Diagram/Diagram"
 import { Distribution } from "./Distribution"
 import { Icon } from "./Icon"
 import { NftCollection } from "./NftCollection"
-import { Popup } from "./Popup"
+import { Radio } from "./Radio"
 import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
 
@@ -22,10 +22,10 @@ const demos = [
   ["moire", () => <Moire style={{ borderRadius: "50%" }} />, true],
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
-  ["popup", () => <Popup />, true],
   ["distribution", () => <Distribution />, true],
   ["steps", () => <Steps />, true],
   ["icon", () => <Icon />, true],
+  ["radio", () => <Radio />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {

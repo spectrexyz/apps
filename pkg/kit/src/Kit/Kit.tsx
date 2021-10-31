@@ -10,6 +10,7 @@ import { Main } from "../Main"
 import { BaseUrl } from "../BaseUrl"
 import { Theme } from "../Theme"
 import { RootEntryPoint } from "../Root"
+import { FocusVisible } from "../FocusVisible"
 
 type KitProps = {
   baseUrl: string
@@ -26,9 +27,11 @@ export function Kit({ baseUrl, children }: KitProps): JSX.Element {
     <BaseUrl baseUrl={baseUrl}>
       <CacheProvider value={emotionCache}>
         <Theme>
-          <RootEntryPoint>
-            <Main>{children}</Main>
-          </RootEntryPoint>
+          <FocusVisible>
+            <RootEntryPoint>
+              <Main>{children}</Main>
+            </RootEntryPoint>
+          </FocusVisible>
         </Theme>
       </CacheProvider>
     </BaseUrl>
