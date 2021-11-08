@@ -1,6 +1,4 @@
 /** @jsx jsx */
-import type { KeyboardEvent } from "react"
-
 import { useEffect, useRef, useState } from "react"
 import { css, jsx } from "@emotion/react"
 import { a, useTransition } from "react-spring"
@@ -9,27 +7,27 @@ import { gu, springs } from "../styles"
 import { useFocusVisible } from "../FocusVisible"
 import { useRadioGroup } from "./RadioGroup"
 
-const KEYS_PREV = ["ArrowUp", "ArrowLeft"]
-const KEYS_NEXT = ["ArrowDown", "ArrowRight"]
-
 type RadioProps = {
   checked?: boolean
+  focusOnCheck?: boolean
   id?: string | number
   onChange?: (checked: boolean) => void
   tabIndex?: number
 }
 
 export function Radio({
-  checked,
+  checked: checkedProp,
+  focusOnCheck,
   id,
   onChange,
   tabIndex,
 }: RadioProps): JSX.Element {
   const [isFocused, setIsFocused] = useState(false)
-  const element = useRef<null | HTMLInputElement>(null)
-  const radioGroup = useRadioGroup()
-  const { focusVisible, onFocus } = useFocusVisible()
+  const input = useRef<null | HTMLInputElement>(null)
+  const focusVisible = useFocusVisible()
+  const radioGroup = useRadioGroup(id)
   const inRadioGroup = radioGroup !== null
+  const checked = checkedProp ?? (inRadioGroup && id === radioGroup.selected)
 
   if (!onChange) {
     if (!inRadioGroup || id === undefined) {
@@ -40,6 +38,10 @@ export function Radio({
     onChange = (checked) => {
       if (checked) radioGroup.select(id)
     }
+  }
+
+  if (focusOnCheck === undefined) {
+    focusOnCheck = inRadioGroup
   }
 
   const handleChange = () => {
@@ -54,38 +56,13 @@ export function Radio({
     }
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!inRadioGroup) return
-
-    if (KEYS_PREV.includes(event.key)) {
-      radioGroup.selectPrev()
-      event.preventDefault()
-    }
-
-    if (KEYS_NEXT.includes(event.key)) {
-      radioGroup.selectNext()
-      event.preventDefault()
-    }
-  }
-
-  const { addRadio, removeRadio } = radioGroup ?? {}
   useEffect(() => {
-    if (id === undefined || !addRadio || !removeRadio) {
-      return
+    if (checked && focusOnCheck) {
+      input.current?.focus()
     }
-    addRadio(id)
-    return () => removeRadio(id)
-  }, [id, addRadio, removeRadio])
+  }, [checked, focusOnCheck])
 
-  const _checked = checked ?? (inRadioGroup && id === radioGroup?.selected)
-
-  useEffect(() => {
-    if (_checked && inRadioGroup) {
-      element.current?.focus()
-    }
-  }, [_checked, inRadioGroup])
-
-  const checkTransition = useTransition(_checked, {
+  const checkTransition = useTransition(checked, {
     config: springs.swift,
     from: {
       opacity: 0,
@@ -112,15 +89,12 @@ export function Radio({
       `}
     >
       <input
-        ref={element}
-        checked={_checked}
+        ref={input}
+        checked={checked}
         onBlur={() => setIsFocused(false)}
         onChange={handleChange}
-        onFocus={() => {
-          onFocus()
-          setIsFocused(true)
-        }}
-        onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onKeyDown={radioGroup?.onKeyDown}
         tabIndex={
           tabIndex ??
           (radioGroup &&
@@ -130,9 +104,16 @@ export function Radio({
             : -1)
         }
         type="radio"
-        css={css`
+        css={({ colors }) => css`
           opacity: 0;
           pointer-events: none;
+          &:active div:after {
+            content: "";
+            position: absolute;
+            inset: 1gu;
+            background: ${colors.accent};
+            border-radius: 50%;
+          }
         `}
       />
       <div

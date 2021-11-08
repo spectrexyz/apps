@@ -1,9 +1,15 @@
-import type { ReactNode } from "react"
+import type { KeyboardEvent, ReactNode } from "react"
 
-import React, { createContext, useCallback, useContext, useState } from "react"
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { noop } from "../utils"
 
-const RadioGroupContext = createContext<null | {
+type RadioGroupContext = {
   addRadio: (id: RadioId) => void
   focusableId: RadioId
   select: (id: RadioId) => void
@@ -11,7 +17,9 @@ const RadioGroupContext = createContext<null | {
   selectNext: () => void
   selectPrev: () => void
   selected: RadioId
-}>(null)
+}
+
+const RadioGroupContext = createContext<RadioGroupContext | null>(null)
 
 type RadioId = string | number
 
@@ -106,6 +114,47 @@ export function RadioGroup({
   )
 }
 
-export function useRadioGroup() {
-  return useContext(RadioGroupContext)
+const KEYS_PREV = ["ArrowUp", "ArrowLeft"]
+const KEYS_NEXT = ["ArrowDown", "ArrowRight"]
+
+type RadioGroupValue = RadioGroupContext & {
+  onKeyDown: (event: KeyboardEvent<HTMLElement>) => void
+}
+
+export function useRadioGroup(
+  id: string | number | undefined
+): RadioGroupValue | null {
+  const radioGroup = useContext(RadioGroupContext) as RadioGroupValue
+
+  const { addRadio, removeRadio } = radioGroup ?? {}
+  useEffect(() => {
+    if (id === undefined || !addRadio || !removeRadio) {
+      return
+    }
+    addRadio(id)
+    return () => removeRadio(id)
+  }, [id, addRadio, removeRadio])
+
+  if (!radioGroup) {
+    return null
+  }
+
+  // Handles key events and trigger changes in the RadioGroup as needed.
+  radioGroup.onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.altKey || event.metaKey || event.ctrlKey) {
+      return
+    }
+
+    if (KEYS_PREV.includes(event.key)) {
+      radioGroup.selectPrev()
+      event.preventDefault()
+    }
+
+    if (KEYS_NEXT.includes(event.key)) {
+      radioGroup.selectNext()
+      event.preventDefault()
+    }
+  }
+
+  return radioGroup
 }
