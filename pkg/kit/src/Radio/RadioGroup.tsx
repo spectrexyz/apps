@@ -1,6 +1,6 @@
 import type { KeyboardEvent, ReactNode } from "react"
 
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

@@ -1,10 +1,9 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
 import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
 import { a, useTransition } from "react-spring"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import { gu, springs } from "../styles"
 import { IconX } from "../icons"
 import { ButtonArea } from "../ButtonArea"

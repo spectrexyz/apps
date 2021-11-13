@@ -1,6 +1,5 @@
 /* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
-import React from "react"
 import { useIconSize, useIconColor } from "../icons-utils"
 type IconArrowRightProps = SVGProps<SVGSVGElement> & {
   color?: string,

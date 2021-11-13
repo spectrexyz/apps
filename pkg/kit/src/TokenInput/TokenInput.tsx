@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ChangeEvent } from "react"
 
 import { useCallback } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { gu } from "../styles"
 import { Button } from "../Button"
 import { TokenIcon } from "../TokenIcon"

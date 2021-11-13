@@ -1,10 +1,9 @@
-/** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import type { ButtonAreaProps } from "../ButtonArea"
 import type { ThemeContextValue } from "../Theme/Theme"
 
 import { createContext, forwardRef, useCallback, useContext } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { gu } from "../styles"
 

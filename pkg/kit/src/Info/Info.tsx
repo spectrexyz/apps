@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
 import { createContext, useContext } from "react"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import { useTheme } from "../Theme"
 import { gu } from "../styles"
 

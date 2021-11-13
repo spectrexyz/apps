@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import React, { createContext, useContext, useMemo } from "react"
+import { createContext, useContext, useMemo } from "react"
 import { ThemeProvider } from "@emotion/react"
 import { fonts } from "../styles"
 

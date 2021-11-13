@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ComponentPropsWithRef, ReactNode } from "react"
 
 import { forwardRef } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 
 type LinkIconProps = ComponentPropsWithRef<"a"> & {
   icon: ReactNode

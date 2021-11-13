@@ -1,8 +1,7 @@
-/** @jsx jsx */
-import type { ReactNode } from "react"
+import type { Ref, ReactNode } from "react"
 
 import { useEffect, useRef } from "react"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { useFocusVisible } from "../FocusVisible"
 import { useRadioGroup } from "./RadioGroup"

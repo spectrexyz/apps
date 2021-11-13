@@ -1,7 +1,5 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { jsx } from "@emotion/react"
 import { createContext, useCallback, useContext, useState } from "react"
 import ReactDOM from "react-dom"
 

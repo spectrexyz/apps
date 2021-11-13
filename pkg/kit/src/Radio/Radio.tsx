@@ -1,6 +1,5 @@
-/** @jsx jsx */
 import { useEffect, useRef, useState } from "react"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import { a, useTransition } from "react-spring"
 import { Moire } from "../Moire"
 import { gu, springs } from "../styles"

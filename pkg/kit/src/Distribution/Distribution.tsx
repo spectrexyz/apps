@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import { useEffect, useRef } from "react"
-import { jsx } from "@emotion/react"
 import {
   IsometricCanvas,
   IsometricRectangle,

@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
 import { createContext, forwardRef, useContext, useMemo } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { ButtonArea } from "../ButtonArea"
 import { Moire } from "../Moire"

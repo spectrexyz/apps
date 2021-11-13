@@ -1,6 +1,5 @@
-/** @jsx jsx */
 import { useMemo } from "react"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import blockie from "ethereum-blockies-base64"
 import { isAddress } from "../utils"
 import { gu } from "../styles"

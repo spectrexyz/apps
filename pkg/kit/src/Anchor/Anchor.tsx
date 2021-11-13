@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
 import { forwardRef, useMemo } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 
 export type AnchorProps = ComponentPropsWithoutRef<"button"> &
   ComponentPropsWithoutRef<"a"> & {

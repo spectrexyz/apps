@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import type {
   ChangeEvent,
   DetailedHTMLProps,
@@ -7,7 +6,7 @@ import type {
 } from "react"
 
 import { useCallback } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { noop } from "../utils"
 
 type InputProps = DetailedHTMLProps<

@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring, useTransition } from "react-spring"
 import { Moire } from "../Moire/Moire"

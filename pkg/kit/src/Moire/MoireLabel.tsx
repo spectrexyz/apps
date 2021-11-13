@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
 import useDimensions from "react-cool-dimensions"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { useTheme } from "../Theme"
 import { Moire } from "../Moire/Moire"
 import { gu } from "../styles"

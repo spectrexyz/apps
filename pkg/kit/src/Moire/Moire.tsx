@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ComponentPropsWithoutRef } from "react"
 
-import React, { useEffect, useRef } from "react"
-import { jsx, css } from "@emotion/react"
+import { useEffect, useRef } from "react"
+import { css } from "@emotion/react"
 import { colord } from "colord"
 import {
   createBufferInfoFromArrays,

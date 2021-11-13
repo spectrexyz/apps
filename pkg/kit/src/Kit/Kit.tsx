@@ -1,7 +1,7 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
+import type { StylisPlugin } from "@emotion/cache"
 
-import { CacheProvider, jsx } from "@emotion/react"
+import { CacheProvider } from "@emotion/react"
 import createCache from "@emotion/cache"
 import { prefixer } from "stylis"
 import { cssUnitPlugin } from "../emotion-plugin-css-unit"
@@ -19,7 +19,7 @@ type KitProps = {
 
 const emotionCache = createCache({
   key: "k",
-  stylisPlugins: [cssUnitPlugin(gu, "gu"), prefixer],
+  stylisPlugins: [cssUnitPlugin(gu, "gu"), prefixer as StylisPlugin],
 })
 
 export function Kit({ baseUrl, children }: KitProps): JSX.Element {

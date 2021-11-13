@@ -1,11 +1,10 @@
-/** @jsx jsx */
 import type { ReactNode, RefObject } from "react"
 
 import { memo, useState } from "react"
 import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
 import { a, useTransition } from "react-spring"
-import { css, jsx } from "@emotion/react"
+import { css } from "@emotion/react"
 import { usePopper } from "react-popper"
 import { ButtonArea } from "../ButtonArea"
 import { IconX } from "../icons"

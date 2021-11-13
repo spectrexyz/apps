@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
 import { useEffect, useMemo, useRef } from "react"
-import { jsx, css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { KEY_LEFT, KEY_RIGHT } from "../keys"
 

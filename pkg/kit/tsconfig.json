@@ -3,5 +3,7 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react"
   }
 }
