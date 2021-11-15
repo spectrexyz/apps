@@ -55,8 +55,8 @@
     "colord": "^2.9.1",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^8.8.2",
+    "ogl": "^0.0.76",
     "react-cool-dimensions": "^2.0.7",
-    "react-popper": "^2.2.5",
-    "twgl.js": "^4.21.2"
+    "react-popper": "^2.2.5"
   }
 }
