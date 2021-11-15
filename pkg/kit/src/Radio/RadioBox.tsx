@@ -22,7 +22,9 @@ export function RadioBox({
   onChange,
   secondary,
 }: RadioBoxProps): JSX.Element {
-  const button = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
+  const button = useRef<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement>(
+    null
+  )
   const focusVisible = useFocusVisible()
   const radioGroup = useRadioGroup(id)
   const inRadioGroup = radioGroup !== null
@@ -66,23 +68,12 @@ export function RadioBox({
   }, [checked, inRadioGroup])
 
   return (
-    <ButtonArea
-      ref={button}
+    <RadioBoxContainer
+      buttonRef={button}
+      checked={checked}
+      id={id}
       onClick={handleClick}
-      onKeyDown={radioGroup?.onKeyDown}
-      tabIndex={
-        radioGroup &&
-        (radioGroup.focusableId === undefined || id === radioGroup.focusableId)
-          ? 0
-          : -1
-      }
-      css={({ colors }) => css`
-        position: relative;
-        width: 100%;
-        padding: 2gu;
-        background: ${colors.layer2};
-        cursor: pointer;
-      `}
+      radioGroup={radioGroup}
     >
       <div
         css={({ colors }) => css`
@@ -90,11 +81,13 @@ export function RadioBox({
           flex-direction: column;
           align-items: flex-start;
           gap: 1gu;
+          width: 100%;
           &:after {
             content: "";
             position: absolute;
             inset: 1px;
             outline: 2px solid ${checked ? colors.accent : "transparent"};
+            pointer-events: none;
           }
         `}
       >
@@ -123,13 +116,79 @@ export function RadioBox({
         </div>
         <div
           css={({ colors }) => css`
+            width: 100%;
             font-size: 12px;
+            text-align: left;
             color: ${colors.contentDimmed};
           `}
         >
           {secondary}
         </div>
       </div>
-    </ButtonArea>
+    </RadioBoxContainer>
+  )
+}
+
+function RadioBoxContainer({
+  buttonRef,
+  checked,
+  children,
+  id,
+  onClick,
+  radioGroup,
+}: {
+  buttonRef: Ref<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement>
+  checked: boolean
+  children: ReactNode
+  id?: string | number
+  onClick: () => void
+  radioGroup: ReturnType<typeof useRadioGroup>
+}) {
+  if (!checked) {
+    return (
+      <ButtonArea
+        ref={buttonRef}
+        onClick={onClick}
+        onKeyDown={radioGroup?.onKeyDown}
+        tabIndex={
+          radioGroup &&
+          (radioGroup.focusableId === undefined ||
+            id === radioGroup.focusableId)
+            ? 0
+            : -1
+        }
+        css={({ colors }) => css`
+          position: relative;
+          width: 100%;
+          padding: 2gu;
+          background: ${colors.layer2};
+          cursor: pointer;
+        `}
+      >
+        {children}
+      </ButtonArea>
+    )
+  }
+  return (
+    <div
+      ref={buttonRef}
+      onClick={onClick}
+      onKeyDown={radioGroup?.onKeyDown}
+      tabIndex={
+        radioGroup &&
+        (radioGroup.focusableId === undefined || id === radioGroup.focusableId)
+          ? 0
+          : -1
+      }
+      css={({ colors }) => css`
+        position: relative;
+        width: 100%;
+        padding: 2gu;
+        background: ${colors.layer2};
+        cursor: pointer;
+      `}
+    >
+      {children}
+    </div>
   )
 }
