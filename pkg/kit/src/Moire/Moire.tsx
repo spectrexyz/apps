@@ -39,15 +39,15 @@ function useOglProgram({
   const uniforms = useRef({
     backgroundColor: scolor(backgroundColor),
     linesColor: scolor(linesColor),
-    resolution: [width * scale, height * scale],
+    resolution: [500 * scale, 500 * scale],
     seed: Math.random() * 1000,
     speed,
     time: 1,
   })
 
   useEffect(() => {
-    uniforms.current.resolution[0] = width * scale
-    uniforms.current.resolution[1] = height * scale
+    uniforms.current.resolution[0] = 500 * scale
+    uniforms.current.resolution[1] = 500 * scale
     uniforms.current.speed = speed
   }, [height, scale, speed, width])
 
@@ -111,16 +111,6 @@ function useOglProgram({
   return render
 }
 
-type MoireProps = ComponentPropsWithoutRef<"div"> & {
-  animate?: boolean
-  backgroundColor?: string
-  height?: number
-  linesColor?: string
-  scale?: number
-  speed?: number
-  width?: number
-}
-
 function useAnimate(animate: boolean, render: (time: number) => void) {
   const _firstFrameRendered = useRef(false)
   const _animate = useRef(animate)
@@ -136,19 +126,29 @@ function useAnimate(animate: boolean, render: (time: number) => void) {
       }
       render(time)
       _firstFrameRendered.current = true
-    }, 1000 / 60)
+    }, 1000 / 30)
     return stopRaf
   }, [render])
+}
+
+type MoireProps = ComponentPropsWithoutRef<"div"> & {
+  animate?: boolean
+  backgroundColor?: string
+  height: number
+  linesColor?: string
+  scale?: number
+  speed?: number
+  width: number
 }
 
 export function Moire({
   animate = true,
   backgroundColor = "rgb(4, 19, 31)",
-  height = 500,
+  height,
   linesColor = "rgb(88, 255, 202)",
   scale = 1,
   speed = 1,
-  width = 500,
+  width,
   ...props
 }: MoireProps): JSX.Element {
   const canvasContainer = useRef<HTMLDivElement>(null)
@@ -170,6 +170,9 @@ export function Moire({
       {...props}
       css={css`
         overflow: hidden;
+        canvas {
+          display: block;
+        }
       `}
     />
   )
