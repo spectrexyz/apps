@@ -18,21 +18,22 @@ type ButtonContextType = null | { size: string }
 
 const ButtonContext = createContext<ButtonContextType>(null)
 
-type ButtonMode =
+export type ButtonMode =
   | "primary"
   | "primary-2"
   | "secondary"
+  | "secondary-2"
   | "flat" // layer1
   | "flat-2" // layer2 (lighter)
   | "flat-3" // dark blue
   | "outline"
-type ButtonSize =
+export type ButtonSize =
   | "medium"
   | "compact" // "compact" is a small button with large text
   | "small"
-type ShadowInBox = false | true | "width" | "height"
+export type ShadowInBox = false | true | "width" | "height"
 
-type ButtonProps = ComponentPropsWithoutRef<"button"> &
+export type ButtonProps = ComponentPropsWithoutRef<"button"> &
   ComponentPropsWithoutRef<"a"> & {
     // adjust the label alignment (i.e. makes all caps button labels appear centered)
     adjustLabelAlignment?: boolean
@@ -82,6 +83,7 @@ export const Button = forwardRef<
 
   const fontSize = useMemo(() => {
     if (size === "small") return "14px"
+    if (size === "compact") return "16px"
     return "18px"
   }, [size])
 
@@ -113,8 +115,8 @@ export const Button = forwardRef<
             if (mode === "flat-3") return colors.accent
             if (mode === "primary") return colors.accentContent
             if (mode === "primary-2") return colors.accent2Content
-            // secondary
-            return colors.accent
+            if (mode === "secondary-2") return colors.accent2
+            return colors.accent // secondary
           })()};
           &:focus-visible {
             outline: 0;
@@ -219,13 +221,13 @@ function ButtonIn({
             if (mode === "flat-3") return colors.background
             if (mode === "primary") return colors.accent
             if (mode === "primary-2") return colors.accent2
-            // secondary
-            return colors.background
+            return colors.background // secondary, secondary-2
           })()};
           border-style: solid;
           border-width: ${flat ? "0" : "1px"};
           border-color: ${(() => {
             if (mode === "primary-2") return colors.accent2
+            if (mode === "secondary-2") return colors.accent2
             return colors.accent
           })()};
         `}
@@ -273,7 +275,7 @@ function ButtonIn({
             css={({ colors }) => css`
               position: absolute;
               inset: 0;
-              background: ${mode === "primary-2"
+              background: ${mode === "primary-2" || mode === "secondary-2"
                 ? colors.accent2
                 : colors.accent};
               opacity: 0;
@@ -291,7 +293,11 @@ function ButtonIn({
             <Moire
               width={Math.ceil(shadowBounds.width)}
               height={Math.ceil(shadowBounds.height)}
-              linesColor={mode === "primary-2" ? colors.accent2 : undefined}
+              linesColor={
+                mode === "primary-2" || mode === "secondary-2"
+                  ? colors.accent2
+                  : undefined
+              }
               scale={0.8}
             />
           </div>

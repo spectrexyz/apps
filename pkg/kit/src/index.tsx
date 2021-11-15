@@ -1,3 +1,5 @@
+export type { ButtonMode, ButtonProps, ButtonSize, ShadowInBox } from "./Button"
+
 export { colord as co } from "colord"
 export { default as FocusTrap } from "focus-trap-react"
 export { default as useDimensions } from "react-cool-dimensions"
