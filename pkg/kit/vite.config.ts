@@ -2,12 +2,7 @@ import path from "path"
 import { defineConfig } from "vite"
 import dts from "vite-dts"
 
-module.exports = defineConfig({
-  mode: "development",
-  esbuild: {
-    jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
-  },
+module.exports = defineConfig(async ({ mode }) => ({
   build: {
     outDir: "dist",
     lib: {
@@ -15,7 +10,7 @@ module.exports = defineConfig({
       formats: ["es", "cjs"],
       fileName: (format) => `kit.${format}.js`,
     },
-    sourcemap: true,
+    sourcemap: mode === "production" || "inline",
     rollupOptions: {
       external: [
         "@emotion/cache",
@@ -27,8 +22,12 @@ module.exports = defineConfig({
       ],
     },
   },
+  esbuild: {
+    jsxFactory: "jsx",
+    jsxInject: `import { jsx } from '@emotion/react'`,
+  },
   optimizeDeps: {
     entries: ["./src/index.tsx"],
   },
   plugins: [dts()],
-})
+}))
