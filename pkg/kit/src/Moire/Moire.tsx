@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react"
 
 import {
   createContext,
+  memo,
   useCallback,
   useContext,
   useEffect,
@@ -9,8 +10,7 @@ import {
   useState,
 } from "react"
 import { css } from "@emotion/react"
-import { Box, Color, Mesh, Program, Renderer } from "ogl"
-import { colord } from "colord"
+import { Box, Mesh, Program, Renderer } from "ogl"
 import { noop, raf } from "../utils"
 
 import moireFragment from "./moire.frag?raw"
@@ -22,22 +22,19 @@ const MoireContext = createContext<{
     canvas: HTMLCanvasElement,
     context: CanvasRenderingContext2D,
     width: number,
-    height: number
+    height: number,
+    color: string
   ) => void
   removeMoire: (canvas: HTMLCanvasElement) => void
 }>({ addMoire: noop, removeMoire: noop })
 
 function useOglProgram({
-  backgroundColor,
   dimensions: [width, height],
-  linesColor,
   parent,
   scale,
   speed,
 }: {
-  backgroundColor: Color
   dimensions: [width: number, height: number]
-  linesColor: Color
   parent: RefObject<HTMLElement>
   scale: number
   speed: number
@@ -55,8 +52,6 @@ function useOglProgram({
   })
 
   const uniforms = useRef({
-    backgroundColor: scolor(backgroundColor),
-    linesColor: scolor(linesColor),
     resolution: [500 * scale, 500 * scale],
     seed: Math.random() * 1000,
     speed,
@@ -70,26 +65,18 @@ function useOglProgram({
   }, [height, scale, speed, width])
 
   useEffect(() => {
-    uniforms.current.backgroundColor = scolor(backgroundColor)
-  }, [backgroundColor])
-
-  useEffect(() => {
-    uniforms.current.linesColor = scolor(linesColor)
-  }, [linesColor])
-
-  useEffect(() => {
     if (!parent.current) return
 
     const renderer = new Renderer({
       dpr: window.devicePixelRatio ?? 1,
-      alpha: false,
+      alpha: true,
     })
     const { gl } = renderer
 
     parent.current.appendChild(gl.canvas)
 
     const program = new Program(gl, {
-      transparent: false,
+      transparent: true,
       fragment: moireFragment.replace(
         /^\/\/ \[IMPORT_SNOISE\]\n/gm,
         snoise + "\n"
@@ -159,18 +146,14 @@ function useAnimate(
 
 type MoireBaseProps = ComponentPropsWithoutRef<"div"> & {
   animate?: boolean
-  backgroundColor?: string
   children: ReactNode
-  linesColor?: string
   scale?: number
   speed?: number
 }
 
 export function MoireBase({
   animate = true,
-  backgroundColor = "rgb(4, 19, 31)",
   children,
-  linesColor = "rgb(88, 255, 202)",
   scale = 1,
   speed = 1,
   ...props
@@ -182,7 +165,12 @@ export function MoireBase({
   const activeMoires = useRef<
     Map<
       HTMLCanvasElement,
-      { context: CanvasRenderingContext2D; width: number; height: number }
+      {
+        color: string
+        context: CanvasRenderingContext2D
+        height: number
+        width: number
+      }
     >
   >(new Map())
 
@@ -191,8 +179,6 @@ export function MoireBase({
     dimensions: [width, height],
     speed,
     scale,
-    linesColor,
-    backgroundColor,
   })
 
   useAnimate(
@@ -201,8 +187,21 @@ export function MoireBase({
         if (!canvas) return
 
         render(time)
-        activeMoires.current.forEach(({ context }) => {
-          context.drawImage(canvas, 0, 0, width, height)
+        activeMoires.current.forEach(({ context, color, width, height }) => {
+          const sw = 500
+          const sh = 500
+
+          const dw = Math.max(500, width)
+          const dh = Math.max(500, height)
+          const dx = 0
+          const dy = 0
+
+          context.clearRect(0, 0, width, height)
+          context.drawImage(canvas, 0, 0, sw, sh, dx, dy, dw, dh)
+          context.fillStyle = color
+          context.globalCompositeOperation = "source-in"
+          context.fillRect(0, 0, width, height)
+          context.globalCompositeOperation = "source-over"
         })
       },
       [render, canvas]
@@ -210,8 +209,8 @@ export function MoireBase({
     { animate }
   )
 
-  const addMoire = useCallback((canvas, context, width, height) => {
-    activeMoires.current.set(canvas, { context, width, height })
+  const addMoire = useCallback((canvas, context, width, height, color) => {
+    activeMoires.current.set(canvas, { context, width, height, color })
   }, [])
 
   const removeMoire = useCallback((canvas) => {
@@ -238,20 +237,35 @@ export function MoireBase({
 
 type MoireProps = ComponentPropsWithoutRef<"canvas"> & {
   animate?: boolean
+  backgroundColor?: string
   height: number
+  linesColor?: string
   scale?: number
   width: number
 }
 
-export function Moire({
+export const Moire = memo(function Moire({
   animate,
+  backgroundColor = "transparent",
   height,
+  linesColor = "rgb(88, 255, 202)",
   scale = 1,
   width,
   ...props
 }: MoireProps): JSX.Element {
   const { addMoire, removeMoire } = useContext(MoireContext)
   const canvas = useRef<HTMLCanvasElement | null>(null)
+
+  useEffect(() => {
+    if (canvas.current) {
+      removeMoire(canvas.current)
+
+      const ctx = canvas.current.getContext("2d")
+      if (ctx) {
+        addMoire(canvas.current, ctx, width, height, linesColor)
+      }
+    }
+  }, [addMoire, removeMoire, linesColor, width, height])
 
   return (
     <canvas
@@ -264,7 +278,7 @@ export function Moire({
 
         const context = _canvas?.getContext("2d")
         if (_canvas && context) {
-          addMoire(_canvas, context, width, height)
+          addMoire(_canvas, context, width, height, linesColor)
           canvas.current = _canvas
         }
       }}
@@ -274,14 +288,11 @@ export function Moire({
       css={css`
         display: block;
         overflow: hidden;
+        background: ${backgroundColor || "transparent"};
       `}
     />
   )
-}
-
-function scolor(value: string): Color {
-  return new Color(colord(value).toHex())
-}
+})
 
 function formatUniforms(uniforms: Record<string, unknown>) {
   return Object.fromEntries(
