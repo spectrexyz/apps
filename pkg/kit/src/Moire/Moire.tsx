@@ -1,14 +1,31 @@
-import type { ComponentPropsWithoutRef, RefObject } from "react"
+import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react"
 
-import { useEffect, useRef, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { css } from "@emotion/react"
 import { Box, Color, Mesh, Program, Renderer } from "ogl"
 import { colord } from "colord"
-import { raf } from "../utils"
+import { noop, raf } from "../utils"
 
 import moireFragment from "./moire.frag?raw"
 import moireVertex from "./moire.vert?raw"
 import snoise from "./snoise.glsl?raw"
+
+const MoireContext = createContext<{
+  addMoire: (
+    canvas: HTMLCanvasElement,
+    context: CanvasRenderingContext2D,
+    width: number,
+    height: number
+  ) => void
+  removeMoire: (canvas: HTMLCanvasElement) => void
+}>({ addMoire: noop, removeMoire: noop })
 
 function useOglProgram({
   backgroundColor,
@@ -28,7 +45,8 @@ function useOglProgram({
   width = Math.round(width)
   height = Math.round(height)
 
-  const [{ render, resize }, setFns] = useState<{
+  const [{ canvas, render, resize }, setFns] = useState<{
+    canvas?: HTMLCanvasElement
     render: (time: number) => void
     resize: (width: number, height: number) => void
   }>({
@@ -100,18 +118,26 @@ function useOglProgram({
       render(uniforms.current.time)
     }
 
-    setFns({ render, resize })
-    return () => gl.canvas.remove()
+    setFns({ render, resize, canvas: gl.canvas })
+
+    return () => {
+      gl.canvas.remove()
+    }
   }, [parent])
 
   useEffect(() => {
     resize(width, height)
   }, [resize, width, height])
 
-  return render
+  return { canvas, render }
 }
 
-function useAnimate(animate: boolean, render: (time: number) => void) {
+function useAnimate(
+  render: (time: number) => void,
+  options?: { animate?: boolean; fps?: number }
+) {
+  const { animate = true, fps = 60 } = options ?? {}
+
   const _firstFrameRendered = useRef(false)
   const _animate = useRef(animate)
 
@@ -126,34 +152,41 @@ function useAnimate(animate: boolean, render: (time: number) => void) {
       }
       render(time)
       _firstFrameRendered.current = true
-    }, 1000 / 30)
+    }, 1000 / fps)
     return stopRaf
   }, [render])
 }
 
-type MoireProps = ComponentPropsWithoutRef<"div"> & {
+type MoireBaseProps = ComponentPropsWithoutRef<"div"> & {
   animate?: boolean
   backgroundColor?: string
-  height: number
+  children: ReactNode
   linesColor?: string
   scale?: number
   speed?: number
-  width: number
 }
 
-export function Moire({
+export function MoireBase({
   animate = true,
   backgroundColor = "rgb(4, 19, 31)",
-  height,
+  children,
   linesColor = "rgb(88, 255, 202)",
   scale = 1,
   speed = 1,
-  width,
   ...props
-}: MoireProps): JSX.Element {
+}: MoireBaseProps): JSX.Element {
+  const [width, height] = [500, 500]
+
   const canvasContainer = useRef<HTMLDivElement>(null)
 
-  const render = useOglProgram({
+  const activeMoires = useRef<
+    Map<
+      HTMLCanvasElement,
+      { context: CanvasRenderingContext2D; width: number; height: number }
+    >
+  >(new Map())
+
+  const { canvas, render } = useOglProgram({
     parent: canvasContainer,
     dimensions: [width, height],
     speed,
@@ -162,17 +195,85 @@ export function Moire({
     backgroundColor,
   })
 
-  useAnimate(animate, render)
+  useAnimate(
+    useCallback(
+      (time) => {
+        if (!canvas) return
+
+        render(time)
+        activeMoires.current.forEach(({ context }) => {
+          context.drawImage(canvas, 0, 0, width, height)
+        })
+      },
+      [render, canvas]
+    ),
+    { animate }
+  )
+
+  const addMoire = useCallback((canvas, context, width, height) => {
+    activeMoires.current.set(canvas, { context, width, height })
+  }, [])
+
+  const removeMoire = useCallback((canvas) => {
+    activeMoires.current.delete(canvas)
+  }, [])
 
   return (
-    <div
-      ref={canvasContainer}
+    <MoireContext.Provider value={{ addMoire, removeMoire }}>
+      <div
+        ref={canvasContainer}
+        {...props}
+        css={css`
+          position: fixed;
+          inset: -500px auto auto -500px;
+          canvas {
+            display: block;
+          }
+        `}
+      />
+      {children}
+    </MoireContext.Provider>
+  )
+}
+
+type MoireProps = ComponentPropsWithoutRef<"canvas"> & {
+  animate?: boolean
+  height: number
+  scale?: number
+  width: number
+}
+
+export function Moire({
+  animate,
+  height,
+  scale = 1,
+  width,
+  ...props
+}: MoireProps): JSX.Element {
+  const { addMoire, removeMoire } = useContext(MoireContext)
+  const canvas = useRef<HTMLCanvasElement | null>(null)
+
+  return (
+    <canvas
+      ref={(_canvas) => {
+        if (!_canvas && canvas.current) {
+          removeMoire(canvas.current)
+          canvas.current = null
+          return
+        }
+
+        const context = _canvas?.getContext("2d")
+        if (_canvas && context) {
+          addMoire(_canvas, context, width, height)
+          canvas.current = _canvas
+        }
+      }}
+      width={width}
+      height={height}
       {...props}
       css={css`
+        display: block;
         overflow: hidden;
-        canvas {
-          display: block;
-        }
       `}
     />
   )

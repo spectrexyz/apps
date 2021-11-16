@@ -6,11 +6,12 @@ import createCache from "@emotion/cache"
 import { prefixer } from "stylis"
 import { cssUnitPlugin } from "../emotion-plugin-css-unit"
 import { gu } from "../styles"
-import { Main } from "../Main"
 import { BaseUrl } from "../BaseUrl"
-import { Theme } from "../Theme"
-import { RootEntryPoint } from "../Root"
 import { FocusVisible } from "../FocusVisible"
+import { Main } from "../Main"
+import { MoireBase } from "../Moire"
+import { RootEntryPoint } from "../Root"
+import { Theme } from "../Theme"
 
 type KitProps = {
   baseUrl: string
@@ -29,7 +30,9 @@ export function Kit({ baseUrl, children }: KitProps): JSX.Element {
         <Theme>
           <FocusVisible>
             <RootEntryPoint>
-              <Main>{children}</Main>
+              <MoireBase>
+                <Main>{children}</Main>
+              </MoireBase>
             </RootEntryPoint>
           </FocusVisible>
         </Theme>
