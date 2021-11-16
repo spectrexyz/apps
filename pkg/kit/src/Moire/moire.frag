@@ -2,8 +2,6 @@
 
 precision highp float;
 
-uniform vec3 backgroundColor;
-uniform vec3 linesColor;
 uniform vec2 resolution;
 uniform float seed;
 uniform float speed;
@@ -12,6 +10,9 @@ uniform float time;
 out vec4 fragColor;
 
 // [IMPORT_SNOISE]
+
+const vec3 linesColor = vec3(1.0, 1.0, 1.0);
+const vec3 backgroundColor = vec3(0.0, 0.0, 0.0);
 
 //  fwidth isolines technique adapted from
 //  https://www.shadertoy.com/view/Xt3yDS
@@ -36,12 +37,13 @@ void main() {
   lines -= lineWeight - 1.;
   lines = clamp(lines, 0.0, 1.0);
 
-  fragColor = vec4(
-    mix(
-      mix(linesColor, backgroundColor, lines),
-      backgroundColor,
-      shadow
-    ),
-    1.0
+  vec3 px = mix(
+    mix(linesColor, backgroundColor, lines),
+    backgroundColor,
+    shadow
   );
+
+  lowp float alpha = px.x * (1.0 / 3.0) + px.y * (1.0 / 3.0) + px.z * (1.0 / 3.0);
+
+  fragColor = vec4(1.0, 1.0, 1.0, alpha);
 }
