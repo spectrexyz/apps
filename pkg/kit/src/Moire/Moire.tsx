@@ -31,12 +31,10 @@ const MoireContext = createContext<{
 function useOglProgram({
   dimensions: [width, height],
   parent,
-  scale,
   speed,
 }: {
   dimensions: [width: number, height: number]
   parent: RefObject<HTMLElement>
-  scale: number
   speed: number
 }) {
   width = Math.round(width)
@@ -52,17 +50,17 @@ function useOglProgram({
   })
 
   const uniforms = useRef({
-    resolution: [500 * scale, 500 * scale],
+    resolution: [500, 500],
     seed: Math.random() * 1000,
     speed,
     time: 1,
   })
 
   useEffect(() => {
-    uniforms.current.resolution[0] = 500 * scale
-    uniforms.current.resolution[1] = 500 * scale
+    uniforms.current.resolution[0] = 500
+    uniforms.current.resolution[1] = 500
     uniforms.current.speed = speed
-  }, [height, scale, speed, width])
+  }, [height, speed, width])
 
   useEffect(() => {
     if (!parent.current) return
@@ -147,14 +145,12 @@ function useAnimate(
 type MoireBaseProps = ComponentPropsWithoutRef<"div"> & {
   animate?: boolean
   children: ReactNode
-  scale?: number
   speed?: number
 }
 
 export function MoireBase({
   animate = true,
   children,
-  scale = 1,
   speed = 1,
   ...props
 }: MoireBaseProps): JSX.Element {
@@ -178,7 +174,6 @@ export function MoireBase({
     parent: canvasContainer,
     dimensions: [width, height],
     speed,
-    scale,
   })
 
   useAnimate(
@@ -262,10 +257,10 @@ export const Moire = memo(function Moire({
 
       const ctx = canvas.current.getContext("2d")
       if (ctx) {
-        addMoire(canvas.current, ctx, width, height, linesColor)
+        addMoire(canvas.current, ctx, width / scale, height / scale, linesColor)
       }
     }
-  }, [addMoire, removeMoire, linesColor, width, height])
+  }, [addMoire, removeMoire, linesColor, width, height, scale])
 
   return (
     <canvas
@@ -278,16 +273,18 @@ export const Moire = memo(function Moire({
 
         const context = _canvas?.getContext("2d")
         if (_canvas && context) {
-          addMoire(_canvas, context, width, height, linesColor)
+          addMoire(_canvas, context, width / scale, height / scale, linesColor)
           canvas.current = _canvas
         }
       }}
-      width={width}
-      height={height}
+      width={width / scale}
+      height={height / scale}
       {...props}
       css={css`
         display: block;
         overflow: hidden;
+        width: ${width}px;
+        height: ${height}px;
         background: ${backgroundColor || "transparent"};
       `}
     />
