@@ -147,6 +147,8 @@ function RadioBoxContainer({
   if (!checked) {
     return (
       <ButtonArea
+        role="radio"
+        aria-checked={false}
         ref={buttonRef}
         onClick={onClick}
         onKeyDown={radioGroup?.onKeyDown}
@@ -171,6 +173,8 @@ function RadioBoxContainer({
   }
   return (
     <div
+      role="radio"
+      aria-checked={true}
       ref={buttonRef}
       onClick={onClick}
       onKeyDown={radioGroup?.onKeyDown}

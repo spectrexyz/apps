@@ -77,6 +77,10 @@ export function Radio({
     },
   })
 
+  // Note: we disable some rules here, because ESLint doesn’t seem to see that
+  // while the click event is on the div, the keyboard events & implicit role
+  // are on the input itself.
+  /* eslint-disable jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */
   return (
     <div
       onClick={handleClick}
@@ -155,4 +159,5 @@ export function Radio({
       )}
     </div>
   )
+  /* eslint-enable jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */
 }

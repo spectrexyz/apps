@@ -49,7 +49,17 @@ module.exports = {
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-this-alias": "warn",
 
-    "import/extensions": ["error", "ignorePackages"],
+    "import/extensions": [
+      "error",
+      {
+        js: "never",
+        json: "always",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
+    ],
+    "react/react-in-jsx-scope": "off",
   },
   overrides: [
     {

@@ -9,12 +9,12 @@ export function stripTrailingSlashes(path: string): string {
 }
 
 function list(count: number): number[]
-function list<T extends unknown>(
+function list<T>(
   count: number,
   callback: (index: number, steps: number) => T
 ): T[]
 
-function list<T extends unknown>(
+function list<T>(
   count: number,
   callback?: (index: number, steps: number) => T
 ): T[] {
