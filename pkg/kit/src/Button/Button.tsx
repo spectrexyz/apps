@@ -298,7 +298,6 @@ function ButtonIn({
                   ? colors.accent2
                   : undefined
               }
-              scale={0.8}
             />
           </div>
         </div>

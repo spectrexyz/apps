@@ -126,3 +126,5 @@ export function checkBackdropFilterSupport(): boolean {
 export function noop(): void {
   // do nothing
 }
+
+export const dpr = devicePixelRatio ?? 1

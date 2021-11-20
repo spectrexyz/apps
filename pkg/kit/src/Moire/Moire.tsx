@@ -11,7 +11,7 @@ import {
 } from "react"
 import { css } from "@emotion/react"
 import { Box, Mesh, Program, Renderer } from "ogl"
-import { noop, raf } from "../utils"
+import { dpr, noop, raf } from "../utils"
 
 /* eslint-disable import/no-unresolved */
 import moireFragment from "./moire.frag?raw"
@@ -19,15 +19,16 @@ import moireVertex from "./moire.vert?raw"
 import snoise from "./snoise.glsl?raw"
 /* eslint-enable import/no-unresolved */
 
+const BASE_SIZE = 500
+
+type RenderMoireFn = (params: {
+  context: CanvasRenderingContext2D
+  canvas: HTMLCanvasElement
+  baseCanvas: HTMLCanvasElement
+}) => void
+
 const MoireContext = createContext<{
-  addMoire: (
-    canvas: HTMLCanvasElement,
-    context: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    color: string,
-    animate: boolean
-  ) => void
+  addMoire: (canvas: HTMLCanvasElement, render: RenderMoireFn) => void
   removeMoire: (canvas: HTMLCanvasElement) => void
 }>({ addMoire: noop, removeMoire: noop })
 
@@ -50,25 +51,22 @@ function useOglProgram({
   }>({ render: noop, resize: noop })
 
   const uniforms = useRef({
-    resolution: [500, 500],
+    resolution: [width, height],
     seed: Math.random() * 1000,
     speed,
     time: 1,
   })
 
   useEffect(() => {
-    uniforms.current.resolution[0] = 500
-    uniforms.current.resolution[1] = 500
+    uniforms.current.resolution[0] = BASE_SIZE
+    uniforms.current.resolution[1] = BASE_SIZE
     uniforms.current.speed = speed
   }, [height, speed, width])
 
   useEffect(() => {
     if (!parent.current) return
 
-    const renderer = new Renderer({
-      dpr: window.devicePixelRatio ?? 1,
-      alpha: true,
-    })
+    const renderer = new Renderer({ dpr, alpha: true })
     const { gl } = renderer
 
     parent.current.appendChild(gl.canvas)
@@ -154,26 +152,26 @@ export function MoireBase({
   speed = 1,
   ...props
 }: MoireBaseProps): JSX.Element {
-  const [width, height] = [500, 500]
-
   const canvasContainer = useRef<HTMLDivElement>(null)
 
-  const activeMoires = useRef<
+  const [activeMoires, setActiveMoires] = useState<
     Map<
       HTMLCanvasElement,
-      {
-        animate: boolean
-        color: string
-        context: CanvasRenderingContext2D
-        height: number
-        width: number
-      }
+      { render: RenderMoireFn; context: CanvasRenderingContext2D }
     >
   >(new Map())
 
+  const [moireMaxWidth, moireMaxHeight] = [...activeMoires.keys()].reduce(
+    ([width, height], canvas) => [
+      Math.max(width, canvas.width / dpr),
+      Math.max(height, canvas.height / dpr),
+    ],
+    [0, 0]
+  )
+
   const { canvas, render } = useOglProgram({
     parent: canvasContainer,
-    dimensions: [width, height],
+    dimensions: [moireMaxWidth, moireMaxHeight],
     speed,
   })
 
@@ -182,58 +180,40 @@ export function MoireBase({
       (time) => {
         if (!canvas) return
 
+        // Render base moire (WebGL canvas)
         render(time)
 
-        activeMoires.current.forEach(
-          ({ animate, context, color, width, height }) => {
-            if (!animate) {
-              return
-            }
-
-            const sw = 500
-            const sh = 500
-
-            const dw = Math.max(500, width)
-            const dh = Math.max(500, height)
-            const dx = 0
-            const dy = 0
-
-            context.clearRect(0, 0, width, height)
-            context.drawImage(canvas, 0, 0, sw, sh, dx, dy, dw, dh)
-            context.fillStyle = color
-            context.globalCompositeOperation = "source-in"
-            context.fillRect(0, 0, width, height)
-            context.globalCompositeOperation = "source-over"
-          }
-        )
+        // Render children moires (2d canvas)
+        activeMoires.forEach(({ render, context }, activeMoireCanvas) => {
+          render({ baseCanvas: canvas, canvas: activeMoireCanvas, context })
+        })
       },
-      [render, canvas]
+      [render, canvas, activeMoires]
     ),
     { animate }
   )
 
   const addMoire = useCallback(
-    (
-      canvas: HTMLCanvasElement,
-      context: CanvasRenderingContext2D,
-      width: number,
-      height: number,
-      color: string,
-      animate: boolean
-    ) => {
-      activeMoires.current.set(canvas, {
-        context,
-        width,
-        height,
-        color,
-        animate,
-      })
+    (canvas: HTMLCanvasElement, render: RenderMoireFn) => {
+      removeMoire(canvas)
+
+      const context = canvas.getContext("2d")
+      if (context) {
+        setActiveMoires((activeMoires) => {
+          activeMoires = new Map(activeMoires)
+          return activeMoires.set(canvas, { render, context })
+        })
+      }
     },
     []
   )
 
   const removeMoire = useCallback((canvas: HTMLCanvasElement) => {
-    activeMoires.current.delete(canvas)
+    setActiveMoires((activeMoires) => {
+      activeMoires = new Map(activeMoires)
+      activeMoires.delete(canvas)
+      return activeMoires
+    })
   }, [])
 
   return (
@@ -242,11 +222,7 @@ export function MoireBase({
         ref={canvasContainer}
         {...props}
         css={css`
-          position: fixed;
-          inset: -500px auto auto -500px;
-          canvas {
-            display: block;
-          }
+          display: none;
         `}
       />
       {children}
@@ -273,50 +249,51 @@ export const Moire = memo(function Moire({
   ...props
 }: MoireProps): JSX.Element {
   const { addMoire, removeMoire } = useContext(MoireContext)
-  const canvas = useRef<HTMLCanvasElement | null>(null)
+  const canvas = useRef<HTMLCanvasElement>(null)
+
+  const renderWidth = (width * dpr) / scale
+  const renderHeight = (height * dpr) / scale
+
+  const render = useCallback(
+    ({ baseCanvas, canvas, context }) => {
+      if (!canvas || !context || !animate) {
+        return
+      }
+
+      const sw = baseCanvas.width
+      const sh = baseCanvas.height
+
+      // const dw = Math.max(baseCanvas.width, renderWidth)
+      // const dh = Math.max(baseCanvas.height, renderHeight)
+      const dw = renderWidth
+      const dh = renderHeight
+      const dx = 0
+      const dy = 0
+
+      context.clearRect(0, 0, renderWidth, renderHeight)
+      if (sw > 0 && sh > 0) {
+        context.drawImage(baseCanvas, 0, 0, sw, sh, dx, dy, dw, dh)
+        context.fillStyle = linesColor
+        context.globalCompositeOperation = "source-in"
+        context.fillRect(0, 0, renderWidth, renderHeight)
+        context.globalCompositeOperation = "source-over"
+      }
+    },
+    [animate, linesColor, renderWidth, renderHeight]
+  )
 
   useEffect(() => {
-    if (canvas.current) {
-      removeMoire(canvas.current)
-
-      const ctx = canvas.current.getContext("2d")
-      if (ctx) {
-        addMoire(
-          canvas.current,
-          ctx,
-          width / scale,
-          height / scale,
-          linesColor,
-          animate
-        )
-      }
-    }
-  }, [addMoire, removeMoire, linesColor, width, height, scale, animate])
+    if (!canvas.current) return
+    const _canvas = canvas.current
+    addMoire(_canvas, render)
+    return () => removeMoire(_canvas)
+  }, [addMoire, render, removeMoire])
 
   return (
     <canvas
-      ref={(_canvas) => {
-        if (!_canvas && canvas.current) {
-          removeMoire(canvas.current)
-          canvas.current = null
-          return
-        }
-
-        const context = _canvas?.getContext("2d")
-        if (_canvas && context) {
-          addMoire(
-            _canvas,
-            context,
-            width / scale,
-            height / scale,
-            linesColor,
-            animate
-          )
-          canvas.current = _canvas
-        }
-      }}
-      width={width / scale}
-      height={height / scale}
+      ref={canvas}
+      width={renderWidth}
+      height={renderHeight}
       {...props}
       css={css`
         display: block;
