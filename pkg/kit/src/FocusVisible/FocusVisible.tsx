@@ -1,12 +1,6 @@
 import type { ReactNode } from "react"
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
 
 // Implements a behavior similar to :focus-visible for browsers that are not
 // supporting it yet.
@@ -37,14 +31,19 @@ export function FocusVisible({ children }: FocusVisibleProps) {
     const onPointerEvent = () => {
       pointerActive.current = true
 
-      timer = setTimeout(() => {
-        // It doesn’t seem to be specified in HTML5, but pointer-related events
-        // happen before the focus-related events on every modern browser. It
-        // means that between the moment where onPointerEvent gets called and
-        // the this setTimeout() callback gets executed, the onFocusIn() function
-        // (see below) might be executed with pointerActive.current being true.
-        pointerActive.current = false
-      }, 0)
+      timer = setTimeout(
+        () => {
+          // It doesn’t seem to be specified in HTML5, but pointer-related events
+          // happen before the focus-related events on every modern browser. It
+          // means that between the moment where onPointerEvent gets called and
+          // the this setTimeout() callback gets executed, the onFocusIn() function
+          // (see below) might be executed with pointerActive.current being true.
+          pointerActive.current = false
+        },
+        // This delay is needed because the focusin event seems to be triggered
+        // asynchronously, at least on Firefox.
+        100
+      )
 
       setFocusVisible(false)
     }

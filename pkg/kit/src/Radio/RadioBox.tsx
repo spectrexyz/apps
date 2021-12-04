@@ -25,7 +25,6 @@ export function RadioBox({
   const button = useRef<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement>(
     null
   )
-  const focusVisible = useFocusVisible()
   const radioGroup = useRadioGroup(id)
   const inRadioGroup = radioGroup !== null
   const checked = checkedProp ?? (inRadioGroup && id === radioGroup.selected)
@@ -57,14 +56,13 @@ export function RadioBox({
     }
   }
 
-  if (focusVisible) {
-    // console.log((handleKeyDown, focusVisible))
-  }
-
+  const focusReady = useRef(false)
   useEffect(() => {
-    if (checked && inRadioGroup) {
+    if (checked && inRadioGroup && focusReady.current) {
       button.current?.focus()
     }
+    // Prevents to focus on mount
+    focusReady.current = true
   }, [checked, inRadioGroup])
 
   return (
@@ -144,6 +142,8 @@ function RadioBoxContainer({
   onClick: () => void
   radioGroup: ReturnType<typeof useRadioGroup>
 }) {
+  const focusVisible = useFocusVisible()
+
   if (!checked) {
     return (
       <ButtonArea
@@ -165,6 +165,9 @@ function RadioBoxContainer({
           padding: 2gu;
           background: ${colors.layer2};
           cursor: pointer;
+          &:focus {
+            outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
+          }
         `}
       >
         {children}
@@ -185,11 +188,15 @@ function RadioBoxContainer({
           : -1
       }
       css={({ colors }) => css`
+        overflow: hidden;
         position: relative;
         width: 100%;
         padding: 2gu;
         background: ${colors.layer2};
         cursor: pointer;
+        &:focus {
+          outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
+        }
       `}
     >
       {children}
