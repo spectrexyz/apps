@@ -1,6 +1,6 @@
 import type { Ref, ReactNode } from "react"
 
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { useFocusVisible } from "../FocusVisible"
@@ -144,8 +144,8 @@ function RadioBoxContainer({
 }) {
   const focusVisible = useFocusVisible()
 
-  if (!checked) {
-    return (
+  return (
+    <>
       <ButtonArea
         role="radio"
         aria-checked={false}
@@ -160,6 +160,7 @@ function RadioBoxContainer({
             : -1
         }
         css={({ colors }) => css`
+          ${checked ? "display: none" : ""};
           position: relative;
           width: 100%;
           padding: 2gu;
@@ -172,34 +173,34 @@ function RadioBoxContainer({
       >
         {children}
       </ButtonArea>
-    )
-  }
-  return (
-    <div
-      role="radio"
-      aria-checked={true}
-      ref={buttonRef}
-      onClick={onClick}
-      onKeyDown={radioGroup?.onKeyDown}
-      tabIndex={
-        radioGroup &&
-        (radioGroup.focusableId === undefined || id === radioGroup.focusableId)
-          ? 0
-          : -1
-      }
-      css={({ colors }) => css`
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-        padding: 2gu;
-        background: ${colors.layer2};
-        cursor: pointer;
-        &:focus {
-          outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
+      <div
+        role="radio"
+        aria-checked={true}
+        ref={buttonRef}
+        onClick={onClick}
+        onKeyDown={radioGroup?.onKeyDown}
+        tabIndex={
+          radioGroup &&
+          (radioGroup.focusableId === undefined ||
+            id === radioGroup.focusableId)
+            ? 0
+            : -1
         }
-      `}
-    >
-      {children}
-    </div>
+        css={({ colors }) => css`
+          ${checked ? "" : "display: none"};
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          padding: 2gu;
+          background: ${colors.layer2};
+          cursor: pointer;
+          &:focus {
+            outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
+          }
+        `}
+      >
+        {children}
+      </div>
+    </>
   )
 }

@@ -262,11 +262,8 @@ export const Moire = memo(function Moire({
 
       const sw = baseCanvas.width
       const sh = baseCanvas.height
-
-      // const dw = Math.max(baseCanvas.width, renderWidth)
-      // const dh = Math.max(baseCanvas.height, renderHeight)
-      const dw = renderWidth
-      const dh = renderHeight
+      const dw = sw
+      const dh = sh
       const dx = 0
       const dy = 0
 
