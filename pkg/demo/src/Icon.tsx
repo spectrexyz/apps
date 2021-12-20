@@ -67,10 +67,10 @@ export function Icon() {
         th {
           font-weight: 400;
           padding: 0 4gu 2gu;
-          &:first-child {
+          &:first-of-type {
             text-align: left;
           }
-          &:last-child {
+          &:last-of-type {
             text-align: right;
           }
         }

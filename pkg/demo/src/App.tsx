@@ -1,31 +1,41 @@
 import type { FC, ReactNode } from "react"
 
 import React, { useState, useEffect } from "react"
-import { Moire, Kit, Button } from "kit"
+import { Kit } from "kit"
 import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
 import { providers, Contract } from "ethers"
 import { NftProvider, FetcherDeclarationEthers } from "use-nft"
+import { Button } from "./Button"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
 import { Distribution } from "./Distribution"
 import { Icon } from "./Icon"
+import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
 import { Radio } from "./Radio"
+import { RadioBox } from "./RadioBox"
 import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
+import { TokenBadge } from "./TokenBadge"
+import { TokenIcon } from "./TokenIcon"
+import { TokenInput } from "./TokenInput"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
   ["spectre", () => <Spectre />, true],
   ["button", () => <Button label="Enable account" />, true],
-  ["moire", () => <Moire style={{ borderRadius: "50%" }} />, true],
+  ["moire", () => <Moire />, true],
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
   ["distribution", () => <Distribution />, true],
   ["steps", () => <Steps />, true],
   ["icon", () => <Icon />, true],
   ["radio", () => <Radio />, true],
+  ["radiobox", () => <RadioBox />, true],
+  ["token-badge", () => <TokenBadge />, true],
+  ["token-icon", () => <TokenIcon />, true],
+  ["token-input", () => <TokenInput />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
@@ -90,6 +100,7 @@ export function App() {
                   position: absolute;
                   top: 1gu;
                   left: 2gu;
+                  z-index: 2;
                 `}
               >
                 <Link href="/">back</Link>
