@@ -7,16 +7,20 @@ import { Button } from "../Button"
 import { TokenIcon } from "../TokenIcon"
 
 type TokenInputProps = {
-  symbol: string
-  onChange: (value: string) => void
-  value: string
+  balance?: string
+  balanceConverted?: string
   maxButton?: boolean
+  onChange: (value: string) => void
+  symbol: string
+  value: string
 }
 
 export function TokenInput({
-  symbol,
-  onChange,
+  balance,
+  balanceConverted,
   maxButton = false,
+  onChange,
+  symbol,
   value,
 }: TokenInputProps): JSX.Element {
   const handleChange = useCallback(
@@ -87,33 +91,35 @@ export function TokenInput({
           `}
         />
       </div>
-      <div
-        css={({ fonts }) => css`
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 3gu;
-          font-family: ${fonts.families.sans};
-        `}
-      >
+      {balance !== undefined && (
         <div
-          css={({ colors }) => css`
-            font-size: 12px;
-            span {
-              color: ${colors.contentDimmed};
-            }
+          css={({ fonts }) => css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 3gu;
+            font-family: ${fonts.families.sans};
           `}
         >
-          <span>Balance:</span> 106.970 ETH
+          <div
+            css={({ colors }) => css`
+              font-size: 12px;
+              span {
+                color: ${colors.contentDimmed};
+              }
+            `}
+          >
+            <span>Balance:</span> {balance} {symbol}
+          </div>
+          <div
+            css={css`
+              font-size: 14px;
+            `}
+          >
+            {balanceConverted}
+          </div>
         </div>
-        <div
-          css={css`
-            font-size: 14px;
-          `}
-        >
-          $283,982
-        </div>
-      </div>
+      )}
     </div>
   )
 }

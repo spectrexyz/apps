@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from "react"
 
 import { createElement, useEffect, useRef } from "react"
-import { uid } from "./utils"
+import { uid, noop } from "./utils"
 import { KEY_ESC } from "./keys"
 
 export function useEsc(callback: () => void, condition: boolean): void {
@@ -40,4 +40,16 @@ export function FlatTree({
       ? createElement(component[0], component[1], children)
       : createElement(component, null, children)
   }, children) as JSX.Element
+}
+
+export function useEvery(cb: () => void, delay: number) {
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
+    const update = () => {
+      cb()
+      timer = setTimeout(update, delay)
+    }
+    update()
+    return () => clearTimeout(timer)
+  }, [cb, delay])
 }
