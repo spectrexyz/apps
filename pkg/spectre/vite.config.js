@@ -1,9 +1,8 @@
 import { defineConfig } from "vite"
-import reactRefresh from "@vitejs/plugin-react-refresh"
+// import react from "@vitejs/plugin-react"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [reactRefresh()],
   build: {
     target: "es2019",
   },
@@ -11,4 +10,5 @@ export default defineConfig({
     jsxFactory: "jsx",
     jsxInject: `import { jsx } from '@emotion/react'`,
   },
+  // plugins: [react()],
 })
