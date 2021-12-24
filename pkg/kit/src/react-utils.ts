@@ -1,8 +1,7 @@
 import type { ComponentType, ReactNode } from "react"
 
 import { createElement, useEffect, useRef } from "react"
-import { uid, noop } from "./utils"
-import { KEY_ESC } from "./keys"
+import { uid } from "./utils"
 
 export function useEsc(callback: () => void, condition: boolean): void {
   const _cb = useRef(callback)
@@ -12,7 +11,7 @@ export function useEsc(callback: () => void, condition: boolean): void {
     }
 
     const keydown = (event: KeyboardEvent) => {
-      if (event.keyCode === KEY_ESC) {
+      if (event.key === 'Escape') {
         _cb.current()
       }
     }

@@ -15,6 +15,7 @@ import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
 import { Radio } from "./Radio"
 import { RadioBox } from "./RadioBox"
+import { Slider } from "./Slider"
 import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
 import { TokenBadge } from "./TokenBadge"
@@ -29,6 +30,7 @@ const demos = [
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
   ["distribution", () => <Distribution />, true],
+  ["slider", () => <Slider />, true],
   ["steps", () => <Steps />, true],
   ["icon", () => <Icon />, true],
   ["radio", () => <Radio />, true],

@@ -3,7 +3,6 @@ import type { ReactNode } from "react"
 import { useEffect, useMemo, useRef } from "react"
 import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
-import { KEY_LEFT, KEY_RIGHT } from "../keys"
 
 type TabItem = {
   label: ReactNode
@@ -36,11 +35,11 @@ export function Tabs({
       if (!isFocused.current) {
         return
       }
-      if (event.keyCode === KEY_RIGHT) {
+      if (event.key === 'ArrowRight') {
         onSelect((selected + 1) % items.length)
         return
       }
-      if (event.keyCode === KEY_LEFT) {
+      if (event.key === 'ArrowLeft') {
         onSelect(selected === 0 ? items.length - 1 : selected - 1)
         return
       }
