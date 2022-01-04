@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react"
-import { useTransition } from "react-spring"
+import React from "react"
 import { css, Global } from "@emotion/react"
 import { useLayout } from "../styles.js"
 import { useAppScrollUpdater } from "../App/AppScroll.jsx"
@@ -62,7 +61,10 @@ export function AppLayout({ children }) {
               flex: 0 0;
             `}
           >
-            <AppLayoutTopBar compact={compact} />
+            <AppLayoutTopBar
+              compact={compact}
+              autoHideCompact={layout.name === "small"}
+            />
           </div>
           <div
             ref={compact ? appScrollRef : undefined}

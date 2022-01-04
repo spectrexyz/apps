@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring } from "react-spring"
 import { Button, ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
@@ -30,8 +30,14 @@ export function AppScreen({
   })
 
   const layout = useLayout()
-  const compactMenu = layout.below("large")
-  const fullWidth = layout.below(601)
+  const compactMenuActive = layout.below("large")
+  const fullWidthActive = layout.below(601)
+
+  const contentPadding = useMemo(() => {
+    if (mode === "minimal") return "0px"
+    if (compactMenuActive) return `${2 * gu}px`
+    return `0 ${4 * gu}px ${4 * gu}px`
+  }, [])
 
   return appReadyTransition(
     ({ progress, screenTransform }, ready) =>
@@ -41,10 +47,10 @@ export function AppScreen({
             display: flex;
             flex-direction: column;
             flex-grow: 1;
-            padding-bottom: ${compactMenu ? 0 : 8 * gu}px;
+            padding-bottom: ${compactMenuActive ? 0 : 8 * gu}px;
           `}
         >
-          {title && compactMenu ? (
+          {title && compactMenuActive ? (
             <div
               css={css`
                 height: 8gu;
@@ -126,14 +132,16 @@ export function AppScreen({
               flex-grow: 1;
               transform-origin: 50% 0;
               width: 100%;
-              max-width: ${fullWidth || mode === "minimal" ? "none" : "500px"};
+              max-width: ${fullWidthActive || mode === "minimal"
+                ? "none"
+                : "500px"};
               margin: 0 auto;
-              background: ${fullWidth || mode === "minimal"
+              background: ${fullWidthActive || mode === "minimal"
                 ? "none"
                 : colors.background};
             `}
           >
-            {!compactMenu && mode !== "minimal" && (
+            {!compactMenuActive && mode !== "minimal" && (
               <div
                 css={css`
                   display: flex;
@@ -162,11 +170,7 @@ export function AppScreen({
             )}
             <div
               css={css`
-                padding: ${mode === "minimal"
-                  ? 0
-                  : compactMenu
-                  ? 2 * gu
-                  : 4 * gu}px;
+                padding: ${contentPadding};
               `}
             >
               {children}

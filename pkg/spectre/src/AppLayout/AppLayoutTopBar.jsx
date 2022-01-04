@@ -16,6 +16,7 @@ import {
   gu,
   springs,
 } from "kit"
+import { useLayout } from "../styles.js"
 import { AccountWindow } from "../Account"
 import { ConnectAccount } from "../ConnectAccount/ConnectAccount.jsx"
 import { Menu } from "../Menu/Menu.jsx"
@@ -26,17 +27,18 @@ import { useEthereum } from "../Ethereum"
 
 import logo from "./logo.png"
 
-export function AppLayoutTopBar({ compact }) {
-  return compact ? <TopBarCompact /> : <TopBarLarge />
+export function AppLayoutTopBar({ compact, autoHideCompact }) {
+  return compact ? <TopBarCompact autoHide={autoHideCompact} /> : <TopBar />
 }
 
-export function TopBarLarge() {
+export function TopBar() {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
   const connectButtonRef = useRef()
   const { account, disconnect } = useEthereum()
+  const layout = useLayout()
 
   useEffect(() => {
     if (account) {
@@ -46,13 +48,29 @@ export function TopBarLarge() {
     }
   }, [account])
 
+  const maxWidth = layout.value({
+    small: 0,
+    large: 104 + 4 * 2,
+    xlarge: 160 + 4 * 2,
+  })
+  const height = layout.value({
+    small: 0,
+    large: 14,
+    xlarge: 16,
+  })
+  const logoSize = layout.value({
+    small: 0,
+    large: 6,
+    xlarge: 7,
+  })
+
   return (
     <>
       <div
         css={css`
           position: relative;
-          max-width: calc(160gu + 4gu * 2);
-          height: 16gu;
+          max-width: ${maxWidth}gu;
+          height: ${height}gu;
           margin: 0 auto;
         `}
       >
@@ -63,11 +81,11 @@ export function TopBarLarge() {
                 style={{ opacity: progress, transform: topBarTransform }}
                 css={css`
                   position: absolute;
-                  inset: 3gu 0 3gu;
+                  inset: 0;
                   display: flex;
                   align-items: center;
                   justify-content: space-between;
-                  height: 10gu;
+                  height: ${height}gu;
                   padding: 0 4gu;
                 `}
               >
@@ -114,7 +132,16 @@ export function TopBarLarge() {
                     outline-offset: -2px;
                   `}
                 >
-                  <img src={logo} alt="" width="64" height="76" />
+                  <img
+                    src={logo}
+                    alt=""
+                    width="64"
+                    height="76"
+                    css={css`
+                      width: ${logoSize}gu;
+                      height: auto;
+                    `}
+                  />
                 </ButtonArea>
                 <div>
                   {account ? (
@@ -150,14 +177,15 @@ export function TopBarLarge() {
   )
 }
 
-export function TopBarCompact() {
+export function TopBarCompact({ autoHide }) {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
 
-  const [hide, setHide] = useState(false)
+  const [shouldHide, setShouldHide] = useState(false)
   useAppScroll((scroll) => {
-    setHide(scroll > 2 * gu)
+    setShouldHide(scroll > 2 * gu)
   })
+  const hide = shouldHide && autoHide
 
   const { innerTransform } = useSpring({
     config: springs.appear,
