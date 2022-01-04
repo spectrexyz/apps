@@ -59,6 +59,7 @@ export const ButtonArea = forwardRef<
     <button
       ref={ref}
       onClick={onClick}
+      type="button"
       {...props}
       css={({ colors }) => css`
         display: flex;
