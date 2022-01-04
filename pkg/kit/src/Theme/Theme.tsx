@@ -45,6 +45,7 @@ const colors = {
   contentDimmed: "#A0A8C2",
   positive: "#58FFCA",
   negative: "#FE6D6D",
+  warning: "#F7B186",
 
   // semantic colors
   yellow: "#F8FFA6",
