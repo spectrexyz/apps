@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef, useState } from "react"
+import React, { forwardRef, useCallback, useRef, useState } from "react"
 import { css } from "@emotion/react"
 import { a } from "react-spring"
 import { useLocation } from "wouter"
@@ -6,20 +6,19 @@ import {
   ButtonIcon,
   IconArrowLeft,
   IconArrowRight,
+  IconHeartStraightFilled,
+  IconMagnifyingGlassPlus,
   IconSquaresFour,
   Tabs,
+  gu,
 } from "kit"
 import { useLayout } from "../styles.js"
 import { useAppReady } from "../App/AppReady.jsx"
 import { AppScreen } from "../AppLayout/AppScreen.jsx"
-import { SNFTS } from "../demo-data"
+import { useSnftsAdjacent, useSnft } from "../snft-hooks"
 import { NftPanel } from "./NftPanel.jsx"
 import { TokenPanel } from "./TokenPanel.jsx"
-
-function useAdjacentNfts(_id) {
-  const index = SNFTS.findIndex(({ id }) => id === _id)
-  return [SNFTS?.[index - 1], SNFTS?.[index + 1]]
-}
+import { ViewArea } from "./ViewArea.jsx"
 
 export function ScreenNft({ id, panel }) {
   const [_, setLocation] = useLocation()
@@ -28,7 +27,7 @@ export function ScreenNft({ id, panel }) {
   const fullWidth = layout.below(601)
   const tokenPanel = panel === "serc20"
 
-  const [nftPrev, nftNext] = useAdjacentNfts(id)
+  const [nftPrev, nftNext] = useSnftsAdjacent(id)
 
   const handlePrevNft = useCallback(() => {
     setLocation(`/nfts/${nftPrev.id}${panel === "serc20" ? "/serc20" : ""}`)
@@ -45,6 +44,8 @@ export function ScreenNft({ id, panel }) {
     [id, tokenPanel, setLocation]
   )
 
+  const snft = useSnft(id)
+
   const tabs = useRef([
     {
       label: "NFT",
@@ -60,6 +61,39 @@ export function ScreenNft({ id, panel }) {
 
   return (
     <AppScreen mode="minimal">
+      <ViewArea
+        height={62.5 * gu}
+        labelDisplay="SPECTRALIZED"
+        label="Spectralized"
+        actionButtons={
+          <>
+            <ButtonIcon icon={<IconHeartStraightFilled />} mode="outline" />
+            <ButtonIcon
+              external
+              href={snft.image}
+              icon={<IconMagnifyingGlassPlus />}
+              mode="outline"
+            />
+          </>
+        }
+      >
+        <img alt="" src={snft.image} width="500" />
+      </ViewArea>
+
+      <div
+        css={css`
+          padding-top: 6.5gu;
+        `}
+      />
+
+      <Tabs
+        align="start"
+        bordered
+        items={tabs.current}
+        onSelect={handleSelectPanel}
+        selected={panel === "nft" ? 0 : 1}
+      />
+
       <div
         css={css`
           position: relative;
@@ -99,18 +133,6 @@ export function ScreenNft({ id, panel }) {
               onClick={handleNextNft}
             />
           )}
-        </div>
-        <div
-          css={css`
-            width: 32gu;
-          `}
-        >
-          <Tabs
-            fullWidth
-            items={tabs.current}
-            onSelect={handleSelectPanel}
-            selected={panel === "nft" ? 0 : 1}
-          />
         </div>
         <div
           css={css`

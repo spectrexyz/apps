@@ -15,6 +15,8 @@ export function SwapModule() {
           onChange={setEthValue}
           symbol="ETH"
           value={ethValue}
+          balance="106.970"
+          balanceConverted="$283,982"
           maxButton
         />
       </div>

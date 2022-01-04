@@ -1,9 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { css } from "@emotion/react"
+import { Link } from "wouter"
+import useInView from "react-cool-inview"
 import {
   Anchor,
   Button,
   ButtonIcon,
+  Distribution,
   IconHeartStraightFilled,
   IconMagnifyingGlassPlus,
   MoireLabel,
@@ -12,47 +15,24 @@ import {
   gu,
   useTheme,
 } from "kit"
-import { Link } from "wouter"
-import { SNFTS } from "../demo-data"
-import { Distribution } from "../Distribution/Distribution.jsx"
+import { useSnft, useSnftsByCreator } from "../snft-hooks"
 import { PanelDetails } from "./PanelDetails.jsx"
 import { PanelSection } from "./PanelSection.jsx"
-import { ViewArea } from "./ViewArea.jsx"
-
-function useSnft(_id) {
-  return SNFTS.find(({ id }) => id === _id)
-}
-
-function useSnftByCreator(creatorAddress, { exclude = [] } = {}) {
-  return SNFTS.filter(
-    ({ id, creator }) =>
-      !exclude.includes(id) && creator.address === creatorAddress
-  )
-}
 
 export function NftPanel({ id }) {
   const snft = useSnft(id)
   const { colors } = useTheme()
+  const distributionInView = useInView()
+
+  const [showDistribution, setShowDistribution] = useState(false)
+  useEffect(() => {
+    if (distributionInView.inView) {
+      setShowDistribution(true)
+    }
+  }, [distributionInView.inView])
+
   return (
     <section>
-      <ViewArea
-        actionButtons={
-          <>
-            <ButtonIcon icon={<IconHeartStraightFilled />} mode="outline" />
-            <ButtonIcon
-              external
-              href={snft.image}
-              icon={<IconMagnifyingGlassPlus />}
-              mode="outline"
-            />
-          </>
-        }
-        height={62.5 * gu}
-        labelDisplay="SPECTRALIZED"
-        label="Spectralized"
-      >
-        <img alt="" src={snft.image} width="500" />
-      </ViewArea>
       <PanelDetails
         title={snft.title}
         primary={
@@ -106,8 +86,13 @@ export function NftPanel({ id }) {
         }
         secondary={
           <>
-            <PanelSection title="Collective ownership distribution">
-              <Distribution values={snft.token.distribution} />
+            <PanelSection
+              ref={distributionInView.observe}
+              title="Collective ownership distribution"
+            >
+              <Distribution
+                values={showDistribution ? snft.token.distribution : []}
+              />
             </PanelSection>
             <PanelSection title="History">
               {snft.history.map(({ date, event }, index) => (
@@ -157,7 +142,7 @@ export function NftPanel({ id }) {
 }
 
 function MoreNfts({ snftFrom }) {
-  const snfts = useSnftByCreator(snftFrom.creator.address, {
+  const snfts = useSnftsByCreator(snftFrom.creator.address, {
     exclude: snftFrom.id,
   })
   return (

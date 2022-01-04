@@ -1,8 +1,13 @@
+import { forwardRef } from "react"
 import { css } from "@emotion/react"
 
-export function PanelSection({ title, children }) {
+export const PanelSection = forwardRef(function PanelSection(
+  { title, children },
+  ref
+) {
   return (
     <section
+      ref={ref}
       css={css`
         padding-top: 8gu;
       `}
@@ -28,4 +33,4 @@ export function PanelSection({ title, children }) {
       </div>
     </section>
   )
-}
+})
