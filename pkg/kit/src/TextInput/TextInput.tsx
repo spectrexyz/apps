@@ -8,6 +8,7 @@ import type {
 import { useCallback } from "react"
 import { css } from "@emotion/react"
 import { noop } from "../utils"
+import { useFieldset } from "../Fieldset"
 
 type InputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
@@ -21,6 +22,8 @@ type TextAreaProps = DetailedHTMLProps<
 // All the TextInput props, except `multiline` and the props
 // inherited from HTMLInputElement and HTMLTextAreaElement.
 type TextInputBaseProps = {
+  error?: string
+  id?: string
   onChange?: (value: string, event: ChangeEvent) => void
   value?: string
 }
@@ -37,12 +40,17 @@ export function TextInput(
 ): JSX.Element
 
 export function TextInput({
+  error,
+  id,
   multiline = false,
   onChange = noop,
   value = "",
   ...props
 }: TextInputProps): JSX.Element {
+  const fieldset = useFieldset()
+
   const sharedProps = {
+    id: id ?? fieldset.labelFor,
     onChange: useCallback(
       (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const value = event?.currentTarget?.value
@@ -54,6 +62,7 @@ export function TextInput({
     ),
     value: value,
   }
+
   return multiline ? (
     <textarea
       {...sharedProps}
@@ -82,9 +91,10 @@ export function TextInput({
         background: transparent;
         border: 0;
         color: ${colors.accent};
+        outline-offset: 3px;
+        outline: ${error ? "2px" : "0"} solid ${colors.warning};
         &:focus {
-          outline: 2px solid ${colors.focus};
-          outline-offset: 3px;
+          outline: 2px solid ${error ? colors.negative : colors.focus};
         }
       `}
     />
