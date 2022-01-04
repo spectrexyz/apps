@@ -40,7 +40,7 @@ function ResetScrollOnPathChange({ children }) {
   const { appScrollRef } = useAppScrollUpdater()
 
   useEffect(() => {
-    appScrollRef.current.scrollTo(0, 0)
+    appScrollRef.current.scrollTo(0, 0, { behavior: "smooth" })
   }, [appScrollRef, pathname])
 
   return children
@@ -59,6 +59,13 @@ export function useAppScroll(callback) {
       removeCallback(_callback.current)
     }
   }, [addCallback, removeCallback])
+}
+
+export function useResetScroll() {
+  const { appScrollRef } = useAppScrollUpdater()
+  return useCallback(() => {
+    appScrollRef.current.scrollTo(0, 0, { behavior: "smooth" })
+  }, [appScrollRef])
 }
 
 export function useAppScrollUpdater() {
