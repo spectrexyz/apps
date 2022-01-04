@@ -1,246 +1,100 @@
-import { forwardRef } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { css } from "@emotion/react"
-import { useDropzone } from "react-dropzone"
-import zustand from "zustand"
-import { useLocation } from "wouter"
-import {
-  Button,
-  ButtonIcon,
-  IconArrowCounterClockwise,
-  IconArrowLeft,
-  IconGearSix,
-  IconUploadSimple,
-  TextInput,
-  gu,
-  useUid,
-} from "kit"
-import { useLayout } from "../styles.js"
-import { AppScreen } from "../AppLayout/AppScreen.jsx"
+import { Steps } from "kit"
 
-const useSpectralize = zustand((set) => ({
-  description: "",
-  file: null,
-  title: "",
-  updateDescription: (description) => set({ description }),
-  updateFile: (file) => set({ file }),
-  updateTitle: (title) => set({ title }),
-}))
+import { useLayout } from "../styles.js"
+import { useResetScroll } from "../App/AppScroll.jsx"
+import { AppScreen } from "../AppLayout/AppScreen2.jsx"
+import { Step1 } from "./Step1.jsx"
+import { Step2 } from "./Step2.jsx"
+import { Step3 } from "./Step3.jsx"
+import { useSpectralize } from "./use-spectralize.js"
+
+const STEPS = [Step1, Step2, Step3]
 
 export function ScreenSpectralize() {
-  const [_, setLocation] = useLocation()
-  const data = useSpectralize()
-  const titleId = useUid()
-  const descriptionId = useUid()
   const layout = useLayout()
+  const resetScroll = useResetScroll()
+  const { currentStep, currentStepTitle, nextStep, prevStep } = useSpectralize()
 
-  const fullWidth = layout.below(601)
+  const handleSubmit = useCallback((event) => {
+    event.preventDefault()
+    nextStep()
+  }, [])
+
+  useEffect(() => {
+    resetScroll()
+  }, [currentStep, resetScroll])
+
+  const contentMaxWidth = layout.value({
+    small: "none",
+    large: css`104gu`,
+    xlarge: css`128gu`,
+  })
+  const contentPadding = layout.value({
+    small: css`0 3gu`,
+    medium: css`0 3gu`,
+    large: "0",
+  })
+  const flexGap = layout.value({
+    small: css`3.5gu`,
+    large: css`4gu`,
+    xlarge: css`8gu`,
+  })
+
+  const Step = STEPS[currentStep]
 
   return (
     <AppScreen
-      title="Add NFT metadata"
-      onBack={() => setLocation("/")}
-      contextual={
-        <div
-          css={({ colors }) => css`
-            display: flex;
-            align-items: center;
-            height: 100%;
-            color: ${colors.accent2};
-          `}
-        >
-          1/3
-        </div>
-      }
-    >
-      <div
-        css={css`
-          padding-bottom: 3gu;
-        `}
-      >
-        <div
-          css={css`
-            margin: 0 auto;
-          `}
-        >
-          <p
-            css={({ fonts }) => css`
-              padding-bottom: 1gu;
-              font-family: ${fonts.families.sans};
-              font-size: 14px;
-            `}
-          >
-            Look at me. No plans, no backup, no weapons worth a damn. Oh, and
-            something else I don't have: anything to lose.
-          </p>
-          <Group heading="NFT title" labelFor={titleId}>
-            <TextInput
-              id={titleId}
-              value={data.title}
-              onChange={data.updateTitle}
-              placeholder=""
-            />
-          </Group>
-
-          <Group heading="NFT description" labelFor={descriptionId}>
-            <TextInput
-              id={descriptionId}
-              value={data.description}
-              onChange={data.updateDescription}
-              multiline
-              css={css`
-                height: 8em;
-              `}
-            />
-          </Group>
-
-          <FileGroup
-            contextual="Image or video"
-            file={data.file}
-            heading="NFT file"
-            onFile={data.updateFile}
-          />
-
-          <div
-            css={css`
-              display: flex;
-              justify-content: flex-end;
-              padding-top: 3gu;
-            `}
-          >
+      compactBar={
+        layout.below("medium") && {
+          title: currentStepTitle(),
+          onBack: () => {},
+          extraRow: (
             <div
               css={css`
-                display: flex;
-                width: ${fullWidth ? "100%" : "50%"};
+                padding: 0 2gu;
               `}
             >
-              <Button label="Next" mode="primary-2" wide shadowInBox />
+              <Steps
+                steps={STEPS.length}
+                current={currentStep}
+                direction="horizontal"
+              />
             </div>
-          </div>
-        </div>
-      </div>
-    </AppScreen>
-  )
-}
-
-const Group = forwardRef(function Group(
-  { heading, contextual, children, labelFor, ...props },
-  ref
-) {
-  return (
-    <section
-      ref={ref}
-      {...props}
-      css={({ colors, fonts }) => css`
-        margin-top: 2gu;
-        padding: 2gu;
-        background: ${colors.layer2};
-        header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          padding-bottom: 1gu;
-          user-select: none;
+          ),
         }
-        header h1 {
-          font-family: ${fonts.families.sans};
-          font-size: 12px;
-          text-transform: uppercase;
-          color: ${colors.contentHeading};
-        }
-      `}
+      }
     >
-      <header>
-        <h1>
-          {labelFor ? <label htmlFor={labelFor}>{heading}</label> : heading}
-        </h1>
-        {contextual && (
-          <div
-            css={({ colors, fonts }) => css`
-              font-family: ${fonts.families.sans};
-              font-size: 12px;
-              color: ${colors.contentDimmed};
-            `}
-          >
-            {contextual}
-          </div>
-        )}
-      </header>
-      <div>{children}</div>
-    </section>
-  )
-})
-
-function FileGroup({ contextual, file, heading, onFile }) {
-  const {
-    getInputProps,
-    getRootProps,
-    isDragAccept,
-    isDragActive,
-    isDragReject,
-    open,
-  } = useDropzone({
-    accept: ["image/*", "video/*"],
-    noClick: true,
-    noKeyboard: true,
-    multiple: false,
-    onDrop: ([file]) => {
-      onFile(file)
-    },
-  })
-
-  return (
-    <Group
-      heading={heading}
-      contextual={contextual}
-      {...getRootProps()}
-      css={({ colors }) => css`
-        position: relative;
-        &:before {
-          content: "";
-          display: ${isDragActive ? "block" : "none"};
-          position: absolute;
-          inset: 0;
-          border: 2px solid ${colors.accent};
-        }
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-top: 1gu;
-        `}
-      >
-        <input {...getInputProps()} />
+      <form onSubmit={handleSubmit}>
         <div
           css={css`
-            max-width: calc(100% - 2.5gu - 2gu);
-            width: auto;
-            flex-shrink: 1;
-            flex-grow: 0;
-            padding-right: 1gu;
+            display: flex;
+            gap: ${flexGap};
+            flex-direction: ${layout.below("medium") ? "column" : "row"};
+            max-width: ${contentMaxWidth};
+            margin: 0 auto;
+            padding: ${contentPadding};
           `}
         >
-          <Button
-            adjustLabelAlignment
-            icon={<IconUploadSimple />}
-            label={file ? file.name : "Upload file"}
-            mode="flat-3"
-            onClick={open}
-            wide
-            css={css`
-              text-transform: uppercase;
-            `}
-          />
+          {!layout.below("medium") && (
+            <div
+              css={css`
+                flex-shrink: 0;
+                height: 38gu;
+                padding-top: 4.5gu;
+              `}
+            >
+              <Steps
+                steps={STEPS.length}
+                current={currentStep}
+                direction="vertical"
+              />
+            </div>
+          )}
+          <Step title={currentStepTitle()} onPrev={() => prevStep()} />
         </div>
-        <ButtonIcon
-          icon={<IconArrowCounterClockwise size={2.5 * gu} />}
-          label="reset"
-          onClick={() => onFile(null)}
-        />
-      </div>
-    </Group>
+      </form>
+    </AppScreen>
   )
 }
