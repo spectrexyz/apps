@@ -1,5 +1,5 @@
 import { gu } from "kit"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useViewport } from "@bpierre/use-viewport"
 
 export const springs = {
@@ -16,23 +16,62 @@ export const springs = {
 }
 
 export const breakpoints = {
-  small: { width: 45 * gu },
-  medium: { width: 96 * gu },
-  large: { width: 120 * gu },
+  small: { width: 45 * gu }, // from 360px
+  medium: { width: 96 * gu }, // above 768px
+  large: { width: 120 * gu }, // above 960px
+  xlarge: { width: 180 * gu }, // above 1440px
+}
+
+const breakpointsByLargest = Object.entries(breakpoints).reverse()
+
+function closestBreakpoint(name) {
+  const index = breakpointsByLargest.findIndex(([_name]) => _name === name)
+  if (index === -1) {
+    throw new Error(`The breakpoint doesn’t seem to exist: ${name}`)
+  }
+  return index === breakpointsByLargest.length - 1
+    ? name
+    : breakpointsByLargest[index + 1][0]
 }
 
 export function useLayout() {
   const { above, below } = useViewport()
 
-  return useMemo(() => {
-    const breakpointsByLargest = Object.entries(breakpoints).reverse()
-
-    const [name, layout] =
+  const [name, layout] = useMemo(
+    () =>
       breakpointsByLargest.find(([name]) => above(name)) ??
       breakpointsByLargest[
         above("large") ? 0 : breakpointsByLargest.length - 1
-      ]
+      ],
+    [above]
+  )
 
-    return { above, below, ...layout, name }
-  }, [above, below])
+  // Get a value depending on the current layout
+  const value = useCallback(
+    (values) => {
+      if (values.small === undefined) {
+        throw new Error("The “small” breakpoint is required with layout.value()")
+      }
+
+      if (values[name] !== undefined) {
+        return values[name]
+      }
+
+      let fallback = name
+      while (values[fallback] === undefined) {
+        let breakpoint = closestBreakpoint(fallback)
+        if (breakpoint === fallback) {
+          return undefined
+        }
+        fallback = breakpoint
+      }
+      return values[fallback]
+    },
+    [name]
+  )
+
+  return useMemo(
+    () => ({ above, below, ...layout, name, value }),
+    [above, below, layout, name, value]
+  )
 }
