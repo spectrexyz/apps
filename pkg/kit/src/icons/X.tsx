@@ -15,7 +15,7 @@ export default function IconX({
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>
       <path
-        d="M25 7L7 25M25 25L7 7"
+        d="M25 7 7 25M25 25 7 7"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"

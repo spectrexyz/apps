@@ -5,10 +5,17 @@ DIR_OUT=src/icons
 TEMPLATE=icons/svgr-template.js
 SVGO_CONF=$(cat <<EOF
 {
-  "plugins": {
-    "removeXMLNS": true,
-    "removeViewBox": false
-  }
+  "plugins": [
+    "removeXMLNS",
+    {
+      "name": "preset-default",
+      "params": {
+        "overrides": {
+          "removeViewBox": false
+        }
+      }
+    }
+  ]
 }
 EOF
 )

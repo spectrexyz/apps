@@ -15,7 +15,7 @@ export default function IconChecks({
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>
       <path
-        d="M18.5 10.5l-11 11L2 16M30 10.5l-11 11-2.922-2.922"
+        d="m18.5 10.5-11 11L2 16M30 10.5l-11 11-2.922-2.922"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"

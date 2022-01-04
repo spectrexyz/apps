@@ -1,14 +1,12 @@
-function defaultTemplate({ template }, opts, { componentName, jsx, exports }) {
-  const typeScriptTpl = template.smart({ plugins: ["jsx", "typescript"] })
-
-  componentName.name = componentName.name.replace(/^Svg/, "Icon")
+function template({ componentName, jsx }, { tpl }) {
+  componentName = componentName.replace(/^Svg/, "Icon")
 
   const propsTypeName = {
     type: "Identifier",
-    name: `${componentName.name}Props`,
+    name: `${componentName}Props`,
   }
 
-  return typeScriptTpl.ast`import type { SVGProps } from 'react'
+  return tpl`import type { SVGProps } from 'react'
 
 import { useIconSize, useIconColor } from '../icons-utils'
 
@@ -30,4 +28,4 @@ export default function ${componentName}({
 `
 }
 
-module.exports = defaultTemplate
+module.exports = template

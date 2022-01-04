@@ -22,7 +22,7 @@ export default function IconCopy({
         strokeLinejoin="round"
       />
       <path
-        d="M21 11H5v16h16V11z"
+        d="M21 11H5v16h16V11Z"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"

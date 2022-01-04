@@ -15,7 +15,7 @@ export default function IconSquaresFour({
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>
       <path
-        d="M14 6H6v8h8V6zM26 6h-8v8h8V6zM14 18H6v8h8v-8zM26 18h-8v8h8v-8z"
+        d="M14 6H6v8h8V6ZM26 6h-8v8h8V6ZM14 18H6v8h8v-8ZM26 18h-8v8h8v-8Z"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"
