@@ -1,14 +1,14 @@
 import type { Ref, ReactNode } from "react"
 
-import React, { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { css } from "@emotion/react"
-import { ButtonArea } from "../ButtonArea"
 import { useFocusVisible } from "../FocusVisible"
 import { useRadioGroup } from "./RadioGroup"
 import { Radio } from "./Radio"
 
 type RadioBoxProps = {
   checked?: boolean
+  error?: string
   id?: string | number
   label: ReactNode
   onChange?: (checked: boolean) => void
@@ -17,6 +17,7 @@ type RadioBoxProps = {
 
 export function RadioBox({
   checked: checkedProp,
+  error,
   id,
   label,
   onChange,
@@ -27,7 +28,7 @@ export function RadioBox({
   )
   const radioGroup = useRadioGroup(id)
   const inRadioGroup = radioGroup !== null
-  const checked = checkedProp ?? (inRadioGroup && id === radioGroup.selected)
+  const checked = checkedProp ?? (inRadioGroup && id === radioGroup?.selected)
 
   if (!onChange) {
     if (!inRadioGroup || id === undefined) {
@@ -37,7 +38,7 @@ export function RadioBox({
     }
     onChange = (checked) => {
       if (checked) {
-        radioGroup.select(id)
+        radioGroup?.select(id)
       }
     }
   }
@@ -64,14 +65,38 @@ export function RadioBox({
     // Prevents to focus on mount
     focusReady.current = true
   }, [checked, inRadioGroup])
+  const focusVisible = useFocusVisible()
 
   return (
-    <RadioBoxContainer
-      buttonRef={button}
-      checked={checked}
-      id={id}
+    <div
+      role="radio"
+      aria-checked={true}
+      ref={button}
       onClick={handleClick}
-      radioGroup={radioGroup}
+      onKeyDown={radioGroup?.onKeyDown}
+      tabIndex={
+        radioGroup &&
+        (radioGroup.focusableId === undefined || id === radioGroup.focusableId)
+          ? 0
+          : -1
+      }
+      css={({ colors }) => css`
+        position: relative;
+        width: 100%;
+        padding: 2gu;
+        background: ${colors.layer2};
+        cursor: pointer;
+        &:focus {
+          outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
+          & > div:after {
+            ${focusVisible
+              ? css`
+                  outline-color: ${colors.focus};
+                `
+              : ""}
+          }
+        }
+      `}
     >
       <div
         css={({ colors }) => css`
@@ -84,7 +109,12 @@ export function RadioBox({
             content: "";
             position: absolute;
             inset: 1px;
-            outline: 2px solid ${checked ? colors.accent : "transparent"};
+            outline: 2px solid
+              ${error
+                ? colors.warning
+                : checked
+                ? colors.accent
+                : "transparent"};
             pointer-events: none;
           }
         `}
@@ -123,84 +153,6 @@ export function RadioBox({
           {secondary}
         </div>
       </div>
-    </RadioBoxContainer>
-  )
-}
-
-function RadioBoxContainer({
-  buttonRef,
-  checked,
-  children,
-  id,
-  onClick,
-  radioGroup,
-}: {
-  buttonRef: Ref<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement>
-  checked: boolean
-  children: ReactNode
-  id?: string | number
-  onClick: () => void
-  radioGroup: ReturnType<typeof useRadioGroup>
-}) {
-  const focusVisible = useFocusVisible()
-
-  return (
-    <>
-      <ButtonArea
-        role="radio"
-        aria-checked={false}
-        ref={buttonRef}
-        onClick={onClick}
-        onKeyDown={radioGroup?.onKeyDown}
-        tabIndex={
-          radioGroup &&
-          (radioGroup.focusableId === undefined ||
-            id === radioGroup.focusableId)
-            ? 0
-            : -1
-        }
-        css={({ colors }) => css`
-          ${checked ? "display: none" : ""};
-          position: relative;
-          width: 100%;
-          padding: 2gu;
-          background: ${colors.layer2};
-          cursor: pointer;
-          &:focus {
-            outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
-          }
-        `}
-      >
-        {children}
-      </ButtonArea>
-      <div
-        role="radio"
-        aria-checked={true}
-        ref={buttonRef}
-        onClick={onClick}
-        onKeyDown={radioGroup?.onKeyDown}
-        tabIndex={
-          radioGroup &&
-          (radioGroup.focusableId === undefined ||
-            id === radioGroup.focusableId)
-            ? 0
-            : -1
-        }
-        css={({ colors }) => css`
-          ${checked ? "" : "display: none"};
-          overflow: hidden;
-          position: relative;
-          width: 100%;
-          padding: 2gu;
-          background: ${colors.layer2};
-          cursor: pointer;
-          &:focus {
-            outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
-          }
-        `}
-      >
-        {children}
-      </div>
-    </>
+    </div>
   )
 }
