@@ -141,7 +141,7 @@ export function Step3({ title, onPrev }) {
             `}
           >
             <Button
-              label="Cancel"
+              label="Back"
               mode="secondary-2"
               shadowInBox
               onClick={onPrev}

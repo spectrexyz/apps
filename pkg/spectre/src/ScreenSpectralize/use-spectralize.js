@@ -152,7 +152,7 @@ export const useSpectralize = zustand((set, get) => ({
     },
   ],
 
-  currentStep: 1,
+  currentStep: 0,
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title
