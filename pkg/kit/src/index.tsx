@@ -11,6 +11,7 @@ export * from "./utils"
 
 export { AddressBadge } from "./AddressBadge"
 export { Anchor } from "./Anchor"
+export { Badge } from "./Badge"
 export { BaseUrl, useBaseUrl } from "./BaseUrl"
 export { Button } from "./Button"
 export { ButtonArea } from "./ButtonArea"
