@@ -21,6 +21,7 @@ import { Steps } from "./Steps"
 import { TokenBadge } from "./TokenBadge"
 import { TokenIcon } from "./TokenIcon"
 import { TokenInput } from "./TokenInput"
+import { Video } from "./Video"
 
 const demos = [
   ["cards", () => <NftCollection />, false],
@@ -38,6 +39,7 @@ const demos = [
   ["token-badge", () => <TokenBadge />, true],
   ["token-icon", () => <TokenIcon />, true],
   ["token-input", () => <TokenInput />, true],
+  ["video", () => <Video />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
