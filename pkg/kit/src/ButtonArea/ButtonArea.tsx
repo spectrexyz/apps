@@ -5,7 +5,7 @@ import { css } from "@emotion/react"
 
 export type ButtonAreaProps = ComponentPropsWithoutRef<"button"> &
   ComponentPropsWithoutRef<"a"> & {
-    children: ReactNode
+    children?: ReactNode
     disabled?: boolean
     external?: boolean
     href?: string
