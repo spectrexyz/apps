@@ -5,31 +5,31 @@ import type {
 
 import { useCallback, useRef, useEffect, useState } from "react"
 import { css } from "@emotion/react"
-import { colord } from "colord"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { springs } from "../styles"
 import { Moire } from "../Moire"
 
-const BAR_HEIGHT = 6
-const HANDLE_OUTLINE = 6
-const HANDLE_SIZE = 18 + HANDLE_OUTLINE * 2
+const BAR_HEIGHT = 4
+const HANDLE_OUTLINE = 5
+const HANDLE_SIZE = 10 + HANDLE_OUTLINE * 2
 const PADDING = 5
 const MIN_WIDTH = HANDLE_SIZE * 10
 const HEIGHT = Math.max(HANDLE_SIZE, BAR_HEIGHT) + PADDING * 2
 
 type SliderProps = {
-  value: number
+  keyboardStep?: (value: number, direction: number) => number
+  labels?: [start: string, end: string]
   onChange: (value: number) => void
+  value: number
 }
 
-function isTouchEvent(
-  event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent
-): event is TouchEvent | ReactTouchEvent {
-  return "touches" in event
-}
-
-export function Slider({ value, onChange }: SliderProps): JSX.Element {
+export function Slider({
+  keyboardStep = (value, dir) => Math.round((value + 0.1 * dir) * 10) / 10,
+  labels,
+  onChange,
+  value,
+}: SliderProps): JSX.Element {
   const [pressed, setPressed] = useState(false)
 
   const lastRect = useRef<DOMRect | null>(null)
@@ -109,7 +109,7 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
 
   const moveSpring = useSpring({
     config: springs.swift,
-    activeBarTransform: `scaleX(${1 - value}) translateZ(0)`,
+    activeBarTransform: `scaleX(${value}) translateZ(0)`,
     handleTransform: `translate3d(${value * 100}%, 0, 0)`,
     pressProgress: Number(pressed),
     value: Math.max(0, Math.min(1, value)),
@@ -123,10 +123,10 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowDown" || event.key === "ArrowLeft") {
-        onChange(Math.max(0, Math.round((value - 0.1) * 10) / 10))
+        onChange(Math.max(0, keyboardStep(value, -1)))
       }
       if (event.key === "ArrowUp" || event.key === "ArrowRight") {
-        onChange(Math.min(1, Math.round((value + 0.1) * 10) / 10))
+        onChange(Math.min(1, keyboardStep(value, 1)))
       }
     }
 
@@ -142,8 +142,9 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       css={({ colors }) => css`
+        position: relative;
         min-width: ${MIN_WIDTH}px;
-        padding: 0 ${HANDLE_SIZE / 2 + PADDING}px;
+        padding: 0 0 ${labels ? css`1.5gu` : "0"};
         user-select: none;
         &:focus-visible {
           outline: ${focused ? "2px" : "0"} solid ${colors.focus};
@@ -171,35 +172,36 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
           `}
         >
           <div
-            ref={barBounds.observe}
-            css={({ colors }) => css`
-              position: absolute;
-              inset: 0;
-              background: ${colors.background};
-            `}
-          />
-          <Moire
-            width={barBounds.width}
-            height={BAR_HEIGHT}
-            scale={0.5}
             css={css`
               position: absolute;
               inset: 0;
+              overflow: hidden;
+              border-radius: ${BAR_HEIGHT / 2}px;
             `}
-          />
-          <a.div
-            style={{ transform: moveSpring.activeBarTransform }}
-            css={({ colors }) => css`
-              position: absolute;
-              inset: 0;
-              transform-origin: 100% 0;
-              background: ${colors.background};
-            `}
-          />
+          >
+            <div
+              ref={barBounds.observe}
+              css={({ colors }) => css`
+                position: absolute;
+                inset: 0;
+                background: ${colors.accentInverted};
+              `}
+            />
+            <a.div
+              style={{ transform: moveSpring.activeBarTransform }}
+              css={({ colors }) => css`
+                position: absolute;
+                inset: 0;
+                transform-origin: 0 0;
+                background: ${colors.accent};
+              `}
+            />
+          </div>
         </div>
 
         <div
           css={css`
+            overflow: hidden;
             pointer-events: none;
             width: calc(100% + ${HANDLE_SIZE}px);
             height: 100%;
@@ -217,6 +219,27 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
           >
             <div
               css={({ colors }) => css`
+                overflow: hidden;
+                position: absolute;
+                inset: calc(50% - ${HANDLE_SIZE / 2}px) 0 0;
+                width: ${HANDLE_SIZE}px;
+                height: ${HANDLE_SIZE}px;
+                border-radius: 50%;
+                background: ${colors.layer2};
+              `}
+            >
+              <Moire
+                width={HANDLE_SIZE}
+                height={HANDLE_SIZE}
+                scale={0.5}
+                css={css`
+                  position: absolute;
+                  inset: 0;
+                `}
+              />
+            </div>
+            <div
+              css={({ colors }) => css`
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -225,8 +248,6 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
                 height: ${HANDLE_SIZE - HANDLE_OUTLINE * 2}px;
                 border-radius: 50%;
                 background: ${colors.accent};
-                outline: ${HANDLE_OUTLINE}px solid
-                  ${colord(colors.accent).alpha(0.2).toHex()};
                 cursor: pointer;
                 pointer-events: auto;
               `}
@@ -234,6 +255,29 @@ export function Slider({ value, onChange }: SliderProps): JSX.Element {
           </a.div>
         </div>
       </div>
+
+      {labels && (
+        <div
+          css={({ colors, fonts }) => css`
+            position: absolute;
+            inset: auto 0 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-family: ${fonts.families.sans};
+            color: ${colors.contentDimmed};
+          `}
+        >
+          <div>{labels[0]}</div>
+          <div>{labels[1]}</div>
+        </div>
+      )}
     </div>
   )
+}
+
+function isTouchEvent(
+  event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent
+): event is TouchEvent | ReactTouchEvent {
+  return "touches" in event
 }
