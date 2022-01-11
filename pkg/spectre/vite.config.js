@@ -4,7 +4,7 @@ import { defineConfig } from "vite"
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
-    target: "es2019",
+    target: "es2020",
   },
   esbuild: {
     jsxFactory: "jsx",
