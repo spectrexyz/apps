@@ -6,6 +6,7 @@ import { css } from "@emotion/react"
 import { Router, Link, Route } from "wouter"
 import { providers, Contract } from "ethers"
 import { NftProvider, FetcherDeclarationEthers } from "use-nft"
+import { Badge } from "./Badge"
 import { Button } from "./Button"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
@@ -24,18 +25,19 @@ import { TokenInput } from "./TokenInput"
 import { Video } from "./Video"
 
 const demos = [
-  ["cards", () => <NftCollection />, false],
-  ["spectre", () => <Spectre />, true],
+  ["badge", () => <Badge />, true],
   ["button", () => <Button label="Enable account" />, true],
-  ["moire", () => <Moire />, true],
+  ["cards", () => <NftCollection />, false],
   ["chart", () => <Chart />, true],
   ["diagram", () => <Diagram />, true],
   ["distribution", () => <Distribution />, true],
-  ["slider", () => <Slider />, true],
-  ["steps", () => <Steps />, true],
   ["icon", () => <Icon />, true],
+  ["moire", () => <Moire />, true],
   ["radio", () => <Radio />, true],
   ["radiobox", () => <RadioBox />, true],
+  ["slider", () => <Slider />, true],
+  ["spectre", () => <Spectre />, true],
+  ["steps", () => <Steps />, true],
   ["token-badge", () => <TokenBadge />, true],
   ["token-icon", () => <TokenIcon />, true],
   ["token-input", () => <TokenInput />, true],

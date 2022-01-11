@@ -11,7 +11,7 @@ export function Slider() {
         width: 400px;
       `}
     >
-      <KitSlider value={value} onChange={setValue} />
+      <KitSlider value={value} onChange={setValue} labels={["0%", "100%"]} />
     </div>
   )
 }
