@@ -25,7 +25,8 @@ type RootProps = {
 export function Root({ children }: RootProps): JSX.Element {
   const element = useContext(RootContext)
   if (element === null) {
-    throw new Error("RootEntryPoint is missing")
+    return <div />
+    // throw new Error("RootEntryPoint is missing")
   }
   return ReactDOM.createPortal(children, element)
 }
