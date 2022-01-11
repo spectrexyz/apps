@@ -8,10 +8,12 @@ import playButton from "./play-button.svg"
 import stopButton from "./stop-button.svg"
 
 type VideoProps = ComponentPropsWithoutRef<"video"> & {
+  poster?: string
   src: string
 }
 
 export const Video = function Video({
+  poster,
   src,
   ...props
 }: VideoProps): JSX.Element {
@@ -19,11 +21,15 @@ export const Video = function Video({
 
   const [playing, setPlaying] = useState(false)
 
-  const playPause = () => {
+  const playStop = () => {
+    const video = videoElement.current
+    if (!video) return
+
     if (playing) {
-      videoElement.current?.pause()
+      video.pause()
+      video.currentTime = 0
     } else {
-      videoElement.current?.play()
+      video.play()
     }
   }
 
@@ -65,8 +71,18 @@ export const Video = function Video({
         `}
       />
 
+      {poster && !playing && (
+        <div
+          css={css`
+            position: absolute;
+            inset: 0;
+            background: url(${poster}) no-repeat 0 0 / cover;
+          `}
+        />
+      )}
+
       <ButtonArea
-        onClick={playPause}
+        onClick={playStop}
         css={css`
           position: absolute;
           inset: 0;
@@ -81,7 +97,7 @@ export const Video = function Video({
             display: block;
           }
         `}
-        title={playing ? "Pause" : "Play"}
+        title={playing ? "Stop" : "Play"}
       >
         <img src={playing ? stopButton : playButton} alt="" />
       </ButtonArea>
