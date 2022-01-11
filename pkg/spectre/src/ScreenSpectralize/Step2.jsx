@@ -1,9 +1,21 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Button, Fieldset, TextInput } from "kit"
+import {
+  Badge,
+  Button,
+  ButtonIcon,
+  Fieldset,
+  IconPlus,
+  IconTrash,
+  Slider,
+  TextInput,
+  gu,
+} from "kit"
 
 import { useLayout } from "../styles.js"
 import { useSpectralize } from "./use-spectralize.js"
+
+const REWARDS_MAX = 50
 
 export function Step2({ title, onPrev }) {
   const data = useSpectralize()
@@ -88,35 +100,57 @@ export function Step2({ title, onPrev }) {
             </Fieldset>
           </div>
           <div>
-            <Fieldset label="NFT description">
-              <TextInput
-                multiline
-                onChange={data.updateDescription}
-                value={data.description}
+            <Fieldset
+              label="Creator & community rewards"
+              contextual={
+                <span
+                  css={({ colors }) => css`
+                    font-size: 18px;
+                    colors: ${colors.contentDimmed};
+                  `}
+                >
+                  {data.rewards}%
+                </span>
+              }
+            >
+              <Slider
+                keyboardStep={(value, dir) =>
+                  Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) / 1000
+                }
+                labels={["0%", `${REWARDS_MAX}%`]}
+                onChange={(v) =>
+                  data.updateRewards(Math.round(v * REWARDS_MAX))
+                }
+                value={data.rewards / REWARDS_MAX}
+              />
+            </Fieldset>
+
+            <Fieldset label="Split creator & community rewards">
+              <div
                 css={css`
-                  height: 8em;
+                  padding-bottom: 2gu;
                 `}
-              />
-            </Fieldset>
+              >
+                <EthAddressRow
+                  address="pierre.eth"
+                  onRemove={() => {}}
+                  reward={`${data.rewards}%`}
+                />
+                <EthAddressRow
+                  address="pierre.eth"
+                  onRemove={() => {}}
+                  reward={`${data.rewards}%`}
+                />
+              </div>
 
-            <Fieldset label="Your name / alias">
-              <TextInput
-                onChange={data.updateAuthorName}
-                value={data.authorName}
-              />
-            </Fieldset>
-
-            <Fieldset label="Email">
-              <TextInput
-                onChange={data.updateDescription}
-                value={data.description}
-              />
-            </Fieldset>
-
-            <Fieldset label="ENS Domain">
-              <TextInput
-                onChange={data.updateDescription}
-                value={data.description}
+              <Button
+                icon={<IconPlus />}
+                label="Add ETH address"
+                mode="flat-3"
+                size="compact"
+                css={css`
+                  text-transform: uppercase;
+                `}
               />
             </Fieldset>
           </div>
@@ -146,7 +180,7 @@ export function Step2({ title, onPrev }) {
             `}
           >
             <Button
-              label="Cancel"
+              label="Back"
               mode="secondary-2"
               shadowInBox
               onClick={onPrev}
@@ -155,6 +189,65 @@ export function Step2({ title, onPrev }) {
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+function EthAddressRow({ address, onRemove, reward }) {
+  return (
+    <div
+      css={css`
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 1.5gu;
+      `}
+    >
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            width: 22gu;
+          `}
+        >
+          <Badge
+            label={
+              <span
+                css={({ colors }) => css`
+                  font-size: 16px;
+                  color: ${colors.accent};
+                `}
+              >
+                {address}
+              </span>
+            }
+          />
+        </div>
+        <ButtonIcon
+          icon={<IconTrash size={2.5 * gu} />}
+          label="Remove"
+          onClick={onRemove}
+          css={css`
+            width: 3gu;
+            height: 3gu;
+          `}
+        />
+      </div>
+      <span
+        css={({ colors }) => css`
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          color: ${colors.contentDimmed};
+        `}
+      >
+        {reward}
+      </span>
     </div>
   )
 }

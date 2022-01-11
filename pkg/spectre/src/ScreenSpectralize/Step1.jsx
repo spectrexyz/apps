@@ -1,24 +1,31 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
+  ButtonIcon,
   Fieldset,
+  FileUpload,
+  IconCheckBold,
+  IconMagnifyingGlassPlus,
+  IconTrash,
   IconWarningOctagon,
   RadioBox,
   RadioGroup,
   TextInput,
+  Video,
+  co,
   gu,
 } from "kit"
 
+import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles.js"
-import { FileUpload } from "./FileUpload.jsx"
 import { useSpectralize } from "./use-spectralize.js"
 
 export function Step1({ title, onPrev }) {
   const data = useSpectralize()
   const layout = useLayout()
 
-  const nftTypeSelectorWidth = layout.value({
+  const fileSelectorWidth = layout.value({
     small: css`32.5gu`,
     xlarge: css`37.5gu`,
   })
@@ -31,6 +38,12 @@ export function Step1({ title, onPrev }) {
     small: css`3.5gu`,
     xlarge: css`5gu`,
   })
+
+  useEffect(() => {
+    data.updateTitle("My NFT title")
+    data.updateDescription("My NFT description")
+    data.updateAuthorEmail("hi@bpier.re")
+  }, [])
 
   return (
     <div
@@ -78,12 +91,8 @@ export function Step1({ title, onPrev }) {
         </p>
         {layout.below("large") && (
           <div>
-            <NftTypeSelector
+            <NftFileSelector
               direction={layout.name === "small" ? "vertical" : "horizontal"}
-              selected={data.fileType}
-              onChange={data.updateFileType}
-              file={data.file}
-              onFile={data.updateFile}
             />
           </div>
         )}
@@ -118,7 +127,7 @@ export function Step1({ title, onPrev }) {
           />
         </Fieldset>
 
-        <Fieldset label="Email" error={data.fieldError("authorEmail")}>
+        <Fieldset label="Your email" error={data.fieldError("authorEmail")}>
           <TextInput
             onChange={data.updateAuthorEmail}
             value={data.authorEmail}
@@ -126,7 +135,7 @@ export function Step1({ title, onPrev }) {
           />
         </Fieldset>
 
-        <Fieldset label="ENS Domain">
+        <Fieldset label="Your ENS Domain">
           <TextInput
             onChange={data.updateAuthorEns}
             value={data.authorEns}
@@ -196,98 +205,280 @@ export function Step1({ title, onPrev }) {
         <div
           css={css`
             flex-shrink: 0;
-            width: ${nftTypeSelectorWidth};
+            width: ${fileSelectorWidth};
             height: 38gu;
           `}
         >
-          <NftTypeSelector
-            direction="vertical"
-            file={data.file}
-            fileError={data.fieldError("file")}
-            onChange={data.updateFileType}
-            onFile={data.updateFile}
-            selected={data.fileType}
-          />
+          <NftFileSelector direction="vertical" />
         </div>
       )}
     </div>
   )
 }
 
-function NftTypeSelector({
-  direction,
-  onChange,
-  selected,
-  file,
-  onFile,
-  fileError,
-}) {
+function NftFileSelector({ direction }) {
   const layout = useLayout()
-  const gridTemplateAxis = direction === "vertical" ? "rows" : "columns"
-  const uploadLabel = layout.name === "medium" ? "Upload" : "Upload file"
+  const gridTemplateAxis1 = direction === "vertical" ? "rows" : "columns"
+  const gridTemplateAxis2 = direction === "vertical" ? "columns" : "rows"
+
+  const { fieldError, file, fileType, updateFile, updateFileType } =
+    useSpectralize()
+
+  const hasError = Boolean(fieldError("file"))
+
+  const uploadButton = (
+    <FileUpload
+      file={file}
+      onFile={updateFile}
+      label={layout.name === "medium" ? "Upload" : "Upload file"}
+      accept={NFT_FILE_TYPES[fileType].mediaTypes}
+      css={css`
+        padding-top: 1gu;
+      `}
+    />
+  )
+
   return (
-    <RadioGroup onChange={onChange} selected={selected}>
+    <div>
+      {file ? (
+        <NftFilePreview />
+      ) : (
+        <RadioGroup onChange={updateFileType} selected={fileType}>
+          <div
+            css={css`
+              display: grid;
+              grid-template-${gridTemplateAxis1}: 1fr 1fr 1fr;
+              grid-template-${gridTemplateAxis2}: 100%;
+              gap: 1.5gu;
+              width: 100%;
+              height: ${direction === "vertical" ? "auto" : css`19gu`};
+            `}
+          >
+            <RadioBox
+              id="image"
+              error={(fileType === "image" && hasError) || undefined}
+              label="Image"
+              secondary={
+                <>
+                  <div
+                    css={css`
+                      display: flex;
+                      justify-content: space-between;
+                      width: 100%;
+                    `}
+                  >
+                    <div>{NFT_FILE_TYPES.image.label}</div>
+                    {layout.name !== "medium" && <div>100MB limit</div>}
+                  </div>
+                  {fileType === "image" && uploadButton}
+                  {layout.name === "medium" && fileType === "image" && (
+                    <div>100MB limit</div>
+                  )}
+                </>
+              }
+            />
+            <RadioBox
+              id="video"
+              error={(fileType === "video" && hasError) || undefined}
+              label="Video"
+              secondary={
+                <>
+                  <div>{NFT_FILE_TYPES.video.label}</div>
+                  {fileType === "video" && uploadButton}
+                </>
+              }
+            />
+            <RadioBox
+              id="audio"
+              error={(fileType === "audio" && hasError) || undefined}
+              label="Audio"
+              secondary={
+                <>
+                  <div>{NFT_FILE_TYPES.audio.label}</div>
+                  {fileType === "audio" && uploadButton}
+                </>
+              }
+            />
+          </div>
+        </RadioGroup>
+      )}
+    </div>
+  )
+}
+
+function NftFilePreview() {
+  const {
+    file,
+    fileType,
+    fileUrl,
+    previewFile,
+    previewUrl,
+    updateFile,
+    updatePreviewFile,
+  } = useSpectralize()
+
+  const hasPreview = fileType === "video" || fileType === "audio"
+
+  return (
+    <div>
       <div
         css={css`
-          display: grid;
-          grid-template-${gridTemplateAxis}: 1fr 1fr 1fr;
-          gap: 1.5gu;
-          width: 100%;
-          height: ${direction === "vertical" ? "auto" : css`19gu`};
+          position: relative;
+          padding-bottom: 2gu;
         `}
       >
-        <RadioBox
-          id="image"
-          error={(selected === "image" && fileError) || undefined}
-          label="Image"
-          secondary={
-            <>
+        {fileType === "image" && (
+          <a
+            href={fileUrl}
+            target="_blank"
+            css={css`
+              display: block;
+              position: relative;
+              min-height: 5gu;
+            `}
+          >
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt=""
+                css={css`
+                  display: block;
+                  width: 100%;
+                `}
+              />
+            ) : (
+              <div
+                css={({ colors }) => css`
+                  height: 10gu;
+                  background: ${colors.background};
+                `}
+              />
+            )}
+            <div
+              css={({ colors }) => css`
+                position: absolute;
+                inset: auto 0 0 auto;
+                display: flex;
+                place-items: center;
+                padding: 1gu;
+                color: ${colors.accent};
+                background: ${co(colors.translucid).alpha(0.6).toHex()};
+              `}
+            >
+              <IconMagnifyingGlassPlus size={3 * gu} />
+            </div>
+          </a>
+        )}
+        {(fileType === "video" || fileType === "audio") && (
+          <Video
+            loop={true}
+            src={fileUrl}
+            poster={previewUrl ?? undefined}
+            css={({ colors }) => css`
+              display: block;
+              width: 100%;
+              background: ${colors.background};
+            `}
+          />
+        )}
+      </div>
+      <section
+        css={({ colors }) => css`
+          padding: 2gu;
+          background: ${colors.layer2};
+          h1 {
+            display: flex;
+            align-items: center;
+            height: 3gu;
+            padding-bottom: 1gu;
+            font-size: 12px;
+            text-transform: uppercase;
+          }
+        `}
+      >
+        <h1>Artwork files</h1>
+
+        <FileEntry name={file.name} onReset={() => updateFile(null)} />
+
+        {hasPreview &&
+          (previewFile ? (
+            <FileEntry
+              name={previewFile.name}
+              onReset={() => updatePreviewFile(null)}
+            />
+          ) : (
+            <div
+              css={css`
+                padding-top: 1gu;
+              `}
+            >
               <div
                 css={css`
                   display: flex;
+                  align-items: center;
                   justify-content: space-between;
-                  width: 100%;
                 `}
               >
-                <div>JPG,PNG,SVG,WEBP</div>
-                {layout.name !== "medium" && <div>100MB limit</div>}
+                <FileUpload
+                  accept={NFT_FILE_TYPES.image.mediaTypes}
+                  file={previewFile}
+                  label="Thumbnail"
+                  onFile={updatePreviewFile}
+                  withReset={false}
+                />
+
+                <span
+                  css={({ colors, fonts }) => css`
+                    font-family: ${fonts.families.sans};
+                    font-size: 12px;
+                    color: ${colors.contentDimmed};
+                  `}
+                >
+                  (Optional)
+                </span>
               </div>
-              {selected === "image" && (
-                <FileUpload file={file} onFile={onFile} label={uploadLabel} />
-              )}
-              {layout.name === "medium" && selected === "image" && (
-                <div>100MB limit</div>
-              )}
-            </>
-          }
-        />
-        <RadioBox
-          id="video"
-          error={(selected === "video" && fileError) || undefined}
-          label="Video"
-          secondary={
-            <>
-              <div>MP4,WEBM,GIF</div>
-              {selected === "video" && (
-                <FileUpload file={file} onFile={onFile} label={uploadLabel} />
-              )}
-            </>
-          }
-        />
-        <RadioBox
-          id="audio"
-          error={(selected === "audio" && fileError) || undefined}
-          label="Audio"
-          secondary={
-            <>
-              <div>MP3,WAV,FLAC</div>
-              {selected === "audio" && (
-                <FileUpload file={file} onFile={onFile} label={uploadLabel} />
-              )}
-            </>
-          }
-        />
+            </div>
+          ))}
+      </section>
+    </div>
+  )
+}
+
+function FileEntry({ name, onReset }) {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding-top: 1.5gu;
+      `}
+    >
+      <div
+        css={({ colors }) => css`
+          display: flex;
+          align-items: center;
+          gap: 1.25gu;
+          height: 4gu;
+          padding: 0 1.5gu 0 1gu;
+          color: ${colors.accent};
+          background: ${colors.layer1};
+        `}
+      >
+        <IconCheckBold size={2.5 * gu} />
+        <span>{name}</span>
       </div>
-    </RadioGroup>
+
+      <ButtonIcon
+        icon={<IconTrash size={2.5 * gu} />}
+        label="reset"
+        onClick={onReset}
+        css={css`
+          width: 3gu;
+          height: 3gu;
+        `}
+      />
+    </div>
   )
 }

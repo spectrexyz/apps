@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Button, Fieldset, TextInput } from "kit"
+import { Button, Fieldset, Slider, TextInput, TokenInput } from "kit"
 
 import { useLayout } from "../styles.js"
 import { useSpectralize } from "./use-spectralize.js"
@@ -59,68 +59,63 @@ export function Step3({ title, onPrev }) {
             color: ${colors.contentDimmed};
           `}
         >
-          Add the name and symbol of your token – this will be used to name your
-          NFT fractions. Also, decide on the % of minting rewards that you’d
-          like to assign to yourself and others, such as collaborators, friends,
-          supporters, etc.
+          Set the economic values of the NFT’s fractions. These will determine
+          the amount of fractions that can be minted, the starting price, as
+          well as the initial price to buy back the NFT.
         </p>
         <div
           css={css`
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 42gu 1fr;
             gap: 8.75gu;
           `}
         >
           <div>
-            <Fieldset label="Token name">
-              <TextInput
-                onChange={data.updateTokenName}
-                placeholder="Token"
-                value={data.tokenName}
-              />
+            <Fieldset label="NFT buyout price">
+              <TokenInput value="50" onChange={() => {}} symbol="ETH" />
             </Fieldset>
-            <Fieldset label="Token symbol">
-              <TextInput
-                onChange={data.updateTokenSymbol}
-                placeholder="TKN"
-                value={data.tokenSymbol}
-              />
+            <Fieldset label="Total market cap">
+              <TokenInput value="50" onChange={() => {}} symbol="ETH" />
+            </Fieldset>
+            <Fieldset label="Initial token price">
+              <TokenInput value="0.001" onChange={() => {}} symbol="ETH" />
             </Fieldset>
           </div>
           <div>
-            <Fieldset label="NFT description">
-              <TextInput
-                multiline
-                onChange={data.updateDescription}
-                value={data.description}
-                css={css`
-                  height: 8em;
-                `}
-              />
+            <Fieldset
+              label="Max token supply cap"
+              contextual={
+                <span
+                  css={({ colors }) => css`
+                    font-size: 18px;
+                    colors: ${colors.contentDimmed};
+                  `}
+                >
+                  {data.rewards}%
+                </span>
+              }
+            >
+              <Slider labels={["1K", "1B"]} onChange={(v) => {}} value={0.5} />
             </Fieldset>
-
-            <Fieldset label="Your name / alias">
-              <TextInput
-                onChange={data.updateAuthorName}
-                value={data.authorName}
-              />
-            </Fieldset>
-
-            <Fieldset label="Email">
-              <TextInput
-                onChange={data.updateDescription}
-                value={data.description}
-              />
-            </Fieldset>
-
-            <Fieldset label="ENS Domain">
-              <TextInput
-                onChange={data.updateDescription}
-                value={data.description}
-              />
+            <Fieldset
+              label="Buyout multiplier"
+              contextual={
+                <span
+                  css={({ colors }) => css`
+                    font-size: 18px;
+                    colors: ${colors.contentDimmed};
+                  `}
+                >
+                  {data.rewards}%
+                </span>
+              }
+            >
+              <Slider labels={["1x", "5x"]} onChange={(v) => {}} value={0.5} />
             </Fieldset>
           </div>
         </div>
+
+        <section>Advanced parameters</section>
 
         {layout.below("medium") ? (
           <div

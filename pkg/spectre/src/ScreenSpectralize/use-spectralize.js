@@ -14,15 +14,49 @@ export const useSpectralize = zustand((set, get) => ({
   },
 
   fileType: "image",
-  updateFileType: (fileType) => {
-    set({ fileType, file: null })
+  updateFileType: (newFileType) => {
+    set({
+      fileType: newFileType,
+      file: null,
+      previewFile: null,
+      previewUrl: null,
+    })
     get().clearError("file")
   },
 
   file: null,
-  updateFile: (file) => {
-    set({ file })
+  fileUrl: null,
+  updateFile: (newFile) => {
+    const { fileType, fileUrl } = get()
+
     get().clearError("file")
+
+    // Clear previous URL object for the file
+    if (fileUrl) URL.revokeObjectURL(fileUrl)
+
+    set({
+      file: newFile,
+      fileUrl: newFile ? URL.createObjectURL(newFile) : null,
+    })
+
+    // Set preview file with the image
+    if (fileType === "image") {
+      get().updatePreviewFile(newFile)
+    }
+  },
+
+  previewFile: null,
+  previewUrl: null,
+  updatePreviewFile: (newPreviewFile) => {
+    const { previewUrl } = get()
+
+    // Clear previous URL object for the preview
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+
+    set({
+      previewFile: newPreviewFile,
+      previewUrl: newPreviewFile ? URL.createObjectURL(newPreviewFile) : null,
+    })
   },
 
   authorName: "",
@@ -42,6 +76,11 @@ export const useSpectralize = zustand((set, get) => ({
 
   tokenSymbol: "",
   updateTokenSymbol: (tokenSymbol) => set({ tokenSymbol }),
+
+  rewards: 5,
+  updateRewards: (rewards) => set({ rewards }),
+
+  rewardsSplit: [],
 
   errors: [],
 
@@ -113,7 +152,7 @@ export const useSpectralize = zustand((set, get) => ({
     },
   ],
 
-  currentStep: 0,
+  currentStep: 1,
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title
