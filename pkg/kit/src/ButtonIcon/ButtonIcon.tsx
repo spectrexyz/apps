@@ -19,14 +19,14 @@ type ButtonIconProps = ButtonAreaProps & {
   href?: ComponentPropsWithoutRef<"a">["href"]
   icon: ReactNode
   label: string
-  mode: ButtonIconMode
+  mode?: ButtonIconMode
 }
 
 export const ButtonIcon = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   ButtonIconProps
 >(function ButtonIcon(
-  { disabled, external, href, icon, label, mode, onClick, ...props },
+  { disabled, external, href, icon, label, mode = "normal", onClick, ...props },
   ref
 ) {
   const anchorProps = useCallback<() => ComponentPropsWithoutRef<"a">>(() => {
