@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from "react"
+import type { FC, ReactNode } from "react"
 
 import { createElement, useEffect, useRef } from "react"
 import { uid } from "./utils"
@@ -11,7 +11,7 @@ export function useEsc(callback: () => void, condition: boolean): void {
     }
 
     const keydown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         _cb.current()
       }
     }
@@ -25,20 +25,19 @@ export function useUid(prefix = "uid"): string {
   return useRef(uid(prefix)).current
 }
 
-type FlatTreeItem = ComponentType | [ComponentType, Record<string, unknown>]
-
 export function FlatTree({
   children,
   items,
 }: {
   children: ReactNode
-  items: FlatTreeItem[]
+  items: FC<{ children: ReactNode }>[]
 }): JSX.Element {
-  return [...items].reverse().reduce((children, component) => {
-    return Array.isArray(component)
-      ? createElement(component[0], component[1], children)
-      : createElement(component, null, children)
-  }, children) as JSX.Element
+  return [...items]
+    .reverse()
+    .reduce(
+      (children, component) => createElement(component, null, children),
+      children
+    ) as JSX.Element
 }
 
 export function useEvery(cb: () => void, delay: number) {

@@ -1,7 +1,7 @@
 import { css } from "@emotion/react"
 import { a, useTransition } from "react-spring"
 import { springs } from "kit"
-import { menuLinks } from "../content.jsx"
+import { menuLinks } from "../content"
 
 export function Menu({ opened }) {
   const openTransition = useTransition(opened, {

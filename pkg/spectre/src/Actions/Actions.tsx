@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { headerLinks } from "../content.jsx"
+import { headerLinks } from "../content"
 
 import discord from "./assets/discord.svg"
 import envelope from "./assets/envelope.svg"

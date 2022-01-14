@@ -3,11 +3,11 @@ import { css } from "@emotion/react"
 import { AddressBadge, Button, ButtonArea, springs } from "kit"
 import { a, useSpring, useTransition } from "react-spring"
 import { useEthereum } from "../Ethereum"
-import { ConnectAccount } from "../ConnectAccount/ConnectAccount.jsx"
-import { AccountDrawer } from "../StatusBar/AccountDrawer.jsx"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
+import { AccountDrawer } from "../StatusBar/AccountDrawer"
 import { SyncStatus } from "../SyncStatus"
-import { Actions } from "../Actions/Actions.jsx"
-import { useAppReady } from "../App/AppReady.jsx"
+import { Actions } from "../Actions/Actions"
+import { useAppReady } from "../App/AppReady"
 
 export function AppLayoutBottomBar({ compact }) {
   return compact ? <BottomBarCompact /> : <BottomBarLarge />

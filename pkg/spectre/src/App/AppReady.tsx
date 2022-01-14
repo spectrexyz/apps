@@ -1,13 +1,24 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { a, useTransition } from "react-spring"
 import { css } from "@emotion/react"
 import { springs } from "kit"
 
 import logo from "./splash-logo.png"
 
-const AppReadyContext = createContext()
+const AppReadyContext = createContext<{
+  appReady: boolean
+  appReadyTransition: null | ReturnType<typeof useTransition>
+}>({ appReady: false, appReadyTransition: null })
 
-export function AppReady({ children }) {
+type AppReadyProps = { children: ReactNode }
+
+export function AppReady({ children }: AppReadyProps) {
   const [ready, setReady] = useState(false)
 
   const appReadyTransition = useTransition(ready, {

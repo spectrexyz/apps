@@ -16,9 +16,9 @@ import {
   useTheme,
 } from "kit"
 import { Link, useLocation } from "wouter"
-import { PanelDetails } from "./PanelDetails.jsx"
-import { PanelSection } from "./PanelSection.jsx"
-import { ViewArea } from "./ViewArea.jsx"
+import { PanelDetails } from "./PanelDetails"
+import { PanelSection } from "./PanelSection"
+import { ViewArea } from "./ViewArea"
 
 const PARAMETER_DESC = `
   Do you want a jelly baby? Don't be sad Grace. You'll do great things. Jamie,

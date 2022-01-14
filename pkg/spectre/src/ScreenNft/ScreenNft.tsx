@@ -12,13 +12,13 @@ import {
   Tabs,
   gu,
 } from "kit"
-import { useLayout } from "../styles.js"
-import { useAppReady } from "../App/AppReady.jsx"
-import { AppScreen } from "../AppLayout/AppScreen.jsx"
+import { useLayout } from "../styles"
+import { useAppReady } from "../App/AppReady"
+import { AppScreen } from "../AppLayout/AppScreen"
 import { useSnftsAdjacent, useSnft } from "../snft-hooks"
-import { NftPanel } from "./NftPanel.jsx"
-import { TokenPanel } from "./TokenPanel.jsx"
-import { ViewArea } from "./ViewArea.jsx"
+import { NftPanel } from "./NftPanel"
+import { TokenPanel } from "./TokenPanel"
+import { ViewArea } from "./ViewArea"
 
 export function ScreenNft({ id, panel }) {
   const [_, setLocation] = useLocation()

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react"
 import { useQuery } from "react-query"
-import { useEthereum } from "./Ethereum.jsx"
+import { useEthereum } from "./Ethereum"
 
 const BlockNumberContext = createContext()
 

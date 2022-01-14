@@ -19,7 +19,7 @@ export function raf(callback, interval = 1000 / 60) {
     rafId = requestAnimationFrame(loop)
 
     // interval can be passed as a function, which allows
-    // to change it on the fly (e.g. for Type.jsx)
+    // to change it on the fly
     const _interval = typeof interval === "function" ? interval() : interval
 
     const now = Date.now()

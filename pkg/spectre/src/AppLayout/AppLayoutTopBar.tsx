@@ -16,13 +16,13 @@ import {
   gu,
   springs,
 } from "kit"
-import { useLayout } from "../styles.js"
+import { useLayout } from "../styles"
 import { AccountWindow } from "../Account"
-import { ConnectAccount } from "../ConnectAccount/ConnectAccount.jsx"
-import { Menu } from "../Menu/Menu.jsx"
-import { menuLinks } from "../content.jsx"
-import { useAppReady } from "../App/AppReady.jsx"
-import { useAppScroll } from "../App/AppScroll.jsx"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
+import { Menu } from "../Menu/Menu"
+import { menuLinks } from "../content"
+import { useAppReady } from "../App/AppReady"
+import { useAppScroll } from "../App/AppScroll"
 import { useEthereum } from "../Ethereum"
 
 import logo from "./logo.png"

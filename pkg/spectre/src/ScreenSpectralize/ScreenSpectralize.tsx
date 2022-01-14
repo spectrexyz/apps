@@ -2,13 +2,13 @@ import { useCallback, useEffect } from "react"
 import { css } from "@emotion/react"
 import { Steps } from "kit"
 
-import { useLayout } from "../styles.js"
-import { useResetScroll } from "../App/AppScroll.jsx"
-import { AppScreen } from "../AppLayout/AppScreen2.jsx"
-import { Step1 } from "./Step1.jsx"
-import { Step2 } from "./Step2.jsx"
-import { Step3 } from "./Step3.jsx"
-import { useSpectralize } from "./use-spectralize.js"
+import { useLayout } from "../styles"
+import { useResetScroll } from "../App/AppScroll"
+import { AppScreen } from "../AppLayout/AppScreen2"
+import { Step1 } from "./Step1"
+import { Step2 } from "./Step2"
+import { Step3 } from "./Step3"
+import { useSpectralize } from "./use-spectralize"
 
 const STEPS = [Step1, Step2, Step3]
 

@@ -16,8 +16,8 @@ import {
   useTheme,
 } from "kit"
 import { useSnft, useSnftsByCreator } from "../snft-hooks"
-import { PanelDetails } from "./PanelDetails.jsx"
-import { PanelSection } from "./PanelSection.jsx"
+import { PanelDetails } from "./PanelDetails"
+import { PanelSection } from "./PanelSection"
 
 export function NftPanel({ id }) {
   const snft = useSnft(id)

@@ -12,12 +12,17 @@ import {
   gu,
 } from "kit"
 
-import { useLayout } from "../styles.js"
-import { useSpectralize } from "./use-spectralize.js"
+import { useLayout } from "../styles"
+import { useSpectralize } from "./use-spectralize"
 
 const REWARDS_MAX = 50
 
-export function Step2({ title, onPrev }) {
+type Step2Props = {
+  title: string
+  onPrev: () => void
+}
+
+export function Step2({ title, onPrev }: Step2Props) {
   const data = useSpectralize()
   const layout = useLayout()
 

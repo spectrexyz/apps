@@ -18,10 +18,15 @@ import {
 } from "kit"
 
 import { NFT_FILE_TYPES } from "../constants"
-import { useLayout } from "../styles.js"
-import { useSpectralize } from "./use-spectralize.js"
+import { useLayout } from "../styles"
+import { useSpectralize } from "./use-spectralize"
 
-export function Step1({ title, onPrev }) {
+type Step1Props = {
+  title: string
+  onPrev: () => void
+}
+
+export function Step1({ title, onPrev }: Step1Props) {
   const data = useSpectralize()
   const layout = useLayout()
 

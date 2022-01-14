@@ -1,6 +1,71 @@
 import zustand from "zustand"
 
-export const useSpectralize = zustand((set, get) => ({
+type FileType = "image" | "video" | "audio"
+
+type FieldError = { field: string; error: string }
+
+type Direction = -1 | 1
+
+type SpectralizeState = {
+  title: string
+  updateTitle: (title: string) => void
+
+  description: string
+  updateDescription: (description: string) => void
+
+  fileType: FileType
+  updateFileType: (fileType: FileType) => void
+
+  file: null | File
+  fileUrl: null | string
+  updateFile: (file: null | File) => void
+
+  previewFile: null | File
+  previewUrl: null | string
+  updatePreviewFile: (previewFile: null | File) => void
+
+  authorName: string
+  updateAuthorName: (authorName: string) => void
+
+  authorEns: string
+  updateAuthorEns: (authorEns: string) => void
+
+  authorEmail: string
+  updateAuthorEmail: (authorEmail: string) => void
+
+  tokenName: string
+  updateTokenName: (tokenName: string) => void
+
+  tokenSymbol: string
+  updateTokenSymbol: (tokenSymbol: string) => void
+
+  rewards: number
+  updateRewards: (rewards: number) => void
+
+  // rewardsSplit: [],
+
+  errors: FieldError[]
+
+  steps: {
+    title: string
+    validate: (state: SpectralizeState) => {
+      errors: SpectralizeState["errors"]
+    }
+  }[]
+
+  currentStep: number
+  currentStepTitle: () => string
+
+  fieldError: (name: string) => undefined | FieldError
+
+  clearError: (name: string) => void
+
+  moveStep: (direction: Direction) => boolean
+  nextStep: () => boolean
+  prevStep: () => boolean
+}
+
+export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
   title: "",
   updateTitle: (title) => {
     set({ title })
@@ -8,7 +73,7 @@ export const useSpectralize = zustand((set, get) => ({
   },
 
   description: "",
-  updateDescription: (description) => {
+  updateDescription: (description: string) => {
     set({ description })
     get().clearError("description")
   },
@@ -80,7 +145,7 @@ export const useSpectralize = zustand((set, get) => ({
   rewards: 5,
   updateRewards: (rewards) => set({ rewards }),
 
-  rewardsSplit: [],
+  // rewardsSplit: [],
 
   errors: [],
 
@@ -164,7 +229,7 @@ export const useSpectralize = zustand((set, get) => ({
 
   clearError(name) {
     const { errors } = get()
-    return set({
+    set({
       errors: [...errors].filter(({ field }) => field !== name),
     })
   },
@@ -180,7 +245,7 @@ export const useSpectralize = zustand((set, get) => ({
 
     // Same screen
     if (currentStep === nextStep) {
-      return
+      return true
     }
 
     // Only validate data when moving forward

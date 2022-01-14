@@ -1,9 +1,9 @@
 import React from "react"
 import { css, Global } from "@emotion/react"
-import { useLayout } from "../styles.js"
-import { useAppScrollUpdater } from "../App/AppScroll.jsx"
-import { AppLayoutTopBar } from "./AppLayoutTopBar.jsx"
-import { AppLayoutBottomBar } from "./AppLayoutBottomBar.jsx"
+import { useLayout } from "../styles"
+import { useAppScrollUpdater } from "../App/AppScroll"
+import { AppLayoutTopBar } from "./AppLayoutTopBar"
+import { AppLayoutBottomBar } from "./AppLayoutBottomBar"
 
 const hexAlpha = (value) =>
   Math.round(value * 255)

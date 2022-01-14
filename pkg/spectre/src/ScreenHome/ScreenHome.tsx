@@ -1,7 +1,7 @@
 import { css } from "@emotion/react"
 import { useLocation } from "wouter"
 import { Button } from "kit"
-import { AppScreen } from "../AppLayout/AppScreen.jsx"
+import { AppScreen } from "../AppLayout/AppScreen"
 
 export function ScreenHome() {
   const [_, setLocation] = useLocation()

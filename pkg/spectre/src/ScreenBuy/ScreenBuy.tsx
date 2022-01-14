@@ -1,8 +1,8 @@
 import { css } from "@emotion/react"
 import { Button, ButtonIcon, IconArrowLeft, IconGearSix } from "kit"
 import { useLocation } from "wouter"
-import { AppScreen } from "../AppLayout/AppScreen.jsx"
-import { SwapModule } from "./SwapModule.jsx"
+import { AppScreen } from "../AppLayout/AppScreen"
+import { SwapModule } from "./SwapModule"
 
 export function ScreenBuy() {
   const [_, setLocation] = useLocation()

@@ -1,16 +1,17 @@
-import { useEffect, useMemo } from "react"
-import { Kit, stripTrailingSlashes, FlatTree } from "kit"
+import { ReactNode, useMemo } from "react"
+
+import { Kit, FlatTree } from "kit"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { Switch, Route, useLocation } from "wouter"
+import { Switch, Route } from "wouter"
 import { BlockNumber, EthBalance, Ethereum } from "../Ethereum"
-import { AppLayout } from "../AppLayout/AppLayout.jsx"
-import { ScreenHome } from "../ScreenHome/ScreenHome.jsx"
-import { ScreenNft } from "../ScreenNft/ScreenNft.jsx"
-import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize.jsx"
-import { ScreenBuy } from "../ScreenBuy/ScreenBuy.jsx"
-import { AppReady } from "./AppReady.jsx"
-import { AppScroll } from "./AppScroll.jsx"
-import { AppViewport } from "./AppViewport.jsx"
+import { AppLayout } from "../AppLayout/AppLayout"
+import { ScreenHome } from "../ScreenHome/ScreenHome"
+import { ScreenNft } from "../ScreenNft/ScreenNft"
+import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize"
+import { ScreenBuy } from "../ScreenBuy/ScreenBuy"
+import { AppReady } from "./AppReady"
+import { AppScroll } from "./AppScroll"
+import { AppViewport } from "./AppViewport"
 
 export default function App() {
   return (
@@ -37,12 +38,18 @@ export default function App() {
   )
 }
 
-function AppProviders({ children }) {
+function AppProviders({ children }: { children: ReactNode }) {
   return (
     <FlatTree
       items={[
-        [Kit, { baseUrl: "/kit/" }],
-        [QueryClientProvider, { client: useMemo(() => new QueryClient(), []) }],
+        ({ children }: { children: ReactNode }) => (
+          <Kit baseUrl="/kit">{children}</Kit>
+        ),
+        ({ children }: { children: ReactNode }) => (
+          <QueryClientProvider client={useMemo(() => new QueryClient(), [])}>
+            {children}
+          </QueryClientProvider>
+        ),
         Ethereum,
         BlockNumber,
         EthBalance,

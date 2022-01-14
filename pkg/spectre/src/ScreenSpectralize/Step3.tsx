@@ -1,11 +1,16 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { Button, Fieldset, Slider, TextInput, TokenInput } from "kit"
+import { Button, Fieldset, Slider, TokenInput } from "kit"
 
-import { useLayout } from "../styles.js"
-import { useSpectralize } from "./use-spectralize.js"
+import { useLayout } from "../styles"
+import { useSpectralize } from "./use-spectralize"
 
-export function Step3({ title, onPrev }) {
+type Step3Props = {
+  title: string
+  onPrev: () => void
+}
+
+export function Step3({ title, onPrev }: Step3Props) {
   const data = useSpectralize()
   const layout = useLayout()
 

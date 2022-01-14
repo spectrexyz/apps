@@ -3,7 +3,7 @@
   "private": true,
   "main": "dist/kit.cjs.js",
   "module": "dist/kit.es.js",
-  "types": "dist/kit.es.d.ts",
+  "types": "dist/kit.cjs.d.ts",
   "sideEffects": false,
   "files": [
     "dist",
@@ -30,14 +30,14 @@
     "stylis": "4.x"
   },
   "devDependencies": {
-    "@svgr/cli": "^6.1.2",
+    "@svgr/cli": "^6.2.0",
     "@types/react": "^17.0.38",
     "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^17.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.8.0",
-    "@typescript-eslint/parser": "^5.8.0",
-    "eslint": "^8.5.0",
-    "eslint-plugin-import": "^2.25.3",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint": "^8.6.0",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
@@ -46,18 +46,18 @@
     "react-dom": "^17.0.2",
     "ts-jest": "^27.1.2",
     "typescript": "^4.5.4",
-    "vite": "^2.7.6",
+    "vite": "^2.7.10",
     "vite-dts": "^1.0.4"
   },
   "dependencies": {
-    "@elchininet/isometric": "^3.1.0",
-    "@popperjs/core": "^2.11.0",
+    "@elchininet/isometric": "^3.2.0",
+    "@popperjs/core": "^2.11.2",
     "colord": "^2.9.2",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^8.9.0",
-    "ogl": "^0.0.77",
+    "ogl": "^0.0.81",
     "react-cool-dimensions": "^2.0.7",
-    "react-dropzone": "^11.4.2",
+    "react-dropzone": "^11.5.1",
     "react-popper": "^2.2.5"
   }
 }

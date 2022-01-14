@@ -2,33 +2,42 @@ import { useMemo, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring } from "react-spring"
 import { Button, ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
-import { useLayout } from "../styles.js"
-import { useAppScroll } from "../App/AppScroll.jsx"
-import { useAppReady } from "../App/AppReady.jsx"
+import { useLayout } from "../styles"
+import { useAppScroll } from "../App/AppScroll"
+import { useAppReady } from "../App/AppReady"
 
-export function AppScreen({ children, compactBar, mode = "normal" }) {
+export function AppScreen({
+  onBack,
+  title,
+  contextual,
+  children,
+  mode = "normal",
+}) {
   const { colors } = useTheme()
   const { appReadyTransition } = useAppReady()
 
-  const hasCompactBar = Boolean(compactBar)
-
-  const [shouldSnapHeader, setShouldSnapHeader] = useState(false)
-  useAppScroll((scroll) => setShouldSnapHeader(scroll > 2 * gu))
-  const snapHeader = shouldSnapHeader && hasCompactBar
-
-  const { contextual, onBack, title, extraRow } = compactBar || {}
+  const [snapHeader, setSnapHeader] = useState(false)
+  useAppScroll((scroll) => {
+    setSnapHeader(scroll > 2 * gu)
+  })
 
   const { headerTransform, headerBorderVisibility } = useSpring({
     config: springs.appear,
     headerTransform: snapHeader
-      ? `translate3d(0, -${8 * gu}px, 0)`
-      : "translate3d(0, 0px, 0)",
+      ? "translate3d(0, -100%, 0)"
+      : "translate3d(0, 0%, 0)",
     headerBorderVisibility: Number(snapHeader),
   })
 
   const layout = useLayout()
   const compactMenuActive = layout.below("large")
   const fullWidthActive = layout.below(601)
+
+  const contentPadding = useMemo(() => {
+    if (mode === "minimal") return "0px"
+    if (compactMenuActive) return `${2 * gu}px`
+    return `0 ${4 * gu}px ${4 * gu}px`
+  }, [])
 
   return appReadyTransition(
     ({ progress, screenTransform }, ready) =>
@@ -41,7 +50,7 @@ export function AppScreen({ children, compactBar, mode = "normal" }) {
             padding-bottom: ${compactMenuActive ? 0 : 8 * gu}px;
           `}
         >
-          {title && compactMenuActive && (
+          {title && compactMenuActive ? (
             <div
               css={css`
                 height: 8gu;
@@ -51,26 +60,24 @@ export function AppScreen({ children, compactBar, mode = "normal" }) {
                 style={{ transform: headerTransform }}
                 css={({ colors }) => css`
                   position: ${snapHeader ? "absolute" : "static"};
-                  inset: 8gu 0 auto;
                   z-index: 2;
+                  inset: 8gu 0 auto;
                   display: flex;
                   align-items: center;
-                  height: ${extraRow ? css`14gu` : css`8gu`};
-                  background: ${colors.background};
+                  height: 8gu;
                 `}
               >
                 <a.div
                   style={{ opacity: progress, transform: screenTransform }}
                   css={css`
                     display: flex;
-                    flex-direction: column;
                     width: 100%;
                     height: 100%;
                     transform-origin: 50% 0;
                     user-select: none;
                   `}
                 >
-                  <CompactBarHeader
+                  <HeaderCompact
                     title={title}
                     start={
                       onBack && (
@@ -87,14 +94,6 @@ export function AppScreen({ children, compactBar, mode = "normal" }) {
                     }
                     end={contextual}
                   />
-                  <div
-                    css={css`
-                      width: 100%;
-                      height: 6gu;
-                    `}
-                  >
-                    {extraRow}
-                  </div>
                   <a.div
                     style={{ opacity: headerBorderVisibility }}
                     css={({ colors }) => css`
@@ -106,30 +105,90 @@ export function AppScreen({ children, compactBar, mode = "normal" }) {
                 </a.div>
               </a.div>
             </div>
+          ) : (
+            <div
+              css={css`
+                display: flex;
+                width: 100%;
+                max-width: calc(160gu + 4gu * 2);
+                margin: 0 auto;
+                padding: 5.25gu 4gu 0;
+              `}
+            >
+              {onBack && (
+                <Button
+                  label="Back"
+                  onClick={onBack}
+                  size="compact"
+                  mode="outline"
+                  icon={<IconArrowLeft />}
+                />
+              )}
+            </div>
           )}
           <a.div
             style={{ opacity: progress, transform: screenTransform }}
-            css={css`
+            css={({ colors }) => css`
               flex-grow: 1;
+              transform-origin: 50% 0;
               width: 100%;
+              max-width: ${fullWidthActive || mode === "minimal"
+                ? "none"
+                : "500px"};
               margin: 0 auto;
+              background: ${fullWidthActive || mode === "minimal"
+                ? "none"
+                : colors.background};
             `}
           >
-            <div>{children}</div>
+            {!compactMenuActive && mode !== "minimal" && (
+              <div
+                css={css`
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 3gu 4gu;
+                `}
+              >
+                <h1
+                  css={css`
+                    text-transform: uppercase;
+                  `}
+                >
+                  {title}
+                </h1>
+                <div
+                  css={css`
+                    height: 100%;
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                  `}
+                >
+                  {contextual}
+                </div>
+              </div>
+            )}
+            <div
+              css={css`
+                padding: ${contentPadding};
+              `}
+            >
+              {children}
+            </div>
           </a.div>
         </div>
       )
   )
 }
 
-export function CompactBarHeader({ start, title, end }) {
+function HeaderCompact({ start, title, end }) {
   return (
     <div
       css={css`
         display: flex;
         justify-content: space-between;
         width: 100%;
-        height: 8gu;
+        height: 100%;
       `}
     >
       <div
@@ -151,7 +210,7 @@ export function CompactBarHeader({ start, title, end }) {
             {start}
           </div>
         )}
-        <h1
+        <div
           css={({ fonts }) => css`
             font-family: ${fonts.families.mono};
             font-size: 16px;
@@ -159,7 +218,7 @@ export function CompactBarHeader({ start, title, end }) {
           `}
         >
           {title}
-        </h1>
+        </div>
       </div>
       {end && (
         <div

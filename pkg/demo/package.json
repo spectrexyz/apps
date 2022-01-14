@@ -10,11 +10,11 @@
   "dependencies": {
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.7.1",
-    "ethers": "^5.5.2",
+    "ethers": "^5.5.3",
     "kit": "workspace:*",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-spring": "^9.3.3",
+    "react-spring": "^9.4.1",
     "stylis": "^4.0.13",
     "twgl.js": "^4.21.2",
     "use-nft": "^0.10.2",
@@ -25,6 +25,6 @@
     "@types/react-dom": "^17.0.11",
     "@vitejs/plugin-react-refresh": "^1.3.6",
     "typescript": "^4.5.4",
-    "vite": "^2.7.6"
+    "vite": "^2.7.10"
   }
 }
