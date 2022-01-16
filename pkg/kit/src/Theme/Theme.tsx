@@ -54,7 +54,7 @@ const colors = {
 
 export type Palette<T> = { [name: string]: T }
 
-export type ThemeContextValue = {
+export type ThemeContext = {
   colors: Palette<string>
   fonts: {
     line: string
@@ -67,17 +67,17 @@ export type ThemeContextValue = {
   }
 }
 
-const ThemeContext = createContext<ThemeContextValue>({ colors, fonts })
+const ThemeContext = createContext<ThemeContext>({ colors, fonts })
 
 export function Theme({ children }: { children: ReactNode }): JSX.Element {
   const context = useMemo(() => ({ colors, fonts }), [])
   return (
-    <ThemeProvider theme={context as ThemeContextValue}>
+    <ThemeProvider theme={context as ThemeContext}>
       <ThemeContext.Provider value={context}>{children}</ThemeContext.Provider>
     </ThemeProvider>
   )
 }
 
-export function useTheme(): ThemeContextValue {
+export function useTheme(): ThemeContext {
   return useContext(ThemeContext)
 }

@@ -10,13 +10,17 @@ import { css } from "@emotion/react"
 import { noop } from "../utils"
 import { useFieldset } from "../Fieldset"
 
-type InputProps = DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+type InputProps = Omit<
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+  "id" | "onChange" | "value"
 >
-type TextAreaProps = DetailedHTMLProps<
-  TextareaHTMLAttributes<HTMLTextAreaElement>,
-  HTMLTextAreaElement
+
+type TextAreaProps = Omit<
+  DetailedHTMLProps<
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+  >,
+  "id" | "onChange" | "value"
 >
 
 // All the TextInput props, except `multiline` and the props
@@ -32,7 +36,7 @@ type TextInputProps = (InputProps | TextAreaProps) &
   TextInputBaseProps & { multiline?: boolean }
 
 export function TextInput(
-  props: InputProps & TextInputBaseProps & { multiline: false }
+  props: InputProps & TextInputBaseProps & { multiline?: false }
 ): JSX.Element
 
 export function TextInput(

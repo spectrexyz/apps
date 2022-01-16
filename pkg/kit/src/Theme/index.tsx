@@ -1,2 +1,2 @@
-export type { Palette, ThemeContextValue } from "./Theme"
-export { Theme, useTheme } from "./Theme"
+export { Palette, Theme, useTheme } from "./Theme"
+export type { ThemeContext } from "./Theme"

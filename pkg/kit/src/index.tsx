@@ -1,4 +1,6 @@
+export * from "./types"
 export type { ButtonMode, ButtonProps, ButtonSize, ShadowInBox } from "./Button"
+export type { ThemeContext } from "./Theme"
 
 export { colord as co } from "colord"
 export { default as FocusTrap } from "focus-trap-react"

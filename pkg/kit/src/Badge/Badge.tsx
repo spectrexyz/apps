@@ -5,7 +5,7 @@ import { gu } from "../styles"
 type BadgeProps = {
   alt?: string
   icon?: string | ReactNode
-  label: string
+  label: ReactNode
 }
 
 export function Badge({ alt, icon, label }: BadgeProps): JSX.Element {

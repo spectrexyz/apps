@@ -1,12 +1,15 @@
-import type {
+import {
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from "react"
-
-import { useCallback, useRef, useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
+import { Direction } from "../types"
 import { springs } from "../styles"
 import { Moire } from "../Moire"
 
@@ -18,7 +21,7 @@ const MIN_WIDTH = HANDLE_SIZE * 10
 const HEIGHT = Math.max(HANDLE_SIZE, BAR_HEIGHT) + PADDING * 2
 
 type SliderProps = {
-  keyboardStep?: (value: number, direction: number) => number
+  keyboardStep?: (value: number, direction: Direction) => number
   labels?: [start: string, end: string]
   onChange: (value: number) => void
   value: number

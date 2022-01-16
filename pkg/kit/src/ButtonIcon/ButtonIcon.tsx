@@ -1,6 +1,6 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
-import type { ButtonAreaProps } from "../ButtonArea"
-import type { ThemeContextValue } from "../Theme/Theme"
+import { ComponentPropsWithoutRef, ReactNode } from "react"
+import { ButtonAreaProps } from "../ButtonArea"
+import { ThemeContext } from "../Theme/Theme"
 
 import { createContext, forwardRef, useCallback, useContext } from "react"
 import { css } from "@emotion/react"
@@ -41,7 +41,7 @@ export const ButtonIcon = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [disabled, external, href, onClick])
 
-  const sharedCssStyles = ({ colors }: ThemeContextValue) => css`
+  const sharedCssStyles = ({ colors }: ThemeContext) => css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
