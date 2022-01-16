@@ -3,7 +3,7 @@
   "private": true,
   "main": "dist/kit.cjs.js",
   "module": "dist/kit.es.js",
-  "types": "dist/kit.cjs.d.ts",
+  "types": "dist/kit.es.d.ts",
   "sideEffects": false,
   "files": [
     "dist",
@@ -47,7 +47,7 @@
     "ts-jest": "^27.1.2",
     "typescript": "^4.5.4",
     "vite": "^2.7.10",
-    "vite-dts": "^1.0.4"
+    "vite-plugin-dts": "^0.9.9"
   },
   "dependencies": {
     "@elchininet/isometric": "^3.2.0",

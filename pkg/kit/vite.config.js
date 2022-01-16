@@ -1,6 +1,6 @@
 import path from "path"
 import { defineConfig } from "vite"
-import dts from "vite-dts"
+import dts from "vite-plugin-dts"
 
 module.exports = defineConfig(async ({ mode }) => ({
   build: {
@@ -29,5 +29,5 @@ module.exports = defineConfig(async ({ mode }) => ({
   optimizeDeps: {
     entries: ["./src/index.tsx"],
   },
-  plugins: [dts()],
+  plugins: [dts({ insertTypesEntry: true })],
 }))
