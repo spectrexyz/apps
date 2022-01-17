@@ -5,16 +5,28 @@ import {
   useEffect,
   useState,
 } from "react"
-import { a, useTransition } from "react-spring"
+import { a, useTransition, TransitionFn } from "react-spring"
 import { css } from "@emotion/react"
 import { springs } from "kit"
 
 import logo from "./splash-logo.png"
 
-const AppReadyContext = createContext<{
+export type AppReadyTransition = TransitionFn<
+  boolean,
+  {
+    progress: number
+    topBarTransform: string
+    bottomBarTransform: string
+    screenTransform: string
+  }
+>
+
+type AppReadyContext = {
   appReady: boolean
-  appReadyTransition: null | ReturnType<typeof useTransition>
-}>({ appReady: false, appReadyTransition: null })
+  appReadyTransition: AppReadyTransition
+}
+
+const AppReadyContext = createContext<AppReadyContext>({} as AppReadyContext)
 
 type AppReadyProps = { children: ReactNode }
 

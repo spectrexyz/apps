@@ -19,7 +19,9 @@ type RadioGroupContext = {
   selected: RadioId
 }
 
-const RadioGroupContext = createContext<RadioGroupContext | null>(null)
+const RadioGroupContext = createContext<RadioGroupContext>(
+  {} as RadioGroupContext
+)
 
 type RadioId = string | number
 

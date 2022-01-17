@@ -17,7 +17,13 @@ import {
 } from "kit"
 import { useEthereum } from "../Ethereum"
 
-export function AccountWindow({ visible, onClose }) {
+export function AccountWindow({
+  onClose,
+  visible,
+}: {
+  onClose: () => void
+  visible: boolean
+}) {
   const { account, disconnect } = useEthereum()
 
   const visibility = useTransition(visible, {
@@ -157,7 +163,7 @@ export function AccountWindow({ visible, onClose }) {
                     icon={<IconArrowSquareOut />}
                     label="Etherscan"
                     href={`https://etherscan.io/address/${account}`}
-                    external
+                    external={true}
                   />
                 </div>
               </div>

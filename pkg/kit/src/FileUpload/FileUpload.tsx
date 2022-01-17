@@ -9,7 +9,7 @@ import { gu } from "../styles"
 type FileUploadProps = {
   accept?: string[]
   className?: string
-  file: File
+  file?: File | null
   label?: string
   onFile: (file: File | null) => void
   withReset?: boolean

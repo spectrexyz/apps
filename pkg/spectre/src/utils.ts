@@ -1,18 +1,21 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { useLocation } from "wouter"
 import { springs } from "./styles"
 
-export function randomArbitrary(min, max) {
+export function randomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min
 }
 
-export function randChar(from) {
+export function randChar(from: string[]) {
   return from[Math.floor(Math.random() * from.length)]
 }
 
-export function raf(callback, interval = 1000 / 60) {
-  let rafId
+export function raf(
+  callback: () => void,
+  interval: number | (() => number) = 1000 / 60
+) {
+  let rafId: ReturnType<typeof requestAnimationFrame>
   let lastUpdate = Date.now()
 
   const loop = () => {
@@ -36,17 +39,17 @@ export function raf(callback, interval = 1000 / 60) {
   return () => cancelAnimationFrame(rafId)
 }
 
-export function useAppear(items, opts = {}) {
+export function useAppear(items: number, opts = {}) {
   const [progress, setProgress] = useState(0)
   useEffect(() => setProgress(1), [])
   return useTrail(items, { progress, config: springs.appear, ...opts })
 }
 
-export function formatLineBreaks(value) {
+export function formatLineBreaks(value: string) {
   return value.trim().replace(/ {2,}/, " ").replace(/\n /, "\n")
 }
 
-export function kebabCase(value) {
+export function kebabCase(value: string) {
   return value
     .replace("&", " ")
     .replace("?", "")
@@ -59,6 +62,6 @@ export function usePath() {
   return [location, setLocation]
 }
 
-export function isValidEmail(value) {
+export function isValidEmail(value: string) {
   return /(.+)@(.+){2,}\.(.+){2,}/.test(value)
 }

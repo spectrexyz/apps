@@ -1,18 +1,14 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
-import { a, useSpring, useTransition } from "react-spring"
+import { a, useSpring, useTransition, SpringValue } from "react-spring"
 import { Link, useLocation } from "wouter"
 import {
   AddressBadge,
   Button,
   ButtonArea,
-  ButtonText,
   FocusTrap,
-  IconArrowSquareOut,
-  IconCopy,
   IconList,
   IconX,
-  Root,
   gu,
   springs,
 } from "kit"
@@ -27,7 +23,13 @@ import { useEthereum } from "../Ethereum"
 
 import logo from "./logo.png"
 
-export function AppLayoutTopBar({ compact, autoHideCompact }) {
+export function AppLayoutTopBar({
+  compact,
+  autoHideCompact,
+}: {
+  compact: boolean
+  autoHideCompact: boolean
+}) {
   return compact ? <TopBarCompact autoHide={autoHideCompact} /> : <TopBar />
 }
 
@@ -36,8 +38,8 @@ export function TopBar() {
   const { appReadyTransition } = useAppReady()
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
-  const connectButtonRef = useRef()
-  const { account, disconnect } = useEthereum()
+  const connectButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
+  const { account } = useEthereum()
   const layout = useLayout()
 
   useEffect(() => {
@@ -177,7 +179,7 @@ export function TopBar() {
   )
 }
 
-export function TopBarCompact({ autoHide }) {
+export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
   const [_, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
 
@@ -192,7 +194,7 @@ export function TopBarCompact({ autoHide }) {
     innerTransform: hide ? "translate3d(0, -100%, 0)" : "translate3d(0, 0%, 0)",
   })
 
-  const [menuOpened, setMenuOpened] = useState(null) // null is used to detect the initial value
+  const [menuOpened, setMenuOpened] = useState<boolean | null>(null) // null is used to detect the initial value
   const menuIconTransition = useTransition(Boolean(menuOpened), {
     config: springs.appear,
     from: {
@@ -289,7 +291,13 @@ export function TopBarCompact({ autoHide }) {
   )
 }
 
-function MenuIcon({ icon, style }) {
+function MenuIcon({
+  icon,
+  style,
+}: {
+  icon: ReactNode
+  style: Record<string, SpringValue>
+}) {
   return (
     <a.div
       style={style}

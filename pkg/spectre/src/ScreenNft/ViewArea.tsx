@@ -1,5 +1,14 @@
+import { ReactNode } from "react"
 import { MoireLabel, useTheme } from "kit"
 import { css } from "@emotion/react"
+
+type ViewAreaProps = {
+  actionButtons: ReactNode
+  children: ReactNode
+  height?: number
+  label: string
+  labelDisplay: ReactNode
+}
 
 export function ViewArea({
   actionButtons,
@@ -7,7 +16,7 @@ export function ViewArea({
   height,
   label,
   labelDisplay,
-}) {
+}: ViewAreaProps) {
   const { colors } = useTheme()
   return (
     <div

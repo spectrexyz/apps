@@ -1,4 +1,4 @@
-import React from "react"
+import { ReactNode } from "react"
 import { css } from "@emotion/react"
 import {
   Badge,
@@ -91,14 +91,14 @@ export function Step2({ title, onPrev }: Step2Props) {
           <div>
             <Fieldset label="Token name">
               <TextInput
-                onChange={data.updateTokenName}
+                onChange={(value: string) => data.updateTokenName(value)}
                 placeholder="Token"
                 value={data.tokenName}
               />
             </Fieldset>
             <Fieldset label="Token symbol">
               <TextInput
-                onChange={data.updateTokenSymbol}
+                onChange={(value: string) => data.updateTokenSymbol(value)}
                 placeholder="TKN"
                 value={data.tokenSymbol}
               />
@@ -123,8 +123,8 @@ export function Step2({ title, onPrev }: Step2Props) {
                   Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) / 1000
                 }
                 labels={["0%", `${REWARDS_MAX}%`]}
-                onChange={(v) =>
-                  data.updateRewards(Math.round(v * REWARDS_MAX))
+                onChange={(value) =>
+                  data.updateRewards(Math.round(value * REWARDS_MAX))
                 }
                 value={data.rewards / REWARDS_MAX}
               />
@@ -198,7 +198,15 @@ export function Step2({ title, onPrev }: Step2Props) {
   )
 }
 
-function EthAddressRow({ address, onRemove, reward }) {
+function EthAddressRow({
+  address,
+  onRemove,
+  reward,
+}: {
+  address: string
+  onRemove: () => void
+  reward: ReactNode
+}) {
   return (
     <div
       css={css`

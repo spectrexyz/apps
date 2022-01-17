@@ -1,5 +1,6 @@
+import { ReactNode } from "react"
 import { css } from "@emotion/react"
-import { a } from "react-spring"
+import { a, TransitionFn } from "react-spring"
 import { useViewport } from "@bpierre/use-viewport"
 import {
   ButtonArea,
@@ -15,14 +16,29 @@ import {
 } from "kit"
 import { SyncStatus } from "../SyncStatus"
 
-export function AccountDrawer({ opened, transition, onClose }) {
+type Status = "error" | "success"
+
+export function AccountDrawer({
+  opened,
+  onClose,
+  transition,
+}: {
+  opened: boolean
+  onClose: () => void
+  transition: TransitionFn<
+    boolean,
+    {
+      progress: number
+    }
+  >
+}) {
   const { height } = useViewport()
   const drawerHeight = height - 18 * gu
 
   return (
     <Root>
       {transition(
-        ({ progress }, _opened) =>
+        ({ progress }, _opened: boolean) =>
           _opened && (
             <div
               css={css`
@@ -59,7 +75,7 @@ export function AccountDrawer({ opened, transition, onClose }) {
                   <a.section
                     style={{
                       transform: progress.to(
-                        (v) => `translate3d(0, ${(1 - v) * 100}%, 0)`
+                        (v: number) => `translate3d(0, ${(1 - v) * 100}%, 0)`
                       ),
                     }}
                     css={({ colors }) => css`
@@ -82,7 +98,8 @@ export function AccountDrawer({ opened, transition, onClose }) {
                       <a.div
                         style={{
                           transform: progress.to(
-                            (v) => `translate3d(0, -${100 * (1 - v)}%, 0)`
+                            (v: number) =>
+                              `translate3d(0, -${100 * (1 - v)}%, 0)`
                           ),
                         }}
                         css={css`
@@ -278,7 +295,17 @@ function Transactions() {
   )
 }
 
-function Transaction({ action, details, status, url }) {
+function Transaction({
+  action,
+  details,
+  status,
+  url,
+}: {
+  action: ReactNode
+  details: ReactNode
+  status: Status
+  url: string
+}) {
   const icon = (() => {
     if (status === "success") {
       return (

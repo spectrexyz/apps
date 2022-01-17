@@ -1,5 +1,6 @@
+import { ReactNode } from "react"
 import { css } from "@emotion/react"
-import { Button, ButtonIcon, IconArrowLeft, IconGearSix } from "kit"
+import { Button, ButtonIcon, IconGearSix } from "kit"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { SwapModule } from "./SwapModule"
@@ -83,7 +84,13 @@ export function ScreenBuy() {
   )
 }
 
-function Group({ heading, children }) {
+function Group({
+  children,
+  heading,
+}: {
+  children: ReactNode
+  heading: ReactNode
+}) {
   return (
     <section
       css={({ fonts }) => css`
@@ -105,7 +112,7 @@ function Group({ heading, children }) {
   )
 }
 
-function Distribution({ mint, swap }) {
+function Distribution({ mint, swap }: { mint: number; swap: number }) {
   return (
     <div>
       <div

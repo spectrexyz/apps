@@ -87,11 +87,12 @@ export function Distribution({
       return
     }
 
-    const surface = new IsometricCanvas(ref.current, {
-      width: SURFACE_DIMENSIONS[0],
+    const surface = new IsometricCanvas({
+      backgroundColor: "transparent",
+      container: ref.current,
       height: SURFACE_DIMENSIONS[1],
       scale: SURFACE_DIMENSIONS[0] * 0.055,
-      backgroundColor: "transparent",
+      width: SURFACE_DIMENSIONS[0],
     })
 
     const { surfaces, surfacesToAnimate } = values.reduce<{

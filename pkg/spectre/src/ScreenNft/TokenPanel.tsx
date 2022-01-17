@@ -8,14 +8,9 @@ import {
   IconLifebuoy,
   IconMagnifyingGlassPlus,
   Info,
-  MoireLabel,
-  Slashes,
   Popup,
-  formatDate,
-  gu,
-  useTheme,
 } from "kit"
-import { Link, useLocation } from "wouter"
+import { useLocation } from "wouter"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
 import { ViewArea } from "./ViewArea"
@@ -26,7 +21,7 @@ const PARAMETER_DESC = `
   smaller on the inside than it is on the outside.
 `
 
-const PARAMETERS = [
+const PARAMETERS: [string, string][] = [
   ["Starting price", "1$"],
   ["Allocation ration", "10%"],
   ["Maximun supply cap", "1,000,000 tokens"],
@@ -39,23 +34,30 @@ const PARAMETERS = [
   ["Trading fee", "1%"],
 ]
 
-const PERF_METRICS = [
+const PERF_METRICS: [string, string][] = [
   ["Price", "$1.57"],
   ["Total market cap", "$1,081,543.44"],
   ["Minted supply", "68%"],
   ["Liquidity pool weight", "37% / 63%"],
 ]
 
-export function TokenPanel({ id }) {
-  const { colors } = useTheme()
+export function TokenPanel({ id }: { id: string }) {
   const [_, setLocation] = useLocation()
   return (
     <section>
       <ViewArea
         actionButtons={
           <>
-            <ButtonIcon icon={<IconHeartStraightFilled />} mode="outline" />
-            <ButtonIcon icon={<IconMagnifyingGlassPlus />} mode="outline" />
+            <ButtonIcon
+              icon={<IconHeartStraightFilled />}
+              mode="outline"
+              label="Add to favorites"
+            />
+            <ButtonIcon
+              icon={<IconMagnifyingGlassPlus />}
+              mode="outline"
+              label="Zoom"
+            />
           </>
         }
         labelDisplay="SPECTRALIZED"
@@ -143,9 +145,9 @@ export function TokenPanel({ id }) {
   )
 }
 
-function Parameter({ label, value }) {
+function Parameter({ label, value }: { label: string; value: string }) {
   const [popupVisible, setPopupVisible] = useState(false)
-  const labelRef = useRef()
+  const labelRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
   return (
     <>
       <Button
@@ -191,7 +193,13 @@ function Parameter({ label, value }) {
   )
 }
 
-function LabelledValues({ cols = 1, values }) {
+function LabelledValues({
+  cols = 1,
+  values,
+}: {
+  cols: number
+  values: [label: string, value: string][]
+}) {
   return (
     <div
       css={css`
@@ -208,9 +216,9 @@ function LabelledValues({ cols = 1, values }) {
   )
 }
 
-function LabelledValue({ label, value }) {
+function LabelledValue({ label, value }: { label: string; value: string }) {
   return (
-    <section css={css``}>
+    <section>
       <h1>{label}</h1>
       <div
         css={({ fonts }) => css`

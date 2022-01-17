@@ -1,6 +1,6 @@
-import { gu } from "kit"
 import { useCallback, useMemo } from "react"
 import { useViewport } from "@bpierre/use-viewport"
+import { gu } from "kit"
 
 export const springs = {
   appear: {
@@ -24,7 +24,7 @@ export const breakpoints = {
 
 const breakpointsByLargest = Object.entries(breakpoints).reverse()
 
-function closestBreakpoint(name) {
+function closestBreakpoint(name: string) {
   const index = breakpointsByLargest.findIndex(([_name]) => _name === name)
   if (index === -1) {
     throw new Error(`The breakpoint doesn’t seem to exist: ${name}`)

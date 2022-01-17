@@ -1,6 +1,15 @@
+import { ReactNode } from "react"
 import { css } from "@emotion/react"
 
-export function PanelDetails({ title, primary, secondary }) {
+export function PanelDetails({
+  primary,
+  secondary,
+  title,
+}: {
+  primary: ReactNode
+  secondary: ReactNode
+  title: ReactNode
+}) {
   return (
     <div
       css={css`

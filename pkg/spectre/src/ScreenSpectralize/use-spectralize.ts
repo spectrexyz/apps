@@ -1,12 +1,11 @@
 import zustand from "zustand"
+import { Direction } from "kit"
 
-type FileType = "image" | "video" | "audio"
+export type FileType = "image" | "video" | "audio"
 
-type FieldError = { field: string; error: string }
+export type FieldError = { field: string; error: string }
 
-type Direction = -1 | 1
-
-type SpectralizeState = {
+export type SpectralizeState = {
   title: string
   updateTitle: (title: string) => void
 
@@ -217,7 +216,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     },
   ],
 
-  currentStep: 0,
+  currentStep: 1,
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title

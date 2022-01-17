@@ -7,7 +7,7 @@ import { useUid } from "../react-utils"
 type FieldsetProps = {
   children: ReactNode
   contextual?: ReactNode
-  error?: boolean
+  error?: boolean | string
   label: ReactNode
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, ReactNode } from "react"
 import { css } from "@emotion/react"
-import { AddressBadge, Button, ButtonArea, springs } from "kit"
-import { a, useSpring, useTransition } from "react-spring"
+import { AddressBadge, Button, ButtonArea, springs, noop } from "kit"
+import { a, useTransition } from "react-spring"
 import { useEthereum } from "../Ethereum"
 import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
 import { AccountDrawer } from "../StatusBar/AccountDrawer"
@@ -9,7 +9,7 @@ import { SyncStatus } from "../SyncStatus"
 import { Actions } from "../Actions/Actions"
 import { useAppReady } from "../App/AppReady"
 
-export function AppLayoutBottomBar({ compact }) {
+export function AppLayoutBottomBar({ compact }: { compact: boolean }) {
   return compact ? <BottomBarCompact /> : <BottomBarLarge />
 }
 
@@ -58,7 +58,7 @@ function BottomBarLarge() {
 function BottomBarCompact() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [drawerOpened, setDrawerOpened] = useState(false)
-  const { account, wallet, disconnect } = useEthereum()
+  const { account, disconnect } = useEthereum()
   const { appReadyTransition } = useAppReady()
 
   useEffect(() => {
@@ -68,7 +68,6 @@ function BottomBarCompact() {
   }, [account])
 
   const drawerSpringConfig = springs.appear
-  // const drawerSpringConfig = { mass: 1, tension: 10, friction: 40 }
 
   const drawerTransition = useTransition(drawerOpened, {
     config: drawerSpringConfig,
@@ -77,15 +76,10 @@ function BottomBarCompact() {
     leave: { progress: 0 },
   })
 
-  const { progress: drawerProgress } = useSpring({
-    config: drawerSpringConfig,
-    to: { progress: Number(drawerOpened) },
-  })
-
   return (
     <>
       <div
-        css={({ colors }) => css`
+        css={css`
           position: relative;
           height: 8gu;
           z-index: 2;
@@ -151,6 +145,12 @@ function BarArea({
   onConnect,
   onDisconnect,
   onOpenDrawer,
+}: {
+  account: string
+  drawerOpened: boolean
+  onConnect: () => void
+  onDisconnect: () => void
+  onOpenDrawer: () => void
 }) {
   return (
     <a.div
@@ -166,7 +166,7 @@ function BarArea({
       `}
     >
       <ButtonBar
-        onClick={account && !drawerOpened && onOpenDrawer}
+        onClick={(account && !drawerOpened && onOpenDrawer) || noop}
         start={() =>
           account ? (
             <AddressBadge address={account} />
@@ -195,7 +195,15 @@ function BarArea({
   )
 }
 
-function ButtonBar({ end, onClick, start }) {
+function ButtonBar({
+  end,
+  onClick,
+  start,
+}: {
+  end: ReactNode
+  onClick: () => void
+  start: ReactNode
+}) {
   if (typeof start === "function") start = start()
   if (typeof end === "function") end = end()
   return onClick ? (

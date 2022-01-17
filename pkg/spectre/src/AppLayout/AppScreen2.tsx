@@ -8,12 +8,15 @@ import { useAppReady } from "../App/AppReady"
 
 type AppScreenProps = {
   children: ReactNode
-  compactBar: {
-    contextual: ReactNode
-    onBack: () => void
-    title: string
-    extraRow: boolean
-  }
+  compactBar:
+    | false
+    | null
+    | {
+        contextual?: ReactNode
+        onBack: () => void
+        title?: ReactNode
+        extraRow?: ReactNode
+      }
 }
 
 export function AppScreen({ children, compactBar }: AppScreenProps) {
@@ -38,7 +41,6 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
 
   const layout = useLayout()
   const compactMenuActive = layout.below("large")
-  const fullWidthActive = layout.below(601)
 
   return appReadyTransition(
     ({ progress, screenTransform }, ready) =>
@@ -132,7 +134,15 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
   )
 }
 
-export function CompactBarHeader({ start, title, end }) {
+export function CompactBarHeader({
+  end,
+  start,
+  title,
+}: {
+  end?: ReactNode
+  start?: ReactNode
+  title: ReactNode
+}) {
   return (
     <div
       css={css`

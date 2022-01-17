@@ -3,7 +3,7 @@ import { a, useTransition } from "react-spring"
 import { springs } from "kit"
 import { menuLinks } from "../content"
 
-export function Menu({ opened }) {
+export function Menu({ opened }: { opened: boolean }) {
   const openTransition = useTransition(opened, {
     config: springs.appear,
     from: { opacity: 0, transform: "scale3d(1.1, 1.1, 1)" },
@@ -25,7 +25,7 @@ export function Menu({ opened }) {
         >
           <a.nav
             style={{ transform }}
-            css={({ colors }) => css`
+            css={css`
               position: absolute;
               z-index: 2;
               inset: 0;

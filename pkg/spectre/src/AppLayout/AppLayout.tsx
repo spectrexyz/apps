@@ -1,18 +1,19 @@
-import React from "react"
+import React, { ReactNode, UIEvent } from "react"
 import { css, Global } from "@emotion/react"
 import { useLayout } from "../styles"
 import { useAppScrollUpdater } from "../App/AppScroll"
 import { AppLayoutTopBar } from "./AppLayoutTopBar"
 import { AppLayoutBottomBar } from "./AppLayoutBottomBar"
 
-const hexAlpha = (value) =>
-  Math.round(value * 255)
+function hexAlpha(value: number) {
+  return Math.round(value * 255)
     .toString(16)
     .padStart(2, "0")
+}
 
-export function AppLayout({ children }) {
+export function AppLayout({ children }: { children: ReactNode }) {
   const { updateAppScroll, appScrollRef } = useAppScrollUpdater()
-  const handleScroll = (event) => {
+  const handleScroll = (event: UIEvent) => {
     updateAppScroll(event.currentTarget.scrollTop)
   }
 

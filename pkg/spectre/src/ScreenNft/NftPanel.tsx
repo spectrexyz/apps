@@ -5,21 +5,17 @@ import useInView from "react-cool-inview"
 import {
   Anchor,
   Button,
-  ButtonIcon,
   Distribution,
-  IconHeartStraightFilled,
-  IconMagnifyingGlassPlus,
-  MoireLabel,
   Slashes,
   formatDate,
-  gu,
   useTheme,
 } from "kit"
+import { Snft } from "../types"
 import { useSnft, useSnftsByCreator } from "../snft-hooks"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
 
-export function NftPanel({ id }) {
+export function NftPanel({ id }: { id: string }) {
   const snft = useSnft(id)
   const { colors } = useTheme()
   const distributionInView = useInView()
@@ -30,6 +26,10 @@ export function NftPanel({ id }) {
       setShowDistribution(true)
     }
   }, [distributionInView.inView])
+
+  if (!snft) {
+    return null
+  }
 
   return (
     <section>
@@ -141,9 +141,9 @@ export function NftPanel({ id }) {
   )
 }
 
-function MoreNfts({ snftFrom }) {
+function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   const snfts = useSnftsByCreator(snftFrom.creator.address, {
-    exclude: snftFrom.id,
+    exclude: [snftFrom.id],
   })
   return (
     <PanelSection title="More NFTs from this creator">

@@ -8,7 +8,7 @@ import { Radio } from "./Radio"
 
 type RadioBoxProps = {
   checked?: boolean
-  error?: string
+  error?: string | boolean
   id?: string | number
   label: ReactNode
   onChange?: (checked: boolean) => void

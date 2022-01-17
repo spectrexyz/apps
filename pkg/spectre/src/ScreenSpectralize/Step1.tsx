@@ -16,10 +16,9 @@ import {
   co,
   gu,
 } from "kit"
-
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
-import { useSpectralize } from "./use-spectralize"
+import { FileType, useSpectralize } from "./use-spectralize"
 
 type Step1Props = {
   title: string
@@ -101,7 +100,7 @@ export function Step1({ title, onPrev }: Step1Props) {
             />
           </div>
         )}
-        <Fieldset label="NFT title" error={data.fieldError("title")}>
+        <Fieldset label="NFT title" error={data.fieldError("title")?.error}>
           <TextInput
             onChange={data.updateTitle}
             placeholder="Title of the NFT"
@@ -111,7 +110,7 @@ export function Step1({ title, onPrev }: Step1Props) {
 
         <Fieldset
           label="NFT description"
-          error={data.fieldError("description")}
+          error={data.fieldError("description")?.error}
         >
           <TextInput
             multiline
@@ -132,7 +131,10 @@ export function Step1({ title, onPrev }: Step1Props) {
           />
         </Fieldset>
 
-        <Fieldset label="Your email" error={data.fieldError("authorEmail")}>
+        <Fieldset
+          label="Your email"
+          error={data.fieldError("authorEmail")?.error}
+        >
           <TextInput
             onChange={data.updateAuthorEmail}
             value={data.authorEmail}
@@ -154,7 +156,7 @@ export function Step1({ title, onPrev }: Step1Props) {
               display: flex;
               padding-top: 2gu;
               color: ${colors.warning};
-              font-family: ${fonts.sans};
+              font-family: ${fonts.families.sans};
               font-size: 14px;
             `}
           >
@@ -221,7 +223,11 @@ export function Step1({ title, onPrev }: Step1Props) {
   )
 }
 
-function NftFileSelector({ direction }) {
+function NftFileSelector({
+  direction,
+}: {
+  direction: "vertical" | "horizontal"
+}) {
   const layout = useLayout()
   const gridTemplateAxis1 = direction === "vertical" ? "rows" : "columns"
   const gridTemplateAxis2 = direction === "vertical" ? "columns" : "rows"
@@ -248,7 +254,10 @@ function NftFileSelector({ direction }) {
       {file ? (
         <NftFilePreview />
       ) : (
-        <RadioGroup onChange={updateFileType} selected={fileType}>
+        <RadioGroup
+          onChange={(fileType) => updateFileType(fileType as FileType)}
+          selected={fileType}
+        >
           <div
             css={css`
               display: grid;
@@ -334,7 +343,7 @@ function NftFilePreview() {
       >
         {fileType === "image" && (
           <a
-            href={fileUrl}
+            href={fileUrl ?? undefined}
             target="_blank"
             css={css`
               display: block;
@@ -374,7 +383,7 @@ function NftFilePreview() {
             </div>
           </a>
         )}
-        {(fileType === "video" || fileType === "audio") && (
+        {(fileType === "video" || fileType === "audio") && fileUrl && (
           <Video
             loop={true}
             src={fileUrl}
@@ -403,7 +412,9 @@ function NftFilePreview() {
       >
         <h1>Artwork files</h1>
 
-        <FileEntry name={file.name} onReset={() => updateFile(null)} />
+        {file?.name && (
+          <FileEntry name={file.name} onReset={() => updateFile(null)} />
+        )}
 
         {hasPreview &&
           (previewFile ? (
@@ -449,7 +460,7 @@ function NftFilePreview() {
   )
 }
 
-function FileEntry({ name, onReset }) {
+function FileEntry({ name, onReset }: { name: string; onReset: () => void }) {
   return (
     <div
       css={css`

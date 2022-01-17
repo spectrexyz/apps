@@ -1,14 +1,20 @@
-import { createContext, useContext } from "react"
-import { useQuery } from "react-query"
+import { createContext, useContext, ReactNode } from "react"
+import { useQuery, UseQueryResult } from "react-query"
 import { useEthereum } from "./Ethereum"
 
-const BlockNumberContext = createContext()
+const BlockNumberContext = createContext<UseQueryResult<number>>({} as UseQueryResult<number>)
 
-export function BlockNumber({ children, refreshEvery = 7000 }) {
+export function BlockNumber({
+  children,
+  refreshEvery = 7000,
+}: {
+  children: ReactNode
+  refreshEvery?: number
+}) {
   const { ethersProvider } = useEthereum()
-  const blockNumber = useQuery(
+  const blockNumber = useQuery<number>(
     "blockNumber",
-    () => ethersProvider.getBlockNumber(),
+    () => ethersProvider?.getBlockNumber() ?? -1,
     { refetchInterval: refreshEvery }
   )
   return (

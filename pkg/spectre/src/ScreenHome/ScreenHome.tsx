@@ -6,7 +6,7 @@ import { AppScreen } from "../AppLayout/AppScreen"
 export function ScreenHome() {
   const [_, setLocation] = useLocation()
   return (
-    <AppScreen>
+    <AppScreen title="Home" onBack={() => {}}>
       <div
         css={css`
           display: flex;

@@ -1,17 +1,29 @@
-import {
+import React, {
+  ReactNode,
+  RefObject,
   createContext,
   useCallback,
   useContext,
   useEffect,
   useRef,
-  useState,
 } from "react"
 import { useLocation } from "wouter"
 
-const AppScrollContext = createContext()
+type AppScrollRef = RefObject<HTMLDivElement>
 
-export function AppScroll({ children }) {
-  const callbacks = useRef([])
+type AppScrollContext = {
+  appScrollRef: AppScrollRef
+  updateAppScroll: (scrollY: number) => void
+  addCallback: (cb: (scrollY: number) => void) => void
+  removeCallback: (cb: (scrollY: number) => void) => void
+}
+
+const AppScrollContext = createContext<AppScrollContext>({} as AppScrollContext)
+
+type AppScrollProps = { children: ReactNode }
+
+export function AppScroll({ children }: AppScrollProps) {
+  const callbacks = useRef<((scrollY: number) => void)[]>([])
 
   const addCallback = useCallback((cb) => {
     callbacks.current.push(cb)
@@ -24,7 +36,7 @@ export function AppScroll({ children }) {
   }, [])
 
   // keep a reference to the scrollable element so it can be shared
-  const appScrollRef = useRef()
+  const appScrollRef = useRef<HTMLDivElement>(null)
 
   return (
     <AppScrollContext.Provider
@@ -35,18 +47,20 @@ export function AppScroll({ children }) {
   )
 }
 
-function ResetScrollOnPathChange({ children }) {
+function ResetScrollOnPathChange({ children }: { children: ReactNode }) {
   const [pathname] = useLocation()
   const { appScrollRef } = useAppScrollUpdater()
 
   useEffect(() => {
-    appScrollRef.current.scrollTo(0, 0, { behavior: "smooth" })
+    if (appScrollRef.current) {
+      appScrollRef.current.scrollTo({ top: 0, behavior: "smooth" })
+    }
   }, [appScrollRef, pathname])
 
-  return children
+  return <>{children}</>
 }
 
-export function useAppScroll(callback) {
+export function useAppScroll(callback: (scrollY: number) => void) {
   const _callback = useRef(callback)
   const { addCallback, removeCallback } = useContext(AppScrollContext)
 
@@ -64,11 +78,16 @@ export function useAppScroll(callback) {
 export function useResetScroll() {
   const { appScrollRef } = useAppScrollUpdater()
   return useCallback(() => {
-    appScrollRef.current.scrollTo(0, 0, { behavior: "smooth" })
+    if (appScrollRef.current) {
+      appScrollRef.current.scrollTo({ top: 0, behavior: "smooth" })
+    }
   }, [appScrollRef])
 }
 
-export function useAppScrollUpdater() {
+export function useAppScrollUpdater(): {
+  appScrollRef: AppScrollRef
+  updateAppScroll: (scrollY: number) => void
+} {
   const { appScrollRef, updateAppScroll } = useContext(AppScrollContext)
   return { appScrollRef, updateAppScroll }
 }

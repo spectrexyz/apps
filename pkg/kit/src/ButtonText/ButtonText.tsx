@@ -1,8 +1,12 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
-
-import { createContext, forwardRef, useContext } from "react"
+import {
+  ComponentPropsWithoutRef,
+  ReactNode,
+  createContext,
+  forwardRef,
+  useContext,
+} from "react"
 import { css } from "@emotion/react"
-import { ButtonArea } from "../ButtonArea"
+import { ButtonArea, ButtonAreaProps } from "../ButtonArea"
 import { gu } from "../styles"
 
 export const ICON_SIZE_DEFAULT = 2.5 * gu
@@ -10,7 +14,8 @@ export const ICON_SIZE_DEFAULT = 2.5 * gu
 const ButtonTextContext = createContext(false)
 
 type ButtonTextProps = ComponentPropsWithoutRef<"button"> &
-  ComponentPropsWithoutRef<"a"> & {
+  ComponentPropsWithoutRef<"a"> &
+  ButtonAreaProps & {
     icon?: ReactNode
     label: ReactNode
     onClick?: () => void

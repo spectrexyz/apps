@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring } from "react-spring"
 import { Button, ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
@@ -7,11 +7,17 @@ import { useAppScroll } from "../App/AppScroll"
 import { useAppReady } from "../App/AppReady"
 
 export function AppScreen({
+  children,
+  contextual,
+  mode = "normal",
   onBack,
   title,
-  contextual,
-  children,
-  mode = "normal",
+}: {
+  children: ReactNode
+  contextual?: ReactNode
+  mode?: "normal" | "minimal"
+  onBack: () => void
+  title: ReactNode
 }) {
   const { colors } = useTheme()
   const { appReadyTransition } = useAppReady()
@@ -58,7 +64,7 @@ export function AppScreen({
             >
               <a.div
                 style={{ transform: headerTransform }}
-                css={({ colors }) => css`
+                css={css`
                   position: ${snapHeader ? "absolute" : "static"};
                   z-index: 2;
                   inset: 8gu 0 auto;
@@ -181,7 +187,15 @@ export function AppScreen({
   )
 }
 
-function HeaderCompact({ start, title, end }) {
+function HeaderCompact({
+  end,
+  start,
+  title,
+}: {
+  end: ReactNode
+  start: ReactNode
+  title: ReactNode
+}) {
   return (
     <div
       css={css`

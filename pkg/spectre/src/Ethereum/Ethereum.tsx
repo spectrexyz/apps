@@ -7,13 +7,15 @@ import { InjectedConnector } from "@web3-react/injected-connector"
 import { providers } from "ethers"
 import { INFURA_PROJECT_ID, CHAIN_ID } from "../environment"
 
-const EthereumContext = createContext<null | {
+type EthereumContext = {
   account: string
   connect: (connectorId: string) => void
   disconnect: () => void
-  ethersProvider: typeof providers.Provider
+  ethersProvider: providers.Provider
   wallet: ReturnType<typeof useWeb3React>
-}>(null)
+}
+
+const EthereumContext = createContext<EthereumContext>({} as EthereumContext)
 
 const ethersProvider = new providers.InfuraProvider(CHAIN_ID, INFURA_PROJECT_ID)
 
@@ -70,7 +72,7 @@ function EthereumProvider({ children }: EthereumProviderProps) {
 
   const value = useMemo(
     () => ({
-      account: wallet.account,
+      account: wallet.account ?? "",
       connect,
       disconnect,
       ethersProvider,

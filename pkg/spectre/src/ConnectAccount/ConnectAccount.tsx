@@ -1,5 +1,6 @@
+import { ReactNode, RefObject } from "react"
 import { css } from "@emotion/react"
-import { useTheme, gu, ButtonArea, Modal, Popup } from "kit"
+import { gu, ButtonArea, Modal, Popup } from "kit"
 import { useEthereum } from "../Ethereum"
 
 import metaMask from "./assets/web3-providers/metamask.svg"
@@ -10,7 +11,15 @@ const PROVIDERS = [
   ["WalletConnect", walletConnect, "wallet-connect"],
 ]
 
-export function ConnectAccount({ onClose, visible, opener = null }) {
+export function ConnectAccount({
+  onClose,
+  visible,
+  opener = null,
+}: {
+  onClose: () => void
+  visible: boolean
+  opener?: null | RefObject<HTMLElement>
+}) {
   return opener ? (
     <Popup
       closeButton={true}
@@ -89,7 +98,15 @@ export function ConnectAccountInside() {
   )
 }
 
-function ProviderButton({ name, icon, id }) {
+function ProviderButton({
+  icon,
+  id,
+  name,
+}: {
+  icon: string
+  id: string
+  name: string
+}) {
   const { connect } = useEthereum()
   return (
     <ButtonArea

@@ -1,3 +1,5 @@
+import { Snft, SnftEvent } from "../types"
+
 import nft1 from "../demo-data/nft-1.jpg"
 import nft2 from "../demo-data/nft-2.jpg"
 import nft3 from "../demo-data/nft-3.jpg"
@@ -23,7 +25,7 @@ https://twitter.com/anocam_
 [1638x2048 MP4 available for collector]
 `
 
-const EVENT_1 = [
+const EVENT_1: SnftEvent = [
   ["@non-subjective", "https://example.org/@non-subjective"],
   " channeled 400 $TOKEN to liquidity pool.",
 ]
@@ -44,7 +46,7 @@ function randomDistribution() {
   return distribution
 }
 
-export const SNFTS = NFT_IMAGES.map((image, index) => ({
+export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => ({
   id: `${index + 1}`,
   image,
   title: `Untitled #${index + 1}`,

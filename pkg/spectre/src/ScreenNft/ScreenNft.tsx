@@ -1,6 +1,5 @@
-import React, { forwardRef, useCallback, useRef, useState } from "react"
+import React, { useCallback, useRef } from "react"
 import { css } from "@emotion/react"
-import { a } from "react-spring"
 import { useLocation } from "wouter"
 import {
   ButtonIcon,
@@ -12,29 +11,34 @@ import {
   Tabs,
   gu,
 } from "kit"
-import { useLayout } from "../styles"
-import { useAppReady } from "../App/AppReady"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { useSnftsAdjacent, useSnft } from "../snft-hooks"
 import { NftPanel } from "./NftPanel"
 import { TokenPanel } from "./TokenPanel"
 import { ViewArea } from "./ViewArea"
 
-export function ScreenNft({ id, panel }) {
+export function ScreenNft({
+  id,
+  panel,
+}: {
+  id: string
+  panel: "serc20" | "nft"
+}) {
   const [_, setLocation] = useLocation()
-  const { appReadyTransition } = useAppReady()
-  const layout = useLayout()
-  const fullWidth = layout.below(601)
   const tokenPanel = panel === "serc20"
 
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
 
   const handlePrevNft = useCallback(() => {
-    setLocation(`/nfts/${nftPrev.id}${panel === "serc20" ? "/serc20" : ""}`)
+    if (nftPrev) {
+      setLocation(`/nfts/${nftPrev.id}${panel === "serc20" ? "/serc20" : ""}`)
+    }
   }, [nftPrev, panel, setLocation])
 
   const handleNextNft = useCallback(() => {
-    setLocation(`/nfts/${nftNext.id}${panel === "serc20" ? "/serc20" : ""}`)
+    if (nftNext) {
+      setLocation(`/nfts/${nftNext.id}${panel === "serc20" ? "/serc20" : ""}`)
+    }
   }, [nftNext, panel, setLocation])
 
   const handleSelectPanel = useCallback(
@@ -60,24 +64,29 @@ export function ScreenNft({ id, panel }) {
   ])
 
   return (
-    <AppScreen mode="minimal">
+    <AppScreen mode="minimal" title="NFT" onBack={() => {}}>
       <ViewArea
         height={62.5 * gu}
         labelDisplay="SPECTRALIZED"
         label="Spectralized"
         actionButtons={
           <>
-            <ButtonIcon icon={<IconHeartStraightFilled />} mode="outline" />
+            <ButtonIcon
+              icon={<IconHeartStraightFilled />}
+              mode="outline"
+              label="Add to favorites"
+            />
             <ButtonIcon
               external
-              href={snft.image}
+              href={snft?.image}
               icon={<IconMagnifyingGlassPlus />}
+              label="Zoom"
               mode="outline"
             />
           </>
         }
       >
-        <img alt="" src={snft.image} width="500" />
+        <img alt="" src={snft?.image} width="500" />
       </ViewArea>
 
       <div
@@ -115,6 +124,7 @@ export function ScreenNft({ id, panel }) {
           {nftPrev ? (
             <ButtonIcon
               icon={<IconArrowLeft />}
+              label="Previous"
               mode="outline"
               onClick={handlePrevNft}
             />
@@ -129,6 +139,7 @@ export function ScreenNft({ id, panel }) {
           {nftNext && (
             <ButtonIcon
               icon={<IconArrowRight />}
+              label="Next"
               mode="outline"
               onClick={handleNextNft}
             />
@@ -140,7 +151,7 @@ export function ScreenNft({ id, panel }) {
             inset: 0 0 auto auto;
           `}
         >
-          <ButtonIcon icon={<IconSquaresFour />} mode="outline" />
+          <ButtonIcon icon={<IconSquaresFour />} mode="outline" label="Grid" />
         </div>
       </div>
       <div
