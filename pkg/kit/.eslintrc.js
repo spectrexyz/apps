@@ -2,18 +2,14 @@
 // https://github.com/rafgraph/rollpkg/blob/d0f6d2fca1e280fe2a13791d652b3bf5f98e2bf6/configs/eslint.js
 
 module.exports = {
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    sourceType: "module",
-    // note that eslint resolves this relative to where eslint is "run", so the tsconfig
-    // this references is the tsconfig in the project root (that uses rollpkg)
-    // and not the rollpkg tsconfig that is in this configs directory
-    // which is good as eslint type checking should be based on the project's tsconfig
-    project: "./tsconfig.json",
-  },
   env: {
     browser: true,
     node: true,
+  },
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    sourceType: "module",
+    project: "./tsconfig.json",
   },
   extends: [
     "eslint:recommended",
@@ -30,13 +26,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier",
   ],
-  settings: {
-    react: {
-      // to indicate latest version
-      // https://github.com/yannickcr/eslint-plugin-react/blob/b8e91a571bc6b58cc3c78e9e62e8b60ecb45e233/lib/util/version.js#L48
-      version: "999.999.999",
-    },
-  },
+  plugins: ["react", "react-hooks"],
   rules: {
     // see for rational https://basarat.gitbook.io/typescript/main-1/defaultisbad
     "import/no-default-export": "error",
@@ -60,6 +50,13 @@ module.exports = {
       },
     ],
     "react/react-in-jsx-scope": "off",
+  },
+  settings: {
+    react: {
+      // to indicate latest version
+      // https://github.com/yannickcr/eslint-plugin-react/blob/b8e91a571bc6b58cc3c78e9e62e8b60ecb45e233/lib/util/version.js#L48
+      version: "999.999.999",
+    },
   },
   overrides: [
     {
