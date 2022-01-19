@@ -24,6 +24,7 @@ export function Badge({ alt, icon, label }: BadgeProps): JSX.Element {
         color: ${colors.accent2};
         background: ${colors.translucid};
         border-radius: 10gu;
+        user-select: none;
       `}
     >
       {icon}
