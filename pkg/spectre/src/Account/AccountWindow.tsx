@@ -17,16 +17,15 @@ import {
 } from "kit"
 import { useEthereum } from "../Ethereum"
 
-export function AccountWindow({
-  onClose,
-  visible,
-}: {
+type AccountWindowProps = {
   onClose: () => void
   visible: boolean
-}) {
+}
+
+export function AccountWindow({ onClose, visible }: AccountWindowProps) {
   const { account, disconnect } = useEthereum()
 
-  const visibility = useTransition(visible, {
+  const visibility = useTransition(visible && account, {
     config: springs.swift,
     from: { blur: 0, opacity: 0, transform: "scale3d(0.9, 0.9, 1)" },
     enter: [{ opacity: 1, transform: "scale3d(1, 1, 1)" }, { blur: 1 }],
@@ -37,11 +36,8 @@ export function AccountWindow({
 
   return (
     <Root>
-      {visibility(({ blur, opacity, transform }, item) => {
-        if (!item) {
-          return null
-        }
-        return (
+      {visibility(({ blur, opacity, transform }, account) => {
+        return account ? (
           <FocusTrap
             focusTrapOptions={{
               onDeactivate: onClose,
@@ -169,7 +165,7 @@ export function AccountWindow({
               </div>
             </a.div>
           </FocusTrap>
-        )
+        ) : null
       })}
     </Root>
   )
