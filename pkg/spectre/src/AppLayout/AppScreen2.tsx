@@ -99,14 +99,16 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
                     }
                     end={contextual}
                   />
-                  <div
-                    css={css`
-                      width: 100%;
-                      height: 6gu;
-                    `}
-                  >
-                    {extraRow}
-                  </div>
+                  {extraRow && (
+                    <div
+                      css={css`
+                        width: 100%;
+                        height: 6gu;
+                      `}
+                    >
+                      {extraRow}
+                    </div>
+                  )}
                   <a.div
                     style={{ opacity: headerBorderVisibility }}
                     css={({ colors }) => css`
@@ -122,12 +124,22 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
           <a.div
             style={{ opacity: progress, transform: screenTransform }}
             css={css`
+              display: flex;
+              flex-direction: column;
               flex-grow: 1;
               width: 100%;
               margin: 0 auto;
             `}
           >
-            <div>{children}</div>
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+              `}
+            >
+              {children}
+            </div>
           </a.div>
         </div>
       )

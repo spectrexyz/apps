@@ -2,24 +2,33 @@ import React, { useEffect, useState, ReactNode } from "react"
 import { css } from "@emotion/react"
 import { AddressBadge, Button, ButtonArea, springs, noop } from "kit"
 import { a, useTransition } from "react-spring"
-import { useEthereum } from "../Ethereum"
-import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
 import { AccountDrawer } from "../StatusBar/AccountDrawer"
-import { SyncStatus } from "../SyncStatus"
 import { Actions } from "../Actions/Actions"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
+import { SyncStatus } from "../SyncStatus"
 import { useAppReady } from "../App/AppReady"
+import { useEthereum } from "../Ethereum"
+import { useLayout } from "../styles"
 
 export function AppLayoutBottomBar({ compact }: { compact: boolean }) {
-  return compact ? <BottomBarCompact /> : <BottomBarLarge />
+  return compact ? <BottomBarCompact /> : <BottomBar />
 }
 
-function BottomBarLarge() {
+function BottomBar() {
   const { appReadyTransition } = useAppReady()
+  const layout = useLayout()
+
+  const maxWidth = layout.value({
+    small: 0,
+    large: 104 + 4 * 2,
+    xlarge: 160 + 4 * 2,
+  })
+
   return (
     <div
       css={css`
         position: relative;
-        max-width: 160gu;
+        max-width: ${maxWidth}gu;
         height: 14gu;
         padding: 5gu 0;
         margin: 0 auto;
@@ -41,6 +50,7 @@ function BottomBarLarge() {
                 justify-content: space-between;
                 width: 100%;
                 height: 4gu;
+                padding: 0 4gu;
               `}
             >
               <div>

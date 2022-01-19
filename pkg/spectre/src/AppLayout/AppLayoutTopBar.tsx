@@ -170,7 +170,6 @@ export function TopBar() {
         visible={connectAccountOpened}
         onClose={() => setConnectAccountOpened(false)}
       />
-
       <AccountWindow
         visible={accountOpened}
         onClose={() => setAccountOpened(false)}
