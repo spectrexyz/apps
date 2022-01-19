@@ -75,13 +75,13 @@ export function shortenAddress(address: string, charsLength = 4): string {
     return ""
   }
   if (address.length < charsLength * 2 + prefixLength) {
-    return address
+    return address.toLowerCase()
   }
   return (
     address.slice(0, charsLength + prefixLength) +
     "…" +
     address.slice(-charsLength)
-  )
+  ).toLowerCase()
 }
 
 const addressRe = /^0x[0-9a-fA-F]{40}$/
