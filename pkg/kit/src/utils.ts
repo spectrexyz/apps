@@ -89,6 +89,11 @@ export function isAddress(address: string): boolean {
   return addressRe.test(address)
 }
 
+const emailRe = /.+@.+/
+export function isEmail(email: string): boolean {
+  return emailRe.test(email)
+}
+
 export function uid(prefix = "uid"): string {
   return `${prefix}-${Math.round(Math.random() * 10 ** 8)}`
 }
