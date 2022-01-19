@@ -1,11 +1,12 @@
-import type {
+import {
   ChangeEvent,
   DetailedHTMLProps,
   InputHTMLAttributes,
   TextareaHTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
 } from "react"
-
-import { useCallback } from "react"
 import { css } from "@emotion/react"
 import { noop } from "../utils"
 import { useFieldset } from "../Fieldset"
@@ -26,6 +27,7 @@ type TextAreaProps = Omit<
 // All the TextInput props, except `multiline` and the props
 // inherited from HTMLInputElement and HTMLTextAreaElement.
 type TextInputBaseProps = {
+  autofocus?: boolean
   error?: string
   id?: string
   onChange?: (value: string, event: ChangeEvent) => void
@@ -44,6 +46,7 @@ export function TextInput(
 ): JSX.Element
 
 export function TextInput({
+  autofocus = false,
   error,
   id,
   multiline = false,
@@ -67,8 +70,19 @@ export function TextInput({
     value: value,
   }
 
+  const inputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (autofocus) {
+      const el = inputRef.current || textareaRef.current
+      el?.focus()
+    }
+  }, [autofocus])
+
   return multiline ? (
     <textarea
+      ref={textareaRef}
       {...sharedProps}
       {...(props as TextAreaProps)}
       css={({ colors }) => css`
@@ -86,6 +100,7 @@ export function TextInput({
     />
   ) : (
     <input
+      ref={inputRef}
       {...sharedProps}
       {...(props as InputProps)}
       css={({ colors }) => css`
