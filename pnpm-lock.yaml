@@ -28,7 +28,7 @@ importers:
       twgl.js: ^4.21.2
       typescript: ^4.5.4
       use-nft: ^0.10.2
-      vite: ^2.7.12
+      vite: ^2.7.13
       wouter: ^2.7.4
     dependencies:
       '@emotion/cache': 11.7.1
@@ -47,7 +47,7 @@ importers:
       '@types/react-dom': 17.0.11
       '@vitejs/plugin-react-refresh': 1.3.6
       typescript: 4.5.4
-      vite: 2.7.12
+      vite: 2.7.13
 
   pkg/kit:
     specifiers:
@@ -57,6 +57,7 @@ importers:
       '@types/react': ^17.0.38
       '@types/react-blockies': ^1.4.1
       '@types/react-dom': ^17.0.11
+      '@types/stylis': ^4.0.2
       '@typescript-eslint/eslint-plugin': ^5.10.0
       '@typescript-eslint/parser': ^5.10.0
       colord: ^2.9.2
@@ -76,7 +77,8 @@ importers:
       react-popper: ^2.2.5
       ts-jest: ^27.1.3
       typescript: ^4.5.4
-      vite: ^2.7.12
+      vite: ^2.7.13
+      vite-dts: ^1.0.4
       vite-plugin-dts: ^0.9.9
     dependencies:
       '@elchininet/isometric': 3.2.0
@@ -93,6 +95,7 @@ importers:
       '@types/react': 17.0.38
       '@types/react-blockies': 1.4.1
       '@types/react-dom': 17.0.11
+      '@types/stylis': 4.0.2
       '@typescript-eslint/eslint-plugin': 5.10.0_3b6b276e93ead7cf6063f183a5e18d1f
       '@typescript-eslint/parser': 5.10.0_eslint@8.7.0+typescript@4.5.4
       eslint: 8.7.0
@@ -105,8 +108,9 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       ts-jest: 27.1.3_typescript@4.5.4
       typescript: 4.5.4
-      vite: 2.7.12
-      vite-plugin-dts: 0.9.9_vite@2.7.12
+      vite: 2.7.13
+      vite-dts: 1.0.4_vite@2.7.13
+      vite-plugin-dts: 0.9.9_vite@2.7.13
 
   pkg/kit-legacy:
     specifiers:
@@ -173,7 +177,7 @@ importers:
       stylis: ^4.0.13
       typescript: ^4.5.4
       use-nft: ^0.10.2
-      vite: ^2.7.12
+      vite: ^2.7.13
       vite-plugin-checker: ^0.3.4
       web3-react: ^5.0.5
       zustand: ^3.6.9
@@ -205,8 +209,8 @@ importers:
       eslint-plugin-react: 7.28.0_eslint@8.7.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.7.0
       typescript: 4.5.4
-      vite: 2.7.12
-      vite-plugin-checker: 0.3.4_vite@2.7.12
+      vite: 2.7.13
+      vite-plugin-checker: 0.3.4_vite@2.7.13
 
   pkg/website:
     specifiers:
@@ -226,7 +230,7 @@ importers:
       react-spring: ^9.4.2
       stylis: ^4.0.13
       use-nft: ^0.10.2
-      vite: ^2.7.12
+      vite: ^2.7.13
     dependencies:
       '@bpierre/use-viewport': 0.3.0_react@17.0.2
       '@emotion/cache': 11.7.1
@@ -245,7 +249,7 @@ importers:
       eslint: 8.7.0
       eslint-plugin-react: 7.28.0_eslint@8.7.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.7.0
-      vite: 2.7.12
+      vite: 2.7.13
 
 packages:
 
@@ -3071,6 +3075,10 @@ packages:
 
   /@types/stack-utils/2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
+    dev: true
+
+  /@types/stylis/4.0.2:
+    resolution: {integrity: sha512-wtckGuk1eXUlUz0Qb1eXHG37Z7HWT2GfMdqRf8F/ifddTwadSS9Jwsqi4qtXk7cP7MtoyGVIHPElFCLc6HItbg==}
     dev: true
 
   /@types/unist/2.0.6:
@@ -11831,6 +11839,16 @@ packages:
       strip-bom: 2.0.0
     dev: true
 
+  /load-json-file/6.2.0:
+    resolution: {integrity: sha512-gUD/epcRms75Cw8RT1pUdHugZYM5ce64ucs2GEISABwkRsOQr0q2wm/MV2TKThycIe5e0ytRweW2RZxclogCdQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      graceful-fs: 4.2.9
+      parse-json: 5.2.0
+      strip-bom: 4.0.0
+      type-fest: 0.6.0
+    dev: true
+
   /loader-runner/2.4.0:
     resolution: {integrity: sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw==}
     engines: {node: '>=4.3.0 <5.0.0 || >=5.10'}
@@ -13549,7 +13567,7 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
     dependencies:
-      '@babel/code-frame': 7.14.5
+      '@babel/code-frame': 7.16.7
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.1.6
@@ -14097,7 +14115,7 @@ packages:
     dependencies:
       nanoid: 3.2.0
       picocolors: 1.0.0
-      source-map-js: 1.0.1
+      source-map-js: 1.0.2
     dev: true
 
   /preact/10.4.1:
@@ -15876,8 +15894,8 @@ packages:
     resolution: {integrity: sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==}
     dev: true
 
-  /source-map-js/1.0.1:
-    resolution: {integrity: sha512-4+TN2b3tqOCd/kaGRJ/sTYA0tR0mdXx26ipdolxcwtJVqEnqNYvlCAt1q3ypy4QMlYus+Zh34RNtYLoq2oQ4IA==}
+  /source-map-js/1.0.2:
+    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -17546,7 +17564,16 @@ packages:
       vfile-message: 2.0.4
     dev: false
 
-  /vite-plugin-checker/0.3.4_vite@2.7.12:
+  /vite-dts/1.0.4_vite@2.7.13:
+    resolution: {integrity: sha512-jfRsrBU8vibUS4a/AboDzHdph2/9/dpoMdYgkiD5tb4OXL75wnlzeEZ6D2XoEZNExwnkXqARKAvz7pv5VtUm5g==}
+    peerDependencies:
+      vite: '>2.0.0-0'
+    dependencies:
+      load-json-file: 6.2.0
+      vite: 2.7.13
+    dev: true
+
+  /vite-plugin-checker/0.3.4_vite@2.7.13:
     resolution: {integrity: sha512-IhZtrfsPOi1Apynm+AYN1GqlOnAygIaMUFS+sSXACn0E/776fFZ7UE2wSuvAt7/sMW1DJESQV+4JJbB7HZPQEA==}
     hasBin: true
     peerDependencies:
@@ -17563,14 +17590,14 @@ packages:
       npm-run-path: 4.0.1
       strip-ansi: 6.0.1
       tiny-invariant: 1.2.0
-      vite: 2.7.12
+      vite: 2.7.13
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.3
       vscode-uri: 3.0.3
     dev: true
 
-  /vite-plugin-dts/0.9.9_vite@2.7.12:
+  /vite-plugin-dts/0.9.9_vite@2.7.13:
     resolution: {integrity: sha512-HzLTCBbsN9gotphtIe97TCigeco6aGLBoeSHdxD9QGGl8prO7uykus0fphLkjWCbFlrerb8Uxp9fu82BfIiaIg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -17579,11 +17606,11 @@ packages:
       fast-glob: 3.2.10
       fs-extra: 10.0.0
       ts-morph: 13.0.2
-      vite: 2.7.12
+      vite: 2.7.13
     dev: true
 
-  /vite/2.7.12:
-    resolution: {integrity: sha512-KvPYToRQWhRfBeVkyhkZ5hASuHQkqZUUdUcE3xyYtq5oYEPIJ0h9LWiWTO6v990glmSac2cEPeYeXzpX5Z6qKQ==}
+  /vite/2.7.13:
+    resolution: {integrity: sha512-Mq8et7f3aK0SgSxjDNfOAimZGW9XryfHRa/uV0jseQSilg+KhYDSoNb9h1rknOy6SuMkvNDLKCYAYYUMCE+IgQ==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
