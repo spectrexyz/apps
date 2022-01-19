@@ -126,9 +126,11 @@ export function Slider({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowDown" || event.key === "ArrowLeft") {
+        event.preventDefault()
         onChange(Math.max(0, keyboardStep(value, -1)))
       }
       if (event.key === "ArrowUp" || event.key === "ArrowRight") {
+        event.preventDefault()
         onChange(Math.min(1, keyboardStep(value, 1)))
       }
     }
