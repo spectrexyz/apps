@@ -15,16 +15,26 @@ export const springs = {
   },
 }
 
-export const breakpoints = {
+type Breakpoint = "small" | "medium" | "large" | "xlarge"
+type BreakpointValue = { width: number }
+
+export const breakpoints: {
+  small: BreakpointValue
+  medium: BreakpointValue
+  large: BreakpointValue
+  xlarge: BreakpointValue
+} = {
   small: { width: 45 * gu }, // from 360px
   medium: { width: 96 * gu }, // above 768px
   large: { width: 120 * gu }, // above 960px
   xlarge: { width: 180 * gu }, // above 1440px
 }
 
-const breakpointsByLargest = Object.entries(breakpoints).reverse()
+const breakpointsByLargest = Object.entries(breakpoints).reverse() as Array<
+  [Breakpoint, { width: number }]
+>
 
-function closestBreakpoint(name: string) {
+function closestBreakpoint(name: Breakpoint): Breakpoint {
   const index = breakpointsByLargest.findIndex(([_name]) => _name === name)
   if (index === -1) {
     throw new Error(`The breakpoint doesn’t seem to exist: ${name}`)
@@ -48,9 +58,11 @@ export function useLayout() {
 
   // Get a value depending on the current layout
   const value = useCallback(
-    (values) => {
+    <T extends unknown>(values: { small: T; medium?: T; large?: T; xlarge?: T }): T | undefined => {
       if (values.small === undefined) {
-        throw new Error("The “small” breakpoint is required with layout.value()")
+        throw new Error(
+          "The “small” breakpoint is required with layout.value()"
+        )
       }
 
       if (values[name] !== undefined) {
