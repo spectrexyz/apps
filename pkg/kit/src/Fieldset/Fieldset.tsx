@@ -44,6 +44,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
               font-size: 12px;
               text-transform: uppercase;
               color: ${colors.contentHeading};
+              white-space: nowrap;
               label {
                 display: block;
               }
