@@ -1,12 +1,12 @@
 import { css } from "@emotion/react"
 import { useLocation } from "wouter"
 import { Button } from "kit"
-import { AppScreen } from "../AppLayout/AppScreen"
+import { AppScreen } from "../AppLayout/AppScreen2"
 
 export function ScreenHome() {
   const [_, setLocation] = useLocation()
   return (
-    <AppScreen title="Home" onBack={() => {}}>
+    <AppScreen compactBar={null}>
       <div
         css={css`
           display: flex;
