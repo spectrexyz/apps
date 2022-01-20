@@ -1,9 +1,11 @@
 import zustand from "zustand"
-import { Direction } from "kit"
+import { Address, Direction, isEmail } from "kit"
 
 export type FileType = "image" | "video" | "audio"
 
-export type FieldError = { field: string; error: string }
+export type FieldError = string
+export type FieldName = string
+export type FieldErrorObject = { field: FieldName; error: FieldError }
 
 export type SpectralizeState = {
   title: string
@@ -38,12 +40,14 @@ export type SpectralizeState = {
   tokenSymbol: string
   updateTokenSymbol: (tokenSymbol: string) => void
 
-  rewards: number
-  updateRewards: (rewards: number) => void
+  rewardsPct: number
+  updateRewardsPct: (rewardsPct: number) => void
 
-  // rewardsSplit: [],
+  rewardsSplit: Address[]
+  addRewardsSplitAddress: (address: Address) => void
+  removeRewardsSplitAddress: (address: Address) => void
 
-  errors: FieldError[]
+  errors: FieldErrorObject[]
 
   steps: {
     title: string
@@ -136,15 +140,35 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
   },
 
   tokenName: "",
-  updateTokenName: (tokenName) => set({ tokenName }),
+  updateTokenName: (tokenName) => {
+    set({ tokenName })
+    get().clearError("tokenName")
+  },
 
   tokenSymbol: "",
-  updateTokenSymbol: (tokenSymbol) => set({ tokenSymbol }),
+  updateTokenSymbol: (tokenSymbol) => {
+    set({ tokenSymbol })
+    get().clearError("tokenSymbol")
+  },
 
-  rewards: 5,
-  updateRewards: (rewards) => set({ rewards }),
+  rewardsPct: 5,
+  updateRewardsPct: (rewardsPct) => set({ rewardsPct }),
 
-  // rewardsSplit: [],
+  rewardsSplit: [],
+  addRewardsSplitAddress: (address) => {
+    set({
+      rewardsSplit: [...new Set([...get().rewardsSplit, address])],
+    })
+    get().clearError("rewardsSplit")
+  },
+  removeRewardsSplitAddress: (address) => {
+    const { rewardsSplit } = get()
+    set({
+      rewardsSplit: [...rewardsSplit].filter(
+        (_address) => address !== _address
+      ),
+    })
+  },
 
   errors: [],
 
@@ -164,7 +188,6 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
         authorEmail = authorEmail.trim()
         description = description.trim()
         title = title.trim()
-        // optional
         authorEns = authorEns.trim()
         authorName = authorName.trim()
 
@@ -181,7 +204,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
 
         if (!authorEmail) {
           errors.push({ field: "authorEmail", error: "Your email is missing." })
-        } else if (!/.+@.+/.test(authorEmail)) {
+        } else if (!isEmail(authorEmail)) {
           errors.push({
             field: "authorEmail",
             error: "Your email seems incorrect.",
@@ -204,8 +227,41 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     },
     {
       title: "02 Token information",
-      validate({ title }) {
-        return { errors: [], title }
+      validate({ rewardsSplit, title, tokenName, tokenSymbol }) {
+        const errors = []
+
+        tokenName = tokenName.trim()
+        tokenSymbol = tokenSymbol.trim().toUpperCase()
+
+        if (!tokenName) {
+          errors.push({
+            field: "tokenName",
+            error: "The token name is missing.",
+          })
+        }
+
+        if (!tokenSymbol) {
+          errors.push({
+            field: "tokenSymbol",
+            error: "The token symbol is missing.",
+          })
+        }
+
+        if (rewardsSplit.length === 0) {
+          errors.push({
+            field: "rewardsSplit",
+            error:
+              "At least one address must be added to the creator & community rewards split.",
+          })
+        }
+
+        return {
+          errors,
+          rewardsSplit,
+          title,
+          tokenName,
+          tokenSymbol,
+        }
       },
     },
     {
@@ -223,7 +279,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
   },
 
   fieldError(name) {
-    return get().errors.find(({ field }) => field === name)
+    return get().errors.find(({ field }) => field === name)?.error
   },
 
   clearError(name) {

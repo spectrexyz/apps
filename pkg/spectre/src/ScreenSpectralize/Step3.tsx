@@ -29,7 +29,7 @@ export function Step3({ title, onPrev }: Step3Props) {
       css={css`
         display: flex;
         gap: ${flexGap};
-        flex-direction: ${layout.below("medium") ? "column" : "row"};
+        flexDirection: ${layout.below("medium") ? "column" : "row"};
         width: 100%;
       `}
     >
@@ -96,7 +96,7 @@ export function Step3({ title, onPrev }: Step3Props) {
                     colors: ${colors.contentDimmed};
                   `}
                 >
-                  {data.rewards}%
+                  {data.rewardsPct}%
                 </span>
               }
             >
@@ -111,7 +111,7 @@ export function Step3({ title, onPrev }: Step3Props) {
                     colors: ${colors.contentDimmed};
                   `}
                 >
-                  {data.rewards}%
+                  {data.rewardsPct}%
                 </span>
               }
             >

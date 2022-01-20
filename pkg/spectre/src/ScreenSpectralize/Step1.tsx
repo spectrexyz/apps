@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useCallback } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
@@ -19,15 +19,25 @@ import {
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
 import { FileType, useSpectralize } from "./use-spectralize"
+import { ErrorSummary } from "./ErrorSummary"
 
 type Step1Props = {
-  title: string
+  onNext: () => void
   onPrev: () => void
+  title: string
 }
 
-export function Step1({ title, onPrev }: Step1Props) {
+export function Step1({ onNext, onPrev, title }: Step1Props) {
   const data = useSpectralize()
   const layout = useLayout()
+
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault()
+      onNext()
+    },
+    [onNext]
+  )
 
   const fileSelectorWidth = layout.value({
     small: css`32.5gu`,
@@ -43,183 +53,158 @@ export function Step1({ title, onPrev }: Step1Props) {
     xlarge: css`5gu`,
   })
 
-  useEffect(() => {
-    data.updateTitle("My NFT title")
-    data.updateDescription("My NFT description")
-    data.updateAuthorEmail("hi@bpier.re")
-  }, [])
-
   return (
-    <div
-      css={css`
-        display: flex;
-        gap: ${flexGap};
-        flex-direction: ${layout.below("medium") ? "column" : "row"};
-        width: 100%;
-      `}
-    >
+    <form onSubmit={handleSubmit}>
       <div
-        css={({ colors }) => css`
-          padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
-          background: ${layout.below("medium") ? "none" : colors.background};
+        css={css`
+          display: flex;
+          gap: ${flexGap};
+          flex-direction: ${layout.below("medium") ? "column" : "row"};
+          width: 100%;
         `}
       >
-        {!layout.below("medium") ? (
-          <h1
-            css={({ fonts }) => css`
-              font-family: ${fonts.families.mono};
-              font-size: 18px;
-              text-transform: uppercase;
-            `}
-          >
-            {title}
-          </h1>
-        ) : (
-          <div
-            css={css`
-              height: 6gu;
-            `}
-          />
-        )}
-        <p
-          css={({ colors, fonts }) => css`
-            padding: ${introPadding};
-            font-family: ${fonts.families.sans};
-            font-size: 14px;
-            color: ${colors.contentDimmed};
+        <div
+          css={({ colors }) => css`
+            padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
+            background: ${layout.below("medium") ? "none" : colors.background};
           `}
         >
-          Add the NFT metadata such as a title, description. Select the file
-          type and upload it. This information will be stored in IPFS and cannot
-          be modify once the NFT is minted.
-        </p>
-        {layout.below("large") && (
-          <div>
-            <NftFileSelector
-              direction={layout.name === "small" ? "vertical" : "horizontal"}
-            />
-          </div>
-        )}
-        <Fieldset label="NFT title" error={data.fieldError("title")?.error}>
-          <TextInput
-            onChange={data.updateTitle}
-            placeholder="Title of the NFT"
-            value={data.title}
-          />
-        </Fieldset>
-
-        <Fieldset
-          label="NFT description"
-          error={data.fieldError("description")?.error}
-        >
-          <TextInput
-            multiline
-            onChange={data.updateDescription}
-            value={data.description}
-            placeholder="Description of the NFT"
-            css={css`
-              height: 8em;
-            `}
-          />
-        </Fieldset>
-
-        <Fieldset label="Your name / alias">
-          <TextInput
-            onChange={data.updateAuthorName}
-            value={data.authorName}
-            placeholder="Your name"
-          />
-        </Fieldset>
-
-        <Fieldset
-          label="Your email"
-          error={data.fieldError("authorEmail")?.error}
-        >
-          <TextInput
-            onChange={data.updateAuthorEmail}
-            value={data.authorEmail}
-            placeholder="you@example.org"
-          />
-        </Fieldset>
-
-        <Fieldset label="Your ENS Domain">
-          <TextInput
-            onChange={data.updateAuthorEns}
-            value={data.authorEns}
-            placeholder="example.eth"
-          />
-        </Fieldset>
-
-        {data.errors.length > 0 && (
-          <p
-            css={({ colors, fonts }) => css`
-              display: flex;
-              padding-top: 2gu;
-              color: ${colors.warning};
-              font-family: ${fonts.families.sans};
-              font-size: 14px;
-            `}
-          >
-            <span
-              css={css`
-                padding-top: 0.5gu;
-                padding-right: 0.75gu;
+          {!layout.below("medium") ? (
+            <h1
+              css={({ fonts }) => css`
+                font-family: ${fonts.families.mono};
+                font-size: 18px;
+                text-transform: uppercase;
               `}
             >
-              <IconWarningOctagon size={2 * gu} />
-            </span>
-            <span>
+              {title}
+            </h1>
+          ) : (
+            <div
+              css={css`
+                height: 6gu;
+              `}
+            />
+          )}
+          <p
+            css={({ colors, fonts }) => css`
+              padding: ${introPadding};
+              font-family: ${fonts.families.sans};
+              font-size: 14px;
+              color: ${colors.contentDimmed};
+            `}
+          >
+            Add the NFT metadata such as a title, description. Select the file
+            type and upload it. This information will be stored in IPFS and
+            cannot be modify once the NFT is minted.
+          </p>
+          {layout.below("large") && (
+            <div>
+              <NftFileSelector
+                direction={layout.name === "small" ? "vertical" : "horizontal"}
+              />
+            </div>
+          )}
+          <Fieldset label="NFT title" error={data.fieldError("title")}>
+            <TextInput
+              onChange={data.updateTitle}
+              placeholder="Title of the NFT"
+              value={data.title}
+            />
+          </Fieldset>
+
+          <Fieldset
+            label="NFT description"
+            error={data.fieldError("description")}
+          >
+            <TextInput
+              multiline
+              onChange={data.updateDescription}
+              value={data.description}
+              placeholder="Description of the NFT"
+              css={css`
+                height: 8em;
+              `}
+            />
+          </Fieldset>
+
+          <Fieldset label="Your name / alias">
+            <TextInput
+              onChange={data.updateAuthorName}
+              value={data.authorName}
+              placeholder="Your name"
+            />
+          </Fieldset>
+
+          <Fieldset label="Your email" error={data.fieldError("authorEmail")}>
+            <TextInput
+              onChange={data.updateAuthorEmail}
+              value={data.authorEmail}
+              placeholder="you@example.org"
+            />
+          </Fieldset>
+
+          <Fieldset label="Your ENS Domain">
+            <TextInput
+              onChange={data.updateAuthorEns}
+              value={data.authorEns}
+              placeholder="example.eth"
+            />
+          </Fieldset>
+
+          {data.errors.length > 0 && (
+            <ErrorSummary>
               The highlighted fields are mandatory, please complete them before
               you can continue.
-            </span>
-          </p>
-        )}
+            </ErrorSummary>
+          )}
 
-        {layout.below("medium") ? (
+          {layout.below("medium") ? (
+            <div
+              css={css`
+                padding: 3gu 0;
+              `}
+            >
+              <Button
+                type="submit"
+                label="Next"
+                mode="primary-2"
+                shadowInBox
+                wide
+              />
+            </div>
+          ) : (
+            <div
+              css={css`
+                display: flex;
+                justify-content: flex-end;
+                gap: 2gu;
+                padding-top: 3gu;
+              `}
+            >
+              <Button
+                label="Cancel"
+                mode="secondary-2"
+                shadowInBox
+                onClick={onPrev}
+              />
+              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
+            </div>
+          )}
+        </div>
+        {!layout.below("large") && (
           <div
             css={css`
-              padding: 3gu 0;
+              flex-shrink: 0;
+              width: ${fileSelectorWidth};
+              height: 38gu;
             `}
           >
-            <Button
-              type="submit"
-              label="Next"
-              mode="primary-2"
-              shadowInBox
-              wide
-            />
-          </div>
-        ) : (
-          <div
-            css={css`
-              display: flex;
-              justify-content: flex-end;
-              gap: 2gu;
-              padding-top: 3gu;
-            `}
-          >
-            <Button
-              label="Cancel"
-              mode="secondary-2"
-              shadowInBox
-              onClick={onPrev}
-            />
-            <Button type="submit" label="Next" mode="primary-2" shadowInBox />
+            <NftFileSelector direction="vertical" />
           </div>
         )}
       </div>
-      {!layout.below("large") && (
-        <div
-          css={css`
-            flex-shrink: 0;
-            width: ${fileSelectorWidth};
-            height: 38gu;
-          `}
-        >
-          <NftFileSelector direction="vertical" />
-        </div>
-      )}
-    </div>
+    </form>
   )
 }
 
