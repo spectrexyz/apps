@@ -28,7 +28,7 @@ type TextAreaProps = Omit<
 // inherited from HTMLInputElement and HTMLTextAreaElement.
 type TextInputBaseProps = {
   autofocus?: boolean
-  error?: string
+  error?: string | boolean
   id?: string
   onChange?: (value: string, event: ChangeEvent) => void
   value?: string
@@ -113,7 +113,7 @@ export function TextInput({
         outline-offset: 3px;
         outline: ${error ? "2px" : "0"} solid ${colors.warning};
         &:focus {
-          outline: 2px solid ${error ? colors.negative : colors.focus};
+          outline: 2px solid ${error ? colors.warning : colors.focus};
         }
       `}
     />
