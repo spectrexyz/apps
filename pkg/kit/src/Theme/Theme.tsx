@@ -46,6 +46,7 @@ const colors = {
   positive: "#58FFCA",
   negative: "#FE6D6D",
   warning: "#F7B186",
+  warningSurface: "#1E1F2A",
 
   // semantic colors
   yellow: "#F8FFA6",
