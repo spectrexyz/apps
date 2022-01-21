@@ -24,6 +24,7 @@ type SliderProps = {
   keyboardStep?: (value: number, direction: Direction) => number
   labels?: [start: string, end: string]
   onChange: (value: number) => void
+  onLabelClick?: (value: "start" | "end") => void
   value: number
 }
 
@@ -31,6 +32,7 @@ export function Slider({
   keyboardStep = (value, dir) => Math.round((value + 0.1 * dir) * 10) / 10,
   labels,
   onChange,
+  onLabelClick,
   value,
 }: SliderProps): JSX.Element {
   const [pressed, setPressed] = useState(false)
@@ -271,10 +273,17 @@ export function Slider({
             font-size: 12px;
             font-family: ${fonts.families.sans};
             color: ${colors.contentDimmed};
+            div {
+              cursor: ${onLabelClick ? "pointer" : "default"};
+            }
           `}
         >
-          <div>{labels[0]}</div>
-          <div>{labels[1]}</div>
+          <div onClick={onLabelClick && (() => onLabelClick("start"))}>
+            {labels[0]}
+          </div>
+          <div onClick={onLabelClick && (() => onLabelClick("end"))}>
+            {labels[1]}
+          </div>
         </div>
       )}
     </div>
