@@ -36,6 +36,10 @@ export function lerp(progress: number, value1: number, value2: number): number {
   return (value2 - value1) * progress + value1
 }
 
+export function norm(value: number, low: number, high: number) {
+  return (value - low) / (high - low)
+}
+
 export function map(
   value: number,
   istart: number,
