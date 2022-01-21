@@ -75,10 +75,11 @@ importers:
       react-dom: ^17.0.2
       react-dropzone: ^11.5.1
       react-popper: ^2.2.5
+      react-query: ^3.34.8
+      token-amount: ^0.3.0
       ts-jest: ^27.1.3
       typescript: ^4.5.4
       vite: ^2.7.13
-      vite-dts: ^1.0.4
       vite-plugin-dts: ^0.9.9
     dependencies:
       '@elchininet/isometric': 3.2.0
@@ -90,6 +91,8 @@ importers:
       react-cool-dimensions: 2.0.7_react@17.0.2
       react-dropzone: 11.5.1_react@17.0.2
       react-popper: 2.2.5_4d48938cec404f33c7375aa6b453941c
+      react-query: 3.34.8_react-dom@17.0.2+react@17.0.2
+      token-amount: 0.3.0
     devDependencies:
       '@svgr/cli': 6.2.0
       '@types/react': 17.0.38
@@ -109,7 +112,6 @@ importers:
       ts-jest: 27.1.3_typescript@4.5.4
       typescript: 4.5.4
       vite: 2.7.13
-      vite-dts: 1.0.4_vite@2.7.13
       vite-plugin-dts: 0.9.9_vite@2.7.13
 
   pkg/kit-legacy:
@@ -11318,6 +11320,10 @@ packages:
       argparse: 2.0.1
     dev: true
 
+  /jsbi/3.2.5:
+    resolution: {integrity: sha512-aBE4n43IPvjaddScbvWRA2YlTzKEynHzu7MqOyTipdHucf/VxS63ViCjxYRg86M8Rxwbt/GfzHl1kKERkt45fQ==}
+    dev: false
+
   /jsbn/0.1.1:
     resolution: {integrity: sha1-peZUwuWi3rXyAdls77yoDA7y9RM=}
 
@@ -11837,16 +11843,6 @@ packages:
       pify: 2.3.0
       pinkie-promise: 2.0.1
       strip-bom: 2.0.0
-    dev: true
-
-  /load-json-file/6.2.0:
-    resolution: {integrity: sha512-gUD/epcRms75Cw8RT1pUdHugZYM5ce64ucs2GEISABwkRsOQr0q2wm/MV2TKThycIe5e0ytRweW2RZxclogCdQ==}
-    engines: {node: '>=8'}
-    dependencies:
-      graceful-fs: 4.2.9
-      parse-json: 5.2.0
-      strip-bom: 4.0.0
-      type-fest: 0.6.0
     dev: true
 
   /loader-runner/2.4.0:
@@ -16821,6 +16817,13 @@ packages:
     resolution: {integrity: sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==}
     engines: {node: '>=0.6'}
 
+  /token-amount/0.3.0:
+    resolution: {integrity: sha512-T9dCmen36//NFhoKoGLG/7m3pcxgG7JYc5rh24hMOHmMLLyDWsLkpXaMGZes3TOZiNW/tsfK9wGp6ZjfKVJE7g==}
+    engines: {node: '>=10'}
+    dependencies:
+      jsbi: 3.2.5
+    dev: false
+
   /token-stream/1.0.0:
     resolution: {integrity: sha1-zCAOqyYT9BZtJ/+a/HylbUnfbrQ=}
     dev: true
@@ -17563,15 +17566,6 @@ packages:
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
     dev: false
-
-  /vite-dts/1.0.4_vite@2.7.13:
-    resolution: {integrity: sha512-jfRsrBU8vibUS4a/AboDzHdph2/9/dpoMdYgkiD5tb4OXL75wnlzeEZ6D2XoEZNExwnkXqARKAvz7pv5VtUm5g==}
-    peerDependencies:
-      vite: '>2.0.0-0'
-    dependencies:
-      load-json-file: 6.2.0
-      vite: 2.7.13
-    dev: true
 
   /vite-plugin-checker/0.3.4_vite@2.7.13:
     resolution: {integrity: sha512-IhZtrfsPOi1Apynm+AYN1GqlOnAygIaMUFS+sSXACn0E/776fFZ7UE2wSuvAt7/sMW1DJESQV+4JJbB7HZPQEA==}

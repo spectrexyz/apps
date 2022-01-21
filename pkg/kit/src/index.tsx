@@ -4,6 +4,7 @@ export type { ThemeContext } from "./Theme"
 
 export { colord as co } from "colord"
 export { default as FocusTrap } from "focus-trap-react"
+export { default as TokenAmount } from "token-amount"
 export { default as useDimensions } from "react-cool-dimensions"
 export { useDropzone } from "react-dropzone"
 
@@ -11,6 +12,7 @@ export * from "./icons"
 export * from "./react-utils"
 export * from "./styles"
 export * from "./utils"
+export * from "./web3-hooks"
 
 export { AddressBadge } from "./AddressBadge"
 export { Anchor } from "./Anchor"
