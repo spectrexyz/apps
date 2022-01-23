@@ -8,18 +8,13 @@ export function stripTrailingSlashes(path: string): string {
   return !path && startWithSlash ? "/" : path
 }
 
-function list(count: number): number[]
-function list<T>(
-  count: number,
-  callback: (index: number, steps: number) => T
-): T[]
+type ListCb<T> = (index: number, steps: number) => T
+function list(length: number): number[]
+function list<T>(length: number, callback: ListCb<T>): T[]
 
-function list<T>(
-  count: number,
-  callback?: (index: number, steps: number) => T
-): T[] {
-  const _callback = callback || ((index) => index as T)
-  return Array.from(Array(count), (_, index) => _callback(index, count))
+function list(length: number, callback?: ListCb<unknown>) {
+  const cb = callback || ((index, _) => index)
+  return Array.from({ length }, (_, index) => cb(index, length))
 }
 export { list }
 
