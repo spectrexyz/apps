@@ -4,6 +4,7 @@ import dts from "vite-plugin-dts"
 
 module.exports = defineConfig(async ({ mode }) => ({
   build: {
+    target: ["es2020", "esnext"],
     outDir: "dist",
     lib: {
       entry: path.resolve(__dirname, "src/index.tsx"),
