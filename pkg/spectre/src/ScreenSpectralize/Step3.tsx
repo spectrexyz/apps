@@ -1,89 +1,85 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { css } from "@emotion/react"
-import { Button, Fieldset, Slider, TokenInput } from "kit"
-
+import {
+  Button,
+  Fieldset,
+  Slider,
+  TokenInput,
+  closestIndexFromSortedNumbers,
+  formatAmount,
+  lerp,
+  norm,
+  progressToItem,
+} from "kit"
+import {
+  ContentLayout,
+  ContentLayoutHeading,
+  ContentLayoutSection,
+} from "../ContentLayout"
 import { useLayout } from "../styles"
 import { useSpectralize } from "./use-spectralize"
+import { StepProps } from "./types"
 
-type Step3Props = {
-  title: string
-  onPrev: () => void
-}
+const maxTokenSupplyCapSteps = [
+  1_000n,
+  5_000n,
+  10_000n,
+  50_000n,
+  100_000n,
+  500_000n,
+  1_000_000n,
+  5_000_000n,
+  10_000_000n,
+  50_000_000n,
+  100_000_000n,
+  500_000_000n,
+  1_000_000_000n,
+]
 
-export function Step3({ title, onPrev }: Step3Props) {
+export function Step3({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
 
-  const introPadding = layout.value({
-    small: css`2gu 0`,
-    medium: css`2gu 0`,
-    large: css`1.5gu 0 1gu`,
-  })
-  const flexGap = layout.value({
-    small: css`3.5gu`,
-    xlarge: css`5gu`,
-  })
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault()
+      onNext()
+    },
+    [onNext]
+  )
 
   return (
-    <div
-      css={css`
-        display: flex;
-        gap: ${flexGap};
-        flexDirection: ${layout.below("medium") ? "column" : "row"};
-        width: 100%;
-      `}
-    >
-      <div
-        css={({ colors }) => css`
-          padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
-          background: ${layout.below("medium") ? "none" : colors.background};
-        `}
-      >
-        {!layout.below("medium") ? (
-          <h1
-            css={({ fonts }) => css`
-              font-family: ${fonts.families.mono};
-              font-size: 18px;
-              text-transform: uppercase;
-            `}
-          >
-            {title}
-          </h1>
-        ) : (
-          <div
-            css={css`
-              height: 6gu;
-            `}
-          />
-        )}
-        <p
-          css={({ colors, fonts }) => css`
-            padding: ${introPadding};
-            font-family: ${fonts.families.sans};
-            font-size: 14px;
-            color: ${colors.contentDimmed};
-          `}
-        >
+    <form onSubmit={handleSubmit}>
+      <ContentLayout>
+        <ContentLayoutHeading title={title}>
           Set the economic values of the NFT’s fractions. These will determine
           the amount of fractions that can be minted, the starting price, as
           well as the initial price to buy back the NFT.
-        </p>
-        <div
-          css={css`
-            display: grid;
-            grid-template-columns: 42gu 1fr;
-            gap: 8.75gu;
-          `}
-        >
+        </ContentLayoutHeading>
+        <ContentLayoutSection type="two-parts">
           <div>
             <Fieldset label="NFT buyout price">
-              <TokenInput value="50" onChange={() => {}} symbol="ETH" />
+              <TokenInput
+                value={data.nftBuyoutPrice}
+                onChange={(value) => data.updateNftBuyoutPrice(value)}
+                symbol="ETH"
+              />
             </Fieldset>
             <Fieldset label="Total market cap">
-              <TokenInput value="50" onChange={() => {}} symbol="ETH" />
+              <TokenInput
+                value={data.totalMarketCap}
+                onChange={(value) => data.updateTotalMarketCap(value)}
+                symbol="ETH"
+              />
             </Fieldset>
             <Fieldset label="Initial token price">
-              <TokenInput value="0.001" onChange={() => {}} symbol="ETH" />
+              <TokenInput
+                value="0.001"
+                onChange={() => {}}
+                symbol="ETH"
+                balance="_"
+                balanceConverted="$283,982"
+              />
             </Fieldset>
           </div>
           <div>
@@ -96,11 +92,33 @@ export function Step3({ title, onPrev }: Step3Props) {
                     colors: ${colors.contentDimmed};
                   `}
                 >
-                  {data.rewardsPct}%
+                  {formatAmount(data.maxTokenSupplyCap)}
                 </span>
               }
             >
-              <Slider labels={["1K", "1B"]} onChange={(v) => {}} value={0.5} />
+              <Slider
+                labels={["1K", "1B"]}
+                onChange={(v) => {
+                  data.updateMaxTokenSupplyCap(
+                    progressToItem(v, maxTokenSupplyCapSteps) ?? 0n
+                  )
+                }}
+                value={
+                  closestIndexFromSortedNumbers(
+                    maxTokenSupplyCapSteps,
+                    data.maxTokenSupplyCap
+                  ) /
+                  (maxTokenSupplyCapSteps.length - 1)
+                }
+                onLabelClick={(side) => {
+                  if (side === "start")
+                    data.updateMaxTokenSupplyCap(maxTokenSupplyCapSteps[0])
+                  if (side === "end")
+                    data.updateMaxTokenSupplyCap(
+                      maxTokenSupplyCapSteps[maxTokenSupplyCapSteps.length - 1]
+                    )
+                }}
+              />
             </Fieldset>
             <Fieldset
               label="Buyout multiplier"
@@ -111,50 +129,62 @@ export function Step3({ title, onPrev }: Step3Props) {
                     colors: ${colors.contentDimmed};
                   `}
                 >
-                  {data.rewardsPct}%
+                  {data.buyoutMultiplier / 10}x
                 </span>
               }
             >
-              <Slider labels={["1x", "5x"]} onChange={(v) => {}} value={0.5} />
+              <Slider
+                labels={["1x", "5x"]}
+                onChange={(value) => {
+                  data.updateBuyoutMultiplier(Math.round(lerp(value, 10, 50)))
+                }}
+                keyboardStep={(value, direction) =>
+                  value + (1 / (50 - 10)) * direction
+                }
+                onLabelClick={(side) => {
+                  if (side === "start") data.updateBuyoutMultiplier(10)
+                  if (side === "end") data.updateBuyoutMultiplier(50)
+                }}
+                value={norm(data.buyoutMultiplier, 10, 50)}
+              />
             </Fieldset>
           </div>
+        </ContentLayoutSection>
+        <div>
+          {layout.below("medium") ? (
+            <div
+              css={css`
+                padding: 3gu 0;
+              `}
+            >
+              <Button
+                type="submit"
+                label="Next"
+                mode="primary-2"
+                shadowInBox
+                wide
+              />
+            </div>
+          ) : (
+            <div
+              css={css`
+                display: flex;
+                justify-content: flex-end;
+                gap: 2gu;
+                padding-top: 3gu;
+              `}
+            >
+              <Button
+                label="Back"
+                mode="secondary-2"
+                shadowInBox
+                onClick={onPrev}
+              />
+              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
+            </div>
+          )}
         </div>
-
-        <section>Advanced parameters</section>
-
-        {layout.below("medium") ? (
-          <div
-            css={css`
-              padding: 3gu 0;
-            `}
-          >
-            <Button
-              type="submit"
-              label="Next"
-              mode="primary-2"
-              shadowInBox
-              wide
-            />
-          </div>
-        ) : (
-          <div
-            css={css`
-              display: flex;
-              justify-content: flex-end;
-              gap: 2gu;
-              padding-top: 3gu;
-            `}
-          >
-            <Button
-              label="Back"
-              mode="secondary-2"
-              shadowInBox
-              onClick={onPrev}
-            />
-            <Button type="submit" label="Next" mode="primary-2" shadowInBox />
-          </div>
-        )}
-      </div>
-    </div>
+      </ContentLayout>
+    </form>
   )
 }

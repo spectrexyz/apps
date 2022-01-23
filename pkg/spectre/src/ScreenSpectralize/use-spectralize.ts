@@ -47,6 +47,21 @@ export type SpectralizeState = {
   addRewardsSplitAddress: (address: Address) => void
   removeRewardsSplitAddress: (address: Address) => void
 
+  nftBuyoutPrice: string
+  updateNftBuyoutPrice: (nftBuyoutPrice: string) => void
+
+  totalMarketCap: string
+  updateTotalMarketCap: (totalMarketCap: string) => void
+
+  initialTokenPrice: string
+  updateInitialTokenPrice: (initialTokenPrice: string) => void
+
+  maxTokenSupplyCap: bigint
+  updateMaxTokenSupplyCap: (maxTokenSupplyCap: bigint) => void
+
+  buyoutMultiplier: number
+  updateBuyoutMultiplier: (buyoutMultiplier: number) => void
+
   errors: FieldErrorObject[]
 
   steps: {
@@ -170,6 +185,31 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     })
   },
 
+  nftBuyoutPrice: "50",
+  updateNftBuyoutPrice: (nftBuyoutPrice) => {
+    set({ nftBuyoutPrice })
+  },
+
+  totalMarketCap: "50",
+  updateTotalMarketCap: (totalMarketCap) => {
+    set({ totalMarketCap })
+  },
+
+  initialTokenPrice: "0.001",
+  updateInitialTokenPrice: (initialTokenPrice) => {
+    set({ initialTokenPrice })
+  },
+
+  maxTokenSupplyCap: 10_000n,
+  updateMaxTokenSupplyCap: (maxTokenSupplyCap) => {
+    set({ maxTokenSupplyCap })
+  },
+
+  buyoutMultiplier: 15,
+  updateBuyoutMultiplier: (buyoutMultiplier) => {
+    set({ buyoutMultiplier })
+  },
+
   errors: [],
 
   steps: [
@@ -272,7 +312,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     },
   ],
 
-  currentStep: 1,
+  currentStep: 2,
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title

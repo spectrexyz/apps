@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { css } from "@emotion/react"
 import { Steps } from "kit"
 import { useLocation } from "wouter"
@@ -18,8 +18,7 @@ export function ScreenSpectralize() {
   const { account } = useEthereum()
   const layout = useLayout()
   const resetScroll = useResetScroll()
-  const { currentStep, currentStepTitle, nextStep, prevStep, demo } =
-    useSpectralize()
+  const { currentStep, currentStepTitle, nextStep, prevStep } = useSpectralize()
   const title = currentStepTitle()
   const Step = STEPS[currentStep]
 
@@ -38,6 +37,8 @@ export function ScreenSpectralize() {
   useEffect(() => {
     resetScroll()
   }, [currentStep, resetScroll])
+
+  useFillDemoData()
 
   const contentMaxWidth = layout.value({
     small: css`none`,
@@ -132,4 +133,49 @@ export function ScreenSpectralize() {
       </div>
     </AppScreen>
   )
+}
+
+function useFillDemoData() {
+  const { connect } = useEthereum()
+  const {
+    updateAuthorEmail,
+    updateDescription,
+    updateFile,
+    updateTitle,
+    updateTokenName,
+    updateTokenSymbol,
+  } = useSpectralize()
+
+  useEffect(() => {
+    connect('injected')
+
+    // screen 1
+    updateTitle("Two Discs")
+    updateDescription("Two superposed discs on a surface.")
+    updateAuthorEmail("hi@example.org")
+    updateFile(
+      new File(
+        [
+          `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+             <rect width="100%" height="100%" fill="lightblue"/>
+             <circle cx="54%" cy="54%" r="20%" fill="lightsteelblue" />
+             <circle cx="50%" cy="50%" r="10%" fill="palevioletred" />
+           </svg>`,
+        ],
+        "two-discs.svg",
+        { type: "image/svg+xml" }
+      )
+    )
+
+    // screen 2
+    updateTokenName("Two Discs Token")
+    updateTokenSymbol("DSCS")
+  }, [
+    updateAuthorEmail,
+    updateDescription,
+    updateFile,
+    updateTitle,
+    updateTokenName,
+    updateTokenSymbol,
+  ])
 }

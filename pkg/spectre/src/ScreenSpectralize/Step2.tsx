@@ -12,6 +12,7 @@ import {
   Badge,
   Button,
   ButtonIcon,
+  ButtonText,
   Fieldset,
   IconPlus,
   IconTrash,
@@ -22,21 +23,20 @@ import {
   isAddress,
   useEsc,
 } from "kit"
+import {
+  ContentLayout,
+  ContentLayoutHeading,
+  ContentLayoutSection,
+} from "../ContentLayout"
 import { useEthereum } from "../Ethereum"
 import { useLayout } from "../styles"
-import { useSpectralize } from "./use-spectralize"
 import { ErrorSummary } from "./ErrorSummary"
-import { InsideLayout } from "./InsideLayout"
+import { StepProps } from "./types"
+import { useSpectralize } from "./use-spectralize"
 
 const REWARDS_MAX = 50
 
-type Step2Props = {
-  title: string
-  onPrev: () => void
-  onNext: () => void
-}
-
-export function Step2({ title, onPrev, onNext }: Step2Props) {
+export function Step2({ title, onPrev, onNext }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
   const { account } = useEthereum()
@@ -81,159 +81,140 @@ export function Step2({ title, onPrev, onNext }: Step2Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <InsideLayout
-        heading={title}
-        intro={`
-          Add the name and symbol of your token – this will be used to name
-          your NFT fractions. Also, decide on the % of minting rewards that
-          you’d like to assign to yourself and others, such as collaborators,
-          friends, supporters, etc.
-        `}
-        sections={[
-          {
-            type: "two-parts",
-            content: [
-              <div>
-                <Fieldset
-                  label="Token name"
-                  error={data.fieldError("tokenName")}
+      <ContentLayout>
+        <ContentLayoutHeading title={title}>
+          Add the name and symbol of your token – this will be used to name your
+          NFT fractions. Also, decide on the % of minting rewards that you’d
+          like to assign to yourself and others, such as collaborators, friends,
+          supporters, etc.
+        </ContentLayoutHeading>
+        <ContentLayoutSection type="two-parts">
+          <div>
+            <Fieldset label="Token name" error={data.fieldError("tokenName")}>
+              <TextInput
+                onChange={(value) => data.updateTokenName(value)}
+                placeholder="Token"
+                value={data.tokenName}
+              />
+            </Fieldset>
+            <Fieldset
+              label="Token symbol"
+              error={data.fieldError("tokenSymbol")}
+            >
+              <TextInput
+                onChange={(value) => data.updateTokenSymbol(value)}
+                placeholder="TKN"
+                value={data.tokenSymbol}
+              />
+            </Fieldset>
+          </div>
+          <div>
+            <Fieldset
+              label="Creator & community rewards"
+              contextual={
+                <span
+                  css={({ colors }) => css`
+                    font-size: 18px;
+                    colors: ${colors.contentDimmed};
+                  `}
                 >
-                  <TextInput
-                    onChange={(value) => data.updateTokenName(value)}
-                    placeholder="Token"
-                    value={data.tokenName}
-                  />
-                </Fieldset>
-                <Fieldset
-                  label="Token symbol"
-                  error={data.fieldError("tokenSymbol")}
-                >
-                  <TextInput
-                    onChange={(value) => data.updateTokenSymbol(value)}
-                    placeholder="TKN"
-                    value={data.tokenSymbol}
-                  />
-                </Fieldset>
-              </div>,
-              <div>
-                <Fieldset
-                  label="Creator & community rewards"
-                  contextual={
-                    <span
-                      css={({ colors }) => css`
-                        font-size: 18px;
-                        colors: ${colors.contentDimmed};
-                      `}
-                    >
-                      {data.rewardsPct}%
-                    </span>
-                  }
-                >
-                  <Slider
-                    keyboardStep={(value, dir) =>
-                      Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) /
-                      1000
-                    }
-                    labels={["0%", `${REWARDS_MAX}%`]}
-                    onChange={(value) =>
-                      data.updateRewardsPct(Math.round(value * REWARDS_MAX))
-                    }
-                    value={data.rewardsPct / REWARDS_MAX}
-                  />
-                </Fieldset>
+                  {data.rewardsPct}%
+                </span>
+              }
+            >
+              <Slider
+                keyboardStep={(value, dir) =>
+                  Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) / 1000
+                }
+                labels={["0%", `${REWARDS_MAX}%`]}
+                onChange={(value) =>
+                  data.updateRewardsPct(Math.round(value * REWARDS_MAX))
+                }
+                value={data.rewardsPct / REWARDS_MAX}
+              />
+            </Fieldset>
 
-                <Fieldset
-                  label="Split creator & community rewards"
-                  error={data.fieldError("rewardsSplit")}
-                >
-                  <div
-                    css={css`
-                      padding-bottom: 2gu;
-                    `}
-                  >
-                    {data.rewardsSplit.map((account) => (
-                      <EthAddressRow
-                        key={account}
-                        address={account}
-                        onRemove={() => removeRewardsSplitAddress(account)}
-                        reward={`${data.rewardsPct}%`}
-                      />
-                    ))}
-                  </div>
-
-                  <AddAccountModule submitRef={submitAddingAccount} />
-                </Fieldset>
-              </div>,
-            ],
-          },
-          {
-            type: "simple",
-            content: data.errors.length > 0 && (
-              <ErrorSummary>
-                <p>Please fix the following issues before you can continue:</p>
-                <ul>
-                  {data.errors.map(({ error }, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </ErrorSummary>
-            ),
-          },
-          {
-            type: "simple",
-            content: layout.below("medium") ? (
+            <Fieldset
+              label="Split creator & community rewards"
+              error={data.fieldError("rewardsSplit")}
+            >
               <div
                 css={css`
-                  padding: 3gu 0;
+                  padding-bottom: 2gu;
                 `}
               >
-                <Button
-                  type="submit"
-                  label="Next"
-                  mode="primary-2"
-                  shadowInBox
-                  wide
-                />
+                {data.rewardsSplit.map((account) => (
+                  <EthAddressRow
+                    key={account}
+                    address={account}
+                    onRemove={() => removeRewardsSplitAddress(account)}
+                    reward={`${data.rewardsPct}%`}
+                  />
+                ))}
               </div>
-            ) : (
-              <div
-                css={css`
-                  display: flex;
-                  justify-content: flex-end;
-                  gap: 2gu;
-                  padding-top: 3gu;
-                `}
-              >
-                <Button
-                  label="Back"
-                  mode="secondary-2"
-                  shadowInBox
-                  onClick={onPrev}
-                />
-                <Button
-                  type="submit"
-                  label="Next"
-                  mode="primary-2"
-                  shadowInBox
-                />
-              </div>
-            ),
-          },
-        ]}
-      />
+
+              <AddAccountModule submitRef={submitAddingAccount} />
+            </Fieldset>
+          </div>
+        </ContentLayoutSection>
+        {data.errors.length > 0 && (
+          <ContentLayoutSection>
+            <ErrorSummary>
+              <p>Please fix the following issues before you can continue:</p>
+              <ul>
+                {data.errors.map(({ error }, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </ErrorSummary>
+          </ContentLayoutSection>
+        )}
+        <ContentLayoutSection>
+          {layout.below("medium") ? (
+            <div
+              css={css`
+                padding: 3gu 0;
+              `}
+            >
+              <Button
+                type="submit"
+                label="Next"
+                mode="primary-2"
+                shadowInBox
+                wide
+              />
+            </div>
+          ) : (
+            <div
+              css={css`
+                display: flex;
+                justify-content: flex-end;
+                gap: 2gu;
+                padding-top: 3gu;
+              `}
+            >
+              <Button
+                label="Back"
+                mode="secondary-2"
+                shadowInBox
+                onClick={onPrev}
+              />
+              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
+            </div>
+          )}
+        </ContentLayoutSection>
+      </ContentLayout>
     </form>
   )
 }
 
-function EthAddressRow({
-  address,
-  onRemove,
-  reward,
-}: {
+type EthAddressRowProps = {
   address: Address
   onRemove: () => void
   reward: ReactNode
-}) {
+}
+
+function EthAddressRow({ address, onRemove, reward }: EthAddressRowProps) {
   return (
     <div
       css={css`
@@ -293,13 +274,13 @@ function EthAddressRow({
   )
 }
 
-function AddAccountModule({
-  submitRef,
-}: {
+type AddAccountModuleProps = {
   submitRef: MutableRefObject<
     (() => { invalid: boolean; account: Address | null }) | undefined
   >
-}) {
+}
+
+function AddAccountModule({ submitRef }: AddAccountModuleProps) {
   const container = useRef<HTMLDivElement>(null)
 
   // null means that the TextInput is hidden
@@ -369,7 +350,14 @@ function AddAccountModule({
           value={account}
         />
       </div>
-      <div>
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          gap: 1gu;
+        `}
+      >
+        <ButtonText label="Cancel" type="submit" />
         <Button label="Add" mode="flat-3" size="compact" type="submit" />
       </div>
     </div>

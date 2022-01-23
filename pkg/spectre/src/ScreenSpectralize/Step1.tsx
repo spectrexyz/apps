@@ -20,14 +20,9 @@ import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
 import { FileType, useSpectralize } from "./use-spectralize"
 import { ErrorSummary } from "./ErrorSummary"
+import { StepProps } from "./types"
 
-type Step1Props = {
-  onNext: () => void
-  onPrev: () => void
-  title: string
-}
-
-export function Step1({ onNext, onPrev, title }: Step1Props) {
+export function Step1({ onNext, onPrev, title }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
 
