@@ -35,6 +35,47 @@ export function norm(value: number, low: number, high: number) {
   return (value - low) / (high - low)
 }
 
+export function progressToItem<T extends unknown>(
+  progress: number,
+  itemArray: T[]
+): T | null {
+  if (itemArray.length === 0) return null
+  return itemArray[Math.round(lerp(progress, 0, itemArray.length - 1))]
+}
+
+export function indexToProgress(index: number, itemArray: unknown[]): number {
+  return norm(index, 0, itemArray.length - 1)
+}
+
+export function abs(value: bigint | number): typeof value {
+  if (typeof value === "bigint") {
+    return value < 0n ? -value : value
+  }
+  return Math.abs(value)
+}
+
+export function min<T extends bigint | number>(...values: T[]): T {
+  let value = values[0]
+  for (const v of values) if (v < value) value = v
+  return value
+}
+
+export function max<T extends bigint | number>(...values: T[]): T {
+  let value = values[0]
+  for (const v of values) if (v > value) value = v
+  return value
+}
+
+// Find the closest number in a sorted array
+export function closestIndexFromSortedNumbers<T extends bigint | number>(
+  sortedNumbers: T[],
+  value: T
+): number {
+  const diffs = sortedNumbers.map((v) => abs(value - v))
+  const minValue = min(...diffs)
+  return diffs.findIndex((v) => v === minValue)
+}
+
 export function map(
   value: number,
   istart: number,
@@ -112,6 +153,46 @@ export function formatDate(date: string | Date, full = false): string {
           hour: "2-digit",
           minute: "2-digit",
         }
+  )
+}
+
+export function formatCurrency(
+  amount: bigint | number | string,
+  decimals: number = 2
+): string {
+  return (
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "AAA",
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format as (value: bigint | number | string) => string
+  )(amount)
+    .replace("AAA", "")
+    .trim()
+}
+
+export function formatAmount(
+  amount: bigint,
+  { decimals = 0, precision = 2 } = {}
+): string {
+  if (decimals === 0) {
+    return formatCurrency(amount, decimals)
+  }
+
+  const whole = String(amount / BigInt(decimals))
+  let fraction = String(amount % BigInt(decimals))
+
+  const zeros = "0".repeat(
+    Math.max(0, String(decimals).length - fraction.length - 1)
+  )
+
+  fraction = `${zeros}${fraction}`.replace(/0+$/, "").slice(0, precision)
+
+  return formatCurrency(
+    fraction === "" || parseInt(fraction, 10) === 0
+      ? whole
+      : `${whole}.${fraction}`
   )
 }
 
