@@ -113,7 +113,7 @@ export function Slider({
   }, [pressed])
 
   const moveSpring = useSpring({
-    config: springs.swift,
+    config: springs.snappy,
     activeBarTransform: `scaleX(${value}) translateZ(0)`,
     handleTransform: `translate3d(${value * 100}%, 0, 0)`,
     pressProgress: Number(pressed),
