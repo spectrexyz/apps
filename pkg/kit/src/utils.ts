@@ -196,6 +196,45 @@ export function formatAmount(
   )
 }
 
+// From https://github.com/aragon/aragon-apps
+export function splitDecimalNumber(value: string) {
+  const [whole = "", dec = ""] = value.split(".")
+  return [
+    whole.replace(/^0*/, ""), // trim leading zeroes
+    dec.replace(/0*$/, ""), // trim trailing zeroes
+  ]
+}
+
+// Convert a bigint value padded with decimals into a decimal number
+// represented as a string.
+// From https://github.com/aragon/aragon-apps
+export function fromDecimals(value: bigint, decimals: number) {
+  const paddedWhole = String(value).padStart(decimals + 1, "0")
+  const decimalIndex = paddedWhole.length - decimals
+  const wholeWithoutBase = paddedWhole.slice(0, decimalIndex)
+  const decWithoutBase = paddedWhole.slice(decimalIndex)
+
+  // Trim any trailing zeroes from the new decimals
+  const decWithoutBaseTrimmed = decWithoutBase.replace(/0*$/, "")
+
+  return decWithoutBaseTrimmed
+    ? `${wholeWithoutBase}.${decWithoutBaseTrimmed}`
+    : wholeWithoutBase
+}
+
+// Convert a decimal number, represented as a string to prevent any precision
+// issue, into a bigint padded with a given number of decimals.
+// From https://github.com/aragon/aragon-apps
+export function toDecimals(value: string, decimals: number): bigint {
+  const [whole, dec] = splitDecimalNumber(value)
+  if (!whole && (!dec || !decimals)) return 0n
+  return BigInt(
+    (whole + dec)
+      .padEnd(whole.length + decimals, "0")
+      .slice(0, whole.length + decimals)
+  )
+}
+
 // This should be removed whenever Firefox supports backdrop-filter by
 // default. As of Firefox 92.0a1, it is only available behind an about:config
 // flag (layout.css.backdrop-filter.enabled = true).

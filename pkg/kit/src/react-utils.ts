@@ -1,7 +1,13 @@
-import type { FC, ReactNode } from "react"
-
-import { createElement, useEffect, useRef } from "react"
-import { uid } from "./utils"
+import {
+  FC,
+  ReactNode,
+  createElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
+import { fromDecimals, toDecimals, uid } from "./utils"
 
 export function useEsc(callback: () => void, condition: boolean): void {
   const _cb = useRef(callback)
@@ -50,4 +56,25 @@ export function useEvery(cb: () => void, delay: number) {
     update()
     return () => clearTimeout(timer)
   }, [cb, delay])
+}
+
+export function useAmountInput(
+  initialValue: bigint,
+  save: (value: bigint) => void,
+  decimals: number = 18
+) {
+  const [inputValue, setInputValue] = useState(
+    fromDecimals(initialValue, decimals)
+  )
+
+  const _save = useRef(save)
+
+  const onChange = useCallback((value) => {
+    if (/^[0-9]*\.?[0-9]*$/.test(value)) {
+      setInputValue(value)
+      _save.current(toDecimals(value, decimals))
+    }
+  }, [])
+
+  return { value: inputValue, onChange }
 }
