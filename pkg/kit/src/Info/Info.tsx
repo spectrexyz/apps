@@ -2,31 +2,46 @@ import type { ReactNode } from "react"
 
 import { createContext, useContext } from "react"
 import { css } from "@emotion/react"
+import { colord as co } from "colord"
 import { useTheme } from "../Theme"
 import { gu } from "../styles"
 
-const InfoTitleContext = createContext(false)
+type Mode = "normal" | "translucid"
 
 type InfoProps = {
   children: ReactNode
+  className?: string
   icon?: ReactNode
+  mode?: Mode
   title: ReactNode
 }
 
-export function Info({ children, icon, title }: InfoProps): JSX.Element {
+const InfoTitleContext = createContext<null | { mode: Mode }>(null)
+
+export function Info({
+  children,
+  className,
+  icon,
+  mode = "normal",
+  title,
+}: InfoProps): JSX.Element {
   return (
     <section
+      className={className}
       css={({ colors }) => css`
         padding: 3gu;
-        background: ${colors.layer2};
+        background: ${mode === "translucid"
+          ? co(colors.translucid).alpha(0.7).toHex()
+          : colors.layer2};
+        border-radius: ${mode === "translucid" ? "6px" : "0"};
       `}
     >
-      <InfoTitleContext.Provider value={true}>
+      <InfoTitleContext.Provider value={{ mode }}>
         <div
           css={css`
             display: flex;
             align-items: center;
-            gap: 2gu;
+            gap: ${mode === "translucid" ? css`1gu` : css`2gu`};
             padding-bottom: 2gu;
           `}
         >
@@ -36,19 +51,27 @@ export function Info({ children, icon, title }: InfoProps): JSX.Element {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 4gu;
-                height: 4gu;
-                background: ${colors.background};
-                border: 1px solid ${colors.accent};
+                width: ${mode === "translucid" ? css`3gu` : css`4gu`};
+                height: ${mode === "translucid" ? css`3gu` : css`4gu`};
+                color: ${mode === "translucid"
+                  ? colors.accent2
+                  : colors.accent};
+                background: ${mode === "translucid"
+                  ? "none"
+                  : colors.background};
+                border: ${mode === "translucid"
+                  ? "0"
+                  : `1px solid ${colors.accent}`};
               `}
             >
               {icon}
             </div>
           )}
           <h1
-            css={css`
+            css={({ colors }) => css`
               text-transform: uppercase;
-              font-size: 20px;
+              font-size: ${mode === "translucid" ? "16px" : "20px"};
+              color: ${mode === "translucid" ? colors.accent2 : colors.content};
             `}
           >
             {title}
@@ -59,7 +82,9 @@ export function Info({ children, icon, title }: InfoProps): JSX.Element {
         css={({ colors, fonts }) => css`
           font-size: 14px;
           line-height: 1.8;
-          color: ${colors.contentHeading2};
+          color: ${mode === "translucid"
+            ? colors.content
+            : colors.contentHeading2};
           font-family: ${fonts.families.sans};
         `}
       >
@@ -70,13 +95,17 @@ export function Info({ children, icon, title }: InfoProps): JSX.Element {
 }
 
 export function useInsideInfoTitle(): boolean {
-  return useContext(InfoTitleContext)
+  return useContext(InfoTitleContext) !== null
 }
 
-export function useInfoTitleIconSize(): number {
-  return 3 * gu
+export function useInfoTitleIconSize(): number | null {
+  const context = useContext(InfoTitleContext)
+  return context === null ? null : 3 * gu
 }
 
-export function useInfoTitleIconColor(): string {
-  return useTheme().colors.accent
+export function useInfoTitleIconColor(): string | null {
+  const context = useContext(InfoTitleContext)
+  const { colors } = useTheme()
+  if (!context) return null
+  return context.mode === "translucid" ? colors.accent2 : colors.accent
 }
