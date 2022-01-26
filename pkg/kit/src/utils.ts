@@ -180,11 +180,12 @@ export function formatAmount(
     return formatCurrency(amount, decimals)
   }
 
-  const whole = String(amount / BigInt(decimals))
-  let fraction = String(amount % BigInt(decimals))
+  const _decimals = 10n ** BigInt(decimals)
+  const whole = String(amount / _decimals)
+  let fraction = String(amount % _decimals)
 
   const zeros = "0".repeat(
-    Math.max(0, String(decimals).length - fraction.length - 1)
+    Math.max(0, String(_decimals).length - fraction.length - 1)
   )
 
   fraction = `${zeros}${fraction}`.replace(/0+$/, "").slice(0, precision)
