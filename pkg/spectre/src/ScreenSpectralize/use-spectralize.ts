@@ -47,14 +47,14 @@ export type SpectralizeState = {
   addRewardsSplitAddress: (address: Address) => void
   removeRewardsSplitAddress: (address: Address) => void
 
-  nftBuyoutPrice: string
-  updateNftBuyoutPrice: (nftBuyoutPrice: string) => void
+  nftBuyoutPrice: bigint
+  updateNftBuyoutPrice: (nftBuyoutPrice: bigint) => void
 
-  totalMarketCap: string
-  updateTotalMarketCap: (totalMarketCap: string) => void
+  totalMarketCap: bigint
+  updateTotalMarketCap: (totalMarketCap: bigint) => void
 
-  initialTokenPrice: string
-  updateInitialTokenPrice: (initialTokenPrice: string) => void
+  initialTokenPrice: bigint
+  updateInitialTokenPrice: (initialTokenPrice: bigint) => void
 
   maxTokenSupplyCap: bigint
   updateMaxTokenSupplyCap: (maxTokenSupplyCap: bigint) => void
@@ -185,29 +185,58 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     })
   },
 
-  nftBuyoutPrice: "50",
+  nftBuyoutPrice: 15000000000000000000n,
   updateNftBuyoutPrice: (nftBuyoutPrice) => {
-    set({ nftBuyoutPrice })
+    const { buyoutMultiplier, maxTokenSupplyCap } = get()
+    const totalMarketCap = (nftBuyoutPrice / BigInt(buyoutMultiplier)) * 10n
+    const initialTokenPrice = totalMarketCap / maxTokenSupplyCap
+    set({
+      initialTokenPrice,
+      nftBuyoutPrice,
+      totalMarketCap,
+    })
   },
 
-  totalMarketCap: "50",
+  totalMarketCap: 10000000000000000000n,
   updateTotalMarketCap: (totalMarketCap) => {
-    set({ totalMarketCap })
+    const { buyoutMultiplier, maxTokenSupplyCap } = get()
+    const initialTokenPrice = totalMarketCap / maxTokenSupplyCap
+    const nftBuyoutPrice = (totalMarketCap * BigInt(buyoutMultiplier)) / 10n
+    set({
+      initialTokenPrice,
+      nftBuyoutPrice,
+      totalMarketCap,
+    })
   },
 
-  initialTokenPrice: "0.001",
+  initialTokenPrice: 1000000000000000n,
   updateInitialTokenPrice: (initialTokenPrice) => {
-    set({ initialTokenPrice })
+    const { maxTokenSupplyCap, buyoutMultiplier } = get()
+    const totalMarketCap = initialTokenPrice * maxTokenSupplyCap
+    const nftBuyoutPrice = (totalMarketCap * BigInt(buyoutMultiplier)) / 10n
+    set({
+      initialTokenPrice,
+      totalMarketCap,
+      nftBuyoutPrice,
+    })
   },
 
-  maxTokenSupplyCap: 10_000n,
+  maxTokenSupplyCap: 1_000_000n,
   updateMaxTokenSupplyCap: (maxTokenSupplyCap) => {
-    set({ maxTokenSupplyCap })
+    const { totalMarketCap } = get()
+    set({
+      maxTokenSupplyCap,
+      initialTokenPrice: totalMarketCap / maxTokenSupplyCap,
+    })
   },
 
   buyoutMultiplier: 15,
   updateBuyoutMultiplier: (buyoutMultiplier) => {
-    set({ buyoutMultiplier })
+    const { totalMarketCap } = get()
+    set({
+      buyoutMultiplier,
+      nftBuyoutPrice: (totalMarketCap * BigInt(buyoutMultiplier)) / 10n,
+    })
   },
 
   errors: [],

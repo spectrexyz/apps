@@ -1,15 +1,21 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
+  Direction,
   Fieldset,
+  IconLifebuoy,
+  Info,
   Slider,
   TokenInput,
   closestIndexFromSortedNumbers,
   formatAmount,
+  formatCurrency,
   lerp,
   norm,
   progressToItem,
+  useAmountInput,
+  usePrice,
 } from "kit"
 import {
   ContentLayout,
@@ -39,14 +45,65 @@ const maxTokenSupplyCapSteps = [
 export function Step3({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
+  const [buyoutOnly, setBuyoutOnly] = useState(true)
 
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault()
-      onNext()
+      if (buyoutOnly) {
+        setBuyoutOnly(false)
+      } else {
+        onNext()
+      }
     },
-    [onNext]
+    [onNext, buyoutOnly]
   )
+
+  const inputs = {
+    nftBuyoutPrice: useAmountInput(data.nftBuyoutPrice, (value) => {
+      data.updateNftBuyoutPrice(value)
+    }),
+    totalMarketCap: useAmountInput(data.totalMarketCap, (value) => {
+      data.updateTotalMarketCap(value)
+    }),
+    initialTokenPrice: useAmountInput(data.initialTokenPrice, (value) => {
+      data.updateInitialTokenPrice(value)
+    }),
+    maxTokenSupplyCap: {
+      onChange(value: number) {
+        data.updateMaxTokenSupplyCap(
+          progressToItem(value, maxTokenSupplyCapSteps) ?? 0n
+        )
+      },
+      onLabelClick(side: "start" | "end") {
+        if (side === "start")
+          data.updateMaxTokenSupplyCap(maxTokenSupplyCapSteps[0])
+        if (side === "end")
+          data.updateMaxTokenSupplyCap(
+            maxTokenSupplyCapSteps[maxTokenSupplyCapSteps.length - 1]
+          )
+      },
+      value:
+        closestIndexFromSortedNumbers(
+          maxTokenSupplyCapSteps,
+          data.maxTokenSupplyCap
+        ) /
+        (maxTokenSupplyCapSteps.length - 1),
+    },
+    buyoutMultiplier: {
+      onChange(value: number) {
+        data.updateBuyoutMultiplier(Math.round(lerp(value, 10, 50)))
+      },
+      keyboardStep(value: number, direction: Direction) {
+        return value + (1 / (50 - 10)) * direction
+      },
+      onLabelClick(side: "start" | "end") {
+        if (side === "start") data.updateBuyoutMultiplier(10)
+        if (side === "end") data.updateBuyoutMultiplier(50)
+      },
+      value: norm(data.buyoutMultiplier, 10, 50),
+    },
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -59,95 +116,68 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
         <ContentLayoutSection type="two-parts">
           <div>
             <Fieldset label="NFT buyout price">
-              <TokenInput
-                value={data.nftBuyoutPrice}
-                onChange={(value) => data.updateNftBuyoutPrice(value)}
-                symbol="ETH"
-              />
+              <EthInput {...inputs.nftBuyoutPrice} />
             </Fieldset>
-            <Fieldset label="Total market cap">
-              <TokenInput
-                value={data.totalMarketCap}
-                onChange={(value) => data.updateTotalMarketCap(value)}
-                symbol="ETH"
-              />
-            </Fieldset>
-            <Fieldset label="Initial token price">
-              <TokenInput
-                value="0.001"
-                onChange={() => {}}
-                symbol="ETH"
-                balance="_"
-                balanceConverted="$283,982"
-              />
-            </Fieldset>
+
+            {!buyoutOnly && (
+              <>
+                <Fieldset label="Total market cap">
+                  <EthInput {...inputs.totalMarketCap} />
+                </Fieldset>
+                <Fieldset label="Initial token price">
+                  <EthInput {...inputs.initialTokenPrice} />
+                </Fieldset>
+              </>
+            )}
           </div>
           <div>
-            <Fieldset
-              label="Max token supply cap"
-              contextual={
-                <span
-                  css={({ colors }) => css`
-                    font-size: 18px;
-                    colors: ${colors.contentDimmed};
-                  `}
+            {buyoutOnly ? (
+              <Info
+                icon={<IconLifebuoy />}
+                mode="translucid"
+                title="Token health tip"
+                css={css`
+                  margin-top: 2gu;
+                `}
+              >
+                Ask yourself: what price do you think your NFT will be worth in
+                the future? Think of it as the reserve price in an auction
+                platform.
+              </Info>
+            ) : (
+              <>
+                <Fieldset
+                  label="Max token supply cap"
+                  contextual={
+                    <span
+                      css={({ colors }) => css`
+                        font-size: 18px;
+                        colors: ${colors.contentDimmed};
+                      `}
+                    >
+                      {formatAmount(data.maxTokenSupplyCap)}
+                    </span>
+                  }
                 >
-                  {formatAmount(data.maxTokenSupplyCap)}
-                </span>
-              }
-            >
-              <Slider
-                labels={["1K", "1B"]}
-                onChange={(v) => {
-                  data.updateMaxTokenSupplyCap(
-                    progressToItem(v, maxTokenSupplyCapSteps) ?? 0n
-                  )
-                }}
-                value={
-                  closestIndexFromSortedNumbers(
-                    maxTokenSupplyCapSteps,
-                    data.maxTokenSupplyCap
-                  ) /
-                  (maxTokenSupplyCapSteps.length - 1)
-                }
-                onLabelClick={(side) => {
-                  if (side === "start")
-                    data.updateMaxTokenSupplyCap(maxTokenSupplyCapSteps[0])
-                  if (side === "end")
-                    data.updateMaxTokenSupplyCap(
-                      maxTokenSupplyCapSteps[maxTokenSupplyCapSteps.length - 1]
-                    )
-                }}
-              />
-            </Fieldset>
-            <Fieldset
-              label="Buyout multiplier"
-              contextual={
-                <span
-                  css={({ colors }) => css`
-                    font-size: 18px;
-                    colors: ${colors.contentDimmed};
-                  `}
+                  <Slider labels={["1K", "1B"]} {...inputs.maxTokenSupplyCap} />
+                </Fieldset>
+                <Fieldset
+                  label="Buyout multiplier"
+                  contextual={
+                    <span
+                      css={({ colors }) => css`
+                        font-size: 18px;
+                        colors: ${colors.contentDimmed};
+                      `}
+                    >
+                      {data.buyoutMultiplier / 10}x
+                    </span>
+                  }
                 >
-                  {data.buyoutMultiplier / 10}x
-                </span>
-              }
-            >
-              <Slider
-                labels={["1x", "5x"]}
-                onChange={(value) => {
-                  data.updateBuyoutMultiplier(Math.round(lerp(value, 10, 50)))
-                }}
-                keyboardStep={(value, direction) =>
-                  value + (1 / (50 - 10)) * direction
-                }
-                onLabelClick={(side) => {
-                  if (side === "start") data.updateBuyoutMultiplier(10)
-                  if (side === "end") data.updateBuyoutMultiplier(50)
-                }}
-                value={norm(data.buyoutMultiplier, 10, 50)}
-              />
-            </Fieldset>
+                  <Slider labels={["1x", "5x"]} {...inputs.buyoutMultiplier} />
+                </Fieldset>
+              </>
+            )}
           </div>
         </ContentLayoutSection>
         <div>
@@ -159,7 +189,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             >
               <Button
                 type="submit"
-                label="Next"
+                label={buyoutOnly ? "Accept suggestions" : "Next"}
                 mode="primary-2"
                 shadowInBox
                 wide
@@ -180,11 +210,42 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                 shadowInBox
                 onClick={onPrev}
               />
-              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
+              <Button
+                type="submit"
+                label={buyoutOnly ? "Accept suggestions" : "Next"}
+                mode="primary-2"
+                shadowInBox
+              />
             </div>
           )}
         </div>
       </ContentLayout>
     </form>
+  )
+}
+
+function EthInput({
+  onChange,
+  value,
+}: {
+  onChange: (value: string) => void
+  value: string
+}) {
+  const ethPrice = usePrice("eth", "usd")
+  const numValue = parseFloat(value)
+  const usdValue =
+    ethPrice.data && !isNaN(numValue)
+      ? BigInt(Math.round(ethPrice.data * numValue * 10 ** 18))
+      : null
+
+  return (
+    <TokenInput
+      onChange={onChange}
+      secondaryEnd={
+        usdValue !== null ? `$${formatAmount(usdValue, { decimals: 18 })}` : "−"
+      }
+      symbol="ETH"
+      value={value}
+    />
   )
 }
