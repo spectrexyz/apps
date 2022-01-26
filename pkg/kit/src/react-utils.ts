@@ -67,6 +67,14 @@ export function useAmountInput(
     fromDecimals(initialValue, decimals)
   )
 
+  useEffect(() => {
+    try {
+      if (BigInt(toDecimals(inputValue, decimals)) !== initialValue) {
+        setInputValue(fromDecimals(initialValue, decimals))
+      }
+    } catch (_) {}
+  }, [decimals, initialValue, inputValue])
+
   const _save = useRef(save)
 
   const onChange = useCallback((value) => {
