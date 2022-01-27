@@ -28,7 +28,7 @@ export const springs = {
   },
   snappy: {
     mass: 1,
-    tension: 1200,
+    tension: 1800,
     friction: 80,
   },
   appear: {

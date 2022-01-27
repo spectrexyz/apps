@@ -1,43 +1,36 @@
 import { ReactNode, useState } from "react"
 import { css } from "@emotion/react"
-import { a, useTransition } from "react-spring"
-import {
-  ButtonArea,
-  IconCaretDown,
-  IconCaretUp,
-  gu,
-  springs,
-  useDimensions,
-} from "kit"
+import { a, useSpring, useTransition } from "react-spring"
+import { ButtonArea, IconCaretDown, gu, springs, useDimensions } from "kit"
 
 export function Details({
   children,
   contextual,
+  fullWidth,
   heading,
 }: {
   children: ReactNode
   contextual: ReactNode
+  fullWidth?: boolean
   heading: ReactNode
 }) {
   const [opened, setOpened] = useState(false)
-
   const contentBounds = useDimensions()
 
   const opening = useTransition(opened, {
-    config: {
-      mass: 1,
-      tension: 1600,
-      friction: 80,
-    },
+    config: springs.snappy,
     from: { headingWidth: 0, contentHeight: 0 },
-    enter: [
-      { headingWidth: 1, contentHeight: 0 },
-      { headingWidth: 1, contentHeight: 1 },
-    ],
-    leave: [
-      { headingWidth: 1, contentHeight: 0 },
-      { headingWidth: 0, contentHeight: 0 },
-    ],
+    enter: fullWidth
+      ? { headingWidth: 1, contentHeight: 1 }
+      : [{ headingWidth: 1 }, { contentHeight: 1 }],
+    leave: fullWidth
+      ? { headingWidth: 0, contentHeight: 0 }
+      : [{ contentHeight: 0 }, { headingWidth: 0 }],
+  })
+
+  const { arrowRotationTransform } = useSpring({
+    config: springs.snappy,
+    arrowRotationTransform: opened ? "rotate(180deg)" : "rotate(0deg)",
   })
 
   return (
@@ -47,28 +40,30 @@ export function Details({
       `}
     >
       <header
-        css={css`
+        css={({ colors }) => css`
           position: relative;
+          background: ${fullWidth ? colors.layer2 : "transparent"};
         `}
       >
-        {opening(
-          ({ headingWidth }, opened) =>
-            opened && (
-              <a.div
-                style={{
-                  transform: headingWidth.to((v) => `scaleX(${v})`),
-                }}
-                css={({ colors }) => css`
-                  position: absolute;
-                  z-index: 1;
-                  inset: 0;
-                  left: calc(50% - 5gu / 2);
-                  background: ${colors.layer2};
-                  transform-origin: 0 0;
-                `}
-              />
-            )
-        )}
+        {!fullWidth &&
+          opening(
+            ({ headingWidth }, opened) =>
+              opened && (
+                <a.div
+                  style={{
+                    transform: headingWidth.to((v) => `scaleX(${v})`),
+                  }}
+                  css={({ colors }) => css`
+                    position: absolute;
+                    z-index: 1;
+                    inset: 0;
+                    left: calc(50% - 5gu / 2);
+                    background: ${colors.layer2};
+                    transform-origin: 0 0;
+                  `}
+                />
+              )
+          )}
         <div
           css={css`
             position: relative;
@@ -82,7 +77,7 @@ export function Details({
           <h1
             css={css`
               /* follow ContentLayoutSection with "two-parts" */
-              width: calc(50% - 5gu / 2);
+              width: ${fullWidth ? "100%" : css`calc(50% - 5gu / 2)`};
             `}
           >
             <ButtonArea
@@ -95,16 +90,22 @@ export function Details({
                 height: 6gu;
                 padding: 0 2gu;
                 text-transform: uppercase;
+                white-space: nowrap;
                 color: ${colors.accent2};
                 background: ${colors.layer2};
               `}
             >
               {heading}
-              {opened ? (
-                <IconCaretUp size={2 * gu} />
-              ) : (
+              <a.div
+                style={{ transform: arrowRotationTransform }}
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  transform-origin: 50% 50%;
+                `}
+              >
                 <IconCaretDown size={2 * gu} />
-              )}
+              </a.div>
             </ButtonArea>
           </h1>
           {opening(
@@ -145,7 +146,7 @@ export function Details({
                 `}
               >
                 <a.div
-                  style={{ opacity: contentHeight }}
+                  style={{ opacity: contentHeight.to([0, 0.8, 1], [0, 0, 1]) }}
                   css={css`
                     padding: 1gu 2gu 2gu;
                   `}

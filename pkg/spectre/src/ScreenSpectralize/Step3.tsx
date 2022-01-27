@@ -110,6 +110,12 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     },
   }
 
+  const advancedColumns = layout.value({
+    xlarge: 6,
+    medium: 3,
+    small: 2,
+  })
+
   return (
     <form onSubmit={handleSubmit}>
       <ContentLayout>
@@ -204,11 +210,12 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   `}
                 />
               }
+              fullWidth={layout.below("large")}
             >
               <div
                 css={css`
                   display: grid;
-                  grid-template-columns: repeat(6, auto);
+                  grid-template-columns: repeat(${advancedColumns}, auto);
                   gap: 4gu;
                 `}
               >
@@ -236,7 +243,15 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   color: ${colors.info};
                 `}
               >
-                <IconWarningOctagon size={2 * gu} />
+                <div
+                  css={css`
+                    display: flex;
+                    align-items: center;
+                    flex-shrink: 0;
+                  `}
+                >
+                  <IconWarningOctagon size={2 * gu} />
+                </div>
                 <p>
                   These are advanced parameters defaults we recommend. Edit them
                   at your own risk.
