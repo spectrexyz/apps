@@ -357,7 +357,7 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
           gap: 1gu;
         `}
       >
-        <ButtonText label="Cancel" type="submit" />
+        <ButtonText label="Cancel" onClick={() => setAccount(null)} />
         <Button label="Add" mode="flat-3" size="compact" type="submit" />
       </div>
     </div>
