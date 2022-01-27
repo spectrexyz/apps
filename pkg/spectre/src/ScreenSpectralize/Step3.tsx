@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import {
   Button,
   ButtonText,
+  Details,
   Direction,
   Fieldset,
   IconLifebuoy,
@@ -26,7 +27,6 @@ import {
   ContentLayoutSection,
 } from "../ContentLayout"
 import { useLayout } from "../styles"
-import { Details } from "./Details"
 import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
@@ -50,7 +50,7 @@ const maxTokenSupplyCapSteps = [
 export function Step3({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
-  const [buyoutOnly, setBuyoutOnly] = useState(false)
+  const [buyoutOnly, setBuyoutOnly] = useState(true)
 
   const handleSubmit = useCallback(
     (event) => {
@@ -199,6 +199,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
           >
             <Details
               heading="Advanced parameters"
+              headingBaseWidth={`calc(50% - ${(5 / 2) * gu}px)`}
               contextual={
                 <ButtonText
                   label="Edit"

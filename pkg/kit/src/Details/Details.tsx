@@ -1,21 +1,29 @@
 import { ReactNode, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring, useTransition } from "react-spring"
-import { ButtonArea, IconCaretDown, gu, springs, useDimensions } from "kit"
+import useDimensions from "react-cool-dimensions"
+
+import { ButtonArea } from "../ButtonArea"
+import { IconCaretDown } from "../icons"
+import { gu, springs } from "../styles"
+
+type DetailsProps = {
+  children: ReactNode
+  contextual: ReactNode
+  heading: ReactNode
+  headingBaseWidth?: string
+}
 
 export function Details({
   children,
   contextual,
-  fullWidth,
   heading,
-}: {
-  children: ReactNode
-  contextual: ReactNode
-  fullWidth?: boolean
-  heading: ReactNode
-}) {
+  headingBaseWidth,
+}: DetailsProps) {
   const [opened, setOpened] = useState(false)
   const contentBounds = useDimensions()
+
+  const fullWidth = headingBaseWidth === undefined
 
   const opening = useTransition(opened, {
     config: springs.snappy,
@@ -76,8 +84,7 @@ export function Details({
         >
           <h1
             css={css`
-              /* follow ContentLayoutSection with "two-parts" */
-              width: ${fullWidth ? "100%" : css`calc(50% - 5gu / 2)`};
+              width: ${headingBaseWidth ?? "100%"};
             `}
           >
             <ButtonArea
