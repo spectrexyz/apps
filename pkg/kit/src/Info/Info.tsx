@@ -42,7 +42,7 @@ export function Info({
             display: flex;
             align-items: center;
             gap: ${mode === "translucid" ? css`1gu` : css`2gu`};
-            padding-bottom: 2gu;
+            padding-bottom: ${mode === "translucid" ? css`1gu` : css`2gu`};
           `}
         >
           {icon && (
