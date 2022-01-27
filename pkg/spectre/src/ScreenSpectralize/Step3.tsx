@@ -1,21 +1,24 @@
-import React, { useCallback, useState } from "react"
+import React, { ReactNode, useCallback, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
+  ButtonText,
   Direction,
   Fieldset,
   IconLifebuoy,
+  IconPencil,
+  IconWarningOctagon,
   Info,
   Slider,
   TokenInput,
   closestIndexFromSortedNumbers,
   formatAmount,
-  formatCurrency,
   lerp,
   norm,
   progressToItem,
   useAmountInput,
   usePrice,
+  gu,
 } from "kit"
 import {
   ContentLayout,
@@ -23,10 +26,12 @@ import {
   ContentLayoutSection,
 } from "../ContentLayout"
 import { useLayout } from "../styles"
-import { useSpectralize } from "./use-spectralize"
+import { Details } from "./Details"
 import { StepProps } from "./types"
+import { useSpectralize } from "./use-spectralize"
 
 const maxTokenSupplyCapSteps = [
+  100n,
   1_000n,
   5_000n,
   10_000n,
@@ -45,7 +50,7 @@ const maxTokenSupplyCapSteps = [
 export function Step3({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
-  const [buyoutOnly, setBuyoutOnly] = useState(true)
+  const [buyoutOnly, setBuyoutOnly] = useState(false)
 
   const handleSubmit = useCallback(
     (event) => {
@@ -180,6 +185,66 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             )}
           </div>
         </ContentLayoutSection>
+        {!buyoutOnly && (
+          <div
+            css={css`
+              padding-top: 4gu;
+            `}
+          >
+            <Details
+              heading="Advanced parameters"
+              contextual={
+                <ButtonText
+                  label="Edit"
+                  icon={<IconPencil />}
+                  css={({ colors, fonts }) => css`
+                    color: ${colors.accent};
+                    font-size: 16px;
+                    font-family: ${fonts.families.sans};
+                  `}
+                />
+              }
+            >
+              <div
+                css={css`
+                  display: grid;
+                  grid-template-columns: repeat(6, auto);
+                  gap: 4gu;
+                `}
+              >
+                <AdvancedParameter title="Buyout" content="FLASH - 1 week" />
+                <AdvancedParameter title="Minting" content="MANUAL" />
+                <AdvancedParameter
+                  title="Initial LP weight"
+                  content="80% ETH / 20% MOI"
+                />
+                <AdvancedParameter
+                  title="Target LP weight"
+                  content="50% ETH / 50% MOI"
+                />
+                <AdvancedParameter title="Minting fees" content="2%" />
+                <AdvancedParameter title="Trading fees" content="1%" />
+              </div>
+
+              <div
+                css={({ colors }) => css`
+                  display: flex;
+                  align-items: center;
+                  gap: 1gu;
+                  padding-top: 3gu;
+                  font-size: 12px;
+                  color: ${colors.info};
+                `}
+              >
+                <IconWarningOctagon size={2 * gu} />
+                <p>
+                  These are advanced parameters defaults we recommend. Edit them
+                  at your own risk.
+                </p>
+              </div>
+            </Details>
+          </div>
+        )}
         <div>
           {layout.below("medium") ? (
             <div
@@ -247,5 +312,39 @@ function EthInput({
       symbol="ETH"
       value={value}
     />
+  )
+}
+
+function AdvancedParameter({
+  title,
+  content,
+}: {
+  title: ReactNode
+  content: ReactNode
+}) {
+  return (
+    <div
+      css={({ fonts }) => css`
+        font-family: ${fonts.families.sans};
+      `}
+    >
+      <div
+        css={({ colors }) => css`
+          padding-bottom: 0.5gu;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: ${colors.contentDimmed};
+        `}
+      >
+        {title}
+      </div>
+      <div
+        css={css`
+          font-size: 14px;
+        `}
+      >
+        {content}
+      </div>
+    </div>
   )
 }
