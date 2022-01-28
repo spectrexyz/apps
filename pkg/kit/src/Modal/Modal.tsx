@@ -14,7 +14,7 @@ import { checkBackdropFilterSupport } from "../utils"
 type ModalProps = {
   children: ReactNode
   onClose: () => void
-  mode?: "normal" | "translucid"
+  mode?: "normal" | "large" | "translucid"
   visible: boolean
 }
 
@@ -50,9 +50,10 @@ export function Modal({
                 position: absolute;
                 z-index: 2;
                 inset: 0;
-                display: grid;
-                align-items: center;
-                justify-content: center;
+                overflow: auto;
+                background: ${colord(colors.background)
+                  .alpha(mode === "large" ? 0.8 : 0.6)
+                  .toHex()};
               `}
             >
               {/* No need for keyboard support here since this is handled elsewhere */}
@@ -64,99 +65,110 @@ export function Modal({
                   }
                 }}
                 css={css`
-                  position: relative;
-                  z-index: 2;
-                  padding: 4gu;
+                  display: grid;
+                  place-items: center;
+                  min-height: 100%;
                 `}
               >
-                <FocusTrap
-                  active={visible}
-                  focusTrapOptions={{
-                    onDeactivate: onClose,
-                    allowOutsideClick: true,
-                  }}
-                >
-                  <a.div
-                    style={{ transform }}
-                    css={({ colors }) =>
-                      css`
-                        max-width: 360px;
-                        padding: 3gu;
-                        ${mode === "translucid"
-                          ? css`
-                              background: ${colord(colors.translucid)
-                                .alpha(supportsBackdropFilters ? 0.6 : 1)
-                                .toHex()};
-                              backdrop-filter: blur(40px);
-                              border-radius: 6px;
-                            `
-                          : css`
-                              background: ${colors.layer1};
-                            `}
-                      `
+                {/* No need for keyboard support here since this is handled elsewhere */}
+                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                <div
+                  onMouseDown={({ target, currentTarget }) => {
+                    if (target === currentTarget) {
+                      onClose()
                     }
+                  }}
+                  css={css`
+                    position: relative;
+                    z-index: 2;
+                    padding: 4gu;
+                  `}
+                >
+                  <FocusTrap
+                    active={visible}
+                    focusTrapOptions={{
+                      onDeactivate: onClose,
+                      allowOutsideClick: true,
+                    }}
                   >
                     <a.div
-                      style={{
-                        opacity: blur.to((v) => 1 - v),
-                      }}
-                      css={css`
-                        display: ${mode === "translucid" &&
-                        supportsBackdropFilters
-                          ? "block"
-                          : "none"};
-                        position: absolute;
-                        z-index: 1;
-                        inset: 0;
-                        background: rgb(43, 44, 97);
-                        border-radius: 6px;
-                      `}
-                    />
-                    <div
-                      css={css`
-                        position: relative;
-                        z-index: 2;
-                      `}
+                      style={{ transform }}
+                      css={({ colors }) =>
+                        css`
+                          width: ${mode === "large" ? "600px" : "auto"};
+                          max-width: ${mode === "large" ? "100%" : "360px"};
+                          padding: ${mode === "large"
+                            ? css`3gu 5gu 5gu`
+                            : css`3gu`};
+                          ${mode === "translucid"
+                            ? css`
+                                background: ${colord(colors.translucid)
+                                  .alpha(supportsBackdropFilters ? 0.6 : 1)
+                                  .toHex()};
+                                backdrop-filter: blur(40px);
+                                border-radius: 6px;
+                              `
+                            : css`
+                                background: ${mode === "large"
+                                  ? colors.background
+                                  : colors.layer1};
+                              `}
+                        `
+                      }
                     >
+                      <a.div
+                        style={{
+                          opacity: blur.to((v) => 1 - v),
+                        }}
+                        css={css`
+                          display: ${mode === "translucid" &&
+                          supportsBackdropFilters
+                            ? "block"
+                            : "none"};
+                          position: absolute;
+                          z-index: 1;
+                          inset: 0;
+                          background: rgb(43, 44, 97);
+                          border-radius: 6px;
+                        `}
+                      />
                       <div
                         css={css`
-                          display: flex;
-                          justify-content: flex-end;
+                          position: relative;
+                          z-index: 2;
                         `}
                       >
-                        <ButtonArea
-                          onClick={onClose}
+                        <div
                           css={css`
-                            position: relative;
                             display: flex;
-                            width: 2.5gu;
-                            height: 2.5gu;
-                            &:active {
-                              top: 1px;
-                              left: 1px;
-                            }
+                            justify-content: flex-end;
                           `}
                         >
-                          <IconX size={2.5 * gu} color={colors.contentDimmed} />
-                        </ButtonArea>
+                          <ButtonArea
+                            onClick={onClose}
+                            css={css`
+                              position: relative;
+                              display: flex;
+                              width: 2.5gu;
+                              height: 2.5gu;
+                              &:active {
+                                top: 1px;
+                                left: 1px;
+                              }
+                            `}
+                          >
+                            <IconX
+                              size={2.5 * gu}
+                              color={colors.contentDimmed}
+                            />
+                          </ButtonArea>
+                        </div>
+                        {children}
                       </div>
-                      {children}
-                    </div>
-                  </a.div>
-                </FocusTrap>
+                    </a.div>
+                  </FocusTrap>
+                </div>
               </div>
-              {/* No need for keyboard support here since this is handled elsewhere */}
-              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-              <div
-                onMouseDown={() => onClose()}
-                css={({ colors }) => css`
-                  position: fixed;
-                  z-index: 1;
-                  inset: 0;
-                  background: ${colors.background};
-                  opacity: 0.6;
-                `}
-              />
             </a.section>
           )
       )}
