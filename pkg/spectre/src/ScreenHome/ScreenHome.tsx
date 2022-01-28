@@ -2,9 +2,11 @@ import { css } from "@emotion/react"
 import { useLocation } from "wouter"
 import { Button } from "kit"
 import { AppScreen } from "../AppLayout/AppScreen2"
+import { useSpectralize } from "../ScreenSpectralize/use-spectralize"
 
 export function ScreenHome() {
   const [_, setLocation] = useLocation()
+  const spectralize = useSpectralize()
   return (
     <AppScreen compactBar={null}>
       <div
@@ -20,11 +22,34 @@ export function ScreenHome() {
         `}
       >
         <h1>Spectre</h1>
-        {[
-          ["Spectralize", "/spectralize"],
-          ["NFT #1", "/nfts/1"],
-          ["TOKEN #1", "/nfts/1/serc20"],
-          ["Buy token", "/nfts/1/buy"],
+
+        <div
+          css={css`
+            display: grid;
+            gap: 2gu;
+          `}
+        >
+          <Button
+            label="Spectralize"
+            onClick={() => {
+              spectralize.reset()
+              setLocation("/spectralize")
+            }}
+            wide
+          />
+          <Button
+            label="Spectralize with demo data"
+            onClick={() => {
+              spectralize.fillDemoData()
+              setLocation("/spectralize")
+            }}
+            wide
+          />
+        </div>
+        {/*[
+          // ["NFT #1", "/nfts/1"],
+          // ["TOKEN #1", "/nfts/1/serc20"],
+          // ["Buy token", "/nfts/1/buy"],
         ].map(([label, path]) => (
           <div
             key={path}
@@ -36,7 +61,7 @@ export function ScreenHome() {
           >
             <Button label={label} onClick={() => setLocation(path)} />
           </div>
-        ))}
+        ))*/}
       </div>
     </AppScreen>
   )
