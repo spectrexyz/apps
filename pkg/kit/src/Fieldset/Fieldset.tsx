@@ -7,8 +7,10 @@ import { useUid } from "../react-utils"
 type FieldsetProps = {
   children: ReactNode
   contextual?: ReactNode
+  dimmed?: boolean
   error?: boolean | string
   label: ReactNode
+  optional?: boolean
 }
 
 const FieldsetContext = createContext<{ labelFor?: string }>({
@@ -17,7 +19,14 @@ const FieldsetContext = createContext<{ labelFor?: string }>({
 
 export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
   function Fieldset(
-    { children, contextual, error = false, label }: FieldsetProps,
+    {
+      children,
+      contextual,
+      dimmed = false,
+      error = false,
+      label,
+      optional = false,
+    }: FieldsetProps,
     ref
   ): JSX.Element {
     const labelFor = useUid()
@@ -43,7 +52,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
               font-family: ${fonts.families.sans};
               font-size: 12px;
               text-transform: uppercase;
-              color: ${colors.contentHeading};
+              color: ${dimmed ? colors.contentDimmed : colors.contentHeading};
               white-space: nowrap;
               label {
                 display: block;
@@ -53,7 +62,19 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
         >
           <header>
             <h1>
-              <label htmlFor={labelFor}>{label}</label>
+              <label htmlFor={labelFor}>
+                {label}{" "}
+                {optional && (
+                  <span
+                    css={({ colors }) => css`
+                      text-transform: none;
+                      color: ${colors.contentDimmed};
+                    `}
+                  >
+                    (Optional)
+                  </span>
+                )}
+              </label>
             </h1>
             {contextual && (
               <div
@@ -67,7 +88,11 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
               </div>
             )}
           </header>
-          <div>
+          <div
+            css={({ fonts }) => css`
+              font-family: ${fonts.families.sans};
+            `}
+          >
             {typeof children === "function" ? children(labelFor) : children}
           </div>
         </section>
