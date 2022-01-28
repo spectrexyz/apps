@@ -77,12 +77,16 @@ export function useAmountInput(
 
   const _save = useRef(save)
 
-  const onChange = useCallback((value) => {
-    if (/^[0-9]*\.?[0-9]*$/.test(value)) {
-      setInputValue(value)
-      _save.current(toDecimals(value, decimals))
-    }
-  }, [])
+  const onChange = useCallback(
+    (value) => {
+      const re = new RegExp(`^[0-9]*(?:\.[0-9]{0,${decimals}})?$`)
+      if (re.test(value)) {
+        setInputValue(value)
+        _save.current(toDecimals(value, decimals))
+      }
+    },
+    [decimals]
+  )
 
   return { value: inputValue, onChange }
 }
