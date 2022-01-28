@@ -117,7 +117,7 @@ export function Details({
           </h1>
           {opening(
             ({ contentHeight }, opened) =>
-              opened && (
+              opened && contextual && (
                 <a.div
                   style={{ opacity: contentHeight }}
                   css={css`
