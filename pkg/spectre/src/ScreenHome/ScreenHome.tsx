@@ -30,18 +30,18 @@ export function ScreenHome() {
           `}
         >
           <Button
-            label="Spectralize"
+            label="Fractionalize"
             onClick={() => {
               spectralize.reset()
-              setLocation("/spectralize")
+              setLocation("/fractionalize")
             }}
             wide
           />
           <Button
-            label="Spectralize with demo data"
+            label="Fractionalize with demo data"
             onClick={() => {
               spectralize.fillDemoData()
-              setLocation("/spectralize")
+              setLocation("/fractionalize")
             }}
             wide
           />

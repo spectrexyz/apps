@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/">
           <ScreenHome />
         </Route>
-        <Route path="/spectralize">
+        <Route path="/fractionalize">
           <ScreenSpectralize />
         </Route>
         <Route path="/nfts/:id/serc20">
