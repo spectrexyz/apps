@@ -107,6 +107,9 @@ export function Modal({
                           padding: ${mode === "large"
                             ? css`3gu 5gu 5gu`
                             : css`3gu`};
+                          @media (max-width: 600px) {
+                            padding: 3gu;
+                          }
                           ${mode === "translucid"
                             ? css`
                                 background: ${colord(colors.translucid)
