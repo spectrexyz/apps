@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --mode production && cp netlify_redirects dist/_redirects",
     "serve": "vite preview",
     "import:kit-assets": "pnpm kit-copy-assets ./public/kit",
     "lint": "eslint --ext .tsx,.ts src/"
