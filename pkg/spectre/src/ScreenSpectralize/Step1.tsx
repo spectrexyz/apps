@@ -8,7 +8,6 @@ import {
   IconCheckBold,
   IconMagnifyingGlassPlus,
   IconTrash,
-  IconWarningOctagon,
   RadioBox,
   RadioGroup,
   TextInput,
