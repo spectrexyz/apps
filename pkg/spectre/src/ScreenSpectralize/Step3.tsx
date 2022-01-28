@@ -14,6 +14,7 @@ import {
   TokenInput,
   closestIndexFromSortedNumbers,
   formatAmount,
+  formatCurrencyNumber,
   lerp,
   norm,
   progressToItem,
@@ -166,7 +167,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                         colors: ${colors.contentDimmed};
                       `}
                     >
-                      {formatAmount(data.maxTokenSupplyCap)}
+                      {formatCurrencyNumber(data.maxTokenSupplyCap)}
                     </span>
                   }
                 >

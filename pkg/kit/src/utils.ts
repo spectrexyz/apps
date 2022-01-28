@@ -156,45 +156,58 @@ export function formatDate(date: string | Date, full = false): string {
   )
 }
 
-export function formatCurrency(
+// Formats a number (fractional or not) to represent a currency amount.
+export function formatCurrencyNumber(
   amount: bigint | number | string,
-  decimals: number = 2
+  digits: number | bigint = 2
 ): string {
+  digits = Number(digits)
   return (
     new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "AAA",
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
     }).format as (value: bigint | number | string) => string
-  )(amount)
+  )(String(amount))
     .replace("AAA", "")
     .trim()
 }
 
+// Formats an amount represented by a bigint and a number of decimals.
 export function formatAmount(
   amount: bigint,
-  { decimals = 0, precision = 2 } = {}
+  decimals: number | bigint,
+  { digits = 2 }: { digits?: number | bigint } = {}
 ): string {
-  if (decimals === 0) {
-    return formatCurrency(amount, decimals)
+  decimals = BigInt(decimals)
+  digits = BigInt(digits)
+
+  if (decimals === 0n) {
+    return formatCurrencyNumber(amount, digits)
   }
 
-  const _decimals = 10n ** BigInt(decimals)
-  const whole = String(amount / _decimals)
-  let fraction = String(amount % _decimals)
+  const decimalsDivisor = 10n ** decimals
+
+  const whole = String(amount / decimalsDivisor)
+  let fraction = String(amount % decimalsDivisor)
 
   const zeros = "0".repeat(
-    Math.max(0, String(_decimals).length - fraction.length - 1)
+    Math.max(0, String(decimalsDivisor).length - fraction.length - 1)
   )
 
-  fraction = `${zeros}${fraction}`.replace(/0+$/, "").slice(0, precision)
+  fraction =
+    zeros + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - digits))
 
-  return formatCurrency(
-    fraction === "" || parseInt(fraction, 10) === 0
-      ? whole
-      : `${whole}.${fraction}`
+  return formatCurrencyNumber(
+    fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
+    digits
   )
+}
+
+// Divide a BigInt by another with rounding
+export function divideRoundBigInt(dividend: bigint, divisor: bigint): bigint {
+  return (dividend + divisor / 2n) / divisor
 }
 
 // From https://github.com/aragon/aragon-apps
@@ -252,4 +265,5 @@ export function noop(): void {
   // do nothing
 }
 
-export const dpr = devicePixelRatio ?? 1
+export const dpr =
+  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
