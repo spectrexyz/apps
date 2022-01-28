@@ -7,97 +7,104 @@ export type FieldError = string
 export type FieldName = string
 export type FieldErrorObject = { field: FieldName; error: FieldError }
 
-export type SpectralizeState = {
+export type SpectralizeData = {
   title: string
-  updateTitle: (title: string) => void
-
   description: string
-  updateDescription: (description: string) => void
-
   fileType: FileType
-  updateFileType: (fileType: FileType) => void
-
   file: null | File
   fileUrl: null | string
-  updateFile: (file: null | File) => void
-
   previewFile: null | File
   previewUrl: null | string
-  updatePreviewFile: (previewFile: null | File) => void
-
   authorName: string
-  updateAuthorName: (authorName: string) => void
-
   authorEns: string
-  updateAuthorEns: (authorEns: string) => void
-
   authorEmail: string
-  updateAuthorEmail: (authorEmail: string) => void
-
   tokenName: string
-  updateTokenName: (tokenName: string) => void
-
   tokenSymbol: string
-  updateTokenSymbol: (tokenSymbol: string) => void
-
   rewardsPct: number
-  updateRewardsPct: (rewardsPct: number) => void
-
   rewardsSplit: Address[]
-  addRewardsSplitAddress: (address: Address) => void
-  removeRewardsSplitAddress: (address: Address) => void
-
   nftBuyoutPrice: bigint
-  updateNftBuyoutPrice: (nftBuyoutPrice: bigint) => void
-
   totalMarketCap: bigint
-  updateTotalMarketCap: (totalMarketCap: bigint) => void
-
   initialTokenPrice: bigint
-  updateInitialTokenPrice: (initialTokenPrice: bigint) => void
-
   maxTokenSupplyCap: bigint
-  updateMaxTokenSupplyCap: (maxTokenSupplyCap: bigint) => void
-
   buyoutMultiplier: number
-  updateBuyoutMultiplier: (buyoutMultiplier: number) => void
-
   errors: FieldErrorObject[]
+  currentStep: number
+  suggestFromBuyout: boolean
+}
 
+export type SpectralizeMethods = {
+  updateTitle(title: string): void
+  updateDescription(description: string): void
+  updateFileType(fileType: FileType): void
+  updateFile(file: null | File): void
+  updatePreviewFile(previewFile: null | File): void
+  updateAuthorName(authorName: string): void
+  updateAuthorEns(authorEns: string): void
+  updateAuthorEmail(authorEmail: string): void
+  updateTokenName(tokenName: string): void
+  updateTokenSymbol(tokenSymbol: string): void
+  updateRewardsPct(rewardsPct: number): void
+  addRewardsSplitAddress(address: Address): void
+  removeRewardsSplitAddress(address: Address): void
+  updateNftBuyoutPrice(nftBuyoutPrice: bigint): void
+  updateTotalMarketCap(totalMarketCap: bigint): void
+  updateInitialTokenPrice(initialTokenPrice: bigint): void
+  updateMaxTokenSupplyCap(maxTokenSupplyCap: bigint): void
+  updateBuyoutMultiplier(buyoutMultiplier: number): void
   steps: {
     title: string
-    validate: (state: SpectralizeState) => {
-      errors: SpectralizeState["errors"]
-    }
+    validate(state: SpectralizeState): { errors: SpectralizeState["errors"] }
   }[]
+  currentStepTitle(): string
+  updateSuggestFromBuyout(suggestFromBuyout: boolean): void
+  fieldError(name: string): undefined | FieldError
+  clearError(name: string): void
+  moveStep(direction: Direction): boolean
+  nextStep(): boolean
+  prevStep(): boolean
+  reset(): void
+  fillDemoData(): void
+}
 
-  currentStep: number
-  currentStepTitle: () => string
+export type SpectralizeState = SpectralizeData & SpectralizeMethods
 
-  fieldError: (name: string) => undefined | FieldError
-
-  clearError: (name: string) => void
-
-  moveStep: (direction: Direction) => boolean
-  nextStep: () => boolean
-  prevStep: () => boolean
+const initialState: SpectralizeData = {
+  title: "",
+  description: "",
+  fileType: "image",
+  file: null,
+  fileUrl: null,
+  previewFile: null,
+  previewUrl: null,
+  authorName: "",
+  authorEns: "",
+  authorEmail: "",
+  tokenName: "",
+  tokenSymbol: "",
+  rewardsPct: 5,
+  rewardsSplit: [],
+  nftBuyoutPrice: 15000000000000000000n,
+  totalMarketCap: 10000000000000000000n,
+  initialTokenPrice: 1000000000000000n,
+  maxTokenSupplyCap: 1_000_000n,
+  buyoutMultiplier: 15,
+  errors: [],
+  currentStep: 0,
+  suggestFromBuyout: true,
 }
 
 export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
-  title: "",
-  updateTitle: (title) => {
+  ...initialState,
+
+  updateTitle(title) {
     set({ title })
     get().clearError("title")
   },
-
-  description: "",
-  updateDescription: (description: string) => {
+  updateDescription(description: string) {
     set({ description })
     get().clearError("description")
   },
-
-  fileType: "image",
-  updateFileType: (newFileType) => {
+  updateFileType(newFileType) {
     set({
       fileType: newFileType,
       file: null,
@@ -106,10 +113,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     })
     get().clearError("file")
   },
-
-  file: null,
-  fileUrl: null,
-  updateFile: (newFile) => {
+  updateFile(newFile) {
     const { fileType, fileUrl } = get()
 
     get().clearError("file")
@@ -127,10 +131,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       get().updatePreviewFile(newFile)
     }
   },
-
-  previewFile: null,
-  previewUrl: null,
-  updatePreviewFile: (newPreviewFile) => {
+  updatePreviewFile(newPreviewFile) {
     const { previewUrl } = get()
 
     // Clear previous URL object for the preview
@@ -141,42 +142,34 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       previewUrl: newPreviewFile ? URL.createObjectURL(newPreviewFile) : null,
     })
   },
-
-  authorName: "",
-  updateAuthorName: (authorName) => set({ authorName }),
-
-  authorEns: "",
-  updateAuthorEns: (authorEns) => set({ authorEns }),
-
-  authorEmail: "",
-  updateAuthorEmail: (authorEmail) => {
+  updateAuthorName(authorName) {
+    set({ authorName })
+  },
+  updateAuthorEns(authorEns) {
+    set({ authorEns })
+  },
+  updateAuthorEmail(authorEmail) {
     set({ authorEmail })
     get().clearError("authorEmail")
   },
-
-  tokenName: "",
-  updateTokenName: (tokenName) => {
+  updateTokenName(tokenName) {
     set({ tokenName })
     get().clearError("tokenName")
   },
-
-  tokenSymbol: "",
-  updateTokenSymbol: (tokenSymbol) => {
+  updateTokenSymbol(tokenSymbol) {
     set({ tokenSymbol })
     get().clearError("tokenSymbol")
   },
-
-  rewardsPct: 5,
-  updateRewardsPct: (rewardsPct) => set({ rewardsPct }),
-
-  rewardsSplit: [],
-  addRewardsSplitAddress: (address) => {
+  updateRewardsPct(rewardsPct) {
+    set({ rewardsPct })
+  },
+  addRewardsSplitAddress(address) {
     set({
       rewardsSplit: [...new Set([...get().rewardsSplit, address])],
     })
     get().clearError("rewardsSplit")
   },
-  removeRewardsSplitAddress: (address) => {
+  removeRewardsSplitAddress(address) {
     const { rewardsSplit } = get()
     set({
       rewardsSplit: [...rewardsSplit].filter(
@@ -184,9 +177,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       ),
     })
   },
-
-  nftBuyoutPrice: 15000000000000000000n,
-  updateNftBuyoutPrice: (nftBuyoutPrice) => {
+  updateNftBuyoutPrice(nftBuyoutPrice) {
     const { buyoutMultiplier, maxTokenSupplyCap } = get()
     const totalMarketCap = (nftBuyoutPrice / BigInt(buyoutMultiplier)) * 10n
     const initialTokenPrice = totalMarketCap / maxTokenSupplyCap
@@ -196,9 +187,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       totalMarketCap,
     })
   },
-
-  totalMarketCap: 10000000000000000000n,
-  updateTotalMarketCap: (totalMarketCap) => {
+  updateTotalMarketCap(totalMarketCap) {
     const { buyoutMultiplier, maxTokenSupplyCap } = get()
     const initialTokenPrice = totalMarketCap / maxTokenSupplyCap
     const nftBuyoutPrice = (totalMarketCap * BigInt(buyoutMultiplier)) / 10n
@@ -208,9 +197,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       totalMarketCap,
     })
   },
-
-  initialTokenPrice: 1000000000000000n,
-  updateInitialTokenPrice: (initialTokenPrice) => {
+  updateInitialTokenPrice(initialTokenPrice) {
     const { maxTokenSupplyCap, buyoutMultiplier } = get()
     const totalMarketCap = initialTokenPrice * maxTokenSupplyCap
     const nftBuyoutPrice = (totalMarketCap * BigInt(buyoutMultiplier)) / 10n
@@ -220,26 +207,20 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       nftBuyoutPrice,
     })
   },
-
-  maxTokenSupplyCap: 1_000_000n,
-  updateMaxTokenSupplyCap: (maxTokenSupplyCap) => {
+  updateMaxTokenSupplyCap(maxTokenSupplyCap) {
     const { totalMarketCap } = get()
     set({
       maxTokenSupplyCap,
       initialTokenPrice: totalMarketCap / maxTokenSupplyCap,
     })
   },
-
-  buyoutMultiplier: 15,
-  updateBuyoutMultiplier: (buyoutMultiplier) => {
+  updateBuyoutMultiplier(buyoutMultiplier) {
     const { totalMarketCap } = get()
     set({
       buyoutMultiplier,
       nftBuyoutPrice: (totalMarketCap * BigInt(buyoutMultiplier)) / 10n,
     })
   },
-
-  errors: [],
 
   steps: [
     {
@@ -339,12 +320,19 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
         return { errors: [], title }
       },
     },
+    {
+      title: "Summary",
+      validate({ title }) {
+        return { errors: [], title }
+      },
+    },
   ],
-
-  currentStep: 2,
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title
+  },
+  updateSuggestFromBuyout: (suggestFromBuyout) => {
+    set({ suggestFromBuyout })
   },
 
   fieldError(name) {
@@ -385,6 +373,47 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
 
     return !hasErrors
   },
-  nextStep: () => get().moveStep(1),
-  prevStep: () => get().moveStep(-1),
+  nextStep() {
+    return get().moveStep(1)
+  },
+  prevStep() {
+    return get().moveStep(-1)
+  },
+  reset() {
+    set(initialState)
+  },
+  fillDemoData() {
+    get().reset()
+
+    // screen 1
+    get().updateTitle("Two Discs")
+    get().updateDescription(
+      "Artworks have always been powerful vectors of collectives structuration " +
+        "and we now see that the internet of money could make us pass from the " +
+        "status of consumer of artworks to a world where artworks are, in their " +
+        "inner form, the organizational layer of tomorrow’s collectives."
+    )
+    get().updateAuthorEmail("hi@example.org")
+    get().updateFile(
+      new File(
+        [
+          `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+             <rect width="100%" height="100%" fill="lightblue"/>
+             <circle cx="54%" cy="54%" r="20%" fill="lightsteelblue" />
+             <circle cx="50%" cy="50%" r="10%" fill="palevioletred" />
+           </svg>`,
+        ],
+        "two-discs.svg",
+        { type: "image/svg+xml" }
+      )
+    )
+
+    // screen 2
+    get().updateTokenName("Two Discs Token")
+    get().updateTokenSymbol("DSCS")
+    get().addRewardsSplitAddress("0x627306090abab3a6e1400e9345bc60c78a8bef57")
+    get().addRewardsSplitAddress("0xf17f52151ebef6c7334fad080c5704d77216b732")
+
+    set({ currentStep: 2 })
+  },
 }))
