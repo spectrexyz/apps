@@ -1,3 +1,5 @@
+import prettyBytes from "pretty-bytes"
+
 export function addSlash(path: string): string {
   return path.endsWith("/") ? path : path + "/"
 }
@@ -208,6 +210,10 @@ export function formatAmount(
     digits,
     { trailingZeros }
   )
+}
+
+export function formatBytes(value: number) {
+  return prettyBytes(value)
 }
 
 // Divide a BigInt by another with rounding
