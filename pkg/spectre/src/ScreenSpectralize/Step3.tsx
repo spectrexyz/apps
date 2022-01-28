@@ -201,7 +201,11 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
           >
             <Details
               heading="Advanced parameters"
-              headingBaseWidth={`calc(50% - ${(5 / 2) * gu}px)`}
+              headingBaseWidth={
+                layout.below("large")
+                  ? undefined
+                  : `calc(50% - ${(5 / 2) * gu}px)`
+              }
               contextual={
                 <ButtonText
                   label="Edit"
@@ -213,7 +217,6 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   `}
                 />
               }
-              fullWidth={layout.below("large")}
             >
               <div
                 css={css`
