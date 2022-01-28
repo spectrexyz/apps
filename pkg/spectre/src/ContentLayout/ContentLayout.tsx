@@ -24,6 +24,7 @@ export function ContentLayout({ children }: ContentLayoutProps) {
     >
       <div
         css={({ colors }) => css`
+          width: 100%;
           padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
           background: ${layout.below("medium") ? "none" : colors.background};
         `}
