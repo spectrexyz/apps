@@ -34,18 +34,16 @@ type EthereumProviderProps = { children: ReactNode }
 function EthereumProvider({ children }: EthereumProviderProps) {
   const wallet = useWeb3React()
 
+  const { activate } = wallet
+
   const connect = useCallback(
     (connectorId) => {
       if (connectorId === "injected") {
-        wallet.activate(
-          new InjectedConnector({ supportedChainIds: [CHAIN_ID] })
-        )
+        activate(new InjectedConnector({ supportedChainIds: [CHAIN_ID] }))
         return
       }
       if (connectorId === "wallet-connect") {
-        wallet.activate(
-          new InjectedConnector({ supportedChainIds: [CHAIN_ID] })
-        )
+        activate(new InjectedConnector({ supportedChainIds: [CHAIN_ID] }))
         // Disabling WalletConnect for now (doesn’t work with Vite)
         // wallet.activate(
         //   new WalletConnectConnector({
@@ -63,7 +61,7 @@ function EthereumProvider({ children }: EthereumProviderProps) {
       }
       throw new Error(`Incorrect connector ID: ${connectorId}`)
     },
-    [wallet]
+    [activate]
   )
 
   const disconnect = useCallback(() => {
