@@ -82,6 +82,9 @@ export function Modal({
                     position: relative;
                     z-index: 2;
                     padding: 4gu;
+                    @media (max-width: 600px) {
+                      padding: ${mode === "large" ? "0" : css`4gu`};
+                    }
                   `}
                 >
                   <FocusTrap
@@ -96,6 +99,10 @@ export function Modal({
                       css={({ colors }) =>
                         css`
                           width: ${mode === "large" ? "600px" : "auto"};
+                          @media (max-width: 600px) {
+                            width: ${mode === "large" ? "100%" : "auto"};
+                          }
+
                           max-width: ${mode === "large" ? "100%" : "360px"};
                           padding: ${mode === "large"
                             ? css`3gu 5gu 5gu`
