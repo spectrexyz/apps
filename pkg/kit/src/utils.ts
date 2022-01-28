@@ -162,7 +162,7 @@ export function formatDate(date: string | Date, full = false): string {
 export function formatNumber(
   value: bigint | number | string,
   digits: number | bigint = 2,
-  { trailingZeros }: { trailingZeros?: boolean } = {}
+  { trailingZeros = false }: { trailingZeros?: boolean } = {}
 ): string {
   digits = Number(digits)
   return (
@@ -177,16 +177,29 @@ export function formatNumber(
 export function formatAmount(
   amount: bigint,
   decimals: number | bigint,
-  {
-    digits = 2,
-    trailingZeros = false,
-  }: { digits?: number | bigint; trailingZeros?: boolean } = {}
+  optionsOrDigits:
+    | { digits?: number | bigint; trailingZeros?: boolean }
+    | number
+    | bigint = {}
 ): string {
   decimals = BigInt(decimals)
-  digits = BigInt(digits)
+
+  // options.digits can also be passed directly as the third argument
+  if (
+    typeof optionsOrDigits === "number" ||
+    typeof optionsOrDigits === "bigint"
+  ) {
+    optionsOrDigits = {
+      digits: optionsOrDigits,
+      trailingZeros: false,
+    }
+  }
+
+  const { digits = decimals, trailingZeros = false } = optionsOrDigits
+  const _digits = BigInt(digits)
 
   if (decimals === 0n) {
-    return formatNumber(amount, digits)
+    return formatNumber(amount, _digits)
   }
 
   const decimalsDivisor = 10n ** decimals
@@ -199,7 +212,7 @@ export function formatAmount(
   )
 
   fraction =
-    zeros + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - digits))
+    zeros + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - _digits))
 
   if (!trailingZeros) {
     fraction = fraction.replace(/0+$/, "")
@@ -207,7 +220,7 @@ export function formatAmount(
 
   return formatNumber(
     fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
-    digits,
+    _digits,
     { trailingZeros }
   )
 }
