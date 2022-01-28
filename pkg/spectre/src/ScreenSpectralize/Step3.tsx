@@ -354,6 +354,28 @@ function AdvancedParametersModal({
       <Fieldset label="Trading Fees" dimmed>
         TODO
       </Fieldset>
+
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2gu;
+          padding-top: 3gu;
+        `}
+      >
+        <Button
+          label="Reset"
+          mode="secondary-2"
+          shadowInBox
+          onClick={() => {}}
+        />
+        <Button
+          onClick={() => {}}
+          label={"Save changes"}
+          mode="primary-2"
+          shadowInBox
+        />
+      </div>
     </Modal>
   )
 }
