@@ -5,10 +5,11 @@ import { Button } from "../Button"
 import { TokenIcon } from "../TokenIcon"
 
 type TokenInputProps = {
-  balance?: string
-  balanceConverted?: string
+  balance?: string // TODO: deprecate
+  balanceConverted?: string // TODO: deprecate
+  onBalanceClick?: () => void // TODO: deprecate
+
   maxButton?: boolean
-  onBalanceClick?: () => void
   onChange: (value: string) => void
   secondaryEnd?: ReactNode
   secondaryStart?: ReactNode
