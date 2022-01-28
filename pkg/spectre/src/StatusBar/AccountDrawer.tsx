@@ -243,7 +243,7 @@ function Transactions() {
         `}
       >
         <Transaction
-          action="Spectralized (mint & lock)"
+          action="Fractionalized (mint & lock)"
           details="10 ETH for 60,429.98 SPCTR"
           url="https://etherscan.io/tx/0x709c03175c3e897ec12f2279857fada4511222c4673a970b3747bfac182398d9"
           status="error"
@@ -267,7 +267,7 @@ function Transactions() {
           status="success"
         />
         <Transaction
-          action="Spectralized (mint & lock)"
+          action="Fractionalized (mint & lock)"
           details="10 ETH for 60,429.98 SPCTR"
           url="https://etherscan.io/tx/0x709c03175c3e897ec12f2279857fada4511222c4673a970b3747bfac182398d9"
           status="success"

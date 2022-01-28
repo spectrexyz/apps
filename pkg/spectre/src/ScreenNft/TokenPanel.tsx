@@ -60,8 +60,8 @@ export function TokenPanel({ id }: { id: string }) {
             />
           </>
         }
-        labelDisplay="SPECTRALIZED"
-        label="Spectralized"
+        labelDisplay="FRACTIONALIZED"
+        label="Fractionalized"
       >
         <div
           css={css`
@@ -108,7 +108,7 @@ export function TokenPanel({ id }: { id: string }) {
                 </div>
               </div>
             </PanelSection>
-            <PanelSection title="Spectralization parameters">
+            <PanelSection title="Fractionalization parameters">
               <div
                 css={css`
                   display: flex;

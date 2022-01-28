@@ -67,8 +67,8 @@ export function ScreenNft({
     <AppScreen mode="minimal" title="NFT" onBack={() => {}}>
       <ViewArea
         height={62.5 * gu}
-        labelDisplay="SPECTRALIZED"
-        label="Spectralized"
+        labelDisplay="FRACTIONALIZED"
+        label="Fractionalized"
         actionButtons={
           <>
             <ButtonIcon

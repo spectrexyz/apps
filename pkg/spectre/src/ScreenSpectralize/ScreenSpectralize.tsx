@@ -59,7 +59,7 @@ export function ScreenSpectralize() {
     return (
       <AppScreen
         compactBar={{
-          title: "Spectralize",
+          title: "Fractionalize",
           onBack: prev,
         }}
       >
@@ -73,9 +73,10 @@ export function ScreenSpectralize() {
             margin: 0 auto;
             padding: ${contentPadding};
             padding-top: 8gu;
+            text-align: center;
           `}
         >
-          Please connect your account to spectralize your NFT.
+          Please connect your account to fractionalize your NFT.
         </div>
       </AppScreen>
     )
