@@ -85,9 +85,10 @@ export function TextInput({
       ref={textareaRef}
       {...sharedProps}
       {...(props as TextAreaProps)}
-      css={({ colors }) => css`
+      css={({ colors, fonts }) => css`
         width: 100%;
         padding: 0;
+        font-family: ${fonts.families.mono};
         color: ${colors.accent};
         background: transparent;
         resize: vertical;
@@ -103,10 +104,11 @@ export function TextInput({
       ref={inputRef}
       {...sharedProps}
       {...(props as InputProps)}
-      css={({ colors }) => css`
+      css={({ colors, fonts }) => css`
         width: 100%;
         height: 3.5gu;
         padding: 0;
+        font-family: ${fonts.families.mono};
         background: transparent;
         border: 0;
         color: ${colors.accent};
