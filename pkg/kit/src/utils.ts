@@ -156,26 +156,22 @@ export function formatDate(date: string | Date, full = false): string {
   )
 }
 
-// Formats a number (fractional or not) to represent a currency amount.
-export function formatCurrencyNumber(
-  amount: bigint | number | string,
+// Format any number
+export function formatNumber(
+  value: bigint | number | string,
   digits: number | bigint = 2,
   { trailingZeros }: { trailingZeros?: boolean } = {}
 ): string {
   digits = Number(digits)
   return (
     new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "AAA",
       minimumFractionDigits: trailingZeros ? digits : 0,
       maximumFractionDigits: digits,
     }).format as (value: bigint | number | string) => string
-  )(String(amount))
-    .replace("AAA", "")
-    .trim()
+  )(String(value))
 }
 
-// Formats an amount represented by a bigint and a number of decimals.
+// Format an amount represented by a bigint and a number of decimals.
 export function formatAmount(
   amount: bigint,
   decimals: number | bigint,
@@ -188,7 +184,7 @@ export function formatAmount(
   digits = BigInt(digits)
 
   if (decimals === 0n) {
-    return formatCurrencyNumber(amount, digits)
+    return formatNumber(amount, digits)
   }
 
   const decimalsDivisor = 10n ** decimals
@@ -207,7 +203,7 @@ export function formatAmount(
     fraction = fraction.replace(/0+$/, "")
   }
 
-  return formatCurrencyNumber(
+  return formatNumber(
     fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
     digits,
     { trailingZeros }
