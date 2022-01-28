@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import {
   Button,
   ButtonText,
+  Definition,
   Details,
   Direction,
   Fieldset,
@@ -221,18 +222,18 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   gap: 4gu;
                 `}
               >
-                <AdvancedParameter title="Buyout" content="FLASH - 1 week" />
-                <AdvancedParameter title="Minting" content="MANUAL" />
-                <AdvancedParameter
+                <Definition title="Buyout" content="FLASH - 1 week" />
+                <Definition title="Minting" content="MANUAL" />
+                <Definition
                   title="Initial LP weight"
                   content="80% ETH / 20% MOI"
                 />
-                <AdvancedParameter
+                <Definition
                   title="Target LP weight"
                   content="50% ETH / 50% MOI"
                 />
-                <AdvancedParameter title="Minting fees" content="2%" />
-                <AdvancedParameter title="Trading fees" content="1%" />
+                <Definition title="Minting fees" content="2%" />
+                <Definition title="Trading fees" content="1%" />
               </div>
 
               <div
@@ -323,45 +324,9 @@ function EthInput({
   return (
     <TokenInput
       onChange={onChange}
-      secondaryEnd={
-        usdValue !== null ? `$${formatAmount(usdValue, { decimals: 18 })}` : "−"
-      }
+      secondaryEnd={usdValue !== null ? `$${formatAmount(usdValue, 18)}` : "−"}
       symbol="ETH"
       value={value}
     />
-  )
-}
-
-function AdvancedParameter({
-  title,
-  content,
-}: {
-  title: ReactNode
-  content: ReactNode
-}) {
-  return (
-    <div
-      css={({ fonts }) => css`
-        font-family: ${fonts.families.sans};
-      `}
-    >
-      <div
-        css={({ colors }) => css`
-          padding-bottom: 0.5gu;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: ${colors.contentDimmed};
-        `}
-      >
-        {title}
-      </div>
-      <div
-        css={css`
-          font-size: 14px;
-        `}
-      >
-        {content}
-      </div>
-    </div>
   )
 }
