@@ -9,9 +9,10 @@ import { useResetScroll } from "../App/AppScroll"
 import { Step1 } from "./Step1"
 import { Step2 } from "./Step2"
 import { Step3 } from "./Step3"
+import { StepSummary } from "./StepSummary"
 import { useSpectralize } from "./use-spectralize"
 
-const STEPS = [Step1, Step2, Step3]
+const STEPS = [Step1, Step2, Step3, StepSummary]
 
 export function ScreenSpectralize() {
   const [_, setLocation] = useLocation()
@@ -37,8 +38,6 @@ export function ScreenSpectralize() {
   useEffect(() => {
     resetScroll()
   }, [currentStep, resetScroll])
-
-  useFillDemoData()
 
   const contentMaxWidth = layout.value({
     small: css`none`,
@@ -95,7 +94,7 @@ export function ScreenSpectralize() {
               `}
             >
               <Steps
-                steps={STEPS.length}
+                steps={STEPS.length - 1}
                 current={currentStep}
                 direction="horizontal"
               />
@@ -109,6 +108,7 @@ export function ScreenSpectralize() {
           display: flex;
           gap: ${flexGap};
           flex-direction: ${layout.below("medium") ? "column" : "row"};
+          width: 100%;
           max-width: ${contentMaxWidth};
           margin: 0 auto;
           padding: ${contentPadding};
@@ -123,7 +123,7 @@ export function ScreenSpectralize() {
             `}
           >
             <Steps
-              steps={STEPS.length}
+              steps={STEPS.length - 1}
               current={currentStep}
               direction="vertical"
             />
@@ -133,49 +133,4 @@ export function ScreenSpectralize() {
       </div>
     </AppScreen>
   )
-}
-
-function useFillDemoData() {
-  const { connect } = useEthereum()
-  const {
-    updateAuthorEmail,
-    updateDescription,
-    updateFile,
-    updateTitle,
-    updateTokenName,
-    updateTokenSymbol,
-  } = useSpectralize()
-
-  useEffect(() => {
-    connect('injected')
-
-    // screen 1
-    updateTitle("Two Discs")
-    updateDescription("Two superposed discs on a surface.")
-    updateAuthorEmail("hi@example.org")
-    updateFile(
-      new File(
-        [
-          `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
-             <rect width="100%" height="100%" fill="lightblue"/>
-             <circle cx="54%" cy="54%" r="20%" fill="lightsteelblue" />
-             <circle cx="50%" cy="50%" r="10%" fill="palevioletred" />
-           </svg>`,
-        ],
-        "two-discs.svg",
-        { type: "image/svg+xml" }
-      )
-    )
-
-    // screen 2
-    updateTokenName("Two Discs Token")
-    updateTokenSymbol("DSCS")
-  }, [
-    updateAuthorEmail,
-    updateDescription,
-    updateFile,
-    updateTitle,
-    updateTokenName,
-    updateTokenSymbol,
-  ])
 }

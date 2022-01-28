@@ -1,5 +1,4 @@
 import {
-  ReactNode,
   MutableRefObject,
   useCallback,
   useEffect,
@@ -9,17 +8,13 @@ import {
 import { css } from "@emotion/react"
 import {
   Address,
-  Badge,
   Button,
-  ButtonIcon,
   ButtonText,
   Fieldset,
   IconPlus,
-  IconTrash,
   Slider,
   TextInput,
-  gu,
-  shortenAddress,
+  formatNumber,
   isAddress,
   useEsc,
 } from "kit"
@@ -31,6 +26,7 @@ import {
 import { useEthereum } from "../Ethereum"
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"
+import { EthAddressRow } from "./EthAddressRow"
 import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
@@ -148,7 +144,9 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
                     key={account}
                     address={account}
                     onRemove={() => removeRewardsSplitAddress(account)}
-                    reward={`${data.rewardsPct}%`}
+                    reward={`${formatNumber(
+                      data.rewardsPct / data.rewardsSplit.length
+                    )}%`}
                   />
                 ))}
               </div>
@@ -205,72 +203,6 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
         </ContentLayoutSection>
       </ContentLayout>
     </form>
-  )
-}
-
-type EthAddressRowProps = {
-  address: Address
-  onRemove: () => void
-  reward: ReactNode
-}
-
-function EthAddressRow({ address, onRemove, reward }: EthAddressRowProps) {
-  return (
-    <div
-      css={css`
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        padding-top: 1.5gu;
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-        `}
-      >
-        <div
-          css={css`
-            display: flex;
-            width: 22gu;
-          `}
-        >
-          <Badge
-            alt={address}
-            label={
-              <span
-                css={({ colors }) => css`
-                  font-size: 16px;
-                  color: ${colors.accent};
-                `}
-              >
-                {shortenAddress(address)}
-              </span>
-            }
-          />
-        </div>
-        <ButtonIcon
-          icon={<IconTrash size={2.5 * gu} />}
-          label="Remove"
-          onClick={onRemove}
-          css={css`
-            width: 3gu;
-            height: 3gu;
-          `}
-        />
-      </div>
-      <span
-        css={({ colors }) => css`
-          display: flex;
-          align-items: center;
-          font-size: 18px;
-          color: ${colors.contentDimmed};
-        `}
-      >
-        {reward}
-      </span>
-    </div>
   )
 }
 

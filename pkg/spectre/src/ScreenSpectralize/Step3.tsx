@@ -1,27 +1,23 @@
-import React, { ReactNode, useCallback, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
-  ButtonText,
-  Definition,
-  Details,
   Direction,
   Fieldset,
   IconLifebuoy,
-  IconPencil,
-  IconWarningOctagon,
   Info,
+  Modal,
   Slider,
   TokenInput,
   closestIndexFromSortedNumbers,
   formatAmount,
-  formatCurrencyNumber,
+  formatNumber,
+  gu,
   lerp,
   norm,
   progressToItem,
   useAmountInput,
   usePrice,
-  gu,
 } from "kit"
 import {
   ContentLayout,
@@ -29,6 +25,7 @@ import {
   ContentLayoutSection,
 } from "../ContentLayout"
 import { useLayout } from "../styles"
+import { AdvancedParameters } from "./AdvancedParameters"
 import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
@@ -52,18 +49,18 @@ const maxTokenSupplyCapSteps = [
 export function Step3({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
-  const [buyoutOnly, setBuyoutOnly] = useState(true)
+  const { suggestFromBuyout, updateSuggestFromBuyout } = data
 
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault()
-      if (buyoutOnly) {
-        setBuyoutOnly(false)
+      if (suggestFromBuyout) {
+        updateSuggestFromBuyout(false)
       } else {
         onNext()
       }
     },
-    [onNext, buyoutOnly]
+    [onNext, suggestFromBuyout, updateSuggestFromBuyout]
   )
 
   const inputs = {
@@ -112,6 +109,9 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     },
   }
 
+  const [showAdvancedParametersEdit, setShowAdvancedParamsEdit] =
+    useState(false)
+
   const advancedColumns = layout.value({
     xlarge: 6,
     medium: 3,
@@ -132,7 +132,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
               <EthInput {...inputs.nftBuyoutPrice} />
             </Fieldset>
 
-            {!buyoutOnly && (
+            {!suggestFromBuyout && (
               <>
                 <Fieldset label="Total market cap">
                   <EthInput {...inputs.totalMarketCap} />
@@ -144,7 +144,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             )}
           </div>
           <div>
-            {buyoutOnly ? (
+            {suggestFromBuyout ? (
               <Info
                 icon={<IconLifebuoy />}
                 mode="translucid"
@@ -168,7 +168,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                         colors: ${colors.contentDimmed};
                       `}
                     >
-                      {formatCurrencyNumber(data.maxTokenSupplyCap)}
+                      {formatNumber(data.maxTokenSupplyCap)}
                     </span>
                   }
                 >
@@ -193,77 +193,25 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             )}
           </div>
         </ContentLayoutSection>
-        {!buyoutOnly && (
+        {!suggestFromBuyout && (
           <div
             css={css`
               padding-top: 4gu;
             `}
           >
-            <Details
-              heading="Advanced parameters"
+            <AdvancedParameters
+              columns={advancedColumns}
+              onEdit={() => setShowAdvancedParamsEdit(true)}
               headingBaseWidth={
                 layout.below("large")
                   ? undefined
                   : `calc(50% - ${(5 / 2) * gu}px)`
               }
-              contextual={
-                <ButtonText
-                  label="Edit"
-                  icon={<IconPencil />}
-                  css={({ colors, fonts }) => css`
-                    color: ${colors.accent};
-                    font-size: 16px;
-                    font-family: ${fonts.families.sans};
-                  `}
-                />
-              }
-            >
-              <div
-                css={css`
-                  display: grid;
-                  grid-template-columns: repeat(${advancedColumns}, auto);
-                  gap: 4gu;
-                `}
-              >
-                <Definition title="Buyout" content="FLASH - 1 week" />
-                <Definition title="Minting" content="MANUAL" />
-                <Definition
-                  title="Initial LP weight"
-                  content="80% ETH / 20% MOI"
-                />
-                <Definition
-                  title="Target LP weight"
-                  content="50% ETH / 50% MOI"
-                />
-                <Definition title="Minting fees" content="2%" />
-                <Definition title="Trading fees" content="1%" />
-              </div>
-
-              <div
-                css={({ colors }) => css`
-                  display: flex;
-                  align-items: center;
-                  gap: 1gu;
-                  padding-top: 3gu;
-                  font-size: 12px;
-                  color: ${colors.info};
-                `}
-              >
-                <div
-                  css={css`
-                    display: flex;
-                    align-items: center;
-                    flex-shrink: 0;
-                  `}
-                >
-                  <IconWarningOctagon size={2 * gu} />
-                </div>
-                <p>
-                  These are advanced parameters defaults we recommend. Edit them
-                  at your own risk.
-                </p>
-              </div>
-            </Details>
+            />
+            <AdvancedParametersModal
+              visible={showAdvancedParametersEdit}
+              onClose={() => setShowAdvancedParamsEdit(false)}
+            />
           </div>
         )}
         <div>
@@ -275,7 +223,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             >
               <Button
                 type="submit"
-                label={buyoutOnly ? "Accept suggestions" : "Next"}
+                label={suggestFromBuyout ? "See suggestions" : "Next"}
                 mode="primary-2"
                 shadowInBox
                 wide
@@ -298,7 +246,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
               />
               <Button
                 type="submit"
-                label={buyoutOnly ? "Accept suggestions" : "Next"}
+                label={suggestFromBuyout ? "See suggestions" : "Next"}
                 mode="primary-2"
                 shadowInBox
               />
@@ -327,9 +275,85 @@ function EthInput({
   return (
     <TokenInput
       onChange={onChange}
-      secondaryEnd={usdValue !== null ? `$${formatAmount(usdValue, 18)}` : "−"}
+      secondaryEnd={
+        usdValue !== null ? `$${formatAmount(usdValue, 18, 2)}` : "−"
+      }
       symbol="ETH"
       value={value}
     />
+  )
+}
+
+function AdvancedParametersModal({
+  onClose,
+  visible,
+}: {
+  onClose: () => void
+  visible: boolean
+}) {
+  const layout = useLayout()
+  const introPadding = layout.value({
+    small: css`2gu 0`,
+    medium: css`2gu 0`,
+    large: css`1.5gu 0 1gu`,
+  })
+  return (
+    <Modal mode="large" onClose={onClose} visible={visible}>
+      <header>
+        <h1
+          css={({ fonts }) => css`
+            font-family: ${fonts.families.mono};
+            font-size: 18px;
+            text-transform: uppercase;
+          `}
+        >
+          Edit Advanced Parameters
+        </h1>
+        <p
+          css={({ colors, fonts }) => css`
+            padding: ${introPadding};
+            font-family: ${fonts.families.sans};
+            font-size: 14px;
+            color: ${colors.contentDimmed};
+          `}
+        >
+          Modifying these settings will affect all transactions triggered with
+          the enabled account. You can always reset them to the original
+          default.
+        </p>
+      </header>
+
+      <Fieldset label="Buyout Mechanism" dimmed>
+        <p
+          css={css`
+            font-size: 14px;
+          `}
+        >
+          Buyout proposals need to be approved or rejected by you (as the NFT
+          guardian) before they can be executed. Proposals can stay active for
+          up to one week.
+        </p>
+      </Fieldset>
+
+      <Fieldset label="Buyout Timelock" dimmed>
+        TODO
+      </Fieldset>
+
+      <Fieldset label="Initial LP Weight" dimmed>
+        TODO
+      </Fieldset>
+
+      <Fieldset label="Target LP Weight" dimmed>
+        TODO
+      </Fieldset>
+
+      <Fieldset label="Minting Fees" dimmed>
+        TODO
+      </Fieldset>
+
+      <Fieldset label="Trading Fees" dimmed>
+        TODO
+      </Fieldset>
+    </Modal>
   )
 }

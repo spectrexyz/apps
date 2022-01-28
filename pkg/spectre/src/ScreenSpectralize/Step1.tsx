@@ -117,12 +117,12 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
               value={data.description}
               placeholder="Description of the NFT"
               css={css`
-                height: 8em;
+                height: 25gu;
               `}
             />
           </Fieldset>
 
-          <Fieldset label="Your name / alias">
+          <Fieldset label="Your name / alias" optional>
             <TextInput
               onChange={data.updateAuthorName}
               value={data.authorName}
@@ -138,7 +138,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
             />
           </Fieldset>
 
-          <Fieldset label="Your ENS Domain">
+          <Fieldset label="Your ENS Domain" optional>
             <TextInput
               onChange={data.updateAuthorEns}
               value={data.authorEns}
