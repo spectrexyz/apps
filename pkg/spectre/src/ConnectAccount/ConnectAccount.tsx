@@ -1,7 +1,7 @@
-import { ReactNode, RefObject } from "react"
+import { RefObject } from "react"
 import { css } from "@emotion/react"
+import { useConnect } from "wagmi"
 import { gu, ButtonArea, Modal, Popup } from "kit"
-import { useEthereum } from "../Ethereum"
 
 import metaMask from "./assets/web3-providers/metamask.svg"
 import walletConnect from "./assets/web3-providers/walletconnect.svg"
@@ -107,10 +107,12 @@ function ProviderButton({
   id: string
   name: string
 }) {
-  const { connect } = useEthereum()
-  return (
+  const [{ data }, connect] = useConnect()
+  const connector = data.connectors.find((connector) => connector.id === id)
+
+  return connector ? (
     <ButtonArea
-      onClick={() => connect(id)}
+      onClick={() => connect(connector)}
       css={({ colors }) => css`
         display: flex;
         align-items: center;
@@ -145,5 +147,5 @@ function ProviderButton({
         </div>
       </div>
     </ButtonArea>
-  )
+  ) : null
 }

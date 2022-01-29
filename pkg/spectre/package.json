@@ -13,9 +13,6 @@
     "@elchininet/isometric": "^3.2.0",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.7.1",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.10",
     "ethers": "^5.5.3",
     "kit": "workspace:*",
     "react": "^17.0.2",
@@ -25,7 +22,7 @@
     "react-spring": "^9.4.2",
     "stylis": "^4.0.13",
     "use-nft": "^0.10.2",
-    "web3-react": "^5.0.5",
+    "wagmi": "^0.2.3",
     "zustand": "^3.6.9"
   },
   "devDependencies": {

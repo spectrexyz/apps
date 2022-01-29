@@ -1,9 +1,11 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { useBlockNumber } from "../Ethereum"
+import { useBlockNumber } from "wagmi"
 
 export function SyncStatus({ full = false }) {
-  const { data, isError, isLoading } = useBlockNumber()
+  const [{ data: blockNumber, error, loading }] = useBlockNumber({
+    watch: true,
+  })
   return (
     <div
       css={({ colors }) => css`
@@ -21,8 +23,8 @@ export function SyncStatus({ full = false }) {
           height: 1gu;
           margin-right: 1gu;
           border-radius: 50%;
-          opacity: ${isLoading ? 0.5 : 1};
-          background: ${isError ? colors.negative : colors.positive};
+          opacity: ${loading ? 0.5 : 1};
+          background: ${error ? colors.negative : colors.positive};
         }
       `}
     >
@@ -36,9 +38,9 @@ export function SyncStatus({ full = false }) {
         </span>
       )}
       {(() => {
-        if (isError) return "error."
-        if (isLoading) return "syncing…"
-        return data
+        if (error) return "error."
+        if (loading) return "syncing…"
+        return blockNumber
       })()}
     </div>
   )

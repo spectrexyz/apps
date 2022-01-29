@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { useEnsLookup } from "wagmi"
 import { Address, Badge, ButtonIcon, IconTrash, gu, shortenAddress } from "kit"
 
 type EthAddressRowProps = {
@@ -13,6 +14,7 @@ export function EthAddressRow({
   onRemove,
   reward,
 }: EthAddressRowProps) {
+  const [{ data: ensName }] = useEnsLookup({ address })
   return (
     <div
       css={css`
@@ -43,7 +45,7 @@ export function EthAddressRow({
                   color: ${colors.accent};
                 `}
               >
-                {shortenAddress(address)}
+                {ensName ?? shortenAddress(address)}
               </span>
             }
           />

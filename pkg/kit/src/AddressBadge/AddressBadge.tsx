@@ -4,6 +4,7 @@ import { shortenAddress } from "../utils"
 
 type AddressBadgeProps = {
   address: string
+  ensName?: string
   error?: boolean
   size?: "medium" | "large"
   transparent?: boolean
@@ -11,9 +12,10 @@ type AddressBadgeProps = {
 
 export function AddressBadge({
   address,
+  ensName,
   error = false,
-  transparent = false,
   size = "medium",
+  transparent = false,
 }: AddressBadgeProps): JSX.Element {
   const iconSize = size === "large" ? 32 : 20
   return (
@@ -50,7 +52,7 @@ export function AddressBadge({
           font-size: ${size === "large" ? "24px" : "16px"};
         `}
       >
-        {shortenAddress(address)}
+        {ensName ?? shortenAddress(address)}
       </div>
     </div>
   )

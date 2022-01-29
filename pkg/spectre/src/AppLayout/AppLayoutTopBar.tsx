@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
 import { a, useSpring, useTransition, SpringValue } from "react-spring"
 import { Link, useLocation } from "wouter"
+import { useAccount } from "wagmi"
 import {
   AddressBadge,
   Button,
@@ -19,7 +20,6 @@ import { Menu } from "../Menu/Menu"
 import { menuLinks } from "../content"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"
-import { useEthereum } from "../Ethereum"
 
 import logo from "./logo.png"
 
@@ -39,16 +39,19 @@ export function TopBar() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
   const connectButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
-  const { account } = useEthereum()
+  const [account, disconnect] = useAccount({ fetchEns: true })
   const layout = useLayout()
 
+  const address = account.data?.address
+  const ensName = account.data?.ens?.name
+
   useEffect(() => {
-    if (account) {
+    if (address) {
       setConnectAccountOpened(false)
     } else {
       setAccountOpened(false)
     }
-  }, [account])
+  }, [address])
 
   const maxWidth = layout.value({
     small: 0,
@@ -146,12 +149,12 @@ export function TopBar() {
                   />
                 </ButtonArea>
                 <div>
-                  {account ? (
+                  {address ? (
                     <ButtonArea
                       title="Open Account"
                       onClick={() => setAccountOpened(true)}
                     >
-                      <AddressBadge address={account} />
+                      <AddressBadge address={address} ensName={ensName} />
                     </ButtonArea>
                   ) : (
                     <Button

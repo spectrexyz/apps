@@ -6,6 +6,7 @@ import {
   useState,
 } from "react"
 import { css } from "@emotion/react"
+import { useAccount } from "wagmi"
 import {
   Address,
   Button,
@@ -23,7 +24,6 @@ import {
   ContentLayoutHeading,
   ContentLayoutSection,
 } from "../ContentLayout"
-import { useEthereum } from "../Ethereum"
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"
 import { EthAddressRow } from "./EthAddressRow"
@@ -35,7 +35,9 @@ const REWARDS_MAX = 50
 export function Step2({ title, onPrev, onNext }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
-  const { account } = useEthereum()
+  const [{ data: accountData }] = useAccount({ fetchEns: false })
+  const address = accountData && accountData?.address
+
   const { rewardsSplit, addRewardsSplitAddress, removeRewardsSplitAddress } =
     data
 
@@ -66,14 +68,15 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
   useEffect(() => {
     if (
       rewardsSplit.length === 0 &&
-      !hasFilledCurrentAccountInRewards.current
+      !hasFilledCurrentAccountInRewards.current &&
+      address
     ) {
-      addRewardsSplitAddress(account)
+      addRewardsSplitAddress(address)
 
       // Make sure we only prefill the account once
       hasFilledCurrentAccountInRewards.current = true
     }
-  }, [account, rewardsSplit, addRewardsSplitAddress])
+  }, [address, rewardsSplit, addRewardsSplitAddress])
 
   return (
     <form onSubmit={handleSubmit}>

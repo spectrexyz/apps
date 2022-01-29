@@ -1,13 +1,13 @@
 import React, { useEffect, useState, ReactNode } from "react"
 import { css } from "@emotion/react"
-import { AddressBadge, Button, ButtonArea, springs, noop } from "kit"
+import { useAccount } from "wagmi"
 import { a, useTransition } from "react-spring"
+import { AddressBadge, Button, ButtonArea, springs, noop } from "kit"
 import { AccountDrawer } from "../StatusBar/AccountDrawer"
 import { Actions } from "../Actions/Actions"
 import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
 import { SyncStatus } from "../SyncStatus"
 import { useAppReady } from "../App/AppReady"
-import { useEthereum } from "../Ethereum"
 import { useLayout } from "../styles"
 
 export function AppLayoutBottomBar({ compact }: { compact: boolean }) {
@@ -68,14 +68,17 @@ function BottomBar() {
 function BottomBarCompact() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [drawerOpened, setDrawerOpened] = useState(false)
-  const { account, disconnect } = useEthereum()
+  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: true })
   const { appReadyTransition } = useAppReady()
 
+  const address = accountData?.address
+  const ensName = accountData?.ens?.name
+
   useEffect(() => {
-    if (account) {
+    if (address) {
       setConnectAccountOpened(false)
     }
-  }, [account])
+  }, [address])
 
   const drawerSpringConfig = springs.appear
 
@@ -125,7 +128,8 @@ function BottomBarCompact() {
                 />
 
                 <BarArea
-                  account={account}
+                  address={address}
+                  ensName={ensName}
                   drawerOpened={drawerOpened}
                   onOpenDrawer={() => setDrawerOpened(true)}
                   onConnect={() => setConnectAccountOpened(true)}
@@ -150,14 +154,16 @@ function BottomBarCompact() {
 
 // The bar area is always visible, at the bottom
 function BarArea({
-  account,
+  address,
   drawerOpened,
+  ensName,
   onConnect,
   onDisconnect,
   onOpenDrawer,
 }: {
-  account: string
+  address?: string
   drawerOpened: boolean
+  ensName?: string
   onConnect: () => void
   onDisconnect: () => void
   onOpenDrawer: () => void
@@ -176,16 +182,16 @@ function BarArea({
       `}
     >
       <ButtonBar
-        onClick={(account && !drawerOpened && onOpenDrawer) || noop}
+        onClick={(address && !drawerOpened && onOpenDrawer) || noop}
         start={() =>
-          account ? (
-            <AddressBadge address={account} />
+          address ? (
+            <AddressBadge address={address} ensName={ensName} />
           ) : (
             <Button label="Connect account" onClick={onConnect} size="small" />
           )
         }
         end={() => {
-          if (!account) {
+          if (!address) {
             return <Actions />
           }
           if (drawerOpened) {

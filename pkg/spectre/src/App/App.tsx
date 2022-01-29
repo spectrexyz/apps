@@ -3,7 +3,7 @@ import { ReactNode, useMemo } from "react"
 import { Kit, FlatTree } from "kit"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Switch, Route } from "wouter"
-import { BlockNumber, EthBalance, Ethereum } from "../Ethereum"
+import { Wagmi } from "../Wagmi"
 import { AppLayout } from "../AppLayout/AppLayout"
 import { ScreenHome } from "../ScreenHome/ScreenHome"
 import { ScreenNft } from "../ScreenNft/ScreenNft"
@@ -50,9 +50,7 @@ function AppProviders({ children }: { children: ReactNode }) {
             {children}
           </QueryClientProvider>
         ),
-        Ethereum,
-        BlockNumber,
-        EthBalance,
+        Wagmi,
         AppScroll,
         AppViewport,
         AppReady,

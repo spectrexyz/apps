@@ -1,6 +1,8 @@
+import { useMemo } from "react"
 import { css } from "@emotion/react"
 import { a, useTransition } from "react-spring"
 import { colord } from "colord"
+import { useAccount } from "wagmi"
 import {
   AddressBadge,
   Button,
@@ -15,7 +17,6 @@ import {
   gu,
   springs,
 } from "kit"
-import { useEthereum } from "../Ethereum"
 
 type AccountWindowProps = {
   onClose: () => void
@@ -23,7 +24,12 @@ type AccountWindowProps = {
 }
 
 export function AccountWindow({ onClose, visible }: AccountWindowProps) {
-  const { account, disconnect } = useEthereum()
+  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: false })
+
+  const address = accountData?.address
+  const ensName = accountData?.ens?.name
+
+  const account = useMemo(() => ({ address, ensName }), [address, ensName])
 
   const visibility = useTransition(visible && account, {
     config: springs.swift,
@@ -37,7 +43,9 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
   return (
     <Root>
       {visibility(({ blur, opacity, transform }, account) => {
-        return account ? (
+        if (!account) return null
+        const { address, ensName } = account
+        return address ? (
           <FocusTrap
             focusTrapOptions={{
               onDeactivate: onClose,
@@ -133,7 +141,8 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                   `}
                 >
                   <AddressBadge
-                    address={account}
+                    address={address}
+                    ensName={ensName}
                     size="large"
                     transparent={true}
                   />
@@ -158,7 +167,7 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                   <ButtonText
                     icon={<IconArrowSquareOut />}
                     label="Etherscan"
-                    href={`https://etherscan.io/address/${account}`}
+                    href={`https://etherscan.io/address/${address}`}
                     external={true}
                   />
                 </div>

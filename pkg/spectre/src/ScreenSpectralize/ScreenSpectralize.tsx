@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect } from "react"
 import { css } from "@emotion/react"
+import { useAccount } from "wagmi"
 import { Steps } from "kit"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen2"
-import { useEthereum } from "../Ethereum"
 import { useLayout } from "../styles"
 import { useResetScroll } from "../App/AppScroll"
 import { Step1 } from "./Step1"
@@ -16,7 +16,8 @@ const STEPS = [Step1, Step2, Step3, StepSummary]
 
 export function ScreenSpectralize() {
   const [_, setLocation] = useLocation()
-  const { account } = useEthereum()
+  const [{ data: accountData }] = useAccount({ fetchEns: false })
+
   const layout = useLayout()
   const resetScroll = useResetScroll()
   const { currentStep, currentStepTitle, nextStep, prevStep } = useSpectralize()
@@ -55,7 +56,7 @@ export function ScreenSpectralize() {
     xlarge: css`8gu`,
   })
 
-  if (!account) {
+  if (!accountData) {
     return (
       <AppScreen
         compactBar={{
