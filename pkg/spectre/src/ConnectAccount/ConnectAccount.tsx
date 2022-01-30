@@ -8,7 +8,7 @@ import walletConnect from "./assets/web3-providers/walletconnect.svg"
 
 const PROVIDERS = [
   ["MetaMask", metaMask, "injected"],
-  ["WalletConnect", walletConnect, "wallet-connect"],
+  ["WalletConnect", walletConnect, "walletConnect"],
 ]
 
 export function ConnectAccount({

@@ -39,7 +39,7 @@ export function TopBar() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
   const connectButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
-  const [account, disconnect] = useAccount({ fetchEns: true })
+  const [account] = useAccount({ fetchEns: true })
   const layout = useLayout()
 
   const address = account.data?.address
