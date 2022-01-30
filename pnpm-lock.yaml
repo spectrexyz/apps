@@ -166,7 +166,6 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.10.1
       '@typescript-eslint/parser': ^5.10.1
       '@vitejs/plugin-react': ^1.1.4
-      '@walletconnect/types': ^1.7.1
       buffer: ^6.0.3
       eslint: ^8.8.0
       eslint-plugin-import: ^2.25.4
@@ -211,7 +210,6 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.10.1_5bb2413551d07429e4087fb9ca3ae3ea
       '@typescript-eslint/parser': 5.10.1_eslint@8.8.0+typescript@4.5.5
       '@vitejs/plugin-react': 1.1.4
-      '@walletconnect/types': 1.7.1
       eslint: 8.8.0
       eslint-plugin-import: 2.25.4_eslint@8.8.0
       eslint-plugin-react: 7.28.0_eslint@8.8.0
@@ -3328,6 +3326,7 @@ packages:
 
   /@walletconnect/types/1.7.1:
     resolution: {integrity: sha512-X0NunEUgq46ExDcKo7BnnFpFhuZ89bZ04/1FtohNziBWcP2Mblp2yf+FN7iwmZiuZ3bRTb8J1O4oJH2JGP9I7A==}
+    dev: false
 
   /@walletconnect/utils/1.7.1:
     resolution: {integrity: sha512-7Lig9rruqTMaFuwEhBrArq1QgzIf2NuzO6J3sCUYCZh60EQ7uIZjekaDonQjiQJAbfYcgWUBm8qa0PG1TzYN3Q==}
