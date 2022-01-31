@@ -185,7 +185,7 @@ importers:
       use-nft: ^0.10.2
       vite: ^2.7.13
       vite-plugin-checker: ^0.3.4
-      wagmi: ^0.2.5
+      wagmi: ^0.2.6
       zustand: ^3.6.9
     dependencies:
       '@bpierre/use-viewport': 0.3.0_react@17.0.2
@@ -204,7 +204,7 @@ importers:
       react-spring: 9.4.2_react-dom@17.0.2+react@17.0.2
       stylis: 4.0.13
       use-nft: 0.10.2_ethers@5.5.3+react@17.0.2
-      wagmi: 0.2.5_ethers@5.5.3+react@17.0.2
+      wagmi: 0.2.6_ethers@5.5.3+react@17.0.2
       zustand: 3.6.9_react@17.0.2
     devDependencies:
       '@typescript-eslint/eslint-plugin': 5.10.1_5bb2413551d07429e4087fb9ca3ae3ea
@@ -15435,8 +15435,8 @@ packages:
       xml-name-validator: 3.0.0
     dev: true
 
-  /wagmi-private/0.1.6_d0bfad94a71d33c81e7ee6fa6a6788ce:
-    resolution: {integrity: sha512-Hm3zPk3qGljerJh8j83Rjt62qWVSyxjQ3yQ8xyay4xpiMR5ssI+4oBWZLPzWRgb0AHTtA9d/1/xz6PYWSKf76w==}
+  /wagmi-private/0.1.7_d0bfad94a71d33c81e7ee6fa6a6788ce:
+    resolution: {integrity: sha512-73HlcoZkom1WSZCfNRrtNd7MZ3j1z5T9nVG3LJZ+dAhOhVLxg00uEFo6PGq2Ex8IWkowU5fff9DCDWYGoCjrCg==}
     peerDependencies:
       '@walletconnect/ethereum-provider': 1.7.1
       ethers: ^5.5.1
@@ -15457,8 +15457,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /wagmi/0.2.5_ethers@5.5.3+react@17.0.2:
-    resolution: {integrity: sha512-WPuLmNgtpY4grRQ4gR8SDeK7esFWwjymuK7bdqtbh639ALk2qe+l6gTdnX6Z1tEAH7wU8QC/8pFU6sgRqiZHxg==}
+  /wagmi/0.2.6_ethers@5.5.3+react@17.0.2:
+    resolution: {integrity: sha512-0pvboWgCkPrX16K0evT9VxNVTq559FSs28WwjotPKlMYAkkcVN46kTIWaLUN7Bm5BaysWlgxaCHrS6kcBC9czw==}
     peerDependencies:
       ethers: ^5.5.1
       react: ^17.0.0
@@ -15467,7 +15467,7 @@ packages:
       '@walletconnect/ethereum-provider': 1.7.1
       ethers: 5.5.3
       react: 17.0.2
-      wagmi-private: 0.1.6_d0bfad94a71d33c81e7ee6fa6a6788ce
+      wagmi-private: 0.1.7_d0bfad94a71d33c81e7ee6fa6a6788ce
       walletlink: 2.4.5
     transitivePeerDependencies:
       - '@babel/core'

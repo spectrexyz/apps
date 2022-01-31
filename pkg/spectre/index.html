@@ -2,27 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SPECTRE</title>
   </head>
-  <body style="background: #050e1f">
+  <body style="background: #050E1F">
     <div id="root"></div>
     <form name="contact" netlify netlify-honeypot="bot-field" hidden>
       <input type="email" name="email" />
     </form>
-    <script type="module">
-      // walletconnect fixes
-
-      import process from "process"
-      import { Buffer } from "buffer"
-      import EventEmitter from "events"
-
-      window.process = process
-      window.Buffer = Buffer
-      window.EventEmitter = EventEmitter
-      window.global = globalThis
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

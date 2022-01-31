@@ -1,3 +1,4 @@
+import '../walletconnect-compat'
 import { ReactNode } from "react"
 import { Provider as WagmiProvider, defaultChains } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
@@ -20,11 +21,7 @@ const wagmiConnectors = [
   new InjectedConnector({ chains: [CHAIN] }),
   new WalletConnectConnector({
     chains: [CHAIN],
-    options: {
-      // bridge: "https://bridge.walletconnect.org",
-      qrcode: true,
-      infuraId: INFURA_PROJECT_ID,
-    },
+    options: { infuraId: INFURA_PROJECT_ID },
   }),
 ]
 

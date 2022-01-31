@@ -4,6 +4,9 @@ import checker from "vite-plugin-checker"
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => ({
+  define: {
+    global: 'globalThis',
+  },
   build: {
     target: "es2020",
     outDir: "dist",
