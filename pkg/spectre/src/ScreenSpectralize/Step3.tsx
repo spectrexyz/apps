@@ -118,11 +118,6 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     small: 2,
   })
 
-  useEffect(() => {
-    setShowAdvancedParamsEdit(true)
-    updateSuggestFromBuyout(false)
-  }, [updateSuggestFromBuyout])
-
   return (
     <form onSubmit={handleSubmit}>
       <ContentLayout>
