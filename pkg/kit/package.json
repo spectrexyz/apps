@@ -36,8 +36,8 @@
     "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^17.0.11",
     "@types/stylis": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.10.1",
-    "@typescript-eslint/parser": "^5.10.1",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
     "eslint": "^8.8.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
@@ -64,7 +64,6 @@
     "react-cool-dimensions": "^2.0.7",
     "react-dropzone": "^11.5.3",
     "react-popper": "^2.2.5",
-    "react-query": "^3.34.12",
-    "token-amount": "^0.3.0"
+    "react-query": "^3.34.12"
   }
 }
