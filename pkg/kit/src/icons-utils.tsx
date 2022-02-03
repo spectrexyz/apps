@@ -8,10 +8,7 @@ import {
   useInsideButtonText,
   ICON_SIZE_DEFAULT as BUTTON_TEXT_ICON_SIZE_DEFAULT,
 } from "./ButtonText"
-import {
-  useInsideButtonIcon,
-  ICON_SIZE_DEFAULT as BUTTON_ICON_ICON_SIZE_DEFAULT,
-} from "./ButtonIcon"
+import { useButtonIconIconSize } from "./ButtonIcon"
 import { useInfoTitleIconColor, useInfoTitleIconSize } from "./Info"
 import { gu } from "./styles"
 
@@ -19,7 +16,7 @@ export function useIconSize(size?: number): number {
   const isInsideButton = useInsideButton()
 
   const isInsideButtonText = useInsideButtonText()
-  const isInsideButtonIcon = useInsideButtonIcon()
+  const buttonIconIconSize = useButtonIconIconSize()
 
   const infoTitleIconSize = useInfoTitleIconSize()
 
@@ -33,7 +30,10 @@ export function useIconSize(size?: number): number {
   }
 
   if (isInsideButtonText) return BUTTON_TEXT_ICON_SIZE_DEFAULT
-  if (isInsideButtonIcon) return BUTTON_ICON_ICON_SIZE_DEFAULT
+
+  if (buttonIconIconSize !== null) {
+    return buttonIconIconSize
+  }
 
   if (infoTitleIconSize !== null) return infoTitleIconSize
 

@@ -7,11 +7,8 @@ import { css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
 import { gu } from "../styles"
 
-export const ICON_SIZE_DEFAULT = 3 * gu
-
-const ButtonIconContext = createContext(false)
-
 type ButtonIconMode = "normal" | "outline"
+type ButtonIconSize = "medium" | "small"
 
 type ButtonIconProps = ButtonAreaProps & {
   disabled?: boolean
@@ -20,13 +17,28 @@ type ButtonIconProps = ButtonAreaProps & {
   icon: ReactNode
   label: string
   mode?: ButtonIconMode
+  size?: ButtonIconSize
 }
+
+const ButtonIconContext = createContext<null | {
+  size: ButtonIconSize
+}>(null)
 
 export const ButtonIcon = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   ButtonIconProps
 >(function ButtonIcon(
-  { disabled, external, href, icon, label, mode = "normal", onClick, ...props },
+  {
+    disabled,
+    external,
+    href,
+    icon,
+    label,
+    mode = "normal",
+    onClick,
+    size = "medium",
+    ...props
+  },
   ref
 ) {
   const anchorProps = useCallback<() => ComponentPropsWithoutRef<"a">>(() => {
@@ -45,8 +57,8 @@ export const ButtonIcon = forwardRef<
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 5gu;
-    height: 5gu;
+    width: ${size === "small" ? css`3gu` : css`5gu`};
+    height: ${size === "small" ? css`3gu` : css`5gu`};
     color: ${mode === "outline" ? colors.accent : colors.content};
     background: ${mode === "outline" ? colors.background : "transparent"};
     border: ${mode === "outline" ? "1px" : "0"} solid ${colors.accent};
@@ -54,10 +66,16 @@ export const ButtonIcon = forwardRef<
     &:active {
       transform: translate(1px, 1px);
     }
+    &:disabled {
+      opacity: 0.5;
+      &:active {
+        transform: none;
+      }
+    }
   `
 
   return (
-    <ButtonIconContext.Provider value={true}>
+    <ButtonIconContext.Provider value={{ size }}>
       {href ? (
         <a {...anchorProps()} css={sharedCssStyles}>
           {icon}
@@ -78,6 +96,8 @@ export const ButtonIcon = forwardRef<
   )
 })
 
-export function useInsideButtonIcon(): boolean {
-  return useContext(ButtonIconContext)
+export function useButtonIconIconSize() {
+  const context = useContext(ButtonIconContext)
+  if (!context) return null
+  return context.size === "small" ? 2 * gu : 3 * gu
 }
