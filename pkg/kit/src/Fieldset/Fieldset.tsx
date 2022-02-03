@@ -35,6 +35,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
         <section
           ref={ref}
           css={({ colors, fonts }) => css`
+            position: relative;
             margin-top: 2gu;
             padding: 2gu;
             background: ${colors.layer2};
