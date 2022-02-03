@@ -61,6 +61,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
           css={({ colors }) => css`
             padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
             background: ${layout.below("medium") ? "none" : colors.background};
+            border: ${layout.below("medium") ? "none" : `2px solid ${colors.contrast}`};
           `}
         >
           {!layout.below("medium") ? (

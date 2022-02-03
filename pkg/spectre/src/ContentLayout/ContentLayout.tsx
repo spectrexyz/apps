@@ -36,7 +36,7 @@ export function ContentLayout({ children }: ContentLayoutProps) {
                 width: 100%;
                 padding: 4.5gu 5gu 3gu;
                 background: ${colors.background};
-                outline: 2px solid ${colors.contrast};
+                border: 2px solid ${colors.contrast};
               `
         }
       >
