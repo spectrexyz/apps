@@ -1,3 +1,4 @@
+import ms from "ms"
 import prettyBytes from "pretty-bytes"
 
 export function addSlash(path: string): string {
@@ -138,6 +139,10 @@ export function isEmail(email: string): boolean {
 
 export function uid(prefix = "uid"): string {
   return `${prefix}-${Math.round(Math.random() * 10 ** 8)}`
+}
+
+export function formatDuration(duration: number): string {
+  return ms(duration, { long: true })
 }
 
 export function formatDate(date: string | Date, full = false): string {
@@ -291,3 +296,8 @@ export function noop(): void {
 
 export const dpr =
   typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+
+export const MINUTE_MS = 60 * 1000
+export const HOUR_MS = MINUTE_MS * 60
+export const DAY_MS = HOUR_MS * 24
+export const WEEK_MS = DAY_MS * 7

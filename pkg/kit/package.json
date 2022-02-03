@@ -58,6 +58,7 @@
     "colord": "^2.9.2",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^8.9.1",
+    "ms": "^3.0.0-canary.1",
     "ogl": "^0.0.81",
     "pretty-bytes": "^5.6.0",
     "react-cool-dimensions": "^2.0.7",

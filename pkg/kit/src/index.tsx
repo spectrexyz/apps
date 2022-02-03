@@ -4,7 +4,7 @@ export type { ThemeContext } from "./Theme"
 
 export { colord as co } from "colord"
 export { default as FocusTrap } from "focus-trap-react"
-export { default as TokenAmount } from "token-amount"
+export { default as ms } from "ms"
 export { default as useDimensions } from "react-cool-dimensions"
 export { useDropzone } from "react-dropzone"
 
