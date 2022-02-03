@@ -12,22 +12,33 @@ export function ContentLayout({ children }: ContentLayoutProps) {
     small: css`3.5gu`,
     xlarge: css`5gu`,
   })
+  const flexDirection = layout.value({
+    small: "column",
+    medium: "row",
+  })
 
   return (
     <div
       css={css`
         display: flex;
         gap: ${flexGap};
-        flex-direction: ${layout.below("medium") ? "column" : "row"};
+        flex-direction: ${flexDirection};
         width: 100%;
       `}
     >
       <div
-        css={({ colors }) => css`
-          width: 100%;
-          padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
-          background: ${layout.below("medium") ? "none" : colors.background};
-        `}
+        css={({ colors }) =>
+          layout.below("medium")
+            ? css`
+                width: 100%;
+              `
+            : css`
+                width: 100%;
+                padding: 4.5gu 5gu 3gu;
+                background: ${colors.background};
+                outline: 2px solid ${colors.contrast};
+              `
+        }
       >
         {children}
       </div>
