@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { css } from "@emotion/react"
-import { TokenAmount, TokenInput as KitTokenInput, usePrice } from "kit"
+import { TokenInput as KitTokenInput, usePrice } from "kit"
+import TokenAmount from "token-amount"
 
 export function TokenInput() {
   return (

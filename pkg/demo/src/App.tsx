@@ -19,6 +19,7 @@ import { RadioBox } from "./RadioBox"
 import { Slider } from "./Slider"
 import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
+import { Toggle } from "./Toggle"
 import { TokenBadge } from "./TokenBadge"
 import { TokenIcon } from "./TokenIcon"
 import { TokenInput } from "./TokenInput"
@@ -42,6 +43,7 @@ const demos = [
   ["token-icon", () => <TokenIcon />, true],
   ["token-input", () => <TokenInput />, true],
   ["video", () => <Video />, true],
+  ["toggle", () => <Toggle />, true],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
@@ -77,8 +79,8 @@ const fetcher = [
 
 export function App() {
   return (
-    <Router hook={useHashLocation}>
-      <Kit baseUrl="/kit/">
+    <Kit baseUrl="/kit/">
+      <Router hook={useHashLocation}>
         <NftProvider fetcher={fetcher as FetcherDeclarationEthers}>
           <div
             css={css`
@@ -127,8 +129,8 @@ export function App() {
             </>
           </div>
         </NftProvider>
-      </Kit>
-    </Router>
+      </Router>
+    </Kit>
   )
 }
 
