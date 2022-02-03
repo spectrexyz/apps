@@ -234,11 +234,10 @@ function StepBar({
         }}
       >
         <Moire
-          animate={true}
           backgroundColor={colors.accentInverted}
           height={direction === "horizontal" ? BAR_THICKNESS : length}
           linesColor={colors.accentInvertedContent}
-          scale={0.75}
+          scale={0.8}
           width={direction === "vertical" ? BAR_THICKNESS : length}
         />
       </a.div>

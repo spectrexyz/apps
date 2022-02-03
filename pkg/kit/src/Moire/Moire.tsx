@@ -19,6 +19,8 @@ import moireVertex from "./moire.vert?raw"
 import snoise from "./snoise.glsl?raw"
 /* eslint-enable import/no-unresolved */
 
+// TODO: instanciate another WebGL rendering on demand for shadow true / false
+
 const BASE_SIZE = 500
 
 type RenderMoireFn = (params: {
@@ -35,10 +37,12 @@ const MoireContext = createContext<{
 function useOglProgram({
   dimensions: [width, height],
   parent,
+  shadow,
   speed,
 }: {
   dimensions: [width: number, height: number]
   parent: RefObject<HTMLElement>
+  shadow: boolean
   speed: number
 }) {
   width = Math.round(width)
@@ -53,6 +57,7 @@ function useOglProgram({
   const uniforms = useRef({
     resolution: [width, height],
     seed: Math.random() * 1000,
+    shadow,
     speed,
     time: 1,
   })
@@ -60,8 +65,9 @@ function useOglProgram({
   useEffect(() => {
     uniforms.current.resolution[0] = BASE_SIZE
     uniforms.current.resolution[1] = BASE_SIZE
+    uniforms.current.shadow = shadow
     uniforms.current.speed = speed
-  }, [height, speed, width])
+  }, [height, speed, width, shadow])
 
   useEffect(() => {
     if (!parent.current) return
@@ -143,12 +149,14 @@ function useAnimate(
 type MoireBaseProps = ComponentPropsWithoutRef<"div"> & {
   animate?: boolean
   children: ReactNode
+  shadow?: boolean
   speed?: number
 }
 
 export function MoireBase({
   animate = true,
   children,
+  shadow = false,
   speed = 1,
   ...props
 }: MoireBaseProps): JSX.Element {
@@ -170,8 +178,9 @@ export function MoireBase({
   )
 
   const { canvas, render } = useOglProgram({
-    parent: canvasContainer,
     dimensions: [moireMaxWidth, moireMaxHeight],
+    parent: canvasContainer,
+    shadow,
     speed,
   })
 
@@ -236,6 +245,7 @@ type MoireProps = ComponentPropsWithoutRef<"canvas"> & {
   height: number
   linesColor?: string
   scale?: number
+  shadow?: boolean
   width: number
 }
 
@@ -245,6 +255,7 @@ export const Moire = memo(function Moire({
   height,
   linesColor = "rgb(88, 255, 202)",
   scale = 1,
+  shadow = false,
   width,
   ...props
 }: MoireProps): JSX.Element {

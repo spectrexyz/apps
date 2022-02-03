@@ -238,7 +238,7 @@ export function Slider({
               <Moire
                 width={HANDLE_SIZE}
                 height={HANDLE_SIZE}
-                scale={0.5}
+                scale={0.8}
                 css={css`
                   position: absolute;
                   inset: 0;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import { Moire as KitMoire, springs, map, useEvery } from "kit"
 import { a, useTransition } from "react-spring"
@@ -19,7 +19,7 @@ function settings(): Settings {
 }
 
 export function Moire() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(1)
   const [scale, setScale] = useState(1)
   return (
     <div

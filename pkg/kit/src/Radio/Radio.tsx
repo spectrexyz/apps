@@ -131,7 +131,7 @@ export function Radio({
           outline-offset: 0;
         `}
       >
-        <Moire width={2.25 * gu} height={2.25 * gu} scale={0.5} />
+        <Moire width={2.25 * gu} height={2.25 * gu} scale={0.8} />
       </div>
       {checkTransition(
         (style, checked) =>
