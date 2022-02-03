@@ -99,8 +99,10 @@ export function Modal({
                       css={({ colors }) =>
                         css`
                           width: ${mode === "large" ? "600px" : "auto"};
+                          outline: 2px solid ${colors.contrast};
                           @media (max-width: 600px) {
                             width: ${mode === "large" ? "100%" : "auto"};
+                            outline: 0;
                           }
 
                           max-width: ${mode === "large" ? "100%" : "360px"};
