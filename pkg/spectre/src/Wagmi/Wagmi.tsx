@@ -1,4 +1,4 @@
-import '../walletconnect-compat'
+import "../walletconnect-compat"
 import { ReactNode } from "react"
 import { Provider as WagmiProvider, defaultChains } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
@@ -29,7 +29,11 @@ const ethersProvider = new providers.InfuraProvider(CHAIN_ID, INFURA_PROJECT_ID)
 
 export function Wagmi({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider connectors={wagmiConnectors} provider={ethersProvider}>
+    <WagmiProvider
+      autoConnect
+      connectors={wagmiConnectors}
+      provider={ethersProvider}
+    >
       {children}
     </WagmiProvider>
   )
