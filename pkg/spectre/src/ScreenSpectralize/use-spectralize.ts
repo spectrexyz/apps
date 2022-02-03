@@ -1,11 +1,34 @@
+import { useCallback, useEffect } from "react"
 import zustand from "zustand"
-import { Address, Direction, isEmail } from "kit"
+import shallow from "zustand/shallow"
+import { Address, Direction, WEEK_MS, isEmail, pick } from "kit"
 
 export type FileType = "image" | "video" | "audio"
 
 export type FieldError = string
 export type FieldName = string
 export type FieldErrorObject = { field: FieldName; error: FieldError }
+export type BuyoutMechanism = "manual" | "flash"
+
+export type AdvancedParametersData = {
+  buyoutMechanism: BuyoutMechanism
+  initialLpTokenWeight: number
+  mintingFees: number
+  targetLpTokenWeight: number
+  timelock: number
+  tradingFees: number
+}
+
+export type AdvancedParametersForm = AdvancedParametersData & {
+  load(state: AdvancedParametersData): void
+  reset(): void
+  updateBuyoutMechanism(buyoutMechanism: BuyoutMechanism): void
+  updateInitialLpTokenWeight(initialLpTokenWeight: number): void
+  updateMintingFees(mintingFees: number): void
+  updateTargetLpTokenWeight(targetLpTokenWeight: number): void
+  updateTimelock(timelock: number): void
+  updateTradingFees(tradingFees: number): void
+}
 
 export type SpectralizeData = {
   title: string
@@ -30,7 +53,7 @@ export type SpectralizeData = {
   errors: FieldErrorObject[]
   currentStep: number
   suggestFromBuyout: boolean
-}
+} & AdvancedParametersData
 
 export type SpectralizeMethods = {
   updateTitle(title: string): void
@@ -51,6 +74,8 @@ export type SpectralizeMethods = {
   updateInitialTokenPrice(initialTokenPrice: bigint): void
   updateMaxTokenSupplyCap(maxTokenSupplyCap: bigint): void
   updateBuyoutMultiplier(buyoutMultiplier: number): void
+  saveAdvancedParameters(state: AdvancedParametersData): void
+
   steps: {
     title: string
     validate(state: SpectralizeState): { errors: SpectralizeState["errors"] }
@@ -67,6 +92,15 @@ export type SpectralizeMethods = {
 }
 
 export type SpectralizeState = SpectralizeData & SpectralizeMethods
+
+const advancedParamsKeys: Array<keyof AdvancedParametersData> = [
+  "buyoutMechanism",
+  "initialLpTokenWeight",
+  "mintingFees",
+  "targetLpTokenWeight",
+  "timelock",
+  "tradingFees",
+]
 
 const initialState: SpectralizeData = {
   title: "",
@@ -91,6 +125,12 @@ const initialState: SpectralizeData = {
   errors: [],
   currentStep: 0,
   suggestFromBuyout: true,
+  buyoutMechanism: "manual",
+  timelock: WEEK_MS,
+  mintingFees: 2,
+  tradingFees: 1,
+  initialLpTokenWeight: 0.2,
+  targetLpTokenWeight: 0.5,
 }
 
 export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
@@ -221,6 +261,9 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       nftBuyoutPrice: (totalMarketCap * BigInt(buyoutMultiplier)) / 10n,
     })
   },
+  saveAdvancedParameters(state) {
+    set(state)
+  },
 
   steps: [
     {
@@ -331,7 +374,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     const { currentStep, steps } = get()
     return steps[currentStep].title
   },
-  updateSuggestFromBuyout: (suggestFromBuyout) => {
+  updateSuggestFromBuyout(suggestFromBuyout) {
     set({ suggestFromBuyout })
   },
 
@@ -414,6 +457,65 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     get().addRewardsSplitAddress("0x627306090abab3a6e1400e9345bc60c78a8bef57")
     get().addRewardsSplitAddress("0xf17f52151ebef6c7334fad080c5704d77216b732")
 
-    set({ currentStep: 0 })
+    set({ currentStep: 2 })
   },
 }))
+
+const useAdvancedParametersFormStore = zustand<AdvancedParametersForm>(
+  (set) => ({
+    ...pick(initialState, advancedParamsKeys),
+    updateBuyoutMechanism(buyoutMechanism) {
+      set({ buyoutMechanism })
+    },
+    updateTimelock(timelock) {
+      set({ timelock })
+    },
+    updateMintingFees(mintingFees) {
+      set({ mintingFees })
+    },
+    updateTradingFees(tradingFees) {
+      set({ tradingFees })
+    },
+    updateInitialLpTokenWeight(initialLpTokenWeight) {
+      set({ initialLpTokenWeight })
+    },
+    updateTargetLpTokenWeight(targetLpTokenWeight) {
+      set({ targetLpTokenWeight })
+    },
+    load(state) {
+      set(state)
+    },
+    reset() {
+      set(pick(initialState, advancedParamsKeys))
+    },
+  })
+)
+
+export function useAdvancedParameters(): AdvancedParametersForm & {
+  save(): void
+  reset(): void
+} {
+  const savedState = useSpectralize(
+    (state) => pick(state, advancedParamsKeys),
+    shallow
+  )
+  const formState = useAdvancedParametersFormStore()
+
+  const saveAdvancedParameters = useSpectralize(
+    (state) => state.saveAdvancedParameters
+  )
+  const load = useAdvancedParametersFormStore((state) => state.load)
+  const reset = useAdvancedParametersFormStore((state) => state.reset)
+
+  useEffect(() => {
+    load(savedState)
+  }, [load, savedState])
+
+  return {
+    ...formState,
+    save() {
+      saveAdvancedParameters(formState)
+    },
+    reset,
+  }
+}

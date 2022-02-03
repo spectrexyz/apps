@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   Fieldset,
   IconLifebuoy,
   Info,
-  Modal,
   Slider,
   TokenInput,
   closestIndexFromSortedNumbers,
@@ -26,6 +25,7 @@ import {
 } from "../ContentLayout"
 import { useLayout } from "../styles"
 import { AdvancedParameters } from "./AdvancedParameters"
+import { AdvancedParametersEditModal } from "./AdvancedParametersEditModal"
 import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
@@ -118,6 +118,11 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     small: 2,
   })
 
+  useEffect(() => {
+    setShowAdvancedParamsEdit(true)
+    updateSuggestFromBuyout(false)
+  }, [updateSuggestFromBuyout])
+
   return (
     <form onSubmit={handleSubmit}>
       <ContentLayout>
@@ -208,7 +213,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   : `calc(50% - ${(5 / 2) * gu}px)`
               }
             />
-            <AdvancedParametersModal
+            <AdvancedParametersEditModal
               visible={showAdvancedParametersEdit}
               onClose={() => setShowAdvancedParamsEdit(false)}
             />
@@ -281,101 +286,5 @@ function EthInput({
       symbol="ETH"
       value={value}
     />
-  )
-}
-
-function AdvancedParametersModal({
-  onClose,
-  visible,
-}: {
-  onClose: () => void
-  visible: boolean
-}) {
-  const layout = useLayout()
-  const introPadding = layout.value({
-    small: css`2gu 0`,
-    medium: css`2gu 0`,
-    large: css`1.5gu 0 1gu`,
-  })
-  return (
-    <Modal mode="large" onClose={onClose} visible={visible}>
-      <header>
-        <h1
-          css={({ fonts }) => css`
-            font-family: ${fonts.families.mono};
-            font-size: 18px;
-            text-transform: uppercase;
-          `}
-        >
-          Edit Advanced Parameters
-        </h1>
-        <p
-          css={({ colors, fonts }) => css`
-            padding: ${introPadding};
-            font-family: ${fonts.families.sans};
-            font-size: 14px;
-            color: ${colors.contentDimmed};
-          `}
-        >
-          Modifying these settings will affect all transactions triggered with
-          the enabled account. You can always reset them to the original
-          default.
-        </p>
-      </header>
-
-      <Fieldset label="Buyout Mechanism" dimmed>
-        <p
-          css={css`
-            font-size: 14px;
-          `}
-        >
-          Buyout proposals need to be approved or rejected by you (as the NFT
-          guardian) before they can be executed. Proposals can stay active for
-          up to one week.
-        </p>
-      </Fieldset>
-
-      <Fieldset label="Buyout Timelock" dimmed>
-        TODO
-      </Fieldset>
-
-      <Fieldset label="Initial LP Weight" dimmed>
-        TODO
-      </Fieldset>
-
-      <Fieldset label="Target LP Weight" dimmed>
-        TODO
-      </Fieldset>
-
-      <Fieldset label="Minting Fees" dimmed>
-        TODO
-      </Fieldset>
-
-      <Fieldset label="Trading Fees" dimmed>
-        TODO
-      </Fieldset>
-
-      <div
-        css={css`
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 2gu;
-          padding-top: 3gu;
-        `}
-      >
-        <Button
-          label="Reset"
-          mode="secondary-2"
-          shadowInBox
-          onClick={() => {}}
-        />
-        <Button
-          onClick={() => {}}
-          label={"Save changes"}
-          mode="primary-2"
-          shadowInBox
-        />
-      </div>
-    </Modal>
   )
 }

@@ -56,6 +56,9 @@ export function ScreenSpectralize() {
     xlarge: css`8gu`,
   })
 
+  const { fillDemoData } = useSpectralize()
+  useEffect(() => fillDemoData(), [fillDemoData])
+
   if (!accountData) {
     return (
       <AppScreen
