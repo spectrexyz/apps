@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react"
 import { css } from "@emotion/react"
 import {
   ButtonText,
@@ -5,8 +6,10 @@ import {
   Details,
   IconPencil,
   IconWarningOctagon,
+  formatDuration,
   gu,
 } from "kit"
+import { useSpectralize } from "./use-spectralize"
 
 type AdvancedParametersProps = {
   columns?: number
@@ -15,12 +18,21 @@ type AdvancedParametersProps = {
   onEdit?: () => void
 }
 
-export function AdvancedParameters({
+export const AdvancedParameters = memo(function AdvancedParameters({
   columns = 2,
   headingFontSize = "16px",
   headingBaseWidth,
   onEdit,
 }: AdvancedParametersProps) {
+  const {
+    buyoutMechanism,
+    initialLpTokenWeight,
+    mintingFees,
+    targetLpTokenWeight,
+    timelock,
+    tradingFees,
+  } = useSpectralize()
+
   return (
     <Details
       heading={
@@ -55,12 +67,24 @@ export function AdvancedParameters({
           gap: 4gu;
         `}
       >
-        <Definition title="Buyout" content="FLASH - 1 week" />
-        <Definition title="Minting" content="MANUAL" />
-        <Definition title="Initial LP weight" content="80% ETH / 20% MOI" />
-        <Definition title="Target LP weight" content="50% ETH / 50% MOI" />
-        <Definition title="Minting fees" content="2%" />
-        <Definition title="Trading fees" content="1%" />
+        <Definition
+          title="Buyout mechanism"
+          content={buyoutMechanism === "flash" ? "Flash" : "Manual"}
+        />
+        <Definition
+          title="Buyout timelock"
+          content={formatDuration(timelock)}
+        />
+        <Definition
+          title="Initial LP weight"
+          content={tokenWeightLabel(initialLpTokenWeight)}
+        />
+        <Definition
+          title="Target LP weight"
+          content={tokenWeightLabel(targetLpTokenWeight)}
+        />
+        <Definition title="Minting fees" content={`${mintingFees}%`} />
+        <Definition title="Trading fees" content={`${tradingFees}%`} />
       </div>
 
       <div
@@ -88,5 +112,12 @@ export function AdvancedParameters({
         </p>
       </div>
     </Details>
+  )
+})
+
+function tokenWeightLabel(tokenWeight: number) {
+  return (
+    `${Math.round(tokenWeight * 100)}% / ` +
+    `${Math.round((1 - tokenWeight) * 100)}%`
   )
 }

@@ -47,7 +47,7 @@ function closestBreakpoint(name: Breakpoint): Breakpoint {
 export function useLayout() {
   const { above, below } = useViewport()
 
-  const [name, layout] = useMemo(
+  const [layoutName, layout] = useMemo(
     () =>
       breakpointsByLargest.find(([name]) => above(name)) ??
       breakpointsByLargest[
@@ -58,32 +58,37 @@ export function useLayout() {
 
   // Get a value depending on the current layout
   const value = useCallback(
-    <T extends unknown>(values: { small: T; medium?: T; large?: T; xlarge?: T }): T | undefined => {
+    <T extends unknown>(values: {
+      small: T
+      medium?: T
+      large?: T
+      xlarge?: T
+    }): T => {
       if (values.small === undefined) {
         throw new Error(
           "The “small” breakpoint is required with layout.value()"
         )
       }
 
-      if (values[name] !== undefined) {
-        return values[name]
+      if (values[layoutName] !== undefined) {
+        return values[layoutName] as T
       }
 
-      let fallback = name
-      while (values[fallback] === undefined) {
-        let breakpoint = closestBreakpoint(fallback)
-        if (breakpoint === fallback) {
-          return undefined
+      let breakPointName = layoutName
+      while (values[breakPointName] === undefined) {
+        let breakpoint = closestBreakpoint(breakPointName)
+        if (breakpoint === breakPointName) {
+          return values.small
         }
-        fallback = breakpoint
+        breakPointName = breakpoint
       }
-      return values[fallback]
+      return values[breakPointName] as T
     },
-    [name]
+    [layoutName]
   )
 
   return useMemo(
-    () => ({ above, below, ...layout, name, value }),
-    [above, below, layout, name, value]
+    () => ({ above, below, ...layout, name: layoutName, value }),
+    [above, below, layout, layoutName, value]
   )
 }

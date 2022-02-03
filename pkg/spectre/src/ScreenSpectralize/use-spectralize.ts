@@ -491,31 +491,36 @@ const useAdvancedParametersFormStore = zustand<AdvancedParametersForm>(
   })
 )
 
-export function useAdvancedParameters(): AdvancedParametersForm & {
-  save(): void
-  reset(): void
-} {
+export function useAdvancedParametersFormReload(): () => void {
   const savedState = useSpectralize(
     (state) => pick(state, advancedParamsKeys),
     shallow
   )
+  const load = useAdvancedParametersFormStore((state) => state.load)
+
+  return useCallback(() => {
+    load(savedState)
+  }, [load, savedState])
+}
+
+export function useAdvancedParametersForm(): AdvancedParametersForm & {
+  save(): void
+  reset(): void
+} {
   const formState = useAdvancedParametersFormStore()
 
   const saveAdvancedParameters = useSpectralize(
     (state) => state.saveAdvancedParameters
   )
-  const load = useAdvancedParametersFormStore((state) => state.load)
   const reset = useAdvancedParametersFormStore((state) => state.reset)
 
-  useEffect(() => {
-    load(savedState)
-  }, [load, savedState])
+  const save = useCallback(() => {
+    saveAdvancedParameters(formState)
+  }, [saveAdvancedParameters, formState])
 
   return {
     ...formState,
-    save() {
-      saveAdvancedParameters(formState)
-    },
     reset,
+    save,
   }
 }

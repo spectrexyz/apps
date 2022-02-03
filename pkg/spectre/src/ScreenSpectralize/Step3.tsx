@@ -27,7 +27,10 @@ import { useLayout } from "../styles"
 import { AdvancedParameters } from "./AdvancedParameters"
 import { AdvancedParametersEditModal } from "./AdvancedParametersEditModal"
 import { StepProps } from "./types"
-import { useSpectralize } from "./use-spectralize"
+import {
+  useAdvancedParametersFormReload,
+  useSpectralize,
+} from "./use-spectralize"
 
 const maxTokenSupplyCapSteps = [
   100n,
@@ -109,8 +112,16 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     },
   }
 
-  const [showAdvancedParametersEdit, setShowAdvancedParamsEdit] =
+  const reloadAdvancedParamsForm = useAdvancedParametersFormReload()
+  const [editAdvancedParams, setEditAdvancedParams] =
     useState(false)
+
+  const handleEditAdvancedParams = useCallback(() => {
+    // Reload the form values from the current state (cancels unsaved changes)
+    reloadAdvancedParamsForm()
+
+    setEditAdvancedParams(true)
+  }, [reloadAdvancedParamsForm])
 
   const advancedColumns = layout.value({
     xlarge: 6,
@@ -201,7 +212,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
           >
             <AdvancedParameters
               columns={advancedColumns}
-              onEdit={() => setShowAdvancedParamsEdit(true)}
+              onEdit={handleEditAdvancedParams}
               headingBaseWidth={
                 layout.below("large")
                   ? undefined
@@ -209,8 +220,8 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
               }
             />
             <AdvancedParametersEditModal
-              visible={showAdvancedParametersEdit}
-              onClose={() => setShowAdvancedParamsEdit(false)}
+              visible={editAdvancedParams}
+              onClose={() => setEditAdvancedParams(false)}
             />
           </div>
         )}

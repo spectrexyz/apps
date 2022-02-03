@@ -16,7 +16,7 @@ import {
   norm,
 } from "kit"
 import { useLayout } from "../styles"
-import { useAdvancedParameters, useSpectralize } from "./use-spectralize"
+import { useAdvancedParametersForm, useSpectralize } from "./use-spectralize"
 
 const TIMELOCK_OPTIONS = [
   DAY_MS * 1,
@@ -93,7 +93,7 @@ export function AdvancedParametersEditModalForm({
     updateTargetLpTokenWeight,
     updateTimelock,
     updateTradingFees,
-  } = useAdvancedParameters()
+  } = useAdvancedParametersForm()
 
   const tokenSymbol = useSpectralize((state) => state.tokenSymbol)
 
@@ -124,9 +124,15 @@ export function AdvancedParametersEditModalForm({
     [onSave, save]
   )
 
-  const handleReset = useCallback(() => {
+  const handleDefaultsClick = useCallback(() => {
     reset()
   }, [reset])
+
+  const layout = useLayout()
+  const saveLabel = layout.value({
+    small: "Save",
+    medium: "Save changes",
+  })
 
   return (
     <form onSubmit={handleSubmit}>
@@ -226,13 +232,13 @@ export function AdvancedParametersEditModalForm({
         `}
       >
         <Button
-          label="Reset"
+          label="Defaults"
           mode="secondary-2"
-          onClick={handleReset}
+          onClick={handleDefaultsClick}
           shadowInBox
         />
         <Button
-          label="Save changes"
+          label={saveLabel}
           mode="primary-2"
           onClick={save}
           shadowInBox
@@ -313,21 +319,28 @@ function TokenWeight({
 }) {
   const tokenWeightPct = `${Math.round(tokenWeight * 100)}%`
   const ethWeightPct = `${Math.round((1 - tokenWeight) * 100)}%`
+  const layout = useLayout()
+  const [baseFontSize, symbolFontSize, position] = layout.value({
+    small: ["12px", "100%", "static"],
+    medium: ["24px", "75%", "absolute"],
+  })
   return (
     <div
       css={({ colors }) => css`
-        position: absolute;
+        position: ${position};
         inset: 1gu 2gu auto auto;
-        font-size: 24px;
+        font-size: ${baseFontSize};
         color: ${colors.accent};
-        span {
-          font-size: 18px;
+        .symbol {
+          font-size: ${symbolFontSize};
         }
       `}
     >
       {tokenWeightPct}
-      <span> {tokenSymbol}</span> / {ethWeightPct}
-      <span> ETH</span>
+      <span className="symbol"> {tokenSymbol}</span>
+      <span> / </span>
+      {ethWeightPct}
+      <span className="symbol"> ETH</span>
     </div>
   )
 }
