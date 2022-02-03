@@ -26,6 +26,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
         styles={css`
           html {
             overflow: hidden;
+            min-width: 360px;
+            @media (max-width: 360px) {
+              overflow: auto;
+            }
           }
         `}
       />
