@@ -1,18 +1,11 @@
-import {
-  ComponentProps,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-  useState,
-  useEffect,
-} from "react"
+import { ComponentProps, useCallback, useLayoutEffect, useState } from "react"
 import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { ButtonArea } from "../ButtonArea"
 import { springs } from "../styles"
 
-type TogglePropValue = 1 | 0
+type TogglePropValue = 0 | 1
 
 type ToggleProps = {
   labels: [start: string, end: string]
@@ -28,10 +21,13 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
   const boundsStart = useDimensions({ useBorderBoxSize: true })
   const boundsEnd = useDimensions({ useBorderBoxSize: true })
 
+  // Make sure we don’t animate until we have the dimensions
   const ready = boundsStart.width > 0
   const [animate, setAnimate] = useState(false)
   useLayoutEffect(() => {
-    if (ready) setAnimate(true)
+    if (!ready) return
+    const timer = setTimeout(() => setAnimate(true), 0)
+    return () => clearTimeout(timer)
   }, [ready])
 
   const { clipPath } = useSpring({
@@ -39,8 +35,8 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
     immediate: !animate,
     clipPath:
       value === 0
-        ? `inset(0 0px 0 ${boundsStart.width}px)`
-        : `inset(0 ${boundsEnd.width}px 0 0px)`,
+        ? `inset(0 ${boundsEnd.width}px 0 0px)`
+        : `inset(0 0px 0 ${boundsStart.width}px)`,
   })
 
   return (
