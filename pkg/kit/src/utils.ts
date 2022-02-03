@@ -301,3 +301,12 @@ export const MINUTE_MS = 60 * 1000
 export const HOUR_MS = MINUTE_MS * 60
 export const DAY_MS = HOUR_MS * 24
 export const WEEK_MS = DAY_MS * 7
+
+export function pick<T extends object, U extends keyof T>(
+  obj: T,
+  paths: U[]
+): Pick<T, U> {
+  const values = Object.create(null)
+  for (const k of paths) values[k] = obj[k]
+  return values
+}
