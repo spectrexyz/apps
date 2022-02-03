@@ -67,7 +67,8 @@ export const ButtonIcon = forwardRef<
       transform: translate(1px, 1px);
     }
     &:disabled {
-      opacity: 0.5;
+      color: ${colors.contentDimmed};
+      border-color: ${colors.contentDimmed};
       &:active {
         transform: none;
       }
