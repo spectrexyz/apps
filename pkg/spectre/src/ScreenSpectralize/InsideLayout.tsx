@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 import { useLayout } from "../styles"
 
 interface Section {
@@ -46,30 +46,35 @@ export function InsideLayout({ heading, intro, sections }: InsideLayoutProps) {
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
           background: ${layout.below("medium") ? "none" : colors.background};
         `}
       >
-        {!layout.below("medium") ? (
-          <h1
-            css={({ fonts }) => css`
+        {!layout.below("medium")
+          ? (
+            <h1
+              css={({ fonts }) =>
+                css`
               font-family: ${fonts.families.mono};
               font-size: 18px;
               text-transform: uppercase;
             `}
-          >
-            {heading}
-          </h1>
-        ) : (
-          <div
-            css={css`
+            >
+              {heading}
+            </h1>
+          )
+          : (
+            <div
+              css={css`
               height: 6gu;
             `}
-          />
-        )}
+            />
+          )}
         <p
-          css={({ colors, fonts }) => css`
+          css={({ colors, fonts }) =>
+            css`
             padding: ${introPadding};
             font-family: ${fonts.families.sans};
             font-size: 14px;
@@ -87,12 +92,14 @@ export function InsideLayout({ heading, intro, sections }: InsideLayoutProps) {
               <div
                 css={css`
                   display: grid;
-                  ${layout.above("large")
+                  ${
+                  layout.above("large")
                     ? `
                     grid-template-columns: repeat(2, 1fr);
                     gap: 5gu;
                   `
-                    : ""};
+                    : ""
+                };
                 `}
               >
                 <div>{section.content[0]}</div>

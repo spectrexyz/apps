@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
-import { gu } from "../styles"
 import { useBaseUrl } from "../BaseUrl"
+import { gu } from "../styles"
 
 type TokenIconProps = {
   alt?: string

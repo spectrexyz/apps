@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react"
 
-import { useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
+import { useEffect, useRef, useState } from "react"
 import { ButtonArea } from "../ButtonArea"
 
 import playButton from "./play-button.svg"

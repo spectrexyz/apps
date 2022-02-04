@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 import { gu } from "../styles"
 
 type BadgeProps = {
@@ -15,7 +15,8 @@ export function Badge({ alt, icon, label }: BadgeProps): JSX.Element {
   return (
     <div
       title={alt}
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         display: flex;
         align-items: center;
         gap: 0.75gu;
@@ -28,18 +29,20 @@ export function Badge({ alt, icon, label }: BadgeProps): JSX.Element {
       `}
     >
       {icon}
-      {typeof label === "string" ? (
-        <span
-          css={css`
+      {typeof label === "string"
+        ? (
+          <span
+            css={css`
             font-size: 18px;
             text-transform: uppercase;
           `}
-        >
-          {label}
-        </span>
-      ) : (
-        label
-      )}
+          >
+            {label}
+          </span>
+        )
+        : (
+          label
+        )}
     </div>
   )
 }

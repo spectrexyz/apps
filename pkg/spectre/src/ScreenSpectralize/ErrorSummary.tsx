@@ -1,10 +1,12 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 
 export function ErrorSummary({ children }: { children?: ReactNode }) {
-  return children ? (
-    <div
-      css={({ colors, fonts }) => css`
+  return children
+    ? (
+      <div
+        css={({ colors, fonts }) =>
+          css`
         margin-top: 2gu;
         padding: 1gu 2gu;
         font-family: ${fonts.families.sans};
@@ -21,8 +23,9 @@ export function ErrorSummary({ children }: { children?: ReactNode }) {
           list-style-position: inside;
         }
       `}
-    >
-      {children}
-    </div>
-  ) : null
+      >
+        {children}
+      </div>
+    )
+    : null
 }

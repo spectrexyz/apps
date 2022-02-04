@@ -1,10 +1,10 @@
-import { ReactNode, useMemo, useState } from "react"
 import { css } from "@emotion/react"
+import { Button, ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
+import { ReactNode, useMemo, useState } from "react"
 import { a, useSpring } from "react-spring"
-import { Button, ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
-import { useLayout } from "../styles"
-import { useAppScroll } from "../App/AppScroll"
 import { useAppReady } from "../App/AppReady"
+import { useAppScroll } from "../App/AppScroll"
+import { useLayout } from "../styles"
 
 export function AppScreen({
   children,
@@ -56,15 +56,16 @@ export function AppScreen({
             padding-bottom: ${compactMenuActive ? 0 : 8 * gu}px;
           `}
         >
-          {title && compactMenuActive ? (
-            <div
-              css={css`
+          {title && compactMenuActive
+            ? (
+              <div
+                css={css`
                 height: 8gu;
               `}
-            >
-              <a.div
-                style={{ transform: headerTransform }}
-                css={css`
+              >
+                <a.div
+                  style={{ transform: headerTransform }}
+                  css={css`
                   position: ${snapHeader ? "absolute" : "static"};
                   z-index: 2;
                   inset: 8gu 0 auto;
@@ -72,21 +73,20 @@ export function AppScreen({
                   align-items: center;
                   height: 8gu;
                 `}
-              >
-                <a.div
-                  style={{ opacity: progress, transform: screenTransform }}
-                  css={css`
+                >
+                  <a.div
+                    style={{ opacity: progress, transform: screenTransform }}
+                    css={css`
                     display: flex;
                     width: 100%;
                     height: 100%;
                     transform-origin: 50% 0;
                     user-select: none;
                   `}
-                >
-                  <HeaderCompact
-                    title={title}
-                    start={
-                      onBack && (
+                  >
+                    <HeaderCompact
+                      title={title}
+                      start={onBack && (
                         <ButtonIcon
                           onClick={onBack}
                           icon={<IconArrowLeft color={colors.accent} />}
@@ -96,55 +96,61 @@ export function AppScreen({
                             height: 100%;
                           `}
                         />
-                      )
-                    }
-                    end={contextual}
-                  />
-                  <a.div
-                    style={{ opacity: headerBorderVisibility }}
-                    css={({ colors }) => css`
+                      )}
+                      end={contextual}
+                    />
+                    <a.div
+                      style={{ opacity: headerBorderVisibility }}
+                      css={({ colors }) =>
+                        css`
                       position: absolute;
                       inset: auto 0 0;
                       border-bottom: 1px solid ${colors.outline2};
                     `}
-                  />
+                    />
+                  </a.div>
                 </a.div>
-              </a.div>
-            </div>
-          ) : (
-            <div
-              css={css`
+              </div>
+            )
+            : (
+              <div
+                css={css`
                 display: flex;
                 width: 100%;
                 max-width: calc(160gu + 4gu * 2);
                 margin: 0 auto;
                 padding: 5.25gu 4gu 0;
               `}
-            >
-              {onBack && (
-                <Button
-                  label="Back"
-                  onClick={onBack}
-                  size="compact"
-                  mode="outline"
-                  icon={<IconArrowLeft />}
-                />
-              )}
-            </div>
-          )}
+              >
+                {onBack && (
+                  <Button
+                    label="Back"
+                    onClick={onBack}
+                    size="compact"
+                    mode="outline"
+                    icon={<IconArrowLeft />}
+                  />
+                )}
+              </div>
+            )}
           <a.div
             style={{ opacity: progress, transform: screenTransform }}
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               flex-grow: 1;
               transform-origin: 50% 0;
               width: 100%;
-              max-width: ${fullWidthActive || mode === "minimal"
-                ? "none"
-                : "500px"};
+              max-width: ${
+                fullWidthActive || mode === "minimal"
+                  ? "none"
+                  : "500px"
+              };
               margin: 0 auto;
-              background: ${fullWidthActive || mode === "minimal"
-                ? "none"
-                : colors.background};
+              background: ${
+                fullWidthActive || mode === "minimal"
+                  ? "none"
+                  : colors.background
+              };
             `}
           >
             {!compactMenuActive && mode !== "minimal" && (
@@ -183,7 +189,7 @@ export function AppScreen({
             </div>
           </a.div>
         </div>
-      )
+      ),
   )
 }
 
@@ -225,7 +231,8 @@ function HeaderCompact({
           </div>
         )}
         <div
-          css={({ fonts }) => css`
+          css={({ fonts }) =>
+            css`
             font-family: ${fonts.families.mono};
             font-size: 16px;
             text-transform: uppercase;

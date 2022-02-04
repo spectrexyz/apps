@@ -1,5 +1,5 @@
-import { ComponentProps, useCallback, useLayoutEffect, useState } from "react"
 import { css } from "@emotion/react"
+import { ComponentProps, useCallback, useLayoutEffect, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { ButtonArea } from "../ButtonArea"
@@ -33,10 +33,9 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
   const { clipPath } = useSpring({
     config: springs.swift,
     immediate: !animate,
-    clipPath:
-      value === 0
-        ? `inset(0 ${boundsEnd.width}px 0 0px)`
-        : `inset(0 0px 0 ${boundsStart.width}px)`,
+    clipPath: value === 0
+      ? `inset(0 ${boundsEnd.width}px 0 0px)`
+      : `inset(0 0px 0 ${boundsStart.width}px)`,
   })
 
   return (
@@ -63,7 +62,8 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
         `}
       >
         <Container
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             color: ${colors.accentContent};
             background: ${colors.accent};
           `}
@@ -79,7 +79,8 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
 function Container(props: ComponentProps<"div">) {
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         display: flex;
         align-items: center;
         height: 3gu;

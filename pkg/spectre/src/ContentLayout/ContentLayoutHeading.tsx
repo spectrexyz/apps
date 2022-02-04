@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 import { useLayout } from "../styles"
 
 type ContentLayoutHeadingProps = {
@@ -19,25 +19,29 @@ export function ContentLayoutHeading({
   })
   return (
     <header>
-      {!layout.below("medium") ? (
-        <h1
-          css={({ fonts }) => css`
+      {!layout.below("medium")
+        ? (
+          <h1
+            css={({ fonts }) =>
+              css`
             font-family: ${fonts.families.mono};
             font-size: 18px;
             text-transform: uppercase;
           `}
-        >
-          {title}
-        </h1>
-      ) : (
-        <div
-          css={css`
+          >
+            {title}
+          </h1>
+        )
+        : (
+          <div
+            css={css`
             height: 6gu;
           `}
-        />
-      )}
+          />
+        )}
       <p
-        css={({ colors, fonts }) => css`
+        css={({ colors, fonts }) =>
+          css`
           padding: ${introPadding};
           font-family: ${fonts.families.sans};
           font-size: 14px;

@@ -1,13 +1,13 @@
+import { css } from "@emotion/react"
+import { springs } from "kit"
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
 } from "react"
-import { a, useTransition, TransitionFn } from "react-spring"
-import { css } from "@emotion/react"
-import { springs } from "kit"
+import { a, TransitionFn, useTransition } from "react-spring"
 
 import logo from "./splash-logo.png"
 
@@ -83,7 +83,8 @@ export function AppReady({ children }: AppReadyProps) {
           loading && (
             <a.div
               style={{ opacity }}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: fixed;
                 z-index: 9;
                 inset: 0;
@@ -100,7 +101,7 @@ export function AppReady({ children }: AppReadyProps) {
                 height="48"
               />
             </a.div>
-          )
+          ),
       )}
       {children}
     </AppReadyContext.Provider>

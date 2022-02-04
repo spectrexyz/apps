@@ -1,5 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react"
 
+import { css } from "@emotion/react"
+import { Box, Mesh, Program, Renderer } from "ogl"
 import {
   createContext,
   memo,
@@ -9,8 +11,6 @@ import {
   useRef,
   useState,
 } from "react"
-import { css } from "@emotion/react"
-import { Box, Mesh, Program, Renderer } from "ogl"
 import { dpr, noop, raf } from "../utils"
 
 /* eslint-disable import/no-unresolved */
@@ -81,7 +81,7 @@ function useOglProgram({
       transparent: true,
       fragment: (moireFragment as string).replace(
         /^\/\/ \[IMPORT_SNOISE\]\n/gm,
-        (snoise as string) + "\n"
+        (snoise as string) + "\n",
       ),
       vertex: moireVertex as string,
       uniforms: formatUniforms(uniforms.current),
@@ -123,7 +123,7 @@ function useOglProgram({
 
 function useAnimate(
   render: (time: number) => void,
-  options?: { animate?: boolean; fps?: number }
+  options?: { animate?: boolean; fps?: number },
 ) {
   const { animate = true, fps = 60 } = options ?? {}
 
@@ -174,7 +174,7 @@ export function MoireBase({
       Math.max(width, canvas.width / dpr),
       Math.max(height, canvas.height / dpr),
     ],
-    [0, 0]
+    [0, 0],
   )
 
   const { canvas, render } = useOglProgram({
@@ -197,9 +197,9 @@ export function MoireBase({
           render({ baseCanvas: canvas, canvas: activeMoireCanvas, context })
         })
       },
-      [render, canvas, activeMoires]
+      [render, canvas, activeMoires],
     ),
-    { animate }
+    { animate },
   )
 
   const addMoire = useCallback(
@@ -214,7 +214,7 @@ export function MoireBase({
         })
       }
     },
-    []
+    [],
   )
 
   const removeMoire = useCallback((canvas: HTMLCanvasElement) => {
@@ -287,7 +287,7 @@ export const Moire = memo(function Moire({
         context.globalCompositeOperation = "source-over"
       }
     },
-    [animate, linesColor, renderWidth, renderHeight]
+    [animate, linesColor, renderWidth, renderHeight],
   )
 
   useEffect(() => {
@@ -316,6 +316,6 @@ export const Moire = memo(function Moire({
 
 function formatUniforms(uniforms: Record<string, unknown>) {
   return Object.fromEntries(
-    Object.entries(uniforms).map(([key, value]) => [key, { value }])
+    Object.entries(uniforms).map(([key, value]) => [key, { value }]),
   )
 }

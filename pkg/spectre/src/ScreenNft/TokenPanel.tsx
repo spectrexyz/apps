@@ -1,4 +1,3 @@
-import React, { useCallback, useRef, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Anchor,
@@ -10,6 +9,7 @@ import {
   Info,
   Popup,
 } from "kit"
+import React, { useCallback, useRef, useState } from "react"
 import { useLocation } from "wouter"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
@@ -155,7 +155,8 @@ function Parameter({ label, value }: { label: string; value: string }) {
         label={`${label}: ${value}`}
         mode="flat"
         onClick={() => setPopupVisible(true)}
-        css={({ colors, fonts }) => css`
+        css={({ colors, fonts }) =>
+          css`
           font-family: ${fonts.families.sans};
           color: ${colors.contentHeading};
         `}
@@ -171,7 +172,8 @@ function Parameter({ label, value }: { label: string; value: string }) {
           `}
         >
           <h1
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               padding-bottom: 1gu;
               text-transform: uppercase;
               color: ${colors.contentHeading};
@@ -180,7 +182,8 @@ function Parameter({ label, value }: { label: string; value: string }) {
             {label}
           </h1>
           <p
-            css={({ colors, fonts }) => css`
+            css={({ colors, fonts }) =>
+              css`
               font-family: ${fonts.families.sans};
               color: ${colors.contentHeading2};
             `}
@@ -221,7 +224,8 @@ function LabelledValue({ label, value }: { label: string; value: string }) {
     <section>
       <h1>{label}</h1>
       <div
-        css={({ fonts }) => css`
+        css={({ fonts }) =>
+          css`
           font-family: ${fonts.families.mono};
           font-size: 32px;
           font-weight: 400;

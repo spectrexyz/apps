@@ -1,25 +1,25 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
-import { a, useSpring, useTransition, SpringValue } from "react-spring"
-import { Link, useLocation } from "wouter"
-import { useAccount } from "wagmi"
 import {
   AddressBadge,
   Button,
   ButtonArea,
   FocusTrap,
+  gu,
   IconList,
   IconX,
-  gu,
   springs,
 } from "kit"
-import { useLayout } from "../styles"
+import React, { ReactNode, useEffect, useRef, useState } from "react"
+import { a, SpringValue, useSpring, useTransition } from "react-spring"
+import { useAccount } from "wagmi"
+import { Link, useLocation } from "wouter"
 import { AccountWindow } from "../Account"
-import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
-import { Menu } from "../Menu/Menu"
-import { menuLinks } from "../content"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
+import { menuLinks } from "../content"
+import { Menu } from "../Menu/Menu"
+import { useLayout } from "../styles"
 
 import logo from "./logo.png"
 
@@ -95,7 +95,8 @@ export function TopBar() {
                 `}
               >
                 <ul
-                  css={({ colors }) => css`
+                  css={({ colors }) =>
+                    css`
                     display: flex;
                     list-style: none;
                     li {
@@ -114,13 +115,13 @@ export function TopBar() {
                 >
                   {menuLinks.map(({ label, url }) => (
                     <li key={url}>
-                      {url ? (
-                        <a href={url}>{label}</a>
-                      ) : (
-                        <Link href="/" className="active">
-                          {label}
-                        </Link>
-                      )}
+                      {url
+                        ? <a href={url}>{label}</a>
+                        : (
+                          <Link href="/" className="active">
+                            {label}
+                          </Link>
+                        )}
                     </li>
                   ))}
                 </ul>
@@ -149,23 +150,25 @@ export function TopBar() {
                   />
                 </ButtonArea>
                 <div>
-                  {address ? (
-                    <ButtonArea
-                      title="Open Account"
-                      onClick={() => setAccountOpened(true)}
-                    >
-                      <AddressBadge address={address} ensName={ensName} />
-                    </ButtonArea>
-                  ) : (
-                    <Button
-                      ref={connectButtonRef}
-                      label="Connect account"
-                      onClick={() => setConnectAccountOpened(true)}
-                    />
-                  )}
+                  {address
+                    ? (
+                      <ButtonArea
+                        title="Open Account"
+                        onClick={() => setAccountOpened(true)}
+                      >
+                        <AddressBadge address={address} ensName={ensName} />
+                      </ButtonArea>
+                    )
+                    : (
+                      <Button
+                        ref={connectButtonRef}
+                        label="Connect account"
+                        onClick={() => setConnectAccountOpened(true)}
+                      />
+                    )}
                 </div>
               </a.div>
-            )
+            ),
         )}
       </div>
       <ConnectAccount
@@ -240,7 +243,8 @@ export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
               >
                 <a.div
                   style={{ transform: innerTransform }}
-                  css={({ colors }) => css`
+                  css={({ colors }) =>
+                    css`
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -276,16 +280,14 @@ export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
                     `}
                   >
                     {menuIconTransition((style, menuOpened) =>
-                      menuOpened ? (
-                        <MenuIcon style={style} icon={<IconX />} />
-                      ) : (
-                        <MenuIcon style={style} icon={<IconList />} />
-                      )
+                      menuOpened
+                        ? <MenuIcon style={style} icon={<IconX />} />
+                        : <MenuIcon style={style} icon={<IconList />} />
                     )}
                   </ButtonArea>
                 </a.div>
               </a.div>
-            )
+            ),
         )}
         <Menu opened={Boolean(menuOpened)} />
       </div>

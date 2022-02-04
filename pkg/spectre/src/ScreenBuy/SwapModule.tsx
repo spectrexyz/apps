@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { css } from "@emotion/react"
-import { ButtonIcon, IconArrowsDownUp, TokenInput, gu } from "kit"
+import { ButtonIcon, gu, IconArrowsDownUp, TokenInput } from "kit"
+import { useState } from "react"
 
 export function SwapModule() {
   const [ethValue, setEthValue] = useState("100")
@@ -35,14 +35,16 @@ export function SwapModule() {
         />
       </div>
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding: 2gu;
           background: ${colors.layer1};
         `}
       >
         <TokenInput onChange={setEthValue} symbol="MAGIC" value={ethValue} />
         <p
-          css={({ colors, fonts }) => css`
+          css={({ colors, fonts }) =>
+            css`
             padding-top: 1.5gu;
             font-family: ${fonts.families.sans};
             font-size: 12px;

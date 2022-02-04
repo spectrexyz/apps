@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
+import { useEffect, useRef, useState } from "react"
 import { a, useTransition } from "react-spring"
+import { useFocusVisible } from "../FocusVisible"
 import { Moire } from "../Moire"
 import { gu, springs } from "../styles"
-import { useFocusVisible } from "../FocusVisible"
 import { useRadioGroup } from "./RadioGroup"
 
 type RadioProps = {
@@ -31,7 +31,7 @@ export function Radio({
   if (!onChange) {
     if (!inRadioGroup || id === undefined) {
       throw new Error(
-        "Radio requires an onChange handler or to be in a RadioGroup with an id."
+        "Radio requires an onChange handler or to be in a RadioGroup with an id.",
       )
     }
     onChange = (checked) => {
@@ -98,16 +98,15 @@ export function Radio({
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onKeyDown={radioGroup?.onKeyDown}
-        tabIndex={
-          tabIndex ??
-          (radioGroup &&
-          (radioGroup.focusableId === undefined ||
-            id === radioGroup.focusableId)
+        tabIndex={tabIndex
+          ?? (radioGroup
+              && (radioGroup.focusableId === undefined
+                || id === radioGroup.focusableId)
             ? 0
-            : -1)
-        }
+            : -1)}
         type="radio"
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           opacity: 0;
           pointer-events: none;
           &:active div:after {
@@ -120,7 +119,8 @@ export function Radio({
         `}
       />
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: absolute;
           inset: 0;
           overflow: hidden;
@@ -144,7 +144,8 @@ export function Radio({
               `}
             >
               <div
-                css={({ colors }) => css`
+                css={({ colors }) =>
+                  css`
                   position: absolute;
                   inset: 50% auto auto 50%;
                   transform: translate(-50%, -50%);
@@ -155,7 +156,7 @@ export function Radio({
                 `}
               />
             </a.div>
-          )
+          ),
       )}
     </div>
   )

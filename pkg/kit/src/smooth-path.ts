@@ -14,13 +14,13 @@ function line(pointA: Point, pointB: Point): Line {
 
 function controlPoint(
   lineCalc: (a: Point, b: Point) => Line,
-  smoothing: number
+  smoothing: number,
 ) {
   return (
     current: Point,
     previous: Point | undefined,
     next: Point | undefined,
-    reverse = false
+    reverse = false,
   ): Point => {
     const p = previous ?? current
     const n = next ?? current
@@ -38,8 +38,8 @@ function bezierCommand(
     current: Point,
     previous: Point | undefined,
     next: Point | undefined,
-    reverse?: boolean
-  ) => Point
+    reverse?: boolean,
+  ) => Point,
 ) {
   return (point: Point, i: number, a: Point[]) => {
     const [cpsX, cpsY] = controlPointCalc(a[i - 1], a[i - 2], point)
@@ -50,7 +50,7 @@ function bezierCommand(
 
 export function smoothPath(
   points: Array<[number, number]>,
-  smoothing = 0.2
+  smoothing = 0.2,
 ): string {
   const bezier = bezierCommand(controlPoint(line, smoothing))
   return points.reduce(
@@ -61,6 +61,6 @@ export function smoothPath(
           ${path}
           ${bezier([x, y], index, points)}
         `,
-    ""
+    "",
   )
 }

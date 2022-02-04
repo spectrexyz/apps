@@ -7,16 +7,16 @@ export function useSnft(_id: string): Snft | undefined {
 
 export function useSnftsByCreator(
   creatorAddress: string,
-  { exclude = [] }: { exclude?: string[] } = {}
+  { exclude = [] }: { exclude?: string[] } = {},
 ): Snft[] {
   return SNFTS.filter(
     ({ id, creator }) =>
-      !exclude.includes(id) && creator.address === creatorAddress
+      !exclude.includes(id) && creator.address === creatorAddress,
   )
 }
 
 export function useSnftsAdjacent(
-  _id: string
+  _id: string,
 ): [Snft | undefined, Snft | undefined] {
   const index = SNFTS.findIndex(({ id }) => id === _id)
   return [SNFTS?.[index - 1], SNFTS?.[index + 1]]

@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { css } from "@emotion/react"
 import { Slider as KitSlider } from "kit"
+import { useState } from "react"
 
 export function Slider() {
   const [value, setValue] = useState(0.5)

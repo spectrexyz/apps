@@ -37,7 +37,8 @@ export function FileUpload({
     <div
       {...getRootProps()}
       className={className}
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         position: relative;
         max-width: 100%;
         &:before {

@@ -1,6 +1,6 @@
 export type SnftEvent = [
   metadata: [category: string, url: string],
-  description: string
+  description: string,
 ]
 
 export type Snft = {

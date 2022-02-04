@@ -1,9 +1,9 @@
-import React, { ReactNode, UIEvent } from "react"
 import { css, Global } from "@emotion/react"
-import { useLayout } from "../styles"
+import React, { ReactNode, UIEvent } from "react"
 import { useAppScrollUpdater } from "../App/AppScroll"
-import { AppLayoutTopBar } from "./AppLayoutTopBar"
+import { useLayout } from "../styles"
 import { AppLayoutBottomBar } from "./AppLayoutBottomBar"
+import { AppLayoutTopBar } from "./AppLayoutTopBar"
 
 function hexAlpha(value: number) {
   return Math.round(value * 255)
@@ -34,14 +34,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
         `}
       />
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: relative;
           z-index: 1;
           color: ${colors.content};
           background: linear-gradient(
-              ${("," + colors.background + hexAlpha(compact ? 0.6 : 0.5))
-                .repeat(2)
-                .slice(1)},
+              ${
+            ("," + colors.background + hexAlpha(compact ? 0.6 : 0.5))
+              .repeat(2)
+              .slice(1)
+          },
               ${colors.background}
             ),
             fixed no-repeat url(/background.webp) ${colors.background};
@@ -74,7 +77,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div
             ref={compact ? appScrollRef : undefined}
             onScroll={handleScroll}
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               flex: 1 1;
               display: flex;
               flex-direction: column;

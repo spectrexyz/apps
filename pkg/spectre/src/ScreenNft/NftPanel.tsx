@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react"
 import { css } from "@emotion/react"
-import { Link } from "wouter"
-import useInView from "react-cool-inview"
 import {
   Anchor,
   Button,
   Distribution,
-  Slashes,
   formatDate,
+  Slashes,
   useTheme,
 } from "kit"
-import { Snft } from "../types"
+import React, { useEffect, useState } from "react"
+import useInView from "react-cool-inview"
+import { Link } from "wouter"
 import { useSnft, useSnftsByCreator } from "../snft-hooks"
+import { Snft } from "../types"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
 
@@ -43,7 +43,8 @@ export function NftPanel({ id }: { id: string }) {
                 mode="flat"
                 href={snft.creator.url}
                 external
-                css={({ fonts }) => css`
+                css={({ fonts }) =>
+                  css`
                   font-family: ${fonts.families.sans};
                 `}
               />
@@ -73,7 +74,8 @@ export function NftPanel({ id }: { id: string }) {
                       mode="flat-2"
                       href={url}
                       external
-                      css={({ fonts }) => css`
+                      css={({ fonts }) =>
+                        css`
                         font-family: ${fonts.families.sans};
                       `}
                     />
@@ -110,16 +112,18 @@ export function NftPanel({ id }: { id: string }) {
                     {event.map(
                       (value, index) => (
                         <span key={index}>
-                          {Array.isArray(value) ? (
-                            <Anchor external href={value[1]}>
-                              {value[0]}
-                            </Anchor>
-                          ) : (
-                            value
-                          )}
+                          {Array.isArray(value)
+                            ? (
+                              <Anchor external href={value[1]}>
+                                {value[0]}
+                              </Anchor>
+                            )
+                            : (
+                              value
+                            )}
                         </span>
                       ),
-                      []
+                      [],
                     )}
                   </div>
                   <div
@@ -148,7 +152,8 @@ function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   return (
     <PanelSection title="More NFTs from this creator">
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: grid;
           grid-template-columns: 1fr 1fr;
           grid-auto-rows: auto;

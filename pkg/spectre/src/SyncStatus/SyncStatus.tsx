@@ -1,5 +1,5 @@
-import React from "react"
 import { css } from "@emotion/react"
+import React from "react"
 import { useBlockNumber } from "wagmi"
 
 export function SyncStatus({ full = false }) {
@@ -8,7 +8,8 @@ export function SyncStatus({ full = false }) {
   })
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         display: flex;
         align-items: center;
         height: 4gu;

@@ -20,7 +20,7 @@ type RadioGroupContext = {
 }
 
 const RadioGroupContext = createContext<RadioGroupContext>(
-  {} as RadioGroupContext
+  {} as RadioGroupContext,
 )
 
 type RadioId = string | number
@@ -124,7 +124,7 @@ type RadioGroupValue = RadioGroupContext & {
 }
 
 export function useRadioGroup(
-  id: string | number | undefined
+  id: string | number | undefined,
 ): RadioGroupValue | null {
   const radioGroup = useContext(RadioGroupContext) as RadioGroupValue
 

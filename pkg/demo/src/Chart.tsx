@@ -1,10 +1,10 @@
 import type { ReactNode } from "react"
 import type { Interpolation, SpringValue } from "react-spring"
 
-import React, { useCallback, useMemo } from "react"
 import { css } from "@emotion/react"
-import { useChain, useSpring, useSpringRef, a } from "react-spring"
-import { Moire, gu, lerp, list, smoothPath, useTheme, useUid } from "kit"
+import { gu, lerp, list, Moire, smoothPath, useTheme, useUid } from "kit"
+import React, { useCallback, useMemo } from "react"
+import { a, useChain, useSpring, useSpringRef } from "react-spring"
 
 type Point = [number, number]
 type Interpolable<T> = SpringValue<T> | Interpolation<T>
@@ -38,8 +38,21 @@ const AXES_DEFAULTS = {
     label: () => "",
     steps: 19,
     values: [
-      0.35, 0.45, 0.5, 0.44, 0.42, 0.5, 0.55, 0.4, 0.5, 0.55, 0.67, 0.74, 0.5,
-      0.4, 0.5,
+      0.35,
+      0.45,
+      0.5,
+      0.44,
+      0.42,
+      0.5,
+      0.55,
+      0.4,
+      0.5,
+      0.55,
+      0.67,
+      0.74,
+      0.5,
+      0.4,
+      0.5,
     ],
   },
 }
@@ -82,7 +95,7 @@ export function Chart({
       end: { ...AXES_DEFAULTS.end, ...axes.end },
       main: { ...AXES_DEFAULTS.main, ...axes.main },
     }),
-    [axes]
+    [axes],
   )
 
   const spRefs = [useSpringRef(), useSpringRef(), useSpringRef()]
@@ -108,7 +121,7 @@ export function Chart({
         height - PADDING.bottom - totalHeight * y,
       ]
     },
-    [width, height]
+    [width, height],
   )
 
   return (
@@ -249,7 +262,8 @@ function Frame({
           V ${PADDING.top}
 
           ${/* Vertical dashes (start + end axes) */ ""}
-          ${[
+          ${
+          [
             [axes.start.steps, PADDING.sides, -DASH_WIDTH],
             [axes.end.steps, width - PADDING.sides, DASH_WIDTH],
           ]
@@ -265,10 +279,12 @@ function Frame({
                 `
               }).join("")
             )
-            .join("")}
+            .join("")
+        }
 
           ${/* Horizontal dashes (main axis) */ ""}
-          ${list(axes.main.steps, (index, steps) => {
+          ${
+          list(axes.main.steps, (index, steps) => {
             const value = index / (steps - 1)
             const hMin = PADDING.sides
             const hMax = width - PADDING.sides
@@ -277,11 +293,12 @@ function Frame({
               ? ""
               : `
                 M ${lerp(value, hMin + stepSize, hMax)} ${
-                  height - PADDING.bottom
-                }
+                height - PADDING.bottom
+              }
                 v ${DASH_WIDTH}
               `
-          }).join("")}
+          }).join("")
+        }
 
         `}
         stroke="#DAEAEF"
@@ -428,7 +445,7 @@ function RectanglePoint({
             M ${lerp(p, fromX, toX)} ${yEnd}
             L ${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)}
             L ${xEnd} ${lerp(p, fromY, toY)}
-          `
+          `,
         )}
         stroke={color}
         strokeWidth="1"
@@ -492,20 +509,19 @@ function LinePoint({
           (p: number) => `
             M ${start[0]} ${start[1]}
             L ${lerp(p, start[0], end[0])} ${lerp(p, start[1], end[1])}
-          `
+          `,
         )}
       />
       <a.g
         transform={showProgress.to(
-          (p: number) =>
-            `
+          (p: number) => `
               translate(
                 ${startPos ? start[0] : lerp(p, start[0], end[0])}
                 ${startPos ? start[1] : lerp(p, start[1], end[1])}
               )
               rotate(${twoPointsAngle(start, end)})
               translate(${startPos ? lerp(p, 0, 6 * gu) : -6 * gu} -${1.5 * gu})
-            `
+            `,
         )}
       >
         <Label color={color} textAnchor={startPos ? "start" : "end"}>
@@ -516,12 +532,14 @@ function LinePoint({
       <a.g
         transform={showProgress.to(
           (p: number) => `
-            translate(${lerp(p, start[0], end[0])}, ${lerp(
-            p,
-            start[1],
-            end[1]
-          )})
-          `
+            translate(${lerp(p, start[0], end[0])}, ${
+            lerp(
+              p,
+              start[1],
+              end[1],
+            )
+          })
+          `,
         )}
       >
         <Disc color={color} />
@@ -545,7 +563,7 @@ function TwoLinesLabel({
     <a.g
       transform={showProgress.to(
         (p: number) =>
-          `translate(${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)})`
+          `translate(${lerp(p, fromX, toX)} ${lerp(p, fromY, toY)})`,
       )}
     >
       <Label color="white" textAnchor="middle" dominantBaseline="auto">
@@ -556,13 +574,11 @@ function TwoLinesLabel({
             <tspan
               key={index}
               x="0"
-              dy={
-                index === 0 && labels.length > 1
-                  ? "-2.8em"
-                  : index === 1 && labels.length > 1
-                  ? "1.6em"
-                  : "0"
-              }
+              dy={index === 0 && labels.length > 1
+                ? "-2.8em"
+                : index === 1 && labels.length > 1
+                ? "1.6em"
+                : "0"}
               fill={index === 1 && labels.length > 1 ? "#58FFCA" : "#FCFAFA"}
             >
               {label.trim()}
@@ -603,13 +619,15 @@ function Curve({
       const start = graphPoint(0, 0)
       let path = `
         M ${start[0]} ${start[1]}
-        ${smoothPath(
+        ${
+        smoothPath(
           curvePoints.map((point) => [
             point[0],
             lerp(progress, height - PADDING.bottom, point[1]),
           ]),
-          0.2
-        )}
+          0.2,
+        )
+      }
       `
       if (close) {
         const lastX = curvePoints[curvePoints.length - 1][0]
@@ -621,7 +639,7 @@ function Curve({
       }
       return path
     },
-    [height, curvePoints]
+    [height, curvePoints],
   )
 
   const endPointFrom: Point = [
@@ -650,7 +668,7 @@ function Curve({
         ${height - PADDING.bottom}
 
       Z
-    `
+    `,
   )
 
   const { colors } = useTheme()
@@ -712,7 +730,7 @@ function Curve({
               ${lerp(p as number, endPointFrom[1], endPointTo[1])}
             )
             scale(${p} ${p})
-          `
+          `,
         )}
       >
         <Disc color="#58FFCA" />

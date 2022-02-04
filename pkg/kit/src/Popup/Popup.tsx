@@ -1,16 +1,16 @@
 import type { ReactNode, RefObject } from "react"
 
-import { memo, useState } from "react"
+import { css } from "@emotion/react"
 import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
-import { a, useTransition } from "react-spring"
-import { css } from "@emotion/react"
+import { memo, useState } from "react"
 import { usePopper } from "react-popper"
+import { a, useTransition } from "react-spring"
 import { ButtonArea } from "../ButtonArea"
 import { IconX } from "../icons"
 import { Root } from "../Root"
-import { useTheme } from "../Theme"
 import { gu, springs } from "../styles"
+import { useTheme } from "../Theme"
 import { checkBackdropFilterSupport } from "../utils"
 
 type PopupProps = {
@@ -75,20 +75,25 @@ export const Popup = memo(function Popup({
                     pointerEvents: visible ? "auto" : "none",
                     transform,
                   }}
-                  css={({ colors }) => css`
+                  css={({ colors }) =>
+                    css`
                     padding: 4gu;
-                    ${mode === "translucid"
-                      ? css`
-                          background: ${colord(colors.translucid)
+                    ${
+                      mode === "translucid"
+                        ? css`
+                          background: ${
+                          colord(colors.translucid)
                             .alpha(supportsBackdropFilters ? 0.6 : 1)
-                            .toHex()};
+                            .toHex()
+                        };
                           backdrop-filter: blur(40px);
                           border-radius: 6px;
                         `
-                      : css`
+                        : css`
                           background: ${colors.layer1};
                           border: 1px solid ${colors.outline};
-                        `}
+                        `
+                    }
                   `}
                 >
                   <a.div
@@ -96,10 +101,12 @@ export const Popup = memo(function Popup({
                       opacity: blur.to((v) => 1 - v),
                     }}
                     css={css`
-                      display: ${mode === "translucid" &&
-                      supportsBackdropFilters
+                      display: ${
+                      mode === "translucid"
+                        && supportsBackdropFilters
                         ? "block"
-                        : "none"};
+                        : "none"
+                    };
                       position: absolute;
                       z-index: 1;
                       inset: 0;
@@ -145,7 +152,7 @@ export const Popup = memo(function Popup({
                 </a.div>
               </FocusTrap>
             </Position>
-          )
+          ),
       )}
     </Root>
   )
@@ -166,7 +173,7 @@ function Position({ opener, children, width }: PositionProps): JSX.Element {
     {
       placement: "bottom-start",
       modifiers: [{ name: "offset", options: { offset } }],
-    }
+    },
   )
 
   return (

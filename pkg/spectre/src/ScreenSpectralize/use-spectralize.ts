@@ -1,7 +1,7 @@
+import { Address, Direction, isEmail, pick, WEEK_MS } from "kit"
 import { useCallback, useEffect } from "react"
 import zustand from "zustand"
 import shallow from "zustand/shallow"
-import { Address, Direction, WEEK_MS, isEmail, pick } from "kit"
 
 export type FileType = "image" | "video" | "audio"
 
@@ -213,7 +213,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     const { rewardsSplit } = get()
     set({
       rewardsSplit: [...rewardsSplit].filter(
-        (_address) => address !== _address
+        (_address) => address !== _address,
       ),
     })
   },
@@ -395,7 +395,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
 
     const nextStep = Math.max(
       0,
-      Math.min(data.steps.length - 1, currentStep + direction)
+      Math.min(data.steps.length - 1, currentStep + direction),
     )
 
     // Same screen
@@ -404,8 +404,9 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     }
 
     // Only validate data when moving forward
-    const validatedData =
-      direction === 1 ? data.steps[currentStep].validate(data) : { errors: [] }
+    const validatedData = direction === 1
+      ? data.steps[currentStep].validate(data)
+      : { errors: [] }
 
     const hasErrors = validatedData.errors.length > 0
 
@@ -431,10 +432,10 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     // screen 1
     get().updateTitle("Two Discs")
     get().updateDescription(
-      "Artworks have always been powerful vectors of collectives structuration " +
-        "and we now see that the internet of money could make us pass from the " +
-        "status of consumer of artworks to a world where artworks are, in their " +
-        "inner form, the organizational layer of tomorrow’s collectives."
+      "Artworks have always been powerful vectors of collectives structuration "
+        + "and we now see that the internet of money could make us pass from the "
+        + "status of consumer of artworks to a world where artworks are, in their "
+        + "inner form, the organizational layer of tomorrow’s collectives.",
     )
     get().updateAuthorEmail("hi@example.org")
     get().updateFile(
@@ -447,8 +448,8 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
            </svg>`,
         ],
         "two-discs.svg",
-        { type: "image/svg+xml" }
-      )
+        { type: "image/svg+xml" },
+      ),
     )
 
     // screen 2
@@ -488,13 +489,13 @@ const useAdvancedParametersFormStore = zustand<AdvancedParametersForm>(
     reset() {
       set(pick(initialState, advancedParamsKeys))
     },
-  })
+  }),
 )
 
 export function useAdvancedParametersFormReload(): () => void {
   const savedState = useSpectralize(
     (state) => pick(state, advancedParamsKeys),
-    shallow
+    shallow,
   )
   const load = useAdvancedParametersFormStore((state) => state.load)
 
@@ -510,7 +511,7 @@ export function useAdvancedParametersForm(): AdvancedParametersForm & {
   const formState = useAdvancedParametersFormStore()
 
   const saveAdvancedParameters = useSpectralize(
-    (state) => state.saveAdvancedParameters
+    (state) => state.saveAdvancedParameters,
   )
   const reset = useAdvancedParametersFormStore((state) => state.reset)
 

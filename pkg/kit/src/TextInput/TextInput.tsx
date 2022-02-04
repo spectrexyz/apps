@@ -1,3 +1,4 @@
+import { css } from "@emotion/react"
 import {
   ChangeEvent,
   DetailedHTMLProps,
@@ -7,9 +8,8 @@ import {
   useEffect,
   useRef,
 } from "react"
-import { css } from "@emotion/react"
-import { noop } from "../utils"
 import { useFieldset } from "../Fieldset"
+import { noop } from "../utils"
 
 type InputProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
@@ -34,15 +34,17 @@ type TextInputBaseProps = {
   value?: string
 }
 
-type TextInputProps = (InputProps | TextAreaProps) &
-  TextInputBaseProps & { multiline?: boolean }
+type TextInputProps =
+  & (InputProps | TextAreaProps)
+  & TextInputBaseProps
+  & { multiline?: boolean }
 
 export function TextInput(
-  props: InputProps & TextInputBaseProps & { multiline?: false }
+  props: InputProps & TextInputBaseProps & { multiline?: false },
 ): JSX.Element
 
 export function TextInput(
-  props: TextAreaProps & TextInputBaseProps & { multiline: true }
+  props: TextAreaProps & TextInputBaseProps & { multiline: true },
 ): JSX.Element
 
 export function TextInput({
@@ -65,7 +67,7 @@ export function TextInput({
           onChange(value, event)
         }
       },
-      [onChange]
+      [onChange],
     ),
     value: value,
   }
@@ -80,12 +82,14 @@ export function TextInput({
     }
   }, [autofocus])
 
-  return multiline ? (
-    <textarea
-      ref={textareaRef}
-      {...sharedProps}
-      {...(props as TextAreaProps)}
-      css={({ colors, fonts }) => css`
+  return multiline
+    ? (
+      <textarea
+        ref={textareaRef}
+        {...sharedProps}
+        {...(props as TextAreaProps)}
+        css={({ colors, fonts }) =>
+          css`
         width: 100%;
         padding: 0;
         font-family: ${fonts.families.mono};
@@ -98,13 +102,15 @@ export function TextInput({
           outline-offset: 3px;
         }
       `}
-    />
-  ) : (
-    <input
-      ref={inputRef}
-      {...sharedProps}
-      {...(props as InputProps)}
-      css={({ colors, fonts }) => css`
+      />
+    )
+    : (
+      <input
+        ref={inputRef}
+        {...sharedProps}
+        {...(props as InputProps)}
+        css={({ colors, fonts }) =>
+          css`
         width: 100%;
         height: 3.5gu;
         padding: 0;
@@ -118,6 +124,6 @@ export function TextInput({
           outline: 2px solid ${error ? colors.warning : colors.focus};
         }
       `}
-    />
-  )
+      />
+    )
 }

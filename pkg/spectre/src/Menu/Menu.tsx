@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
-import { a, useTransition } from "react-spring"
 import { springs } from "kit"
+import { a, useTransition } from "react-spring"
 import { menuLinks } from "../content"
 
 export function Menu({ opened }: { opened: boolean }) {
@@ -16,7 +16,8 @@ export function Menu({ opened }: { opened: boolean }) {
       opened && (
         <a.div
           style={{ opacity }}
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             position: fixed;
             z-index: 3;
             inset: 8gu 0 0;
@@ -32,7 +33,8 @@ export function Menu({ opened }: { opened: boolean }) {
             `}
           >
             <ul
-              css={({ colors, fonts }) => css`
+              css={({ colors, fonts }) =>
+                css`
                 margin: 0;
                 padding: 5gu 0 0 3gu;
                 list-style: none;
@@ -52,6 +54,6 @@ export function Menu({ opened }: { opened: boolean }) {
             </ul>
           </a.nav>
         </a.div>
-      )
+      ),
   )
 }

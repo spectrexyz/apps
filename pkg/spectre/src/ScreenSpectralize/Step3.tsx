@@ -1,23 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
+  closestIndexFromSortedNumbers,
   Direction,
   Fieldset,
-  IconLifebuoy,
-  Info,
-  Slider,
-  TokenInput,
-  closestIndexFromSortedNumbers,
   formatAmount,
   formatNumber,
   gu,
+  IconLifebuoy,
+  Info,
   lerp,
   norm,
   progressToItem,
+  Slider,
+  TokenInput,
   useAmountInput,
   usePrice,
 } from "kit"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   ContentLayout,
   ContentLayoutHeading,
@@ -63,7 +63,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
         onNext()
       }
     },
-    [onNext, suggestFromBuyout, updateSuggestFromBuyout]
+    [onNext, suggestFromBuyout, updateSuggestFromBuyout],
   )
 
   const inputs = {
@@ -79,23 +79,24 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
     maxTokenSupplyCap: {
       onChange(value: number) {
         data.updateMaxTokenSupplyCap(
-          progressToItem(value, maxTokenSupplyCapSteps) ?? 0n
+          progressToItem(value, maxTokenSupplyCapSteps) ?? 0n,
         )
       },
       onLabelClick(side: "start" | "end") {
-        if (side === "start")
+        if (side === "start") {
           data.updateMaxTokenSupplyCap(maxTokenSupplyCapSteps[0])
-        if (side === "end")
+        }
+        if (side === "end") {
           data.updateMaxTokenSupplyCap(
-            maxTokenSupplyCapSteps[maxTokenSupplyCapSteps.length - 1]
+            maxTokenSupplyCapSteps[maxTokenSupplyCapSteps.length - 1],
           )
+        }
       },
-      value:
-        closestIndexFromSortedNumbers(
-          maxTokenSupplyCapSteps,
-          data.maxTokenSupplyCap
-        ) /
-        (maxTokenSupplyCapSteps.length - 1),
+      value: closestIndexFromSortedNumbers(
+        maxTokenSupplyCapSteps,
+        data.maxTokenSupplyCap,
+      )
+        / (maxTokenSupplyCapSteps.length - 1),
     },
     buyoutMultiplier: {
       onChange(value: number) {
@@ -113,8 +114,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
   }
 
   const reloadAdvancedParamsForm = useAdvancedParametersFormReload()
-  const [editAdvancedParams, setEditAdvancedParams] =
-    useState(false)
+  const [editAdvancedParams, setEditAdvancedParams] = useState(false)
 
   const handleEditAdvancedParams = useCallback(() => {
     // Reload the form values from the current state (cancels unsaved changes)
@@ -155,53 +155,63 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             )}
           </div>
           <div>
-            {suggestFromBuyout ? (
-              <Info
-                icon={<IconLifebuoy />}
-                mode="translucid"
-                title="Token health tip"
-                css={css`
+            {suggestFromBuyout
+              ? (
+                <Info
+                  icon={<IconLifebuoy />}
+                  mode="translucid"
+                  title="Token health tip"
+                  css={css`
                   margin-top: 2gu;
                 `}
-              >
-                Ask yourself: what price do you think your NFT will be worth in
-                the future? Think of it as the reserve price in an auction
-                platform.
-              </Info>
-            ) : (
-              <>
-                <Fieldset
-                  label="Max token supply cap"
-                  contextual={
-                    <span
-                      css={({ colors }) => css`
+                >
+                  Ask yourself: what price do you think your NFT will be worth
+                  in the future? Think of it as the reserve price in an auction
+                  platform.
+                </Info>
+              )
+              : (
+                <>
+                  <Fieldset
+                    label="Max token supply cap"
+                    contextual={
+                      <span
+                        css={({ colors }) =>
+                          css`
                         font-size: 18px;
                         colors: ${colors.contentDimmed};
                       `}
-                    >
-                      {formatNumber(data.maxTokenSupplyCap)}
-                    </span>
-                  }
-                >
-                  <Slider labels={["1K", "1B"]} {...inputs.maxTokenSupplyCap} />
-                </Fieldset>
-                <Fieldset
-                  label="Buyout multiplier"
-                  contextual={
-                    <span
-                      css={({ colors }) => css`
+                      >
+                        {formatNumber(data.maxTokenSupplyCap)}
+                      </span>
+                    }
+                  >
+                    <Slider
+                      labels={["1K", "1B"]}
+                      {...inputs.maxTokenSupplyCap}
+                    />
+                  </Fieldset>
+                  <Fieldset
+                    label="Buyout multiplier"
+                    contextual={
+                      <span
+                        css={({ colors }) =>
+                          css`
                         font-size: 18px;
                         colors: ${colors.contentDimmed};
                       `}
-                    >
-                      {data.buyoutMultiplier / 10}x
-                    </span>
-                  }
-                >
-                  <Slider labels={["1x", "5x"]} {...inputs.buyoutMultiplier} />
-                </Fieldset>
-              </>
-            )}
+                      >
+                        {data.buyoutMultiplier / 10}x
+                      </span>
+                    }
+                  >
+                    <Slider
+                      labels={["1x", "5x"]}
+                      {...inputs.buyoutMultiplier}
+                    />
+                  </Fieldset>
+                </>
+              )}
           </div>
         </ContentLayoutSection>
         {!suggestFromBuyout && (
@@ -213,11 +223,9 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             <AdvancedParameters
               columns={advancedColumns}
               onEdit={handleEditAdvancedParams}
-              headingBaseWidth={
-                layout.below("large")
-                  ? undefined
-                  : `calc(50% - ${(5 / 2) * gu}px)`
-              }
+              headingBaseWidth={layout.below("large")
+                ? undefined
+                : `calc(50% - ${(5 / 2) * gu}px)`}
             />
             <AdvancedParametersEditModal
               visible={editAdvancedParams}
@@ -226,43 +234,45 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
           </div>
         )}
         <div>
-          {layout.below("medium") ? (
-            <div
-              css={css`
+          {layout.below("medium")
+            ? (
+              <div
+                css={css`
                 padding: 3gu 0;
               `}
-            >
-              <Button
-                type="submit"
-                label={suggestFromBuyout ? "See suggestions" : "Next"}
-                mode="primary-2"
-                shadowInBox
-                wide
-              />
-            </div>
-          ) : (
-            <div
-              css={css`
+              >
+                <Button
+                  type="submit"
+                  label={suggestFromBuyout ? "See suggestions" : "Next"}
+                  mode="primary-2"
+                  shadowInBox
+                  wide
+                />
+              </div>
+            )
+            : (
+              <div
+                css={css`
                 display: flex;
                 justify-content: flex-end;
                 gap: 2gu;
                 padding-top: 3gu;
               `}
-            >
-              <Button
-                label="Back"
-                mode="secondary-2"
-                shadowInBox
-                onClick={onPrev}
-              />
-              <Button
-                type="submit"
-                label={suggestFromBuyout ? "See suggestions" : "Next"}
-                mode="primary-2"
-                shadowInBox
-              />
-            </div>
-          )}
+              >
+                <Button
+                  label="Back"
+                  mode="secondary-2"
+                  shadowInBox
+                  onClick={onPrev}
+                />
+                <Button
+                  type="submit"
+                  label={suggestFromBuyout ? "See suggestions" : "Next"}
+                  mode="primary-2"
+                  shadowInBox
+                />
+              </div>
+            )}
         </div>
       </ContentLayout>
     </form>
@@ -278,17 +288,16 @@ function EthInput({
 }) {
   const ethPrice = usePrice("eth", "usd")
   const numValue = parseFloat(value)
-  const usdValue =
-    ethPrice.data && !isNaN(numValue)
-      ? BigInt(Math.round(ethPrice.data * numValue * 10 ** 18))
-      : null
+  const usdValue = ethPrice.data && !isNaN(numValue)
+    ? BigInt(Math.round(ethPrice.data * numValue * 10 ** 18))
+    : null
 
   return (
     <TokenInput
       onChange={onChange}
-      secondaryEnd={
-        usdValue !== null ? `$${formatAmount(usdValue, 18, 2)}` : "−"
-      }
+      secondaryEnd={usdValue !== null
+        ? `$${formatAmount(usdValue, 18, 2)}`
+        : "−"}
       symbol="ETH"
       value={value}
     />

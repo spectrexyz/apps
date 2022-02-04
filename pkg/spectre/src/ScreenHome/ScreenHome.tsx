@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
-import { useLocation } from "wouter"
 import { Button } from "kit"
+import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen2"
 import { useSpectralize } from "../ScreenSpectralize/use-spectralize"
 
@@ -30,6 +30,13 @@ export function ScreenHome() {
           `}
         >
           <Button
+            label="NFT"
+            onClick={() => {
+              setLocation("/nfts/1")
+            }}
+            wide
+          />
+          <Button
             label="Fractionalize"
             onClick={() => {
               spectralize.reset()
@@ -46,7 +53,8 @@ export function ScreenHome() {
             wide
           />
         </div>
-        {/*[
+        {
+          /*[
           // ["NFT #1", "/nfts/1"],
           // ["TOKEN #1", "/nfts/1/serc20"],
           // ["Buy token", "/nfts/1/buy"],
@@ -61,7 +69,8 @@ export function ScreenHome() {
           >
             <Button label={label} onClick={() => setLocation(path)} />
           </div>
-        ))*/}
+        ))*/
+        }
       </div>
     </AppScreen>
   )

@@ -1,10 +1,10 @@
-import { useState, ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
+import { ReactNode, useState } from "react"
 import { a, useSpring } from "react-spring"
-import { ButtonIcon, IconArrowLeft, gu, springs, useTheme } from "kit"
-import { useLayout } from "../styles"
-import { useAppScroll } from "../App/AppScroll"
 import { useAppReady } from "../App/AppReady"
+import { useAppScroll } from "../App/AppScroll"
+import { useLayout } from "../styles"
 
 type AppScreenProps = {
   children: ReactNode
@@ -12,11 +12,11 @@ type AppScreenProps = {
     | false
     | null
     | {
-        contextual?: ReactNode
-        onBack: () => void
-        title?: ReactNode
-        extraRow?: ReactNode
-      }
+      contextual?: ReactNode
+      onBack: () => void
+      title?: ReactNode
+      extraRow?: ReactNode
+    }
 }
 
 export function AppScreen({ children, compactBar }: AppScreenProps) {
@@ -61,7 +61,8 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
             >
               <a.div
                 style={{ transform: headerTransform }}
-                css={({ colors }) => css`
+                css={({ colors }) =>
+                  css`
                   position: ${snapHeader ? "absolute" : "static"};
                   inset: 8gu 0 auto;
                   z-index: 2;
@@ -84,19 +85,17 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
                 >
                   <CompactBarHeader
                     title={title}
-                    start={
-                      onBack && (
-                        <ButtonIcon
-                          onClick={onBack}
-                          icon={<IconArrowLeft color={colors.accent} />}
-                          label="Back"
-                          css={css`
+                    start={onBack && (
+                      <ButtonIcon
+                        onClick={onBack}
+                        icon={<IconArrowLeft color={colors.accent} />}
+                        label="Back"
+                        css={css`
                             width: 7gu;
                             height: 100%;
                           `}
-                        />
-                      )
-                    }
+                      />
+                    )}
                     end={contextual}
                   />
                   {extraRow && (
@@ -111,7 +110,8 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
                   )}
                   <a.div
                     style={{ opacity: headerBorderVisibility }}
-                    css={({ colors }) => css`
+                    css={({ colors }) =>
+                      css`
                       position: absolute;
                       inset: auto 0 0;
                       border-bottom: 1px solid ${colors.outline2};
@@ -142,7 +142,7 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
             </div>
           </a.div>
         </div>
-      )
+      ),
   )
 }
 
@@ -184,7 +184,8 @@ export function CompactBarHeader({
           </div>
         )}
         <h1
-          css={({ fonts }) => css`
+          css={({ fonts }) =>
+            css`
             font-family: ${fonts.families.mono};
             font-size: 16px;
             text-transform: uppercase;

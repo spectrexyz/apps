@@ -1,11 +1,11 @@
-import "../walletconnect-compat"
+import { providers } from "ethers"
 import { ReactNode } from "react"
-import { Provider as WagmiProvider, defaultChains } from "wagmi"
+import { defaultChains, Provider as WagmiProvider } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
-import { providers } from "ethers"
+import "../walletconnect-compat"
 
-import { INFURA_PROJECT_ID, CHAIN_ID } from "../environment"
+import { CHAIN_ID, INFURA_PROJECT_ID } from "../environment"
 
 const CHAIN = defaultChains.find((chain) => chain.id === CHAIN_ID)
 

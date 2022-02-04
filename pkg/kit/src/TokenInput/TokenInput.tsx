@@ -1,7 +1,7 @@
-import { ChangeEvent, ReactNode, useCallback } from "react"
 import { css } from "@emotion/react"
-import { gu } from "../styles"
+import { ChangeEvent, ReactNode, useCallback } from "react"
 import { Button } from "../Button"
+import { gu } from "../styles"
 import { TokenIcon } from "../TokenIcon"
 
 type TokenInputProps = {
@@ -29,12 +29,12 @@ export function TokenInput({
   value,
 }: TokenInputProps): JSX.Element {
   const hasBalanceRow = balance !== undefined || balanceConverted !== undefined
-  const hasSecondaryRow =
-    secondaryStart !== undefined || secondaryEnd !== undefined
+  const hasSecondaryRow = secondaryStart !== undefined
+    || secondaryEnd !== undefined
 
   if (hasBalanceRow && hasSecondaryRow) {
     throw new Error(
-      "TokenInput: please only use balance / balanceConverted or secondary, not both."
+      "TokenInput: please only use balance / balanceConverted or secondary, not both.",
     )
   }
 
@@ -45,7 +45,7 @@ export function TokenInput({
         onChange(value)
       }
     },
-    [onChange]
+    [onChange],
   )
 
   return (
@@ -90,7 +90,8 @@ export function TokenInput({
           type="text"
           onChange={handleChange}
           value={value}
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             display: block;
             width: 100%;
             margin-right: -1gu;
@@ -133,7 +134,8 @@ export function TokenInput({
 function SecondaryRow({ start, end }: { start?: ReactNode; end?: ReactNode }) {
   return (
     <div
-      css={({ fonts }) => css`
+      css={({ fonts }) =>
+        css`
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -142,7 +144,8 @@ function SecondaryRow({ start, end }: { start?: ReactNode; end?: ReactNode }) {
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           font-size: 12px;
           span {
             color: ${colors.contentDimmed};

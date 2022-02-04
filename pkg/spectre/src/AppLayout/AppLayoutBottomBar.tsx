@@ -1,14 +1,14 @@
-import React, { useEffect, useState, ReactNode } from "react"
 import { css } from "@emotion/react"
-import { useAccount } from "wagmi"
+import { AddressBadge, Button, ButtonArea, noop, springs } from "kit"
+import React, { ReactNode, useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
-import { AddressBadge, Button, ButtonArea, springs, noop } from "kit"
-import { AccountDrawer } from "../StatusBar/AccountDrawer"
+import { useAccount } from "wagmi"
 import { Actions } from "../Actions/Actions"
-import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
-import { SyncStatus } from "../SyncStatus"
 import { useAppReady } from "../App/AppReady"
+import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
+import { AccountDrawer } from "../StatusBar/AccountDrawer"
 import { useLayout } from "../styles"
+import { SyncStatus } from "../SyncStatus"
 
 export function AppLayoutBottomBar({ compact }: { compact: boolean }) {
   return compact ? <BottomBarCompact /> : <BottomBar />
@@ -59,7 +59,7 @@ function BottomBar() {
               <Actions />
             </a.div>
           )
-        }
+        },
       )}
     </div>
   )
@@ -106,7 +106,8 @@ function BottomBarCompact() {
             }
             return (
               <a.div
-                css={({ colors }) => css`
+                css={({ colors }) =>
+                  css`
                   position: relative;
                   z-index: 2;
                   display: flex;
@@ -141,7 +142,7 @@ function BottomBarCompact() {
                 />
               </a.div>
             )
-          }
+          },
         )}
       </div>
       <ConnectAccount
@@ -170,7 +171,8 @@ function BarArea({
 }) {
   return (
     <a.div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         overflow: hidden;
         position: relative;
         z-index: 2;
@@ -184,12 +186,15 @@ function BarArea({
       <ButtonBar
         onClick={(address && !drawerOpened && onOpenDrawer) || noop}
         start={() =>
-          address ? (
-            <AddressBadge address={address} ensName={ensName} />
-          ) : (
-            <Button label="Connect account" onClick={onConnect} size="small" />
-          )
-        }
+          address
+            ? <AddressBadge address={address} ensName={ensName} />
+            : (
+              <Button
+                label="Connect account"
+                onClick={onConnect}
+                size="small"
+              />
+            )}
         end={() => {
           if (!address) {
             return <Actions />
@@ -222,10 +227,11 @@ function ButtonBar({
 }) {
   if (typeof start === "function") start = start()
   if (typeof end === "function") end = end()
-  return onClick ? (
-    <ButtonArea
-      onClick={onClick}
-      css={css`
+  return onClick
+    ? (
+      <ButtonArea
+        onClick={onClick}
+        css={css`
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -234,13 +240,14 @@ function ButtonBar({
         padding: 0 2gu;
         outline-offset: -2px;
       `}
-    >
-      {start}
-      {end}
-    </ButtonArea>
-  ) : (
-    <div
-      css={css`
+      >
+        {start}
+        {end}
+      </ButtonArea>
+    )
+    : (
+      <div
+        css={css`
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -248,9 +255,9 @@ function ButtonBar({
         height: 100%;
         padding: 0 2gu;
       `}
-    >
-      {start}
-      {end}
-    </div>
-  )
+      >
+        {start}
+        {end}
+      </div>
+    )
 }

@@ -13,7 +13,7 @@ export function randChar(from: string[]) {
 
 export function raf(
   callback: () => void,
-  interval: number | (() => number) = 1000 / 60
+  interval: number | (() => number) = 1000 / 60,
 ) {
   let rafId: ReturnType<typeof requestAnimationFrame>
   let lastUpdate = Date.now()

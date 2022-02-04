@@ -23,9 +23,7 @@ export function Button() {
           "flat-3",
           "outline",
         ] as ButtonMode[]
-      ).map((mode) => (
-        <KitButton key={mode} label={mode} mode={mode} />
-      ))}
+      ).map((mode) => <KitButton key={mode} label={mode} mode={mode} />)}
     </div>
   )
 }

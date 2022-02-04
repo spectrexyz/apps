@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
-import { useEffect, useMemo, useRef } from "react"
 import { css } from "@emotion/react"
+import { useEffect, useMemo, useRef } from "react"
 import { ButtonArea } from "../ButtonArea"
 
 type TabItem = {
@@ -35,11 +35,11 @@ export function Tabs({
       if (!isFocused.current) {
         return
       }
-      if (event.key === 'ArrowRight') {
+      if (event.key === "ArrowRight") {
         onSelect((selected + 1) % items.length)
         return
       }
-      if (event.key === 'ArrowLeft') {
+      if (event.key === "ArrowLeft") {
         onSelect(selected === 0 ? items.length - 1 : selected - 1)
         return
       }
@@ -56,7 +56,7 @@ export function Tabs({
     }
 
     const selectedButton = container.current?.querySelector(
-      '[tabindex="0"]'
+      "[tabindex=\"0\"]",
     ) as HTMLElement
     selectedButton?.focus()
   }, [selected])
@@ -71,7 +71,8 @@ export function Tabs({
     <div
       ref={container}
       role="tablist"
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         display: flex;
         justify-content: ${justifyContent};
         align-items: center;
@@ -81,7 +82,8 @@ export function Tabs({
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: flex;
           align-items: center;
           width: ${fullWidth ? "100%" : "auto"};
@@ -111,7 +113,8 @@ export function Tabs({
             onClick={() => onSelect(index)}
             role="tab"
             tabIndex={selected === index ? 0 : -1}
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               flex: 1 1 0;
               align-items: center;
               justify-content: center;

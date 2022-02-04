@@ -1,13 +1,13 @@
 import type { ReactNode } from "react"
 
+import { css } from "@emotion/react"
 import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
 import { a, useTransition } from "react-spring"
-import { css } from "@emotion/react"
-import { gu, springs } from "../styles"
-import { IconX } from "../icons"
 import { ButtonArea } from "../ButtonArea"
+import { IconX } from "../icons"
 import { Root } from "../Root"
+import { gu, springs } from "../styles"
 import { useTheme } from "../Theme"
 import { checkBackdropFilterSupport } from "../utils"
 
@@ -51,9 +51,11 @@ export function Modal({
                 z-index: 2;
                 inset: 0;
                 overflow: auto;
-                background: ${colord(colors.background)
+                background: ${
+                colord(colors.background)
                   .alpha(mode === "large" ? 0.8 : 0.6)
-                  .toHex()};
+                  .toHex()
+              };
               `}
             >
               {/* No need for keyboard support here since this is handled elsewhere */}
@@ -106,37 +108,46 @@ export function Modal({
                           }
 
                           max-width: ${mode === "large" ? "100%" : "360px"};
-                          padding: ${mode === "large"
+                          padding: ${
+                          mode === "large"
                             ? css`3gu 5gu 5gu`
-                            : css`3gu`};
+                            : css`3gu`
+                        };
                           @media (max-width: 600px) {
                             padding: 3gu;
                           }
-                          ${mode === "translucid"
+                          ${
+                          mode === "translucid"
                             ? css`
-                                background: ${colord(colors.translucid)
-                                  .alpha(supportsBackdropFilters ? 0.6 : 1)
-                                  .toHex()};
+                                background: ${
+                              colord(colors.translucid)
+                                .alpha(supportsBackdropFilters ? 0.6 : 1)
+                                .toHex()
+                            };
                                 backdrop-filter: blur(40px);
                                 border-radius: 6px;
                               `
                             : css`
-                                background: ${mode === "large"
-                                  ? colors.background
-                                  : colors.layer1};
-                              `}
-                        `
-                      }
+                                background: ${
+                              mode === "large"
+                                ? colors.background
+                                : colors.layer1
+                            };
+                              `
+                        }
+                        `}
                     >
                       <a.div
                         style={{
                           opacity: blur.to((v) => 1 - v),
                         }}
                         css={css`
-                          display: ${mode === "translucid" &&
-                          supportsBackdropFilters
+                          display: ${
+                          mode === "translucid"
+                            && supportsBackdropFilters
                             ? "block"
-                            : "none"};
+                            : "none"
+                        };
                           position: absolute;
                           z-index: 1;
                           inset: 0;
@@ -182,7 +193,7 @@ export function Modal({
                 </div>
               </div>
             </a.section>
-          )
+          ),
       )}
     </Root>
   )

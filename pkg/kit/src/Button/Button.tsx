@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
-import { createContext, forwardRef, useContext, useMemo } from "react"
 import { css } from "@emotion/react"
+import { createContext, forwardRef, useContext, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
 import { ButtonArea } from "../ButtonArea"
 import { Moire } from "../Moire"
@@ -33,8 +33,10 @@ export type ButtonSize =
   | "small"
 export type ShadowInBox = false | true | "width" | "height"
 
-export type ButtonProps = ComponentPropsWithoutRef<"button"> &
-  ComponentPropsWithoutRef<"a"> & {
+export type ButtonProps =
+  & ComponentPropsWithoutRef<"button">
+  & ComponentPropsWithoutRef<"a">
+  & {
     // adjust the label alignment (i.e. makes all caps button labels appear centered)
     adjustLabelAlignment?: boolean
     disabled?: boolean
@@ -70,7 +72,7 @@ export const Button = forwardRef<
     wide = false,
     ...props
   },
-  ref
+  ref,
 ): JSX.Element {
   const hShift = shadowInBox === "width" || shadowInBox === true
   const vShift = shadowInBox === "height" || shadowInBox === true
@@ -97,7 +99,8 @@ export const Button = forwardRef<
         onClick={onClick}
         type={href ? undefined : "button"}
         {...props}
-        css={({ colors, fonts }) => css`
+        css={({ colors, fonts }) =>
+          css`
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -109,15 +112,17 @@ export const Button = forwardRef<
           white-space: nowrap;
           font-size: ${fontSize};
           font-family: ${fonts.families.mono};
-          color: ${(() => {
-            if (mode === "flat") return colors.accent
-            if (mode === "flat-2") return colors.accent
-            if (mode === "flat-3") return colors.accent
-            if (mode === "primary") return colors.accentContent
-            if (mode === "primary-2") return colors.accent2Content
-            if (mode === "secondary-2") return colors.accent2
-            return colors.accent // secondary
-          })()};
+          color: ${
+            (() => {
+              if (mode === "flat") return colors.accent
+              if (mode === "flat-2") return colors.accent
+              if (mode === "flat-3") return colors.accent
+              if (mode === "primary") return colors.accentContent
+              if (mode === "primary-2") return colors.accent2Content
+              if (mode === "secondary-2") return colors.accent2
+              return colors.accent // secondary
+            })()
+          };
           &:focus-visible {
             outline: 0;
             .surface {
@@ -169,11 +174,12 @@ export const Button = forwardRef<
   )
 })
 
-type ButtonInProps = Pick<
-  ButtonProps,
-  "adjustLabelAlignment" | "horizontalPadding" | "icon" | "label" | "size"
-> &
-  Pick<Required<ButtonProps>, "mode">
+type ButtonInProps =
+  & Pick<
+    ButtonProps,
+    "adjustLabelAlignment" | "horizontalPadding" | "icon" | "label" | "size"
+  >
+  & Pick<Required<ButtonProps>, "mode">
 
 function ButtonIn({
   adjustLabelAlignment,
@@ -207,7 +213,8 @@ function ButtonIn({
     >
       <div
         className="surface"
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: relative;
           z-index: 2;
           display: flex;
@@ -215,21 +222,25 @@ function ButtonIn({
           width: 100%;
           height: 100%;
           padding: 0 ${_horizontalPadding}px;
-          background: ${(() => {
-            if (mode === "flat") return colors.layer2
-            if (mode === "flat-2") return colors.layer1
-            if (mode === "flat-3") return colors.background
-            if (mode === "primary") return colors.accent
-            if (mode === "primary-2") return colors.accent2
-            return colors.background // secondary, secondary-2
-          })()};
+          background: ${
+            (() => {
+              if (mode === "flat") return colors.layer2
+              if (mode === "flat-2") return colors.layer1
+              if (mode === "flat-3") return colors.background
+              if (mode === "primary") return colors.accent
+              if (mode === "primary-2") return colors.accent2
+              return colors.background // secondary, secondary-2
+            })()
+          };
           border-style: solid;
           border-width: ${flat ? "0" : "1px"};
-          border-color: ${(() => {
-            if (mode === "primary-2") return colors.accent2
-            if (mode === "secondary-2") return colors.accent2
-            return colors.accent
-          })()};
+          border-color: ${
+            (() => {
+              if (mode === "primary-2") return colors.accent2
+              if (mode === "secondary-2") return colors.accent2
+              return colors.accent
+            })()
+          };
         `}
       >
         {icon && (
@@ -272,12 +283,15 @@ function ButtonIn({
         >
           <div
             className="active-shadow"
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               position: absolute;
               inset: 0;
-              background: ${mode === "primary-2" || mode === "secondary-2"
-                ? colors.accent2
-                : colors.accent};
+              background: ${
+                mode === "primary-2" || mode === "secondary-2"
+                  ? colors.accent2
+                  : colors.accent
+              };
               opacity: 0;
             `}
           />
@@ -293,11 +307,9 @@ function ButtonIn({
             <Moire
               width={Math.ceil(shadowBounds.width)}
               height={Math.ceil(shadowBounds.height)}
-              linesColor={
-                mode === "primary-2" || mode === "secondary-2"
-                  ? colors.accent2
-                  : undefined
-              }
+              linesColor={mode === "primary-2" || mode === "secondary-2"
+                ? colors.accent2
+                : undefined}
             />
           </div>
         </div>

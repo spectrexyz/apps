@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
-import { createContext, forwardRef, useContext } from "react"
 import { css } from "@emotion/react"
+import { createContext, forwardRef, useContext } from "react"
 import { useUid } from "../react-utils"
 
 type FieldsetProps = {
@@ -27,14 +27,15 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
       label,
       optional = false,
     }: FieldsetProps,
-    ref
+    ref,
   ): JSX.Element {
     const labelFor = useUid()
     return (
       <FieldsetContext.Provider value={{ labelFor }}>
         <section
           ref={ref}
-          css={({ colors, fonts }) => css`
+          css={({ colors, fonts }) =>
+            css`
             position: relative;
             margin-top: 2gu;
             padding: 2gu;
@@ -64,10 +65,10 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
           <header>
             <h1>
               <label htmlFor={labelFor}>
-                {label}{" "}
-                {optional && (
+                {label} {optional && (
                   <span
-                    css={({ colors }) => css`
+                    css={({ colors }) =>
+                      css`
                       text-transform: none;
                       color: ${colors.contentDimmed};
                     `}
@@ -79,7 +80,8 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
             </h1>
             {contextual && (
               <div
-                css={({ colors, fonts }) => css`
+                css={({ colors, fonts }) =>
+                  css`
                   font-family: ${fonts.families.sans};
                   font-size: 12px;
                   color: ${colors.contentDimmed};
@@ -90,7 +92,8 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
             )}
           </header>
           <div
-            css={({ fonts }) => css`
+            css={({ fonts }) =>
+              css`
               font-family: ${fonts.families.sans};
             `}
           >
@@ -99,7 +102,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
         </section>
       </FieldsetContext.Provider>
     )
-  }
+  },
 )
 
 export function useFieldset() {

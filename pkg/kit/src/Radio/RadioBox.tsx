@@ -1,10 +1,10 @@
-import type { Ref, ReactNode } from "react"
+import type { ReactNode, Ref } from "react"
 
-import { useEffect, useRef } from "react"
 import { css } from "@emotion/react"
+import { useEffect, useRef } from "react"
 import { useFocusVisible } from "../FocusVisible"
-import { useRadioGroup } from "./RadioGroup"
 import { Radio } from "./Radio"
+import { useRadioGroup } from "./RadioGroup"
 
 type RadioBoxProps = {
   checked?: boolean
@@ -24,7 +24,7 @@ export function RadioBox({
   secondary,
 }: RadioBoxProps): JSX.Element {
   const button = useRef<HTMLButtonElement & HTMLAnchorElement & HTMLDivElement>(
-    null
+    null,
   )
   const radioGroup = useRadioGroup(id)
   const inRadioGroup = radioGroup !== null
@@ -33,7 +33,7 @@ export function RadioBox({
   if (!onChange) {
     if (!inRadioGroup || id === undefined) {
       throw new Error(
-        "RadioBox requires an onChange handler or to be in a RadioGroup with an id."
+        "RadioBox requires an onChange handler or to be in a RadioGroup with an id.",
       )
     }
     onChange = (checked) => {
@@ -74,13 +74,13 @@ export function RadioBox({
       ref={button}
       onClick={handleClick}
       onKeyDown={radioGroup?.onKeyDown}
-      tabIndex={
-        radioGroup &&
-        (radioGroup.focusableId === undefined || id === radioGroup.focusableId)
-          ? 0
-          : -1
-      }
-      css={({ colors }) => css`
+      tabIndex={radioGroup
+          && (radioGroup.focusableId === undefined
+            || id === radioGroup.focusableId)
+        ? 0
+        : -1}
+      css={({ colors }) =>
+        css`
         position: relative;
         width: 100%;
         padding: 2gu;
@@ -89,17 +89,20 @@ export function RadioBox({
         &:focus {
           outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
           & > div:after {
-            ${focusVisible
-              ? css`
+            ${
+          focusVisible
+            ? css`
                   outline-color: ${colors.focus};
                 `
-              : ""}
+            : ""
+        }
           }
         }
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: flex;
           flex-direction: column;
           align-items: flex-start;
@@ -110,11 +113,13 @@ export function RadioBox({
             position: absolute;
             inset: 1px;
             outline: 2px solid
-              ${error
-                ? colors.warning
-                : checked
-                ? colors.accent
-                : "transparent"};
+              ${
+            error
+              ? colors.warning
+              : checked
+              ? colors.accent
+              : "transparent"
+          };
             pointer-events: none;
           }
         `}
@@ -132,7 +137,8 @@ export function RadioBox({
             onChange={handleChange}
           />
           <span
-            css={({ fonts }) => css`
+            css={({ fonts }) =>
+              css`
               margin-left: 1.5gu;
               font-family: ${fonts.families.mono};
               font-size: 18px;
@@ -143,7 +149,8 @@ export function RadioBox({
           </span>
         </div>
         <div
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             width: 100%;
             font-size: 12px;
             text-align: left;

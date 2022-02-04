@@ -14,7 +14,7 @@ export const fonts = {
     soSoLarge: "72px",
   },
   families: {
-    mono: '"IBM Plex Mono", monospace',
+    mono: "\"IBM Plex Mono\", monospace",
     sans: "Inter, sans-serif",
   },
 }

@@ -1,3 +1,4 @@
+import { css } from "@emotion/react"
 import {
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
@@ -6,12 +7,11 @@ import {
   useRef,
   useState,
 } from "react"
-import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
-import { Direction } from "../types"
-import { springs } from "../styles"
 import { Moire } from "../Moire"
+import { springs } from "../styles"
+import { Direction } from "../types"
 
 const BAR_HEIGHT = 4
 const HANDLE_OUTLINE = 5
@@ -53,14 +53,14 @@ export function Slider({
     }
 
     lastRectTime.current = now
-    lastRect.current =
-      mainElement.current?.getBoundingClientRect() ?? new window.DOMRect()
+    lastRect.current = mainElement.current?.getBoundingClientRect()
+      ?? new window.DOMRect()
 
     return lastRect.current
   }, [])
 
   const clientXFromEvent = (
-    event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent
+    event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent,
   ) => {
     if (isTouchEvent(event)) {
       return event.touches.item(0)?.clientX ?? 0
@@ -74,7 +74,7 @@ export function Slider({
       const x = Math.min(rect.width, Math.max(0, clientX - rect.x))
       onChange(x / rect.width)
     },
-    [onChange, getRect]
+    [onChange, getRect],
   )
 
   const dragStart = (event: ReactMouseEvent | ReactTouchEvent) => {
@@ -148,7 +148,8 @@ export function Slider({
       tabIndex={0}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         position: relative;
         min-width: ${MIN_WIDTH}px;
         padding: 0 0 ${labels ? css`1.5gu` : "0"};
@@ -188,7 +189,8 @@ export function Slider({
           >
             <div
               ref={barBounds.observe}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: absolute;
                 inset: 0;
                 background: ${colors.accentInverted};
@@ -196,7 +198,8 @@ export function Slider({
             />
             <a.div
               style={{ transform: moveSpring.activeBarTransform }}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: absolute;
                 inset: 0;
                 transform-origin: 0 0;
@@ -225,7 +228,8 @@ export function Slider({
             `}
           >
             <div
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 overflow: hidden;
                 position: absolute;
                 inset: calc(50% - ${HANDLE_SIZE / 2}px) 0 0;
@@ -246,7 +250,8 @@ export function Slider({
               />
             </div>
             <div
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -265,7 +270,8 @@ export function Slider({
 
       {labels && (
         <div
-          css={({ colors, fonts }) => css`
+          css={({ colors, fonts }) =>
+            css`
             position: absolute;
             inset: auto 0 0;
             display: flex;
@@ -291,7 +297,7 @@ export function Slider({
 }
 
 function isTouchEvent(
-  event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent
+  event: ReactTouchEvent | ReactMouseEvent | TouchEvent | MouseEvent,
 ): event is TouchEvent | ReactTouchEvent {
   return "touches" in event
 }

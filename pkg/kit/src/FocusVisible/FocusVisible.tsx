@@ -42,7 +42,7 @@ export function FocusVisible({ children }: FocusVisibleProps) {
         },
         // This delay is needed because the focusin event seems to be triggered
         // asynchronously, at least on Firefox.
-        100
+        100,
       )
 
       setFocusVisible(false)

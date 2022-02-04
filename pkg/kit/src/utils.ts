@@ -40,7 +40,7 @@ export function norm(value: number, low: number, high: number) {
 
 export function progressToItem<T extends unknown>(
   progress: number,
-  itemArray: T[]
+  itemArray: T[],
 ): T | null {
   if (itemArray.length === 0) return null
   return itemArray[Math.round(lerp(progress, 0, itemArray.length - 1))]
@@ -72,7 +72,7 @@ export function max<T extends bigint | number>(...values: T[]): T {
 // Find the closest number in a sorted array
 export function closestIndexFromSortedNumbers<T extends bigint | number>(
   sortedNumbers: T[],
-  value: T
+  value: T,
 ): number {
   const diffs = sortedNumbers.map((v) => abs(value - v))
   const minValue = min(...diffs)
@@ -84,14 +84,14 @@ export function map(
   istart: number,
   istop: number,
   ostart: number,
-  ostop: number
+  ostop: number,
 ): number {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
 }
 
 export function raf(
   callback: (time: number) => void,
-  interval = 1000 / 60
+  interval = 1000 / 60,
 ): () => void {
   let rafId: number
   let lastUpdate = Date.now()
@@ -121,9 +121,9 @@ export function shortenAddress(address: string, charsLength = 4): string {
     return address.toLowerCase()
   }
   return (
-    address.slice(0, charsLength + prefixLength) +
-    "…" +
-    address.slice(-charsLength)
+    address.slice(0, charsLength + prefixLength)
+    + "…"
+    + address.slice(-charsLength)
   ).toLowerCase()
 }
 
@@ -151,15 +151,15 @@ export function formatDate(date: string | Date, full = false): string {
     "en-US",
     full
       ? {
-          dateStyle: "full",
-          timeStyle: "medium",
-        }
+        dateStyle: "full",
+        timeStyle: "medium",
+      }
       : {
-          month: "long",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }
+        month: "long",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      },
   )
 }
 
@@ -167,7 +167,7 @@ export function formatDate(date: string | Date, full = false): string {
 export function formatNumber(
   value: bigint | number | string,
   digits: number | bigint = 2,
-  { trailingZeros = false }: { trailingZeros?: boolean } = {}
+  { trailingZeros = false }: { trailingZeros?: boolean } = {},
 ): string {
   digits = Number(digits)
   return (
@@ -185,14 +185,14 @@ export function formatAmount(
   optionsOrDigits:
     | { digits?: number | bigint; trailingZeros?: boolean }
     | number
-    | bigint = {}
+    | bigint = {},
 ): string {
   decimals = BigInt(decimals)
 
   // options.digits can also be passed directly as the third argument
   if (
-    typeof optionsOrDigits === "number" ||
-    typeof optionsOrDigits === "bigint"
+    typeof optionsOrDigits === "number"
+    || typeof optionsOrDigits === "bigint"
   ) {
     optionsOrDigits = {
       digits: optionsOrDigits,
@@ -213,11 +213,11 @@ export function formatAmount(
   let fraction = String(amount % decimalsDivisor)
 
   const zeros = "0".repeat(
-    Math.max(0, String(decimalsDivisor).length - fraction.length - 1)
+    Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
   )
 
-  fraction =
-    zeros + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - _digits))
+  fraction = zeros
+    + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - _digits))
 
   if (!trailingZeros) {
     fraction = fraction.replace(/0+$/, "")
@@ -226,7 +226,7 @@ export function formatAmount(
   return formatNumber(
     fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
     _digits,
-    { trailingZeros }
+    { trailingZeros },
   )
 }
 
@@ -274,7 +274,7 @@ export function toDecimals(value: string, decimals: number): bigint {
   return BigInt(
     (whole + dec)
       .padEnd(whole.length + decimals, "0")
-      .slice(0, whole.length + decimals)
+      .slice(0, whole.length + decimals),
   )
 }
 
@@ -294,8 +294,9 @@ export function noop(): void {
   // do nothing
 }
 
-export const dpr =
-  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+export const dpr = typeof devicePixelRatio !== "undefined"
+  ? devicePixelRatio
+  : 1
 
 export const MINUTE_MS = 60 * 1000
 export const HOUR_MS = MINUTE_MS * 60
@@ -304,7 +305,7 @@ export const WEEK_MS = DAY_MS * 7
 
 export function pick<T extends object, U extends keyof T>(
   obj: T,
-  paths: U[]
+  paths: U[],
 ): Pick<T, U> {
   const values = Object.create(null)
   for (const k of paths) values[k] = obj[k]

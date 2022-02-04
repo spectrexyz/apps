@@ -1,10 +1,11 @@
-import React, { useCallback } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
   ButtonIcon,
+  co,
   Fieldset,
   FileUpload,
+  gu,
   IconCheckBold,
   IconMagnifyingGlassPlus,
   IconTrash,
@@ -12,14 +13,13 @@ import {
   RadioGroup,
   TextInput,
   Video,
-  co,
-  gu,
 } from "kit"
+import React, { useCallback } from "react"
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
-import { FileType, useSpectralize } from "./use-spectralize"
 import { ErrorSummary } from "./ErrorSummary"
 import { StepProps } from "./types"
+import { FileType, useSpectralize } from "./use-spectralize"
 
 export function Step1({ onNext, onPrev, title }: StepProps) {
   const data = useSpectralize()
@@ -30,7 +30,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
       event.preventDefault()
       onNext()
     },
-    [onNext]
+    [onNext],
   )
 
   const fileSelectorWidth = layout.value({
@@ -58,31 +58,38 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
         `}
       >
         <div
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
             background: ${layout.below("medium") ? "none" : colors.background};
-            border: ${layout.below("medium") ? "none" : `2px solid ${colors.contrast}`};
+            border: ${
+              layout.below("medium") ? "none" : `2px solid ${colors.contrast}`
+            };
           `}
         >
-          {!layout.below("medium") ? (
-            <h1
-              css={({ fonts }) => css`
+          {!layout.below("medium")
+            ? (
+              <h1
+                css={({ fonts }) =>
+                  css`
                 font-family: ${fonts.families.mono};
                 font-size: 18px;
                 text-transform: uppercase;
               `}
-            >
-              {title}
-            </h1>
-          ) : (
-            <div
-              css={css`
+              >
+                {title}
+              </h1>
+            )
+            : (
+              <div
+                css={css`
                 height: 6gu;
               `}
-            />
-          )}
+              />
+            )}
           <p
-            css={({ colors, fonts }) => css`
+            css={({ colors, fonts }) =>
+              css`
               padding: ${introPadding};
               font-family: ${fonts.families.sans};
               font-size: 14px;
@@ -154,38 +161,45 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
             </ErrorSummary>
           )}
 
-          {layout.below("medium") ? (
-            <div
-              css={css`
+          {layout.below("medium")
+            ? (
+              <div
+                css={css`
                 padding: 3gu 0;
               `}
-            >
-              <Button
-                type="submit"
-                label="Next"
-                mode="primary-2"
-                shadowInBox
-                wide
-              />
-            </div>
-          ) : (
-            <div
-              css={css`
+              >
+                <Button
+                  type="submit"
+                  label="Next"
+                  mode="primary-2"
+                  shadowInBox
+                  wide
+                />
+              </div>
+            )
+            : (
+              <div
+                css={css`
                 display: flex;
                 justify-content: flex-end;
                 gap: 2gu;
                 padding-top: 3gu;
               `}
-            >
-              <Button
-                label="Cancel"
-                mode="secondary-2"
-                shadowInBox
-                onClick={onPrev}
-              />
-              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
-            </div>
-          )}
+              >
+                <Button
+                  label="Cancel"
+                  mode="secondary-2"
+                  shadowInBox
+                  onClick={onPrev}
+                />
+                <Button
+                  type="submit"
+                  label="Next"
+                  mode="primary-2"
+                  shadowInBox
+                />
+              </div>
+            )}
         </div>
         {!layout.below("large") && (
           <div
@@ -231,9 +245,7 @@ function NftFileSelector({
 
   return (
     <div>
-      {file ? (
-        <NftFilePreview />
-      ) : (
+      {file ? <NftFilePreview /> : (
         <RadioGroup
           onChange={(fileType) => updateFileType(fileType as FileType)}
           selected={fileType}
@@ -331,25 +343,29 @@ function NftFilePreview() {
               min-height: 5gu;
             `}
           >
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt=""
-                css={css`
+            {previewUrl
+              ? (
+                <img
+                  src={previewUrl}
+                  alt=""
+                  css={css`
                   display: block;
                   width: 100%;
                 `}
-              />
-            ) : (
-              <div
-                css={({ colors }) => css`
+                />
+              )
+              : (
+                <div
+                  css={({ colors }) =>
+                    css`
                   height: 10gu;
                   background: ${colors.background};
                 `}
-              />
-            )}
+                />
+              )}
             <div
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: absolute;
                 inset: auto 0 0 auto;
                 display: flex;
@@ -368,7 +384,8 @@ function NftFilePreview() {
             loop={true}
             src={fileUrl}
             poster={previewUrl ?? undefined}
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               display: block;
               width: 100%;
               background: ${colors.background};
@@ -377,7 +394,8 @@ function NftFilePreview() {
         )}
       </div>
       <section
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding: 2gu;
           background: ${colors.layer2};
           h1 {
@@ -393,48 +411,54 @@ function NftFilePreview() {
         <h1>Artwork files</h1>
 
         {file?.name && (
-          <FileEntry name={file.name} onReset={() => updateFile(null)} />
+          <FileEntry
+            name={file.name}
+            onReset={() => updateFile(null)}
+          />
         )}
 
-        {hasPreview &&
-          (previewFile ? (
-            <FileEntry
-              name={previewFile.name}
-              onReset={() => updatePreviewFile(null)}
-            />
-          ) : (
-            <div
-              css={css`
-                padding-top: 1gu;
-              `}
-            >
+        {hasPreview
+          && (previewFile
+            ? (
+              <FileEntry
+                name={previewFile.name}
+                onReset={() => updatePreviewFile(null)}
+              />
+            )
+            : (
               <div
                 css={css`
+                padding-top: 1gu;
+              `}
+              >
+                <div
+                  css={css`
                   display: flex;
                   align-items: center;
                   justify-content: space-between;
                 `}
-              >
-                <FileUpload
-                  accept={NFT_FILE_TYPES.image.mediaTypes}
-                  file={previewFile}
-                  label="Thumbnail"
-                  onFile={updatePreviewFile}
-                  withReset={false}
-                />
+                >
+                  <FileUpload
+                    accept={NFT_FILE_TYPES.image.mediaTypes}
+                    file={previewFile}
+                    label="Thumbnail"
+                    onFile={updatePreviewFile}
+                    withReset={false}
+                  />
 
-                <span
-                  css={({ colors, fonts }) => css`
+                  <span
+                    css={({ colors, fonts }) =>
+                      css`
                     font-family: ${fonts.families.sans};
                     font-size: 12px;
                     color: ${colors.contentDimmed};
                   `}
-                >
-                  (Optional)
-                </span>
+                  >
+                    (Optional)
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
       </section>
     </div>
   )
@@ -452,7 +476,8 @@ function FileEntry({ name, onReset }: { name: string; onReset: () => void }) {
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: flex;
           align-items: center;
           gap: 1.25gu;

@@ -1,4 +1,3 @@
-import React, { useCallback } from "react"
 import { css } from "@emotion/react"
 import {
   AddressBadge,
@@ -8,6 +7,7 @@ import {
   formatBytes,
   formatNumber,
 } from "kit"
+import React, { useCallback } from "react"
 import {
   ContentLayout,
   ContentLayoutHeading,
@@ -27,7 +27,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
       event.preventDefault()
       onNext()
     },
-    [onNext]
+    [onNext],
   )
 
   const headingBottomSpace = layout.value({
@@ -50,7 +50,8 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
         <ContentLayoutHeading
           title={
             <span
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 color: ${colors.accent};
               `}
             >
@@ -173,7 +174,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
                         `}
                       >
                         {formatNumber(
-                          data.rewardsPct / data.rewardsSplit.length
+                          data.rewardsPct / data.rewardsSplit.length,
                         )}
                         %
                       </div>
@@ -192,45 +193,47 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
           </div>
         </ContentLayoutSection>
         <div>
-          {layout.below("medium") ? (
-            <div
-              css={css`
+          {layout.below("medium")
+            ? (
+              <div
+                css={css`
                 padding: 3gu 0;
               `}
-            >
-              <Button
-                label="Fractionalize NFT"
-                mode="primary-2"
-                onClick={fractionalize}
-                shadowInBox
-                type="submit"
-                wide
-              />
-            </div>
-          ) : (
-            <div
-              css={css`
+              >
+                <Button
+                  label="Fractionalize NFT"
+                  mode="primary-2"
+                  onClick={fractionalize}
+                  shadowInBox
+                  type="submit"
+                  wide
+                />
+              </div>
+            )
+            : (
+              <div
+                css={css`
                 display: flex;
                 justify-content: flex-end;
                 gap: 2gu;
                 padding-top: 3gu;
               `}
-            >
-              <Button
-                label="Back"
-                mode="secondary-2"
-                shadowInBox
-                onClick={onPrev}
-              />
-              <Button
-                label="Fractionalize NFT"
-                mode="primary-2"
-                onClick={fractionalize}
-                shadowInBox
-                type="submit"
-              />
-            </div>
-          )}
+              >
+                <Button
+                  label="Back"
+                  mode="secondary-2"
+                  shadowInBox
+                  onClick={onPrev}
+                />
+                <Button
+                  label="Fractionalize NFT"
+                  mode="primary-2"
+                  onClick={fractionalize}
+                  shadowInBox
+                  type="submit"
+                />
+              </div>
+            )}
         </div>
       </ContentLayout>
     </form>

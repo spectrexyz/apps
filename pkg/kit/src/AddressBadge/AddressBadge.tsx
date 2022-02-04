@@ -20,18 +20,21 @@ export function AddressBadge({
   const iconSize = size === "large" ? 32 : 20
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         display: flex;
         align-items: center;
         height: 4gu;
         padding: ${transparent ? "0" : css`0 1gu`};
         user-select: none;
         color: ${colors.accent};
-        background: ${error
-          ? colors.negative
-          : transparent
-          ? "none"
-          : colors.layer1};
+        background: ${
+          error
+            ? colors.negative
+            : transparent
+            ? "none"
+            : colors.layer1
+        };
       `}
     >
       <div
@@ -47,7 +50,8 @@ export function AddressBadge({
       </div>
       <div
         title={address}
-        css={({ fonts }) => css`
+        css={({ fonts }) =>
+          css`
           font-family: ${fonts.families.mono};
           font-size: ${size === "large" ? "24px" : "16px"};
         `}

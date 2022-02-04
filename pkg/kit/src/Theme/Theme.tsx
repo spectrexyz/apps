@@ -1,6 +1,6 @@
+import { ThemeProvider } from "@emotion/react"
 import type { ReactNode } from "react"
 import { createContext, useContext, useMemo } from "react"
-import { ThemeProvider } from "@emotion/react"
 import { fonts } from "../styles"
 
 const colorNames = {

@@ -1,6 +1,6 @@
 export function cssUnitPlugin(
   unitInPx: number,
-  unit: string
+  unit: string,
 ): (element: { type: string; value: string }) => void {
   const re = new RegExp("([+-]?(?:[0-9]*[.])?[0-9]+)" + unit, "g")
   const convert = (value: string) => value.replace(re, replacer)

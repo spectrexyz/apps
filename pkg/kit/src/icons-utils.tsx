@@ -1,14 +1,14 @@
 import {
-  useInsideButton,
   ICON_SIZE_DEFAULT as BUTTON_ICON_SIZE_DEFAULT,
-  ICON_SIZE_DEFAULT_SMALL as BUTTON_ICON_SIZE_DEFAULT_SMALL,
   ICON_SIZE_DEFAULT_COMPACT as BUTTON_ICON_SIZE_DEFAULT_COMPACT,
+  ICON_SIZE_DEFAULT_SMALL as BUTTON_ICON_SIZE_DEFAULT_SMALL,
+  useInsideButton,
 } from "./Button"
-import {
-  useInsideButtonText,
-  ICON_SIZE_DEFAULT as BUTTON_TEXT_ICON_SIZE_DEFAULT,
-} from "./ButtonText"
 import { useButtonIconIconSize } from "./ButtonIcon"
+import {
+  ICON_SIZE_DEFAULT as BUTTON_TEXT_ICON_SIZE_DEFAULT,
+  useInsideButtonText,
+} from "./ButtonText"
 import { useInfoTitleIconColor, useInfoTitleIconSize } from "./Info"
 import { gu } from "./styles"
 
@@ -24,8 +24,9 @@ export function useIconSize(size?: number): number {
 
   if (isInsideButton) {
     if (isInsideButton.size === "small") return BUTTON_ICON_SIZE_DEFAULT_SMALL
-    if (isInsideButton.size === "compact")
+    if (isInsideButton.size === "compact") {
       return BUTTON_ICON_SIZE_DEFAULT_COMPACT
+    }
     return BUTTON_ICON_SIZE_DEFAULT
   }
 

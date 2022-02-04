@@ -1,10 +1,10 @@
 import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring, useTransition } from "react-spring"
-import { Moire } from "../Moire/Moire"
-import { useTheme } from "../Theme/Theme"
 import { IconCheckBold } from "../icons"
+import { Moire } from "../Moire/Moire"
 import { gu, springs } from "../styles"
+import { useTheme } from "../Theme/Theme"
 
 type StepsProps = {
   current: number
@@ -24,18 +24,17 @@ export function Steps({
   steps = Math.round(steps)
   if (steps < 2) {
     throw new Error(
-      `Steps: the number of steps should be greater than 1 (received ${steps}).`
+      `Steps: the number of steps should be greater than 1 (received ${steps}).`,
     )
   }
 
   const bounds = useDimensions()
 
   // Bar length = its width or height, depending on direction
-  const barLength =
-    ((direction === "vertical" ? bounds.height : bounds.width) -
-      NUMBER_SIZE * steps) /
-      (steps - 1) -
-    BAR_SPACING * 2
+  const barLength = ((direction === "vertical" ? bounds.height : bounds.width)
+        - NUMBER_SIZE * steps)
+      / (steps - 1)
+    - BAR_SPACING * 2
 
   return (
     <div
@@ -59,21 +58,23 @@ export function Steps({
           const bar = index % 2 === 1
           const step = index - Math.floor(index / 2)
           const active = step <= current
-          return bar ? (
-            <StepBar
-              key={index}
-              active={active}
-              direction={direction}
-              length={barLength}
-            />
-          ) : (
-            <StepNumber
-              key={index}
-              active={active}
-              checked={step < current}
-              label={String(step + 1)}
-            />
-          )
+          return bar
+            ? (
+              <StepBar
+                key={index}
+                active={active}
+                direction={direction}
+                length={barLength}
+              />
+            )
+            : (
+              <StepNumber
+                key={index}
+                active={active}
+                checked={step < current}
+                label={String(step + 1)}
+              />
+            )
         })}
       </div>
     </div>
@@ -123,7 +124,8 @@ function StepNumber({
 
   return (
     <div
-      css={({ fonts }) => css`
+      css={({ fonts }) =>
+        css`
         flex-shrink: 0;
         position: relative;
         display: flex;
@@ -138,7 +140,8 @@ function StepNumber({
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: absolute;
           inset: 0;
           display: flex;
@@ -159,7 +162,8 @@ function StepNumber({
             <a.div
               style={{ opacity, transform }}
               title={label}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: absolute;
                 inset: 0;
                 display: flex;
@@ -187,7 +191,7 @@ function StepNumber({
                 </a.span>
               ))}
             </a.div>
-          )
+          ),
       )}
     </div>
   )
@@ -205,9 +209,8 @@ function StepBar({
   const { colors } = useTheme()
   const visibility = useSpring({
     config: springs.lazy,
-    transform:
-      (direction === "horizontal" ? "translateX" : "translateY") +
-      `(${active ? 0 : -50}%)`,
+    transform: (direction === "horizontal" ? "translateX" : "translateY")
+      + `(${active ? 0 : -50}%)`,
     opacity: Number(active),
   })
   return (
@@ -215,12 +218,16 @@ function StepBar({
       css={css`
         display: flex;
         flex-shrink: 1;
-        width: ${direction === "horizontal"
+        width: ${
+        direction === "horizontal"
           ? `${length}px`
-          : `${BAR_THICKNESS}px`};
-        height: ${direction === "horizontal"
+          : `${BAR_THICKNESS}px`
+      };
+        height: ${
+        direction === "horizontal"
           ? `${BAR_THICKNESS}px`
-          : `${length}px`};
+          : `${length}px`
+      };
         background: ${colors.accentInverted};
         border-radius: 0.25gu;
         margin: ${direction === "horizontal" ? css`0 1.75gu` : css`1.75gu 0`};

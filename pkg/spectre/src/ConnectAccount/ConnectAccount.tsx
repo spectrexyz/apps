@@ -1,7 +1,7 @@
-import { RefObject } from "react"
 import { css } from "@emotion/react"
+import { ButtonArea, gu, Modal, Popup } from "kit"
+import { RefObject } from "react"
 import { useConnect } from "wagmi"
-import { gu, ButtonArea, Modal, Popup } from "kit"
 
 import metaMask from "./assets/web3-providers/metamask.svg"
 import walletConnect from "./assets/web3-providers/walletconnect.svg"
@@ -20,29 +20,32 @@ export function ConnectAccount({
   visible: boolean
   opener?: null | RefObject<HTMLElement>
 }) {
-  return opener ? (
-    <Popup
-      closeButton={true}
-      focusableContainer={false}
-      mode="translucid"
-      onClose={onClose}
-      opener={opener}
-      visible={visible}
-      width={45 * gu}
-    >
-      <ConnectAccountInside />
-    </Popup>
-  ) : (
-    <Modal visible={visible} onClose={onClose} mode="translucid">
-      <ConnectAccountInside />
-    </Modal>
-  )
+  return opener
+    ? (
+      <Popup
+        closeButton={true}
+        focusableContainer={false}
+        mode="translucid"
+        onClose={onClose}
+        opener={opener}
+        visible={visible}
+        width={45 * gu}
+      >
+        <ConnectAccountInside />
+      </Popup>
+    )
+    : (
+      <Modal visible={visible} onClose={onClose} mode="translucid">
+        <ConnectAccountInside />
+      </Modal>
+    )
 }
 
 export function ConnectAccountInside() {
   return (
     <div
-      css={({ colors, fonts }) => css`
+      css={({ colors, fonts }) =>
+        css`
         padding-top: 2gu;
         h1 {
           margin-bottom: 1gu;
@@ -78,7 +81,8 @@ export function ConnectAccountInside() {
         ))}
       </div>
       <p
-        css={({ colors, fonts }) => css`
+        css={({ colors, fonts }) =>
+          css`
           margin-top: 3gu;
           text-align: center;
           color: ${colors.contentDimmed};
@@ -110,10 +114,12 @@ function ProviderButton({
   const [{ data }, connect] = useConnect()
   const connector = data.connectors.find((connector) => connector.id === id)
 
-  return connector ? (
-    <ButtonArea
-      onClick={() => connect(connector)}
-      css={({ colors }) => css`
+  return connector
+    ? (
+      <ButtonArea
+        onClick={() => connect(connector)}
+        css={({ colors }) =>
+          css`
         display: flex;
         align-items: center;
         width: 100%;
@@ -128,9 +134,9 @@ function ProviderButton({
           left: 1px;
         }
       `}
-    >
-      <div
-        css={css`
+      >
+        <div
+          css={css`
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -140,12 +146,13 @@ function ProviderButton({
             align-items: center;
           }
         `}
-      >
-        <div>{name}</div>
-        <div>
-          <img src={icon} alt="" width="32" height="32" />
+        >
+          <div>{name}</div>
+          <div>
+            <img src={icon} alt="" width="32" height="32" />
+          </div>
         </div>
-      </div>
-    </ButtonArea>
-  ) : null
+      </ButtonArea>
+    )
+    : null
 }

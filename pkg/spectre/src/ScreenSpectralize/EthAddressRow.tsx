@@ -1,7 +1,7 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { Address, Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
+import { ReactNode } from "react"
 import { useEnsLookup } from "wagmi"
-import { Address, Badge, ButtonIcon, IconTrash, gu, shortenAddress } from "kit"
 
 type EthAddressRowProps = {
   address: Address
@@ -40,7 +40,8 @@ export function EthAddressRow({
             alt={address}
             label={
               <span
-                css={({ colors }) => css`
+                css={({ colors }) =>
+                  css`
                   font-size: 16px;
                   color: ${colors.accent};
                 `}
@@ -63,7 +64,8 @@ export function EthAddressRow({
         )}
       </div>
       <span
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: flex;
           align-items: center;
           font-size: 18px;

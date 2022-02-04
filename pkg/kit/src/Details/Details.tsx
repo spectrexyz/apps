@@ -1,7 +1,7 @@
-import { ReactNode, useState } from "react"
 import { css } from "@emotion/react"
-import { a, useSpring, useTransition } from "react-spring"
+import { ReactNode, useState } from "react"
 import useDimensions from "react-cool-dimensions"
+import { a, useSpring, useTransition } from "react-spring"
 
 import { ButtonArea } from "../ButtonArea"
 import { IconCaretDown } from "../icons"
@@ -48,20 +48,22 @@ export function Details({
       `}
     >
       <header
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: relative;
           background: ${fullWidth ? colors.layer2 : "transparent"};
         `}
       >
-        {!fullWidth &&
-          opening(
+        {!fullWidth
+          && opening(
             ({ headingWidth }, opened) =>
               opened && (
                 <a.div
                   style={{
                     transform: headingWidth.to((v) => `scaleX(${v})`),
                   }}
-                  css={({ colors }) => css`
+                  css={({ colors }) =>
+                    css`
                     position: absolute;
                     z-index: 1;
                     inset: 0;
@@ -70,7 +72,7 @@ export function Details({
                     transform-origin: 0 0;
                   `}
                 />
-              )
+              ),
           )}
         <div
           css={css`
@@ -89,7 +91,8 @@ export function Details({
           >
             <ButtonArea
               onClick={() => setOpened((v) => !v)}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 display: flex;
                 align-items: center;
                 gap: 1gu;
@@ -126,7 +129,7 @@ export function Details({
                 >
                   {contextual}
                 </a.div>
-              )
+              ),
           )}
         </div>
       </header>
@@ -136,10 +139,11 @@ export function Details({
             <a.div
               style={{
                 height: contentHeight.to(
-                  (v) => `${v * contentBounds.height}px`
+                  (v) => `${v * contentBounds.height}px`,
                 ),
               }}
-              css={({ colors }) => css`
+              css={({ colors }) =>
+                css`
                 position: relative;
                 overflow: hidden;
                 background: ${colors.layer2};
@@ -162,7 +166,7 @@ export function Details({
                 </a.div>
               </div>
             </a.div>
-          )
+          ),
       )}
     </section>
   )

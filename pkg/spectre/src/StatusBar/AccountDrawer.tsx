@@ -1,19 +1,19 @@
-import { ReactNode } from "react"
-import { css } from "@emotion/react"
-import { a, TransitionFn } from "react-spring"
 import { useViewport } from "@bpierre/use-viewport"
+import { css } from "@emotion/react"
 import {
   ButtonArea,
   ButtonText,
+  co,
   FocusTrap,
+  gu,
   IconArrowSquareOut,
   IconCheck,
   IconCopy,
   IconX,
   Root,
-  co,
-  gu,
 } from "kit"
+import { ReactNode } from "react"
+import { a, TransitionFn } from "react-spring"
 import { SyncStatus } from "../SyncStatus"
 
 type Status = "error" | "success"
@@ -50,7 +50,8 @@ export function AccountDrawer({
               <a.div
                 onClick={onClose}
                 style={{ opacity: progress }}
-                css={({ colors }) => css`
+                css={({ colors }) =>
+                  css`
                   position: absolute;
                   z-index: 1;
                   inset: 0;
@@ -75,10 +76,11 @@ export function AccountDrawer({
                   <a.section
                     style={{
                       transform: progress.to(
-                        (v: number) => `translate3d(0, ${(1 - v) * 100}%, 0)`
+                        (v: number) => `translate3d(0, ${(1 - v) * 100}%, 0)`,
                       ),
                     }}
-                    css={({ colors }) => css`
+                    css={({ colors }) =>
+                      css`
                       pointer-events: ${opened ? "auto" : "none"};
                       position: absolute;
                       bottom: 0;
@@ -99,7 +101,7 @@ export function AccountDrawer({
                         style={{
                           transform: progress.to(
                             (v: number) =>
-                              `translate3d(0, -${100 * (1 - v)}%, 0)`
+                              `translate3d(0, -${100 * (1 - v)}%, 0)`,
                           ),
                         }}
                         css={css`
@@ -119,7 +121,8 @@ export function AccountDrawer({
                         </h1>
                         <ButtonArea
                           onClick={onClose}
-                          css={({ colors }) => css`
+                          css={({ colors }) =>
+                            css`
                             position: relative;
                             display: flex;
                             width: 2.5gu;
@@ -145,7 +148,8 @@ export function AccountDrawer({
                       </div>
 
                       <div
-                        css={({ colors }) => css`
+                        css={({ colors }) =>
+                          css`
                           position: absolute;
                           inset: auto 2gu 1gu;
                           padding-top: 3gu;
@@ -153,7 +157,8 @@ export function AccountDrawer({
                         `}
                       >
                         <h2
-                          css={({ colors, fonts }) => css`
+                          css={({ colors, fonts }) =>
+                            css`
                             font-size: 14px;
                             color: ${colors.contentDimmed};
                             font-family: ${fonts.families.sans};
@@ -193,7 +198,7 @@ export function AccountDrawer({
                 </div>
               </FocusTrap>
             </div>
-          )
+          ),
       )}
     </Root>
   )
@@ -224,15 +229,15 @@ function Transactions() {
               font-family: ${fonts.families.sans};
               font-size: 14px;
               color: ${colors.contentDimmed};
-            `
-          }
+            `}
         >
           Recent transactions
         </h1>
         <ButtonText label="Clear all" />
       </div>
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           overflow-y: auto;
           width: 100%;
           display: grid;
@@ -314,8 +319,7 @@ function Transaction({
           css={({ colors }) =>
             css`
               color: ${colors.positive};
-            `
-          }
+            `}
         />
       )
     }
@@ -326,8 +330,7 @@ function Transaction({
           css={({ colors }) =>
             css`
               color: ${colors.negative};
-            `
-          }
+            `}
         />
       )
     }
@@ -337,15 +340,15 @@ function Transaction({
         css={({ colors }) =>
           css`
             color: ${colors.positive};
-          `
-        }
+          `}
       />
     )
   })()
 
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         height: 10gu;
         background: ${colors.layer2};
       `}
@@ -363,7 +366,8 @@ function Transaction({
           `}
         >
           <div
-            css={({ colors, fonts }) => css`
+            css={({ colors, fonts }) =>
+              css`
               padding-bottom: 0.75gu;
               text-transform: uppercase;
               font-family: ${fonts.families.sans};
@@ -374,7 +378,8 @@ function Transaction({
             {action}
           </div>
           <div
-            css={({ fonts }) => css`
+            css={({ fonts }) =>
+              css`
               font-family: ${fonts.families.sans};
               font-size: 14px;
             `}

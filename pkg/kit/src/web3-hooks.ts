@@ -16,7 +16,7 @@ function coinGeckoTokenId(tokenId: PriceToken) {
 function parseCoinGeckoPriceResult(
   result: CoinGeckoPriceResult,
   from: PriceToken,
-  to: PriceToken
+  to: PriceToken,
 ) {
   const price = result?.[coinGeckoTokenId(from)]?.[coinGeckoTokenId(to)] ?? null
   if (price === null) {
@@ -27,8 +27,8 @@ function parseCoinGeckoPriceResult(
 
 function priceUrl(from: PriceToken, to: PriceToken) {
   return (
-    `https://api.coingecko.com/api/v3/simple/price?` +
-    `ids=${coinGeckoTokenId(from)}&vs_currencies=${coinGeckoTokenId(to)}`
+    `https://api.coingecko.com/api/v3/simple/price?`
+    + `ids=${coinGeckoTokenId(from)}&vs_currencies=${coinGeckoTokenId(to)}`
   )
 }
 export function usePrice(from: "eth", to: "usd") {

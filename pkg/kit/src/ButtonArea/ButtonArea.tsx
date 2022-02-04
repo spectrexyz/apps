@@ -1,10 +1,12 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
-import { forwardRef, useMemo } from "react"
 import { css } from "@emotion/react"
+import { forwardRef, useMemo } from "react"
 
-export type ButtonAreaProps = ComponentPropsWithoutRef<"button"> &
-  ComponentPropsWithoutRef<"a"> & {
+export type ButtonAreaProps =
+  & ComponentPropsWithoutRef<"button">
+  & ComponentPropsWithoutRef<"a">
+  & {
     children?: ReactNode
     disabled?: boolean
     external?: boolean
@@ -17,11 +19,11 @@ export const ButtonArea = forwardRef<
   ButtonAreaProps
 >(function ButtonArea(
   { disabled = false, href, external, onClick, children, ...props },
-  ref
+  ref,
 ) {
   if (onClick !== undefined && (href !== undefined || external !== undefined)) {
     throw new Error(
-      "ButtonArea: the href and external props can’t be set when onClick is set."
+      "ButtonArea: the href and external props can’t be set when onClick is set.",
     )
   }
 
@@ -37,12 +39,14 @@ export const ButtonArea = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [href, disabled, external, onClick])
 
-  return href ? (
-    <a
-      ref={ref}
-      {...anchorProps}
-      {...props}
-      css={({ colors }) => css`
+  return href
+    ? (
+      <a
+        ref={ref}
+        {...anchorProps}
+        {...props}
+        css={({ colors }) =>
+          css`
         display: flex;
         outline: 0;
         &:focus:not(:focus-visible) {
@@ -52,17 +56,19 @@ export const ButtonArea = forwardRef<
           outline: 2px solid ${colors.focus};
         }
       `}
-    >
-      {children}
-    </a>
-  ) : (
-    <button
-      ref={ref}
-      onClick={onClick}
-      type="button"
-      disabled={disabled}
-      {...props}
-      css={({ colors }) => css`
+      >
+        {children}
+      </a>
+    )
+    : (
+      <button
+        ref={ref}
+        onClick={onClick}
+        type="button"
+        disabled={disabled}
+        {...props}
+        css={({ colors }) =>
+          css`
         display: flex;
         padding: 0;
         border: 0;
@@ -79,8 +85,8 @@ export const ButtonArea = forwardRef<
           outline: 2px solid ${colors.focus};
         }
       `}
-    >
-      {children}
-    </button>
-  )
+      >
+        {children}
+      </button>
+    )
 })

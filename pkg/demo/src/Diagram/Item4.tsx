@@ -4,7 +4,7 @@ import React, { memo } from "react"
 import { a, useSpring } from "react-spring"
 import { Label } from "./Label"
 import { Nft } from "./Nft"
-import { WIDTH, HEIGHT, spSlow } from "./shared"
+import { HEIGHT, spSlow, WIDTH } from "./shared"
 
 type Props = { progress: SpringValue<number> }
 

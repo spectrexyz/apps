@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { Button, ButtonIcon, IconGearSix } from "kit"
+import { ReactNode } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { SwapModule } from "./SwapModule"
@@ -28,7 +28,8 @@ export function ScreenBuy() {
         `}
       >
         <div
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             width: 100%;
             margin: 0 auto;
             padding: 2gu 1gu 3gu;
@@ -93,14 +94,16 @@ function Group({
 }) {
   return (
     <section
-      css={({ fonts }) => css`
+      css={({ fonts }) =>
+        css`
         padding-top: 2gu;
         font-family: ${fonts.families.sans};
         font-size: 14px;
       `}
     >
       <h1
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding-bottom: 0.5gu;
           color: ${colors.contentDimmed};
         `}
@@ -127,7 +130,8 @@ function Distribution({ mint, swap }: { mint: number; swap: number }) {
           `}
         >
           <div
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               position: absolute;
               inset: 0;
               border-radius: 4px;
@@ -135,7 +139,8 @@ function Distribution({ mint, swap }: { mint: number; swap: number }) {
             `}
           />
           <div
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               position: absolute;
               inset: 0 ${(1 - mint) * 100}% 0 0;
               border-radius: 4px;
@@ -146,7 +151,8 @@ function Distribution({ mint, swap }: { mint: number; swap: number }) {
       </div>
 
       <ul
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           li {
             display: flex;
             align-items: center;

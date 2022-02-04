@@ -1,7 +1,7 @@
 import type { SpringValue } from "react-spring"
 
 import React, { memo, useRef } from "react"
-import { a, useSpring, to } from "react-spring"
+import { a, to, useSpring } from "react-spring"
 import { Label } from "./Label"
 import { spSlow, WIDTH } from "./shared"
 
@@ -91,7 +91,7 @@ export const Item2 = memo(function Item2({ progress }: Props) {
                   scale(${scale})
                   rotate(${rotate})
                 `
-              }
+              },
             )}
           />
         </g>

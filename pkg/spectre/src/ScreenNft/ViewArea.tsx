@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
-import { MoireLabel, useTheme } from "kit"
 import { css } from "@emotion/react"
+import { MoireLabel, useTheme } from "kit"
+import { ReactNode } from "react"
 
 type ViewAreaProps = {
   actionButtons: ReactNode
@@ -20,7 +20,8 @@ export function ViewArea({
   const { colors } = useTheme()
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         position: relative;
         display: flex;
         justify-content: center;

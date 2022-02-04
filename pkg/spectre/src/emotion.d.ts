@@ -1,6 +1,6 @@
 import "@emotion/react"
-import { Interpolation } from "@emotion/serialize"
 import { Theme } from "@emotion/react"
+import { Interpolation } from "@emotion/serialize"
 import { ThemeContext } from "kit"
 
 declare module "@emotion/react" {

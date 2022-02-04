@@ -1,8 +1,8 @@
-import { useMemo } from "react"
 import { css } from "@emotion/react"
 import blockie from "ethereum-blockies-base64"
-import { isAddress } from "../utils"
+import { useMemo } from "react"
 import { gu } from "../styles"
+import { isAddress } from "../utils"
 
 type EthIconProps = {
   address: string

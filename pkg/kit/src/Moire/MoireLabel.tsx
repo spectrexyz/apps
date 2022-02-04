@@ -1,10 +1,10 @@
 import type { ReactNode } from "react"
 
-import useDimensions from "react-cool-dimensions"
 import { css } from "@emotion/react"
-import { useTheme } from "../Theme"
+import useDimensions from "react-cool-dimensions"
 import { Moire } from "../Moire/Moire"
 import { gu } from "../styles"
+import { useTheme } from "../Theme"
 
 type MoireLabelProps = {
   background?: string
@@ -31,7 +31,8 @@ export function MoireLabel({
     <span title={title}>
       <span
         ref={bounds.observe}
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: relative;
           display: inline-flex;
           align-items: center;

@@ -1,11 +1,11 @@
 import type { FC, ReactNode } from "react"
 
-import React, { useState, useEffect } from "react"
-import { Kit } from "kit"
 import { css } from "@emotion/react"
-import { Router, Link, Route } from "wouter"
-import { providers, Contract } from "ethers"
-import { NftProvider, FetcherDeclarationEthers } from "use-nft"
+import { Contract, providers } from "ethers"
+import { Kit } from "kit"
+import React, { useEffect, useState } from "react"
+import { FetcherDeclarationEthers, NftProvider } from "use-nft"
+import { Link, Route, Router } from "wouter"
 import { Badge } from "./Badge"
 import { Button } from "./Button"
 import { Chart } from "./Chart"
@@ -72,7 +72,7 @@ const fetcher = [
     ethers: { Contract },
     provider: new providers.AlchemyProvider(
       "homestead",
-      "E7YgkR4GmBg58uKRmXtQ9tJaqM6oE9hu"
+      "E7YgkR4GmBg58uKRmXtQ9tJaqM6oE9hu",
     ),
   },
 ]
@@ -117,13 +117,13 @@ export function App() {
             <>
               {demos.map(([name, Element, centered]) => (
                 <Route key={name} path={`/${name}`}>
-                  {centered ? (
-                    <VCenter>
-                      <Element />
-                    </VCenter>
-                  ) : (
-                    <Element />
-                  )}
+                  {centered
+                    ? (
+                      <VCenter>
+                        <Element />
+                      </VCenter>
+                    )
+                    : <Element />}
                 </Route>
               ))}
             </>

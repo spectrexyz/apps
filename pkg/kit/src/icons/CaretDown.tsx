@@ -1,9 +1,9 @@
 /* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
-import { useIconSize, useIconColor } from "../icons-utils"
+import { useIconColor, useIconSize } from "../icons-utils"
 type IconCaretDownProps = SVGProps<SVGSVGElement> & {
-  color?: string,
-  size?: number,
+  color?: string
+  size?: number
 }
 export default function IconCaretDown({
   color,

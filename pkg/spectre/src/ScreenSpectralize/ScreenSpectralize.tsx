@@ -1,11 +1,11 @@
-import { useCallback, useEffect } from "react"
 import { css } from "@emotion/react"
-import { useAccount } from "wagmi"
 import { Steps } from "kit"
+import { useCallback, useEffect } from "react"
+import { useAccount } from "wagmi"
 import { useLocation } from "wouter"
+import { useResetScroll } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen2"
 import { useLayout } from "../styles"
-import { useResetScroll } from "../App/AppScroll"
 import { Step1 } from "./Step1"
 import { Step2 } from "./Step2"
 import { Step3 } from "./Step3"
@@ -85,25 +85,23 @@ export function ScreenSpectralize() {
 
   return (
     <AppScreen
-      compactBar={
-        layout.below("medium") && {
-          title,
-          onBack: prev,
-          extraRow: (
-            <div
-              css={css`
+      compactBar={layout.below("medium") && {
+        title,
+        onBack: prev,
+        extraRow: (
+          <div
+            css={css`
                 padding: 0 2gu;
               `}
-            >
-              <Steps
-                steps={STEPS.length - 1}
-                current={currentStep}
-                direction="horizontal"
-              />
-            </div>
-          ),
-        }
-      }
+          >
+            <Steps
+              steps={STEPS.length - 1}
+              current={currentStep}
+              direction="horizontal"
+            />
+          </div>
+        ),
+      }}
     >
       <div
         css={css`

@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 import { useLayout } from "../styles"
 
 type ContentLayoutProps = {
@@ -37,8 +37,7 @@ export function ContentLayout({ children }: ContentLayoutProps) {
                 padding: 4.5gu 5gu 3gu;
                 background: ${colors.background};
                 border: 2px solid ${colors.contrast};
-              `
-        }
+              `}
       >
         {children}
       </div>

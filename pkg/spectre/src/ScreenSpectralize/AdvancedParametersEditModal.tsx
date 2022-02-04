@@ -1,20 +1,20 @@
-import { ReactNode, useCallback, useMemo, useState } from "react"
 import { css } from "@emotion/react"
 import {
   Button,
   ButtonIcon,
+  closestIndexFromSortedNumbers,
   DAY_MS,
   Fieldset,
+  formatDuration,
   IconArrowDown,
   IconArrowUp,
   Modal,
+  norm,
   Slider,
   Toggle,
   WEEK_MS,
-  closestIndexFromSortedNumbers,
-  formatDuration,
-  norm,
 } from "kit"
+import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLayout } from "../styles"
 import { useAdvancedParametersForm, useSpectralize } from "./use-spectralize"
 
@@ -47,7 +47,8 @@ export function AdvancedParametersEditModal({
     <Modal mode="large" onClose={onClose} visible={visible}>
       <header>
         <h1
-          css={({ fonts }) => css`
+          css={({ fonts }) =>
+            css`
             font-family: ${fonts.families.mono};
             font-size: 18px;
             text-transform: uppercase;
@@ -56,7 +57,8 @@ export function AdvancedParametersEditModal({
           Edit Advanced Parameters
         </h1>
         <p
-          css={({ colors, fonts }) => css`
+          css={({ colors, fonts }) =>
+            css`
             padding: ${introPadding};
             font-family: ${fonts.families.sans};
             font-size: 14px;
@@ -99,14 +101,14 @@ export function AdvancedParametersEditModalForm({
 
   const closestTimelockIndex = useMemo(
     () => closestIndexFromSortedNumbers(TIMELOCK_OPTIONS, timelock),
-    [timelock]
+    [timelock],
   )
 
   const handleBuyoutMechanismIncrease = () => {
     updateTimelock(
       TIMELOCK_OPTIONS[
         Math.min(closestTimelockIndex + 1, TIMELOCK_OPTIONS.length - 1)
-      ]
+      ],
     )
   }
 
@@ -121,7 +123,7 @@ export function AdvancedParametersEditModalForm({
       save()
       onSave()
     },
-    [onSave, save]
+    [onSave, save],
   )
 
   const handleDefaultsClick = useCallback(() => {
@@ -150,7 +152,8 @@ export function AdvancedParametersEditModalForm({
         }
       >
         <p
-          css={({ colors }) => css`
+          css={({ colors }) =>
+            css`
             padding-top: 1gu;
             font-size: 14px;
             color: ${colors.contentHeading};
@@ -298,7 +301,8 @@ function IncrementalField({
       }
     >
       <p
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding-top: 0.5gu;
           text-transform: uppercase;
           color: ${colors.accent};
@@ -326,7 +330,8 @@ function TokenWeight({
   })
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         position: ${position};
         inset: 1gu 2gu auto auto;
         font-size: ${baseFontSize};
@@ -337,10 +342,10 @@ function TokenWeight({
       `}
     >
       {tokenWeightPct}
-      <span className="symbol"> {tokenSymbol}</span>
-      <span> / </span>
+      <span className="symbol">{tokenSymbol}</span>
+      <span>/</span>
       {ethWeightPct}
-      <span className="symbol"> ETH</span>
+      <span className="symbol">ETH</span>
     </div>
   )
 }

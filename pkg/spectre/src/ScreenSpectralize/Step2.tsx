@@ -1,3 +1,16 @@
+import { css } from "@emotion/react"
+import {
+  Address,
+  Button,
+  ButtonText,
+  Fieldset,
+  formatNumber,
+  IconPlus,
+  isAddress,
+  Slider,
+  TextInput,
+  useEsc,
+} from "kit"
 import {
   MutableRefObject,
   useCallback,
@@ -5,20 +18,7 @@ import {
   useRef,
   useState,
 } from "react"
-import { css } from "@emotion/react"
 import { useAccount } from "wagmi"
-import {
-  Address,
-  Button,
-  ButtonText,
-  Fieldset,
-  IconPlus,
-  Slider,
-  TextInput,
-  formatNumber,
-  isAddress,
-  useEsc,
-} from "kit"
 import {
   ContentLayout,
   ContentLayoutHeading,
@@ -61,15 +61,15 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
       // Next screen
       onNext()
     },
-    [addRewardsSplitAddress, onNext]
+    [addRewardsSplitAddress, onNext],
   )
 
   const hasFilledCurrentAccountInRewards = useRef(rewardsSplit.length > 0)
   useEffect(() => {
     if (
-      rewardsSplit.length === 0 &&
-      !hasFilledCurrentAccountInRewards.current &&
-      address
+      rewardsSplit.length === 0
+      && !hasFilledCurrentAccountInRewards.current
+      && address
     ) {
       addRewardsSplitAddress(address)
 
@@ -112,7 +112,8 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
               label="Creator & community rewards"
               contextual={
                 <span
-                  css={({ colors }) => css`
+                  css={({ colors }) =>
+                    css`
                     font-size: 18px;
                     colors: ${colors.contentDimmed};
                   `}
@@ -123,12 +124,10 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
             >
               <Slider
                 keyboardStep={(value, dir) =>
-                  Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) / 1000
-                }
+                  Math.round((value + (1 / REWARDS_MAX) * dir) * 1000) / 1000}
                 labels={["0%", `${REWARDS_MAX}%`]}
                 onChange={(value) =>
-                  data.updateRewardsPct(Math.round(value * REWARDS_MAX))
-                }
+                  data.updateRewardsPct(Math.round(value * REWARDS_MAX))}
                 value={data.rewardsPct / REWARDS_MAX}
               />
             </Fieldset>
@@ -147,9 +146,11 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
                     key={account}
                     address={account}
                     onRemove={() => removeRewardsSplitAddress(account)}
-                    reward={`${formatNumber(
-                      data.rewardsPct / data.rewardsSplit.length
-                    )}%`}
+                    reward={`${
+                      formatNumber(
+                        data.rewardsPct / data.rewardsSplit.length,
+                      )
+                    }%`}
                   />
                 ))}
               </div>
@@ -171,38 +172,45 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
           </ContentLayoutSection>
         )}
         <ContentLayoutSection>
-          {layout.below("medium") ? (
-            <div
-              css={css`
+          {layout.below("medium")
+            ? (
+              <div
+                css={css`
                 padding: 3gu 0;
               `}
-            >
-              <Button
-                type="submit"
-                label="Next"
-                mode="primary-2"
-                shadowInBox
-                wide
-              />
-            </div>
-          ) : (
-            <div
-              css={css`
+              >
+                <Button
+                  type="submit"
+                  label="Next"
+                  mode="primary-2"
+                  shadowInBox
+                  wide
+                />
+              </div>
+            )
+            : (
+              <div
+                css={css`
                 display: flex;
                 justify-content: flex-end;
                 gap: 2gu;
                 padding-top: 3gu;
               `}
-            >
-              <Button
-                label="Back"
-                mode="secondary-2"
-                shadowInBox
-                onClick={onPrev}
-              />
-              <Button type="submit" label="Next" mode="primary-2" shadowInBox />
-            </div>
-          )}
+              >
+                <Button
+                  label="Back"
+                  mode="secondary-2"
+                  shadowInBox
+                  onClick={onPrev}
+                />
+                <Button
+                  type="submit"
+                  label="Next"
+                  mode="primary-2"
+                  shadowInBox
+                />
+              </div>
+            )}
         </ContentLayoutSection>
       </ContentLayout>
     </form>
@@ -225,7 +233,7 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
 
   const isFocused = useCallback(
     () => container.current?.contains(document.activeElement) || false,
-    []
+    [],
   )
 
   submitRef.current = () => {
@@ -252,49 +260,51 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
     setInvalid(false)
   }, [account])
 
-  return account === null ? (
-    <Button
-      icon={<IconPlus />}
-      label="Add ETH address"
-      mode="flat-3"
-      size="compact"
-      onClick={() => setAccount("")}
-      css={css`
+  return account === null
+    ? (
+      <Button
+        icon={<IconPlus />}
+        label="Add ETH address"
+        mode="flat-3"
+        size="compact"
+        onClick={() => setAccount("")}
+        css={css`
         text-transform: uppercase;
       `}
-    />
-  ) : (
-    <div
-      ref={container}
-      css={css`
+      />
+    )
+    : (
+      <div
+        ref={container}
+        css={css`
         display: flex;
         align-items: center;
         gap: 2gu;
       `}
-    >
-      <div
-        css={css`
+      >
+        <div
+          css={css`
           flex-grow: 1;
         `}
-      >
-        <TextInput
-          error={invalid}
-          autofocus={true}
-          onChange={(value) => setAccount(value)}
-          placeholder="0x…"
-          value={account}
-        />
-      </div>
-      <div
-        css={css`
+        >
+          <TextInput
+            error={invalid}
+            autofocus={true}
+            onChange={(value) => setAccount(value)}
+            placeholder="0x…"
+            value={account}
+          />
+        </div>
+        <div
+          css={css`
           display: flex;
           align-items: center;
           gap: 1gu;
         `}
-      >
-        <ButtonText label="Cancel" onClick={() => setAccount(null)} />
-        <Button label="Add" mode="flat-3" size="compact" type="submit" />
+        >
+          <ButtonText label="Cancel" onClick={() => setAccount(null)} />
+          <Button label="Add" mode="flat-3" size="compact" type="submit" />
+        </div>
       </div>
-    </div>
-  )
+    )
 }

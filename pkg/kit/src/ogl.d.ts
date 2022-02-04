@@ -18,7 +18,7 @@ declare module "ogl" {
       options: {
         geometry: Box
         program: Program
-      }
+      },
     )
   }
 
@@ -30,7 +30,7 @@ declare module "ogl" {
         fragment: string
         vertex: string
         uniforms: Uniforms
-      }
+      },
     )
     uniforms: Uniforms
   }
@@ -41,7 +41,7 @@ declare module "ogl" {
       options: {
         width: number
         height: number
-      }
+      },
     )
   }
 }

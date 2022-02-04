@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
 import { css } from "@emotion/react"
-import { Moire as KitMoire, springs, map, useEvery } from "kit"
+import { map, Moire as KitMoire, springs, useEvery } from "kit"
+import { useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
 
 type Settings = [number, number, number, string]
@@ -10,11 +10,13 @@ function settings(): Settings {
   const size = Math.random() > 0.5 ? 500 : 50
   const x = Math.random() * (window.innerWidth - size)
   const y = Math.random() * (window.innerHeight - size)
-  const color = `rgb(${[
-    Math.random() * 255,
-    Math.random() * 255,
-    Math.random() * 255,
-  ].join(",")})`
+  const color = `rgb(${
+    [
+      Math.random() * 255,
+      Math.random() * 255,
+      Math.random() * 255,
+    ].join(",")
+  })`
   return [size, x, y, color]
 }
 
@@ -49,13 +51,14 @@ export function Moire() {
             }
           `}
         >
-          <div>instances: {count} </div>
+          <div>instances: {count}</div>
           <a role="button" onClick={() => setCount((v) => Math.max(0, v - 1))}>
             rm
           </a>
           <a role="button" onClick={() => setCount((v) => v + 1)}>
             add
-          </a>{" "}
+          </a>
+          {" "}
         </div>
         <div
           css={css`
@@ -80,8 +83,7 @@ export function Moire() {
             max="10"
             value={Math.round(map(scale, 0.5, 1.5, 0, 10))}
             onChange={(e) =>
-              setScale(map(Number(e.target.value), 0, 10, 0.5, 1.5))
-            }
+              setScale(map(Number(e.target.value), 0, 10, 0.5, 1.5))}
           />
         </div>
       </div>
@@ -151,6 +153,6 @@ export function MoireRandom({ scale }: { scale: number }) {
             `}
           />
         </a.div>
-      )
+      ),
   )
 }

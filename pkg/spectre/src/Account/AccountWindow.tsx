@@ -1,22 +1,22 @@
-import { useMemo } from "react"
 import { css } from "@emotion/react"
-import { a, useTransition } from "react-spring"
 import { colord } from "colord"
-import { useAccount } from "wagmi"
 import {
   AddressBadge,
   Button,
   ButtonArea,
   ButtonText,
+  checkBackdropFilterSupport,
   FocusTrap,
+  gu,
   IconArrowSquareOut,
   IconCopy,
   IconX,
   Root,
-  checkBackdropFilterSupport,
-  gu,
   springs,
 } from "kit"
+import { useMemo } from "react"
+import { a, useTransition } from "react-spring"
+import { useAccount } from "wagmi"
 
 type AccountWindowProps = {
   onClose: () => void
@@ -45,39 +45,42 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
       {visibility(({ blur, opacity, transform }, account) => {
         if (!account) return null
         const { address, ensName } = account
-        return address ? (
-          <FocusTrap
-            focusTrapOptions={{
-              onDeactivate: onClose,
-              allowOutsideClick: true,
-              clickOutsideDeactivates: true,
-            }}
-          >
-            <a.div
-              style={{
-                opacity,
-                pointerEvents: visible ? "auto" : "none",
-                transform,
+        return address
+          ? (
+            <FocusTrap
+              focusTrapOptions={{
+                onDeactivate: onClose,
+                allowOutsideClick: true,
+                clickOutsideDeactivates: true,
               }}
-              css={({ colors }) => css`
-                position: absolute;
-                z-index: 2;
-                inset: 5.25gu 5.25gu auto auto;
-                width: 61gu;
-                padding: 2.5gu 3gu;
-
-                background: ${colord(colors.translucid)
-                  .alpha(supportsBackdropFilters ? 0.6 : 1)
-                  .toHex()};
-                backdrop-filter: blur(40px);
-                border-radius: 6px;
-              `}
             >
               <a.div
                 style={{
-                  opacity: blur.to((v) => 1 - v),
+                  opacity,
+                  pointerEvents: visible ? "auto" : "none",
+                  transform,
                 }}
-                css={css`
+                css={({ colors }) =>
+                  css`
+                  position: absolute;
+                  z-index: 2;
+                  inset: 5.25gu 5.25gu auto auto;
+                  width: 61gu;
+                  padding: 2.5gu 3gu;
+                  background: ${
+                    colord(colors.translucid).alpha(
+                      supportsBackdropFilters
+                        ? 0.6
+                        : 1,
+                    ).toHex()
+                  };
+                  backdrop-filter: blur(40px);
+                  border-radius: 6px;
+                `}
+              >
+                <a.div
+                  style={{ opacity: blur.to((v) => 1 - v) }}
+                  css={css`
                   display: ${supportsBackdropFilters ? "block" : "none"};
                   position: absolute;
                   z-index: 1;
@@ -85,31 +88,32 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                   background: rgb(43, 44, 97);
                   border-radius: 6px;
                 `}
-              />
-              <div
-                css={css`
+                />
+                <div
+                  css={css`
                   position: relative;
                   z-index: 2;
                 `}
-              >
-                <div
-                  css={css`
+                >
+                  <div
+                    css={css`
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     padding-bottom: 3gu;
                   `}
-                >
-                  <h1
-                    css={css`
+                  >
+                    <h1
+                      css={css`
                       text-transform: uppercase;
                     `}
-                  >
-                    Account
-                  </h1>
-                  <ButtonArea
-                    onClick={onClose}
-                    css={({ colors }) => css`
+                    >
+                      Account
+                    </h1>
+                    <ButtonArea
+                      onClick={onClose}
+                      css={({ colors }) =>
+                        css`
                       position: relative;
                       display: flex;
                       width: 2.5gu;
@@ -120,61 +124,63 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                         left: 1px;
                       }
                     `}
-                  >
-                    <IconX size={2.5 * gu} />
-                  </ButtonArea>
-                </div>
-                <h2
-                  css={({ colors, fonts }) => css`
+                    >
+                      <IconX size={2.5 * gu} />
+                    </ButtonArea>
+                  </div>
+                  <h2
+                    css={({ colors, fonts }) =>
+                      css`
                     padding-bottom: 1.25gu;
                     font-size: 14px;
                     color: ${colors.contentDimmed};
                     font-family: ${fonts.families.sans};
                   `}
-                >
-                  Connected with MetaMask
-                </h2>
-                <div
-                  css={css`
+                  >
+                    Connected with MetaMask
+                  </h2>
+                  <div
+                    css={css`
                     display: flex;
                     justify-content: space-between;
                   `}
-                >
-                  <AddressBadge
-                    address={address}
-                    ensName={ensName}
-                    size="large"
-                    transparent={true}
-                  />
-                  <Button
-                    label="Disconnect"
-                    mode="flat"
-                    onClick={disconnect}
-                    size="small"
-                    css={css`
+                  >
+                    <AddressBadge
+                      address={address}
+                      ensName={ensName}
+                      size="large"
+                      transparent={true}
+                    />
+                    <Button
+                      label="Disconnect"
+                      mode="flat"
+                      onClick={disconnect}
+                      size="small"
+                      css={css`
                       text-transform: uppercase;
                     `}
-                  />
-                </div>
-                <div
-                  css={css`
+                    />
+                  </div>
+                  <div
+                    css={css`
                     display: flex;
                     gap: 2gu;
                     padding-top: 3.5gu;
                   `}
-                >
-                  <ButtonText icon={<IconCopy />} label="Copy address" />
-                  <ButtonText
-                    icon={<IconArrowSquareOut />}
-                    label="Etherscan"
-                    href={`https://etherscan.io/address/${address}`}
-                    external={true}
-                  />
+                  >
+                    <ButtonText icon={<IconCopy />} label="Copy address" />
+                    <ButtonText
+                      icon={<IconArrowSquareOut />}
+                      label="Etherscan"
+                      href={`https://etherscan.io/address/${address}`}
+                      external={true}
+                    />
+                  </div>
                 </div>
-              </div>
-            </a.div>
-          </FocusTrap>
-        ) : null
+              </a.div>
+            </FocusTrap>
+          )
+          : null
       })}
     </Root>
   )

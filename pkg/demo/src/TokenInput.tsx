@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { css } from "@emotion/react"
 import { TokenInput as KitTokenInput, usePrice } from "kit"
+import { useState } from "react"
 import TokenAmount from "token-amount"
 
 export function TokenInput() {
@@ -27,7 +27,7 @@ function usd(amount: bigint) {
 
 function TokenInput1() {
   const [value, setValue] = useState<null | TokenAmount>(
-    eth(1000000000000000000n)
+    eth(1000000000000000000n),
   )
   const ethPrice = usePrice("eth", "usd")
   const balanceEth = eth(106970000000000000000n)
@@ -53,7 +53,9 @@ function TokenInput1() {
         }
       }}
       symbol="ETH"
-      value={value === null ? "" : value.format({ symbol: undefined, commify: false })}
+      value={value === null
+        ? ""
+        : value.format({ symbol: undefined, commify: false })}
     />
   )
 }

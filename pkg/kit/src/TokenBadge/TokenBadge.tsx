@@ -1,6 +1,6 @@
 import { Badge } from "../Badge"
-import { TokenIcon } from "../TokenIcon"
 import { gu } from "../styles"
+import { TokenIcon } from "../TokenIcon"
 
 type TokenBadgeProps = {
   alt?: string
@@ -24,13 +24,9 @@ export function TokenBadge({
   return (
     <Badge
       alt={alt}
-      icon={
-        tokenImage ? (
-          <img alt="" src={tokenImage} width={3 * gu} height={3 * gu} />
-        ) : (
-          <TokenIcon tokenType={tokenType} />
-        )
-      }
+      icon={tokenImage
+        ? <img alt="" src={tokenImage} width={3 * gu} height={3 * gu} />
+        : <TokenIcon tokenType={tokenType} />}
       label={label}
     />
   )

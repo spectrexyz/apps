@@ -1,5 +1,5 @@
-import { useState } from "react"
 import { Distribution } from "kit"
+import { useState } from "react"
 
 function randomDistribution(): number[] {
   const { random, floor, max } = Math

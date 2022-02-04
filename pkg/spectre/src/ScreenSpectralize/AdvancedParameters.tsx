@@ -1,14 +1,14 @@
-import { memo, useMemo } from "react"
 import { css } from "@emotion/react"
 import {
   ButtonText,
   Definition,
   Details,
-  IconPencil,
-  IconWarningOctagon,
   formatDuration,
   gu,
+  IconPencil,
+  IconWarningOctagon,
 } from "kit"
+import { memo, useMemo } from "react"
 import { useSpectralize } from "./use-spectralize"
 
 type AdvancedParametersProps = {
@@ -45,20 +45,19 @@ export const AdvancedParameters = memo(function AdvancedParameters({
         </span>
       }
       headingBaseWidth={headingBaseWidth}
-      contextual={
-        onEdit && (
-          <ButtonText
-            label="Edit"
-            icon={<IconPencil />}
-            onClick={onEdit}
-            css={({ colors, fonts }) => css`
+      contextual={onEdit && (
+        <ButtonText
+          label="Edit"
+          icon={<IconPencil />}
+          onClick={onEdit}
+          css={({ colors, fonts }) =>
+            css`
               color: ${colors.accent};
               font-size: 16px;
               font-family: ${fonts.families.sans};
             `}
-          />
-        )
-      }
+        />
+      )}
     >
       <div
         css={css`
@@ -88,7 +87,8 @@ export const AdvancedParameters = memo(function AdvancedParameters({
       </div>
 
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: flex;
           align-items: center;
           gap: 1gu;
@@ -117,7 +117,7 @@ export const AdvancedParameters = memo(function AdvancedParameters({
 
 function tokenWeightLabel(tokenWeight: number) {
   return (
-    `${Math.round(tokenWeight * 100)}% / ` +
-    `${Math.round((1 - tokenWeight) * 100)}%`
+    `${Math.round(tokenWeight * 100)}% / `
+    + `${Math.round((1 - tokenWeight) * 100)}%`
   )
 }

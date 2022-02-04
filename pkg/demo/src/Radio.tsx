@@ -1,8 +1,8 @@
 import type { ReactNode } from "react"
 
-import { useState } from "react"
 import { css } from "@emotion/react"
 import { Radio as KitRadio, RadioGroup } from "kit"
+import { useState } from "react"
 
 export function Radio() {
   const [selected, setSelected] = useState(0)

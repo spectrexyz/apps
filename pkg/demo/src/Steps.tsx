@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { css } from "@emotion/react"
 import { Button, Steps } from "kit"
+import { useState } from "react"
 
 function StepsDemo() {
   const [[step, steps], setSteps] = useState([0, 3]) // current step, total steps
@@ -39,14 +39,12 @@ function StepsDemo() {
         <Button
           label="Prev"
           onClick={() =>
-            setSteps(([step, steps]) => [Math.max(0, step - 1), steps])
-          }
+            setSteps(([step, steps]) => [Math.max(0, step - 1), steps])}
         />
         <Button
           label="Next"
           onClick={() =>
-            setSteps(([step, steps]) => [Math.min(steps - 1, step + 1), steps])
-          }
+            setSteps(([step, steps]) => [Math.min(steps - 1, step + 1), steps])}
         />
         <Button
           label="Less"
@@ -54,14 +52,12 @@ function StepsDemo() {
             setSteps(([step, steps]) => [
               Math.min(steps - 2, step),
               Math.max(2, steps - 1),
-            ])
-          }
+            ])}
         />
         <Button
           label="More"
           onClick={() =>
-            setSteps(([step, steps]) => [step, Math.min(7, steps + 1)])
-          }
+            setSteps(([step, steps]) => [step, Math.min(7, steps + 1)])}
         />
       </div>
     </div>

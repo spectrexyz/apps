@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react"
 import {
   IsometricCanvas,
   IsometricRectangle,
   PlaneView,
 } from "@elchininet/isometric"
-import { list, raf, shuffle } from "../utils"
+import { useEffect, useRef } from "react"
 import { gu } from "../styles"
 import { useTheme } from "../Theme"
+import { list, raf, shuffle } from "../utils"
 
 const SURFACE_DIMENSIONS = [52 * gu, 40 * gu]
 
@@ -31,7 +31,7 @@ function makeRect(
   x: number,
   y: number,
   color: string,
-  strokeColor: string
+  strokeColor: string,
 ): IsometricRectangle {
   const rect = new IsometricRectangle({
     height: 1,
@@ -48,7 +48,7 @@ function makeRect(
 function makeCube(
   index: number,
   baseColor: string,
-  strokeColor: string
+  strokeColor: string,
 ): IsometricRectangle[] {
   const col = 10 - (index % 10)
   const row = Math.floor(index / 10)
@@ -62,12 +62,14 @@ function makeCube(
   rects.push(makeRect(PlaneView.TOP, x, y, baseColor, strokeColor))
 
   // left
-  if (row === 9)
+  if (row === 9) {
     rects.push(makeRect(PlaneView.SIDE, x + 1, y - 1, baseColor, strokeColor))
+  }
 
   // right
-  if (col === 1)
+  if (col === 1) {
     rects.push(makeRect(PlaneView.FRONT, x - 1, y - 2, baseColor, strokeColor))
+  }
 
   return rects
 }
@@ -112,7 +114,7 @@ export function Distribution({
             [
               surface,
               surface.planeView === "TOP" ? groupColor : colors.background,
-            ] as [IsometricRectangle, string]
+            ] as [IsometricRectangle, string],
         )
 
         return {
@@ -121,7 +123,7 @@ export function Distribution({
           cubesIndex: cubesIndex + groupSize,
         }
       },
-      { cubesIndex: 0, surfaces: [], surfacesToAnimate: [] }
+      { cubesIndex: 0, surfaces: [], surfacesToAnimate: [] },
     )
 
     surface.addChildren(...surfaces)

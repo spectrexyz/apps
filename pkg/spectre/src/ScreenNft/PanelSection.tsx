@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode } from "react"
 import { css } from "@emotion/react"
+import { forwardRef, ReactNode } from "react"
 
 type PanelSectionProps = {
   title?: ReactNode
@@ -17,7 +17,8 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
       >
         {title && (
           <h1
-            css={({ colors }) => css`
+            css={({ colors }) =>
+              css`
               padding-bottom: 2gu;
               font-size: 20px;
               text-transform: uppercase;
@@ -28,7 +29,8 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
           </h1>
         )}
         <div
-          css={({ fonts }) => css`
+          css={({ fonts }) =>
+            css`
             font-family: ${fonts.families.sans};
           `}
         >
@@ -36,5 +38,5 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
         </div>
       </section>
     )
-  }
+  },
 )

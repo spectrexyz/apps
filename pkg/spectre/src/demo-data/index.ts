@@ -54,15 +54,15 @@ export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => ({
   token: { name: `$TOKEN${index + 1}`, distribution: randomDistribution() },
   creator: [0, 5, 6, 7, 8].includes(index)
     ? {
-        address: "0xfabe062eb33af3e68eb3329818d0507949c14142",
-        name: "@raxacoricofallapatorius",
-        url: "https://example.org/@raxacoricofallapatorius",
-      }
+      address: "0xfabe062eb33af3e68eb3329818d0507949c14142",
+      name: "@raxacoricofallapatorius",
+      url: "https://example.org/@raxacoricofallapatorius",
+    }
     : {
-        address: "0x32dd41219f6a74f739466e6c86091500e81beaa8",
-        name: "@someone",
-        url: "https://example.org/@someone",
-      },
+      address: "0x32dd41219f6a74f739466e6c86091500e81beaa8",
+      name: "@someone",
+      url: "https://example.org/@someone",
+    },
   authenticity: [
     { name: "Etherscan", url: "https://example.org/etherscan" },
     { name: "IPFS", url: "https://example.org/ipfs" },

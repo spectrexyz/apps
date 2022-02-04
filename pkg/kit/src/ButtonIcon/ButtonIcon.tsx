@@ -2,8 +2,8 @@ import { ComponentPropsWithoutRef, ReactNode } from "react"
 import { ButtonAreaProps } from "../ButtonArea"
 import { ThemeContext } from "../Theme/Theme"
 
-import { createContext, forwardRef, useCallback, useContext } from "react"
 import { css } from "@emotion/react"
+import { createContext, forwardRef, useCallback, useContext } from "react"
 import { ButtonArea } from "../ButtonArea"
 import { gu } from "../styles"
 
@@ -20,9 +20,11 @@ type ButtonIconProps = ButtonAreaProps & {
   size?: ButtonIconSize
 }
 
-const ButtonIconContext = createContext<null | {
-  size: ButtonIconSize
-}>(null)
+const ButtonIconContext = createContext<
+  null | {
+    size: ButtonIconSize
+  }
+>(null)
 
 export const ButtonIcon = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
@@ -39,7 +41,7 @@ export const ButtonIcon = forwardRef<
     size = "medium",
     ...props
   },
-  ref
+  ref,
 ) {
   const anchorProps = useCallback<() => ComponentPropsWithoutRef<"a">>(() => {
     if (disabled) {
@@ -53,7 +55,8 @@ export const ButtonIcon = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [disabled, external, href, onClick])
 
-  const sharedCssStyles = ({ colors }: ThemeContext) => css`
+  const sharedCssStyles = ({ colors }: ThemeContext) =>
+    css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -77,22 +80,24 @@ export const ButtonIcon = forwardRef<
 
   return (
     <ButtonIconContext.Provider value={{ size }}>
-      {href ? (
-        <a {...anchorProps()} css={sharedCssStyles}>
-          {icon}
-        </a>
-      ) : (
-        <ButtonArea
-          ref={ref}
-          disabled={disabled}
-          onClick={onClick}
-          title={label}
-          {...props}
-          css={sharedCssStyles}
-        >
-          {icon}
-        </ButtonArea>
-      )}
+      {href
+        ? (
+          <a {...anchorProps()} css={sharedCssStyles}>
+            {icon}
+          </a>
+        )
+        : (
+          <ButtonArea
+            ref={ref}
+            disabled={disabled}
+            onClick={onClick}
+            title={label}
+            {...props}
+            css={sharedCssStyles}
+          >
+            {icon}
+          </ButtonArea>
+        )}
     </ButtonIconContext.Provider>
   )
 })

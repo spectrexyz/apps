@@ -1,7 +1,7 @@
 import {
+  createElement,
   FC,
   ReactNode,
-  createElement,
   useCallback,
   useEffect,
   useRef,
@@ -42,7 +42,7 @@ export function FlatTree({
     .reverse()
     .reduce(
       (children, component) => createElement(component, null, children),
-      children
+      children,
     ) as JSX.Element
 }
 
@@ -61,10 +61,10 @@ export function useEvery(cb: () => void, delay: number) {
 export function useAmountInput(
   initialValue: bigint,
   save: (value: bigint) => void,
-  decimals: number = 18
+  decimals: number = 18,
 ) {
   const [inputValue, setInputValue] = useState(
-    fromDecimals(initialValue, decimals)
+    fromDecimals(initialValue, decimals),
   )
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export function useAmountInput(
         _save.current(toDecimals(value, decimals))
       }
     },
-    [decimals]
+    [decimals],
   )
 
   return { value: inputValue, onChange }

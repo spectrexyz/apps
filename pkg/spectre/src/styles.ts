@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from "react"
 import { useViewport } from "@bpierre/use-viewport"
 import { gu } from "kit"
+import { useCallback, useMemo } from "react"
 
 export const springs = {
   appear: {
@@ -49,11 +49,11 @@ export function useLayout() {
 
   const [layoutName, layout] = useMemo(
     () =>
-      breakpointsByLargest.find(([name]) => above(name)) ??
-      breakpointsByLargest[
-        above("large") ? 0 : breakpointsByLargest.length - 1
-      ],
-    [above]
+      breakpointsByLargest.find(([name]) => above(name))
+        ?? breakpointsByLargest[
+          above("large") ? 0 : breakpointsByLargest.length - 1
+        ],
+    [above],
   )
 
   // Get a value depending on the current layout
@@ -66,7 +66,7 @@ export function useLayout() {
     }): T => {
       if (values.small === undefined) {
         throw new Error(
-          "The “small” breakpoint is required with layout.value()"
+          "The “small” breakpoint is required with layout.value()",
         )
       }
 
@@ -84,11 +84,11 @@ export function useLayout() {
       }
       return values[breakPointName] as T
     },
-    [layoutName]
+    [layoutName],
   )
 
   return useMemo(
     () => ({ above, below, ...layout, name: layoutName, value }),
-    [above, below, layout, layoutName, value]
+    [above, below, layout, layoutName, value],
   )
 }

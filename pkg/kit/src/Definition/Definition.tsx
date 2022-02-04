@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import { ReactNode } from "react"
 
 type DefinitionProps = {
   title: ReactNode
@@ -9,13 +9,15 @@ type DefinitionProps = {
 export function Definition({ title, content }: DefinitionProps) {
   return (
     <div
-      css={({ fonts }) => css`
+      css={({ fonts }) =>
+        css`
         overflow: hidden;
         font-family: ${fonts.families.sans};
       `}
     >
       <div
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           padding-bottom: 0.75gu;
           font-size: 12px;
           text-transform: uppercase;
