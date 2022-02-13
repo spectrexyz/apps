@@ -10,7 +10,7 @@
     "website:build": "pnpm kit-legacy:build && cd pkg/website && pnpm copy-kit-assets && pnpm build"
   },
   "devDependencies": {
-    "dprint": "^0.22.0"
+    "dprint": "^0.22.2"
   },
   "pnpm": {
     "neverBuiltDependencies": [
