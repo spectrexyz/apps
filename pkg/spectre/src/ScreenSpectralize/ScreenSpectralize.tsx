@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { Steps } from "kit"
 import { useCallback, useEffect } from "react"
 import { useAccount } from "wagmi"
@@ -41,19 +40,19 @@ export function ScreenSpectralize() {
   }, [currentStep, resetScroll])
 
   const contentMaxWidth = layout.value({
-    small: css`none`,
-    large: css`104gu`,
-    xlarge: css`128gu`,
+    small: "none",
+    large: "104gu",
+    xlarge: "128gu",
   })
   const contentPadding = layout.value({
-    small: css`0 3gu`,
-    medium: css`0 3gu`,
-    large: css`0`,
+    small: "0 3gu",
+    medium: "0 3gu",
+    large: "0",
   })
   const flexGap = layout.value({
-    small: css`3.5gu`,
-    large: css`4gu`,
-    xlarge: css`8gu`,
+    small: "3.5gu",
+    large: "4gu",
+    xlarge: "8gu",
   })
 
   if (!accountData) {
@@ -65,17 +64,17 @@ export function ScreenSpectralize() {
         }}
       >
         <div
-          css={css`
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            max-width: ${contentMaxWidth};
-            margin: 0 auto;
-            padding: ${contentPadding};
-            padding-top: 8gu;
-            text-align: center;
-          `}
+          css={{
+            flexGrow: "1",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            maxWidth: contentMaxWidth,
+            margin: "0 auto",
+            padding: contentPadding,
+            paddingTop: "8gu",
+            textAlign: "center",
+          }}
         >
           Please connect your account to fractionalize your NFT.
         </div>
@@ -90,9 +89,9 @@ export function ScreenSpectralize() {
         onBack: prev,
         extraRow: (
           <div
-            css={css`
-                padding: 0 2gu;
-              `}
+            css={{
+              padding: "0 2gu",
+            }}
           >
             <Steps
               steps={STEPS.length - 1}
@@ -104,23 +103,23 @@ export function ScreenSpectralize() {
       }}
     >
       <div
-        css={css`
-          display: flex;
-          gap: ${flexGap};
-          flex-direction: ${layout.below("medium") ? "column" : "row"};
-          width: 100%;
-          max-width: ${contentMaxWidth};
-          margin: 0 auto;
-          padding: ${contentPadding};
-        `}
+        css={{
+          display: "flex",
+          gap: flexGap,
+          flexDirection: layout.below("medium") ? "column" : "row",
+          width: "100%",
+          maxWidth: contentMaxWidth,
+          margin: "0 auto",
+          padding: contentPadding,
+        }}
       >
         {!layout.below("medium") && (
           <div
-            css={css`
-              flex-shrink: 0;
-              height: 38gu;
-              padding-top: 4.5gu;
-            `}
+            css={{
+              flexShrink: "0",
+              height: "38gu",
+              paddingTop: "4.5gu",
+            }}
           >
             <Steps
               steps={STEPS.length - 1}
