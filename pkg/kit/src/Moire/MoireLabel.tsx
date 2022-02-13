@@ -1,10 +1,11 @@
 import type { ReactNode } from "react"
 
-import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { Moire } from "../Moire/Moire"
 import { gu } from "../styles"
 import { useTheme } from "../Theme"
+
+const PADDING_H = 1.5 * gu
 
 type MoireLabelProps = {
   background?: string
@@ -28,53 +29,49 @@ export function MoireLabel({
     title = label
   }
   return (
-    <span title={title}>
+    <span
+      title={title}
+      ref={bounds.observe}
+      css={({ colors, fonts }) => ({
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        height: "4gu",
+        fontFamily: fonts.families.sans,
+        fontSize: "20px",
+        fontWeight: "800",
+        color: labelColor || colors.background,
+        userSelect: "none",
+        opacity: ready ? 1 : 0,
+        transition: "opacity 150ms ease-in-out",
+      })}
+    >
       <span
-        ref={bounds.observe}
-        css={({ colors }) =>
-          css`
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          height: 4gu;
-          padding: 0 2.5gu;
-          font-size: 20px;
-          font-weight: 600;
-          color: ${labelColor || colors.background};
-          user-select: none;
-          opacity: ${ready ? 1 : 0};
-          transition: opacity 150ms ease-in-out;
-        `}
+        css={{
+          position: "absolute",
+          inset: "0",
+          zIndex: "1",
+          opacity: "0.75",
+        }}
       >
-        <span
-          css={css`
-            position: absolute;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.75;
-          `}
-        >
-          {ready && (
-            <Moire
-              width={bounds.width + 2.5 * gu * 2}
-              height={bounds.height}
-              linesColor={linesColor || colors.lightBackground}
-              backgroundColor={background || colors.background}
-              scale={0.5}
-            />
-          )}
-        </span>
-        <span
-          css={css`
-            position: relative;
-            z-index: 1;
-          `}
-        >
-          {label}
-        </span>
+        {ready && (
+          <Moire
+            width={bounds.width}
+            height={bounds.height}
+            linesColor={linesColor || colors.lightBackground}
+            backgroundColor={background || colors.background}
+            scale={0.5}
+          />
+        )}
+      </span>
+      <span
+        css={{
+          position: "relative",
+          zIndex: "1",
+          padding: `0 ${PADDING_H}px`,
+        }}
+      >
+        {label}
       </span>
     </span>
   )

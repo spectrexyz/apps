@@ -13,7 +13,9 @@ const FONT_NAME_SANS = "Inter"
 
 const FONT_FILE_MONO_REGULAR = "IBMPlexMono-Regular-Latin1.woff2"
 const FONT_FILE_MONO_MEDIUM = "IBMPlexMono-Medium-Latin1.woff2"
-const FONT_FILE_SANS = "Inter-Regular.woff2"
+
+const FONT_FILE_SANS_REGULAR = "Inter-Regular.woff2"
+const FONT_FILE_SANS_BLACK = "Inter-Black.woff2"
 
 const UNICODE_RANGE_LATIN1 =
   "U+0000, U+000D, U+0020-007E, U+00A0-00A3, U+00A4-00FF, U+0131, "
@@ -46,7 +48,14 @@ export function Main({ children }: MainProps): JSX.Element {
             font-family: "${FONT_NAME_SANS}";
             font-weight: 400;
             font-style: normal;
-            src: url("${assets}/${FONT_FILE_SANS}") format("woff2");
+            src: url("${assets}/${FONT_FILE_SANS_REGULAR}") format("woff2");
+            unicode-range: ${UNICODE_RANGE_LATIN1};
+          }
+          @font-face {
+            font-family: "${FONT_NAME_SANS}";
+            font-weight: 800;
+            font-style: normal;
+            src: url("${assets}/${FONT_FILE_SANS_BLACK}") format("woff2");
             unicode-range: ${UNICODE_RANGE_LATIN1};
           }
           *,
