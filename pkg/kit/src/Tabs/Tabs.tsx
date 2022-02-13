@@ -96,13 +96,14 @@ export function Tabs({
         display: "flex",
         justifyContent: justifyContent,
         alignItems: "center",
-        height: "6gu",
         width: fullWidth ? "100%" : "auto",
+        height: "calc(6gu + 2px)",
+        paddingBottom: "2px",
         "&:after": {
           content: "\"\"",
           position: "absolute",
           zIndex: 1,
-          inset: "auto 0 -2px 0",
+          inset: "auto 0 0 0",
           height: bordered ? 2 : 0,
           background: colors.layer2,
         },
@@ -113,7 +114,7 @@ export function Tabs({
         css={({ colors }) => ({
           position: "absolute",
           zIndex: 2,
-          inset: "auto auto -2px 0",
+          inset: "auto auto 0 0",
           width: "1px",
           height: "2px",
           background: colors.accent2,
@@ -121,12 +122,12 @@ export function Tabs({
         })}
       />
       <div
-        css={({ colors }) => ({
+        css={{
           display: "flex",
           alignItems: "center",
           width: fullWidth ? "100%" : "auto",
-          height: "100%",
-        })}
+          height: "6gu",
+        }}
         onFocus={() => {
           isFocused.current = true
         }}
@@ -189,6 +190,7 @@ function Tab(
       tabIndex={selected ? 0 : -1}
       css={({ colors }) => ({
         position: "relative",
+        zIndex: 3,
         flex: "1 1 0",
         alignItems: "center",
         justifyContent: "center",

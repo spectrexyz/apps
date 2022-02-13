@@ -1,6 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
-import { css } from "@emotion/react"
 import { forwardRef, useMemo } from "react"
 
 export type ButtonAreaProps =
@@ -45,17 +44,16 @@ export const ButtonArea = forwardRef<
         ref={ref}
         {...anchorProps}
         {...props}
-        css={({ colors }) =>
-          css`
-        display: flex;
-        outline: 0;
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
+        css={({ colors }) => ({
+          display: "flex",
+          outline: "0",
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
       >
         {children}
       </a>
@@ -67,24 +65,23 @@ export const ButtonArea = forwardRef<
         type="button"
         disabled={disabled}
         {...props}
-        css={({ colors }) =>
-          css`
-        display: flex;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        background: none;
-        cursor: pointer;
-        &::-moz-focus-inner {
-          border: 0;
-        }
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
+        css={({ colors }) => ({
+          display: "flex",
+          padding: "0",
+          border: "0",
+          outline: "0",
+          background: "none",
+          cursor: "pointer",
+          "&:-moz-focus-inner": {
+            border: "0",
+          },
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
       >
         {children}
       </button>
