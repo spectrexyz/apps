@@ -17,18 +17,28 @@ export default function App() {
   return (
     <AppProviders>
       <Switch>
+        {/* Home */}
         <Route path="/">
           <ScreenHome />
         </Route>
+
+        {/* Fractionalize */}
         <Route path="/fractionalize">
           <ScreenSpectralize />
         </Route>
-        <Route path="/nfts/:id/serc20">
-          {({ id }) => <ScreenNft id={id} panel="serc20" />}
+
+        {/* NFTs */}
+        <Route path="/nfts/:id/pool">
+          {({ id }) => <ScreenNft id={id} panel="pool" />}
+        </Route>
+        <Route path="/nfts/:id/fractions">
+          {({ id }) => <ScreenNft id={id} panel="fractions" />}
         </Route>
         <Route path="/nfts/:id">
           {({ id }) => <ScreenNft id={id} panel="nft" />}
         </Route>
+
+        {/* Swap */}
         <Route path="/nfts/:id/buy">
           <ScreenBuy />
         </Route>
