@@ -16,7 +16,7 @@
   "json": {},
   "markdown": {},
   "includes": ["**/*.{ts,tsx,js,jsx,json,md}"],
-  "excludes": ["**/node_modules", "**/*-lock.json"],
+  "excludes": ["**/node_modules", "**/*-lock.json", "**/dist"],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.62.2.wasm",
     "https://plugins.dprint.dev/json-0.14.1.wasm",
