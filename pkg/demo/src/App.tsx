@@ -19,6 +19,7 @@ import { RadioBox } from "./RadioBox"
 import { Slider } from "./Slider"
 import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
+import { TabsDemo } from "./TabsDemo"
 import { Toggle } from "./Toggle"
 import { TokenBadge } from "./TokenBadge"
 import { TokenIcon } from "./TokenIcon"
@@ -26,24 +27,25 @@ import { TokenInput } from "./TokenInput"
 import { Video } from "./Video"
 
 const demos = [
-  ["badge", () => <Badge />, true],
-  ["button", () => <Button label="Enable account" />, true],
-  ["cards", () => <NftCollection />, false],
-  ["chart", () => <Chart />, true],
-  ["diagram", () => <Diagram />, true],
-  ["distribution", () => <Distribution />, true],
-  ["icon", () => <Icon />, true],
-  ["moire", () => <Moire />, true],
-  ["radio", () => <Radio />, true],
-  ["radiobox", () => <RadioBox />, true],
-  ["slider", () => <Slider />, true],
-  ["spectre", () => <Spectre />, true],
-  ["steps", () => <Steps />, true],
-  ["token-badge", () => <TokenBadge />, true],
-  ["token-icon", () => <TokenIcon />, true],
-  ["token-input", () => <TokenInput />, true],
-  ["video", () => <Video />, true],
-  ["toggle", () => <Toggle />, true],
+  ["badge", Badge],
+  ["button", Button],
+  ["cards", NftCollection, false],
+  ["tabs", TabsDemo],
+  ["chart", Chart],
+  ["diagram", Diagram],
+  ["distribution", Distribution],
+  ["icon", Icon],
+  ["moire", Moire],
+  ["radio", Radio],
+  ["radiobox", RadioBox],
+  ["slider", Slider],
+  ["spectre", Spectre],
+  ["steps", Steps],
+  ["toggle", Toggle],
+  ["token-badge", TokenBadge],
+  ["token-icon", TokenIcon],
+  ["token-input", TokenInput],
+  ["video", Video],
 ] as [name: string, component: FC, centered: boolean][]
 
 function currentLocation() {
@@ -115,7 +117,7 @@ export function App() {
               </div>
             </Route>
             <>
-              {demos.map(([name, Element, centered]) => (
+              {demos.map(([name, Element, centered = true]) => (
                 <Route key={name} path={`/${name}`}>
                   {centered
                     ? (
