@@ -55,4 +55,7 @@ for icon in $icons; do
   printf '%s\n%s\n' "/* eslint-disable import/no-default-export */" "$(cat "$path")" >"${path}"
 done
 
+echo "Format component files…"
+pnpm dprint fmt -- "${DIR_OUT}/*.{ts,tsx}"
+
 echo "Done."
