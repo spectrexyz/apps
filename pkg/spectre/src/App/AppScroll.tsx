@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  MutableRefObject,
   ReactNode,
   RefObject,
   useCallback,
@@ -12,6 +13,7 @@ import { useLocation } from "wouter"
 type AppScrollRef = RefObject<HTMLDivElement>
 
 type AppScrollContext = {
+  animateOnPathChange: MutableRefObject<boolean>
   appScrollRef: AppScrollRef
   updateAppScroll: (scrollY: number) => void
   addCallback: (cb: (scrollY: number) => void) => void
@@ -38,9 +40,17 @@ export function AppScroll({ children }: AppScrollProps) {
   // keep a reference to the scrollable element so it can be shared
   const appScrollRef = useRef<HTMLDivElement>(null)
 
+  const animateOnPathChange = useRef(true)
+
   return (
     <AppScrollContext.Provider
-      value={{ appScrollRef, updateAppScroll, addCallback, removeCallback }}
+      value={{
+        addCallback,
+        animateOnPathChange,
+        appScrollRef,
+        removeCallback,
+        updateAppScroll,
+      }}
     >
       <ResetScrollOnPathChange>{children}</ResetScrollOnPathChange>
     </AppScrollContext.Provider>
@@ -49,15 +59,23 @@ export function AppScroll({ children }: AppScrollProps) {
 
 function ResetScrollOnPathChange({ children }: { children: ReactNode }) {
   const [pathname] = useLocation()
-  const { appScrollRef } = useAppScrollUpdater()
+  const { animateOnPathChange, appScrollRef } = useContext(AppScrollContext)
 
   useEffect(() => {
-    if (appScrollRef.current) {
+    if (appScrollRef.current && animateOnPathChange.current) {
       appScrollRef.current.scrollTo({ top: 0, behavior: "smooth" })
     }
-  }, [appScrollRef, pathname])
+    animateOnPathChange.current = true
+  }, [animateOnPathChange, appScrollRef, pathname])
 
   return <>{children}</>
+}
+
+export function usePreventNextScrollReset() {
+  const { animateOnPathChange } = useContext(AppScrollContext)
+  return useCallback(() => {
+    animateOnPathChange.current = false
+  }, [animateOnPathChange])
 }
 
 export function useAppScroll(callback: (scrollY: number) => void) {
