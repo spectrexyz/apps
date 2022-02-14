@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { Address, Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
 import { ReactNode } from "react"
 import { useEnsLookup } from "wagmi"
@@ -17,34 +16,33 @@ export function EthAddressRow({
   const [{ data: ensName }] = useEnsLookup({ address })
   return (
     <div
-      css={css`
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        padding-top: 1.5gu;
-      `}
+      css={{
+        display: "flex",
+        width: "100%",
+        justifyContent: "space-between",
+        paddingTop: "1.5gu",
+      }}
     >
       <div
-        css={css`
-          display: flex;
-          align-items: center;
-        `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+        }}
       >
         <div
-          css={css`
-            display: flex;
-            width: 22gu;
-          `}
+          css={{
+            display: "flex",
+            width: "22gu",
+          }}
         >
           <Badge
             alt={address}
             label={
               <span
-                css={({ colors }) =>
-                  css`
-                  font-size: 16px;
-                  color: ${colors.accent};
-                `}
+                css={({ colors }) => ({
+                  fontSize: "16px",
+                  color: colors.accent,
+                })}
               >
                 {ensName ?? shortenAddress(address)}
               </span>
@@ -56,21 +54,20 @@ export function EthAddressRow({
             icon={<IconTrash size={2.5 * gu} />}
             label="Remove"
             onClick={onRemove}
-            css={css`
-              width: 3gu;
-              height: 3gu;
-            `}
+            css={{
+              width: "3gu",
+              height: "3gu",
+            }}
           />
         )}
       </div>
       <span
-        css={({ colors }) =>
-          css`
-          display: flex;
-          align-items: center;
-          font-size: 18px;
-          color: ${colors.contentDimmed};
-        `}
+        css={({ colors }) => ({
+          display: "flex",
+          alignItems: "center",
+          fontSize: "18px",
+          color: colors.contentDimmed,
+        })}
       >
         {reward}
       </span>

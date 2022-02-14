@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { MoireLabel, useTheme } from "kit"
 import { ReactNode } from "react"
 
@@ -8,6 +7,7 @@ type ViewAreaProps = {
   height?: number
   label: string
   labelDisplay: ReactNode
+  navigationButtons: ReactNode
 }
 
 export function ViewArea({
@@ -16,35 +16,36 @@ export function ViewArea({
   height,
   label,
   labelDisplay,
+  navigationButtons,
 }: ViewAreaProps) {
   const { colors } = useTheme()
   return (
     <div
-      css={({ colors }) =>
-        css`
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 auto;
-        padding: 8.75gu 0;
-        background: ${colors.layer2};
-      `}
+      css={{
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        margin: "0 auto",
+        padding: "8gu 0",
+        background: colors.layer2,
+      }}
     >
       <div
-        css={css`
-          position: absolute;
-          margin: 0 auto;
-          inset: 0 auto;
-          width: 100%;
-          max-width: 160gu;
-        `}
+        css={{
+          position: "absolute",
+          margin: "0 auto",
+          inset: "0 auto",
+          width: "100%",
+          maxWidth: "160gu",
+        }}
       >
         <div
-          css={css`
-            position: absolute;
-            inset: 5gu 0 auto auto;
-          `}
+          css={{
+            position: "absolute",
+            inset: "8gu 0 auto auto",
+          }}
         >
           <MoireLabel
             background={colors.layer2}
@@ -55,21 +56,32 @@ export function ViewArea({
           />
         </div>
         <div
-          css={css`
-            position: absolute;
-            inset: auto 0 3gu auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5gu;
-          `}
+          css={{
+            position: "absolute",
+            inset: "8gu auto auto 0",
+            display: "flex",
+            flexDirection: "row",
+            gap: "2gu",
+          }}
+        >
+          {navigationButtons}
+        </div>
+        <div
+          css={{
+            position: "absolute",
+            inset: "auto 0 3gu auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5gu",
+          }}
         >
           {actionButtons}
         </div>
       </div>
       <div
-        css={css`
-          height: ${height ? `${height}px` : "auto"};
-        `}
+        css={{
+          height: `${height ? `${height}px` : "auto"}`,
+        }}
       >
         {children}
       </div>

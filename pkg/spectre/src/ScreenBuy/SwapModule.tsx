@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ButtonIcon, gu, IconArrowsDownUp, TokenInput } from "kit"
 import { useState } from "react"
 
@@ -7,9 +6,9 @@ export function SwapModule() {
   return (
     <div>
       <div
-        css={css`
-          padding: 0 2gu;
-        `}
+        css={{
+          padding: "0 2gu",
+        }}
       >
         <TokenInput
           onChange={setEthValue}
@@ -21,12 +20,12 @@ export function SwapModule() {
         />
       </div>
       <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2gu 0;
-        `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2gu 0",
+        }}
       >
         <ButtonIcon
           onClick={() => {}}
@@ -35,21 +34,19 @@ export function SwapModule() {
         />
       </div>
       <div
-        css={({ colors }) =>
-          css`
-          padding: 2gu;
-          background: ${colors.layer1};
-        `}
+        css={({ colors }) => ({
+          padding: "2gu",
+          background: colors.layer1,
+        })}
       >
         <TokenInput onChange={setEthValue} symbol="MAGIC" value={ethValue} />
         <p
-          css={({ colors, fonts }) =>
-            css`
-            padding-top: 1.5gu;
-            font-family: ${fonts.families.sans};
-            font-size: 12px;
-            color: ${colors.contentDimmed};
-          `}
+          css={({ colors, fonts }) => ({
+            paddingTop: "1.5gu",
+            fontFamily: fonts.families.sans,
+            fontSize: "12px",
+            color: colors.contentDimmed,
+          })}
         >
           Tokens will be minted and trasnferred to your connected account.
         </p>

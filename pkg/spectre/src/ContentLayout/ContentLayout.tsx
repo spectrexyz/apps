@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ReactNode } from "react"
 import { useLayout } from "../styles"
 
@@ -9,8 +8,8 @@ type ContentLayoutProps = {
 export function ContentLayout({ children }: ContentLayoutProps) {
   const layout = useLayout()
   const flexGap = layout.value({
-    small: css`3.5gu`,
-    xlarge: css`5gu`,
+    small: "3.5gu",
+    xlarge: "5gu",
   })
   const flexDirection = layout.value({
     small: "column",
@@ -19,25 +18,25 @@ export function ContentLayout({ children }: ContentLayoutProps) {
 
   return (
     <div
-      css={css`
-        display: flex;
-        gap: ${flexGap};
-        flex-direction: ${flexDirection};
-        width: 100%;
-      `}
+      css={{
+        display: "flex",
+        gap: flexGap,
+        flexDirection: flexDirection as "column" | "row",
+        width: "100%",
+      }}
     >
       <div
         css={({ colors }) =>
           layout.below("medium")
-            ? css`
-                width: 100%;
-              `
-            : css`
-                width: 100%;
-                padding: 4.5gu 5gu 3gu;
-                background: ${colors.background};
-                border: 2px solid ${colors.contrast};
-              `}
+            ? {
+              width: "100%",
+            }
+            : {
+              width: "100%",
+              padding: "4.5gu 5gu 3gu",
+              background: colors.background,
+              border: `2px solid ${colors.contrast}`,
+            }}
       >
         {children}
       </div>

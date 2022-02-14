@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { Button, ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
 import { ReactNode, useMemo, useState } from "react"
 import { a, useSpring } from "react-spring"
@@ -49,40 +48,40 @@ export function AppScreen({
     ({ progress, screenTransform }, ready) =>
       ready && (
         <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            padding-bottom: ${compactMenuActive ? 0 : 8 * gu}px;
-          `}
+          css={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: "1",
+            paddingBottom: `${compactMenuActive ? 0 : 8 * gu}px`,
+          }}
         >
           {title && compactMenuActive
             ? (
               <div
-                css={css`
-                height: 8gu;
-              `}
+                css={{
+                  height: "8gu",
+                }}
               >
                 <a.div
                   style={{ transform: headerTransform }}
-                  css={css`
-                  position: ${snapHeader ? "absolute" : "static"};
-                  z-index: 2;
-                  inset: 8gu 0 auto;
-                  display: flex;
-                  align-items: center;
-                  height: 8gu;
-                `}
+                  css={{
+                    position: snapHeader ? "absolute" : "static",
+                    zIndex: "2",
+                    inset: "8gu 0 auto",
+                    display: "flex",
+                    alignItems: "center",
+                    height: "8gu",
+                  }}
                 >
                   <a.div
                     style={{ opacity: progress, transform: screenTransform }}
-                    css={css`
-                    display: flex;
-                    width: 100%;
-                    height: 100%;
-                    transform-origin: 50% 0;
-                    user-select: none;
-                  `}
+                    css={{
+                      display: "flex",
+                      width: "100%",
+                      height: "100%",
+                      transformOrigin: "50% 0",
+                      userSelect: "none",
+                    }}
                   >
                     <HeaderCompact
                       title={title}
@@ -91,22 +90,21 @@ export function AppScreen({
                           onClick={onBack}
                           icon={<IconArrowLeft color={colors.accent} />}
                           label="Back"
-                          css={css`
-                            width: 7gu;
-                            height: 100%;
-                          `}
+                          css={{
+                            width: "7gu",
+                            height: "100%",
+                          }}
                         />
                       )}
                       end={contextual}
                     />
                     <a.div
                       style={{ opacity: headerBorderVisibility }}
-                      css={({ colors }) =>
-                        css`
-                      position: absolute;
-                      inset: auto 0 0;
-                      border-bottom: 1px solid ${colors.outline2};
-                    `}
+                      css={({ colors }) => ({
+                        position: "absolute",
+                        inset: "auto 0 0",
+                        borderBottom: `1px solid ${colors.outline2}`,
+                      })}
                     />
                   </a.div>
                 </a.div>
@@ -114,13 +112,13 @@ export function AppScreen({
             )
             : (
               <div
-                css={css`
-                display: flex;
-                width: 100%;
-                max-width: calc(160gu + 4gu * 2);
-                margin: 0 auto;
-                padding: 5.25gu 4gu 0;
-              `}
+                css={{
+                  display: "flex",
+                  width: "100%",
+                  maxWidth: "calc(160gu + 4gu * 2)",
+                  margin: "0 auto",
+                  padding: "5.25gu 4gu 0",
+                }}
               >
                 {onBack && (
                   <Button
@@ -135,55 +133,50 @@ export function AppScreen({
             )}
           <a.div
             style={{ opacity: progress, transform: screenTransform }}
-            css={({ colors }) =>
-              css`
-              flex-grow: 1;
-              transform-origin: 50% 0;
-              width: 100%;
-              max-width: ${
-                fullWidthActive || mode === "minimal"
-                  ? "none"
-                  : "500px"
-              };
-              margin: 0 auto;
-              background: ${
-                fullWidthActive || mode === "minimal"
-                  ? "none"
-                  : colors.background
-              };
-            `}
+            css={({ colors }) => ({
+              flexGrow: "1",
+              transformOrigin: "50% 0",
+              width: "100%",
+              maxWidth: fullWidthActive || mode === "minimal"
+                ? "none"
+                : "500px",
+              margin: "0 auto",
+              background: fullWidthActive || mode === "minimal"
+                ? "none"
+                : colors.background,
+            })}
           >
             {!compactMenuActive && mode !== "minimal" && (
               <div
-                css={css`
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  padding: 3gu 4gu;
-                `}
+                css={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "3gu 4gu",
+                }}
               >
                 <h1
-                  css={css`
-                    text-transform: uppercase;
-                  `}
+                  css={{
+                    textTransform: "uppercase",
+                  }}
                 >
                   {title}
                 </h1>
                 <div
-                  css={css`
-                    height: 100%;
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                  `}
+                  css={{
+                    height: "100%",
+                    flexGrow: "0",
+                    flexShrink: "0",
+                  }}
                 >
                   {contextual}
                 </div>
               </div>
             )}
             <div
-              css={css`
-                padding: ${contentPadding};
-              `}
+              css={{
+                padding: contentPadding,
+              }}
             >
               {children}
             </div>
@@ -204,52 +197,51 @@ function HeaderCompact({
 }) {
   return (
     <div
-      css={css`
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        height: 100%;
-      `}
+      css={{
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        height: "100%",
+      }}
     >
       <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 100%;
-        `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
       >
         {start && (
           <div
-            css={css`
-              display: flex;
-              align-items: center;
-              height: 100%;
-            `}
+            css={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+            }}
           >
             {start}
           </div>
         )}
         <div
-          css={({ fonts }) =>
-            css`
-            font-family: ${fonts.families.mono};
-            font-size: 16px;
-            text-transform: uppercase;
-          `}
+          css={({ fonts }) => ({
+            fontFamily: fonts.families.mono,
+            fontSize: "16px",
+            textTransform: "uppercase",
+          })}
         >
           {title}
         </div>
       </div>
       {end && (
         <div
-          css={css`
-            display: flex;
-            width: 7gu;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-          `}
+          css={{
+            display: "flex",
+            width: "7gu",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           {end}
         </div>

@@ -1,5 +1,3 @@
-import { css } from "@emotion/react"
-import React from "react"
 import { headerLinks } from "../content"
 
 import discord from "./assets/discord.svg"
@@ -15,10 +13,10 @@ const ACTIONS = [
 export function Actions() {
   return (
     <div
-      css={css`
-        display: flex;
-        gap: 1.5gu;
-      `}
+      css={{
+        display: "flex",
+        gap: "1.5gu",
+      }}
     >
       {ACTIONS.map(([label, icon, url], index) => {
         const anchor = url.startsWith("#")
@@ -30,9 +28,9 @@ export function Actions() {
               src={icon}
               width="32"
               height="32"
-              css={css`
-                display: block;
-              `}
+              css={{
+                display: "block",
+              }}
             />
           </a>
         )

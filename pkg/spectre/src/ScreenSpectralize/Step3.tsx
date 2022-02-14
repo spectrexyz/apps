@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   Button,
   closestIndexFromSortedNumbers,
@@ -161,9 +160,9 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                   icon={<IconLifebuoy />}
                   mode="translucid"
                   title="Token health tip"
-                  css={css`
-                  margin-top: 2gu;
-                `}
+                  css={{
+                    marginTop: "2gu",
+                  }}
                 >
                   Ask yourself: what price do you think your NFT will be worth
                   in the future? Think of it as the reserve price in an auction
@@ -176,11 +175,10 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                     label="Max token supply cap"
                     contextual={
                       <span
-                        css={({ colors }) =>
-                          css`
-                        font-size: 18px;
-                        colors: ${colors.contentDimmed};
-                      `}
+                        css={({ colors }) => ({
+                          fontSize: "18px",
+                          colors: colors.contentDimmed,
+                        })}
                       >
                         {formatNumber(data.maxTokenSupplyCap)}
                       </span>
@@ -195,11 +193,10 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
                     label="Buyout multiplier"
                     contextual={
                       <span
-                        css={({ colors }) =>
-                          css`
-                        font-size: 18px;
-                        colors: ${colors.contentDimmed};
-                      `}
+                        css={({ colors }) => ({
+                          fontSize: "18px",
+                          colors: colors.contentDimmed,
+                        })}
                       >
                         {data.buyoutMultiplier / 10}x
                       </span>
@@ -216,9 +213,9 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
         </ContentLayoutSection>
         {!suggestFromBuyout && (
           <div
-            css={css`
-              padding-top: 4gu;
-            `}
+            css={{
+              paddingTop: "4gu",
+            }}
           >
             <AdvancedParameters
               columns={advancedColumns}
@@ -237,9 +234,9 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
           {layout.below("medium")
             ? (
               <div
-                css={css`
-                padding: 3gu 0;
-              `}
+                css={{
+                  padding: "3gu 0",
+                }}
               >
                 <Button
                   type="submit"
@@ -252,12 +249,12 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
             )
             : (
               <div
-                css={css`
-                display: flex;
-                justify-content: flex-end;
-                gap: 2gu;
-                padding-top: 3gu;
-              `}
+                css={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "2gu",
+                  paddingTop: "3gu",
+                }}
               >
                 <Button
                   label="Back"

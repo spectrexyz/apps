@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { springs } from "kit"
 import { a, useTransition } from "react-spring"
 import { menuLinks } from "../content"
@@ -16,37 +15,35 @@ export function Menu({ opened }: { opened: boolean }) {
       opened && (
         <a.div
           style={{ opacity }}
-          css={({ colors }) =>
-            css`
-            position: fixed;
-            z-index: 3;
-            inset: 8gu 0 0;
-            background: ${colors.background};
-          `}
+          css={({ colors }) => ({
+            position: "fixed",
+            zIndex: "3",
+            inset: "8gu 0 0",
+            background: colors.background,
+          })}
         >
           <a.nav
             style={{ transform }}
-            css={css`
-              position: absolute;
-              z-index: 2;
-              inset: 0;
-            `}
+            css={{
+              position: "absolute",
+              zIndex: "2",
+              inset: "0",
+            }}
           >
             <ul
-              css={({ colors, fonts }) =>
-                css`
-                margin: 0;
-                padding: 5gu 0 0 3gu;
-                list-style: none;
-                li {
-                  padding-bottom: 2gu;
-                  font-family: ${fonts.families.mono};
-                  font-size: 32px;
-                }
-                a {
-                  color: ${colors.content};
-                }
-              `}
+              css={({ colors, fonts }) => ({
+                margin: "0",
+                padding: "5gu 0 0 3gu",
+                listStyle: "none",
+                "li": {
+                  paddingBottom: "2gu",
+                  fontFamily: fonts.families.mono,
+                  fontSize: "32px",
+                },
+                "a": {
+                  color: colors.content,
+                },
+              })}
             >
               {menuLinks.map(({ label, url }) => (
                 <li key={url}>{url && <a href={url}>{label}</a>}</li>

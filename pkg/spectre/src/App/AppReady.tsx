@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { springs } from "kit"
 import {
   createContext,
@@ -83,15 +82,14 @@ export function AppReady({ children }: AppReadyProps) {
           loading && (
             <a.div
               style={{ opacity }}
-              css={({ colors }) =>
-                css`
-                position: fixed;
-                z-index: 9;
-                inset: 0;
-                display: grid;
-                place-items: center;
-                background: ${colors.background};
-              `}
+              css={({ colors }) => ({
+                position: "fixed",
+                zIndex: "9",
+                inset: "0",
+                display: "grid",
+                placeItems: "center",
+                background: colors.background,
+              })}
             >
               <a.img
                 style={{ transformOrigin: "50% 50%", transform: logoTransform }}

@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { AddressBadge, Button, ButtonArea, noop, springs } from "kit"
 import React, { ReactNode, useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
@@ -19,20 +18,20 @@ function BottomBar() {
   const layout = useLayout()
 
   const maxWidth = layout.value({
-    small: 0,
-    large: 104 + 4 * 2,
-    xlarge: 160 + 4 * 2,
+    small: "0",
+    large: `${104 + 4 * 2}gu`,
+    xlarge: `${160 + 4 * 2}gu`,
   })
 
   return (
     <div
-      css={css`
-        position: relative;
-        max-width: ${maxWidth}gu;
-        height: 14gu;
-        padding: 5gu 0;
-        margin: 0 auto;
-      `}
+      css={{
+        position: "relative",
+        maxWidth,
+        height: "14gu",
+        padding: "5gu 0",
+        margin: "0 auto",
+      }}
     >
       {appReadyTransition(
         ({ progress: appReadyProgress, bottomBarTransform }, ready) => {
@@ -45,13 +44,13 @@ function BottomBar() {
                 opacity: appReadyProgress,
                 transform: bottomBarTransform,
               }}
-              css={css`
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                height: 4gu;
-                padding: 0 4gu;
-              `}
+              css={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                height: "4gu",
+                padding: "0 4gu",
+              }}
             >
               <div>
                 <SyncStatus />
@@ -92,12 +91,12 @@ function BottomBarCompact() {
   return (
     <>
       <div
-        css={css`
-          position: relative;
-          height: 8gu;
-          z-index: 2;
-          overflow: hidden;
-        `}
+        css={{
+          position: "relative",
+          height: "8gu",
+          zIndex: "2",
+          overflow: "hidden",
+        }}
       >
         {appReadyTransition(
           ({ progress: appReadyProgress, bottomBarTransform }, ready) => {
@@ -106,17 +105,16 @@ function BottomBarCompact() {
             }
             return (
               <a.div
-                css={({ colors }) =>
-                  css`
-                  position: relative;
-                  z-index: 2;
-                  display: flex;
-                  align-items: center;
-                  width: 100%;
-                  height: 100%;
-                  background: ${colors.background};
-                  border-top: 1px solid ${colors.outline2};
-                `}
+                css={({ colors }) => ({
+                  position: "relative",
+                  zIndex: "2",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  background: colors.background,
+                  borderTop: `1px solid ${colors.outline2}`,
+                })}
                 style={{
                   opacity: appReadyProgress,
                   transform: bottomBarTransform,
@@ -171,17 +169,16 @@ function BarArea({
 }) {
   return (
     <a.div
-      css={({ colors }) =>
-        css`
-        overflow: hidden;
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        background: ${colors.background};
-      `}
+      css={({ colors }) => ({
+        overflow: "hidden",
+        position: "relative",
+        zIndex: "2",
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        background: colors.background,
+      })}
     >
       <ButtonBar
         onClick={(address && !drawerOpened && onOpenDrawer) || noop}
@@ -231,15 +228,15 @@ function ButtonBar({
     ? (
       <ButtonArea
         onClick={onClick}
-        css={css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        height: 100%;
-        padding: 0 2gu;
-        outline-offset: -2px;
-      `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          height: "100%",
+          padding: "0 2gu",
+          outlineOffset: "-2px",
+        }}
       >
         {start}
         {end}
@@ -247,14 +244,14 @@ function ButtonBar({
     )
     : (
       <div
-        css={css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        height: 100%;
-        padding: 0 2gu;
-      `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          height: "100%",
+          padding: "0 2gu",
+        }}
       >
         {start}
         {end}

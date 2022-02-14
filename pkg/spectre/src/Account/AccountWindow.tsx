@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { colord } from "colord"
 import {
   AddressBadge,
@@ -60,90 +59,83 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                   pointerEvents: visible ? "auto" : "none",
                   transform,
                 }}
-                css={({ colors }) =>
-                  css`
-                  position: absolute;
-                  z-index: 2;
-                  inset: 5.25gu 5.25gu auto auto;
-                  width: 61gu;
-                  padding: 2.5gu 3gu;
-                  background: ${
-                    colord(colors.translucid).alpha(
-                      supportsBackdropFilters
-                        ? 0.6
-                        : 1,
-                    ).toHex()
-                  };
-                  backdrop-filter: blur(40px);
-                  border-radius: 6px;
-                `}
+                css={({ colors }) => ({
+                  position: "absolute",
+                  zIndex: "2",
+                  inset: "5.25gu 5.25gu auto auto",
+                  width: "61gu",
+                  padding: "2.5gu 3gu",
+                  background: colord(colors.translucid).alpha(
+                    supportsBackdropFilters ? 0.6 : 1,
+                  ).toHex(),
+                  backdropFilter: "blur(40px)",
+                  borderRadius: "6px",
+                })}
               >
                 <a.div
                   style={{ opacity: blur.to((v) => 1 - v) }}
-                  css={css`
-                  display: ${supportsBackdropFilters ? "block" : "none"};
-                  position: absolute;
-                  z-index: 1;
-                  inset: 0;
-                  background: rgb(43, 44, 97);
-                  border-radius: 6px;
-                `}
+                  css={{
+                    display: supportsBackdropFilters ? "block" : "none",
+                    position: "absolute",
+                    zIndex: "1",
+                    inset: "0",
+                    background: "rgb(43, 44, 97)",
+                    borderRadius: "6px",
+                  }}
                 />
                 <div
-                  css={css`
-                  position: relative;
-                  z-index: 2;
-                `}
+                  css={{
+                    position: "relative",
+                    zIndex: "2",
+                  }}
                 >
                   <div
-                    css={css`
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding-bottom: 3gu;
-                  `}
+                    css={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      paddingBottom: "3gu",
+                    }}
                   >
                     <h1
-                      css={css`
-                      text-transform: uppercase;
-                    `}
+                      css={{
+                        textTransform: "uppercase",
+                      }}
                     >
                       Account
                     </h1>
                     <ButtonArea
                       onClick={onClose}
-                      css={({ colors }) =>
-                        css`
-                      position: relative;
-                      display: flex;
-                      width: 2.5gu;
-                      height: 2.5gu;
-                      color: ${colors.contentDimmed};
-                      &:active {
-                        top: 1px;
-                        left: 1px;
-                      }
-                    `}
+                      css={({ colors }) => ({
+                        position: "relative",
+                        display: "flex",
+                        width: "2.5gu",
+                        height: "2.5gu",
+                        color: colors.contentDimmed,
+                        "&:active": {
+                          top: "1px",
+                          left: "1px",
+                        },
+                      })}
                     >
                       <IconX size={2.5 * gu} />
                     </ButtonArea>
                   </div>
                   <h2
-                    css={({ colors, fonts }) =>
-                      css`
-                    padding-bottom: 1.25gu;
-                    font-size: 14px;
-                    color: ${colors.contentDimmed};
-                    font-family: ${fonts.families.sans};
-                  `}
+                    css={({ colors, fonts }) => ({
+                      paddingBottom: "1.25gu",
+                      fontSize: "14px",
+                      color: colors.contentDimmed,
+                      fontFamily: fonts.families.sans,
+                    })}
                   >
                     Connected with MetaMask
                   </h2>
                   <div
-                    css={css`
-                    display: flex;
-                    justify-content: space-between;
-                  `}
+                    css={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
                   >
                     <AddressBadge
                       address={address}
@@ -156,17 +148,17 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                       mode="flat"
                       onClick={disconnect}
                       size="small"
-                      css={css`
-                      text-transform: uppercase;
-                    `}
+                      css={{
+                        textTransform: "uppercase",
+                      }}
                     />
                   </div>
                   <div
-                    css={css`
-                    display: flex;
-                    gap: 2gu;
-                    padding-top: 3.5gu;
-                  `}
+                    css={{
+                      display: "flex",
+                      gap: "2gu",
+                      paddingTop: "3.5gu",
+                    }}
                   >
                     <ButtonText icon={<IconCopy />} label="Copy address" />
                     <ButtonText

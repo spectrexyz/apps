@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   Button,
   ButtonIcon,
@@ -34,67 +33,64 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
   )
 
   const fileSelectorWidth = layout.value({
-    small: css`32.5gu`,
-    xlarge: css`37.5gu`,
+    small: "32.5gu",
+    xlarge: "37.5gu",
   })
   const introPadding = layout.value({
-    small: css`2gu 0`,
-    medium: css`2gu 0`,
-    large: css`1.5gu 0 1gu`,
+    small: "2gu 0",
+    medium: "2gu 0",
+    large: "1.5gu 0 1gu",
   })
   const flexGap = layout.value({
-    small: css`3.5gu`,
-    xlarge: css`5gu`,
+    small: "3.5gu",
+    xlarge: "5gu",
   })
 
   return (
     <form onSubmit={handleSubmit}>
       <div
-        css={css`
-          display: flex;
-          gap: ${flexGap};
-          flex-direction: ${layout.below("medium") ? "column" : "row"};
-          width: 100%;
-        `}
+        css={{
+          display: "flex",
+          gap: flexGap,
+          flexDirection: layout.below("medium") ? "column" : "row",
+          width: "100%",
+        }}
       >
         <div
-          css={({ colors }) =>
-            css`
-            padding: ${layout.below("medium") ? "0" : css`4.5gu 5gu 3gu`};
-            background: ${layout.below("medium") ? "none" : colors.background};
-            border: ${
-              layout.below("medium") ? "none" : `2px solid ${colors.contrast}`
-            };
-          `}
+          css={({ colors }) => ({
+            padding: layout.below("medium") ? "0" : "4.5gu 5gu 3gu",
+            background: layout.below("medium") ? "none" : colors.background,
+            border: layout.below("medium")
+              ? "none"
+              : `2px solid ${colors.contrast}`,
+          })}
         >
           {!layout.below("medium")
             ? (
               <h1
-                css={({ fonts }) =>
-                  css`
-                font-family: ${fonts.families.mono};
-                font-size: 18px;
-                text-transform: uppercase;
-              `}
+                css={({ fonts }) => ({
+                  fontFamily: fonts.families.mono,
+                  fontSize: "18px",
+                  textTransform: "uppercase",
+                })}
               >
                 {title}
               </h1>
             )
             : (
               <div
-                css={css`
-                height: 6gu;
-              `}
+                css={{
+                  height: "6gu",
+                }}
               />
             )}
           <p
-            css={({ colors, fonts }) =>
-              css`
-              padding: ${introPadding};
-              font-family: ${fonts.families.sans};
-              font-size: 14px;
-              color: ${colors.contentDimmed};
-            `}
+            css={({ colors, fonts }) => ({
+              padding: introPadding,
+              fontFamily: fonts.families.sans,
+              fontSize: "14px",
+              color: colors.contentDimmed,
+            })}
           >
             Add the NFT metadata such as a title, description. Select the file
             type and upload it. This information will be stored in IPFS and
@@ -124,9 +120,9 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
               onChange={data.updateDescription}
               value={data.description}
               placeholder="Description of the NFT"
-              css={css`
-                height: 25gu;
-              `}
+              css={{
+                height: "25gu",
+              }}
             />
           </Fieldset>
 
@@ -164,9 +160,9 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
           {layout.below("medium")
             ? (
               <div
-                css={css`
-                padding: 3gu 0;
-              `}
+                css={{
+                  padding: "3gu 0",
+                }}
               >
                 <Button
                   type="submit"
@@ -179,12 +175,12 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
             )
             : (
               <div
-                css={css`
-                display: flex;
-                justify-content: flex-end;
-                gap: 2gu;
-                padding-top: 3gu;
-              `}
+                css={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "2gu",
+                  paddingTop: "3gu",
+                }}
               >
                 <Button
                   label="Cancel"
@@ -203,11 +199,11 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
         </div>
         {!layout.below("large") && (
           <div
-            css={css`
-              flex-shrink: 0;
-              width: ${fileSelectorWidth};
-              height: 38gu;
-            `}
+            css={{
+              flexShrink: "0",
+              width: fileSelectorWidth,
+              height: "38gu",
+            }}
           >
             <NftFileSelector direction="vertical" />
           </div>
@@ -223,8 +219,8 @@ function NftFileSelector({
   direction: "vertical" | "horizontal"
 }) {
   const layout = useLayout()
-  const gridTemplateAxis1 = direction === "vertical" ? "rows" : "columns"
-  const gridTemplateAxis2 = direction === "vertical" ? "columns" : "rows"
+  const gridTemplateAxis1 = direction === "vertical" ? "Rows" : "Columns"
+  const gridTemplateAxis2 = direction === "vertical" ? "Columns" : "Rows"
 
   const { fieldError, file, fileType, updateFile, updateFileType } =
     useSpectralize()
@@ -237,9 +233,9 @@ function NftFileSelector({
       onFile={updateFile}
       label={layout.name === "medium" ? "Upload" : "Upload file"}
       accept={NFT_FILE_TYPES[fileType].mediaTypes}
-      css={css`
-        padding-top: 1gu;
-      `}
+      css={{
+        paddingTop: "1gu",
+      }}
     />
   )
 
@@ -251,14 +247,14 @@ function NftFileSelector({
           selected={fileType}
         >
           <div
-            css={css`
-              display: grid;
-              grid-template-${gridTemplateAxis1}: 1fr 1fr 1fr;
-              grid-template-${gridTemplateAxis2}: 100%;
-              gap: 1.5gu;
-              width: 100%;
-              height: ${direction === "vertical" ? "auto" : css`19gu`};
-            `}
+            css={{
+              display: "grid",
+              [`gridTemplate${gridTemplateAxis1}`]: "1fr 1fr 1fr",
+              [`gridTemplate${gridTemplateAxis2}`]: "100%",
+              gap: "1.5gu",
+              width: "100%",
+              height: direction === "vertical" ? "auto" : "19gu",
+            }}
           >
             <RadioBox
               id="image"
@@ -267,11 +263,11 @@ function NftFileSelector({
               secondary={
                 <>
                   <div
-                    css={css`
-                      display: flex;
-                      justify-content: space-between;
-                      width: 100%;
-                    `}
+                    css={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
                   >
                     <div>{NFT_FILE_TYPES.image.label}</div>
                     {layout.name !== "medium" && <div>100MB limit</div>}
@@ -328,52 +324,50 @@ function NftFilePreview() {
   return (
     <div>
       <div
-        css={css`
-          position: relative;
-          padding-bottom: 2gu;
-        `}
+        css={{
+          position: "relative",
+          paddingBottom: "2gu",
+        }}
       >
         {fileType === "image" && (
           <a
             href={fileUrl ?? undefined}
             target="_blank"
-            css={css`
-              display: block;
-              position: relative;
-              min-height: 5gu;
-            `}
+            css={{
+              display: "block",
+              position: "relative",
+              minHeight: "5gu",
+            }}
           >
             {previewUrl
               ? (
                 <img
                   src={previewUrl}
                   alt=""
-                  css={css`
-                  display: block;
-                  width: 100%;
-                `}
+                  css={{
+                    display: "block",
+                    width: "100%",
+                  }}
                 />
               )
               : (
                 <div
-                  css={({ colors }) =>
-                    css`
-                  height: 10gu;
-                  background: ${colors.background};
-                `}
+                  css={({ colors }) => ({
+                    height: "10gu",
+                    background: colors.background,
+                  })}
                 />
               )}
             <div
-              css={({ colors }) =>
-                css`
-                position: absolute;
-                inset: auto 0 0 auto;
-                display: flex;
-                place-items: center;
-                padding: 1gu;
-                color: ${colors.accent};
-                background: ${co(colors.translucid).alpha(0.6).toHex()};
-              `}
+              css={({ colors }) => ({
+                position: "absolute",
+                inset: "auto 0 0 auto",
+                display: "flex",
+                placeItems: "center",
+                padding: "1gu",
+                color: colors.accent,
+                background: co(colors.translucid).alpha(0.6).toHex(),
+              })}
             >
               <IconMagnifyingGlassPlus size={3 * gu} />
             </div>
@@ -384,29 +378,27 @@ function NftFilePreview() {
             loop={true}
             src={fileUrl}
             poster={previewUrl ?? undefined}
-            css={({ colors }) =>
-              css`
-              display: block;
-              width: 100%;
-              background: ${colors.background};
-            `}
+            css={({ colors }) => ({
+              display: "block",
+              width: "100%",
+              background: `${colors.background}`,
+            })}
           />
         )}
       </div>
       <section
-        css={({ colors }) =>
-          css`
-          padding: 2gu;
-          background: ${colors.layer2};
-          h1 {
-            display: flex;
-            align-items: center;
-            height: 3gu;
-            padding-bottom: 1gu;
-            font-size: 12px;
-            text-transform: uppercase;
-          }
-        `}
+        css={({ colors }) => ({
+          padding: "2gu",
+          background: colors.layer2,
+          "h1": {
+            display: "flex",
+            alignItems: "center",
+            height: "3gu",
+            paddingBottom: "1gu",
+            fontSize: "12px",
+            textTransform: "uppercase",
+          },
+        })}
       >
         <h1>Artwork files</h1>
 
@@ -427,16 +419,16 @@ function NftFilePreview() {
             )
             : (
               <div
-                css={css`
-                padding-top: 1gu;
-              `}
+                css={{
+                  paddingTop: "1gu",
+                }}
               >
                 <div
-                  css={css`
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                `}
+                  css={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
                 >
                   <FileUpload
                     accept={NFT_FILE_TYPES.image.mediaTypes}
@@ -447,12 +439,11 @@ function NftFilePreview() {
                   />
 
                   <span
-                    css={({ colors, fonts }) =>
-                      css`
-                    font-family: ${fonts.families.sans};
-                    font-size: 12px;
-                    color: ${colors.contentDimmed};
-                  `}
+                    css={({ colors, fonts }) => ({
+                      fontFamily: fonts.families.sans,
+                      fontSize: "12px",
+                      color: colors.contentDimmed,
+                    })}
                   >
                     (Optional)
                   </span>
@@ -467,25 +458,24 @@ function NftFilePreview() {
 function FileEntry({ name, onReset }: { name: string; onReset: () => void }) {
   return (
     <div
-      css={css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding-top: 1.5gu;
-      `}
+      css={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        paddingTop: "1.5gu",
+      }}
     >
       <div
-        css={({ colors }) =>
-          css`
-          display: flex;
-          align-items: center;
-          gap: 1.25gu;
-          height: 4gu;
-          padding: 0 1.5gu 0 1gu;
-          color: ${colors.accent};
-          background: ${colors.layer1};
-        `}
+        css={({ colors }) => ({
+          display: "flex",
+          alignItems: "center",
+          gap: "1.25gu",
+          height: "4gu",
+          padding: "0 1.5gu 0 1gu",
+          color: colors.accent,
+          background: colors.layer1,
+        })}
       >
         <IconCheckBold size={2.5 * gu} />
         <span>{name}</span>
@@ -495,10 +485,10 @@ function FileEntry({ name, onReset }: { name: string; onReset: () => void }) {
         icon={<IconTrash size={2.5 * gu} />}
         label="reset"
         onClick={onReset}
-        css={css`
-          width: 3gu;
-          height: 3gu;
-        `}
+        css={{
+          width: "3gu",
+          height: "3gu",
+        }}
       />
     </div>
   )

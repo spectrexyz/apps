@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ButtonArea, gu, Modal, Popup } from "kit"
 import { RefObject } from "react"
 import { useConnect } from "wagmi"
@@ -44,54 +43,51 @@ export function ConnectAccount({
 export function ConnectAccountInside() {
   return (
     <div
-      css={({ colors, fonts }) =>
-        css`
-        padding-top: 2gu;
-        h1 {
-          margin-bottom: 1gu;
-          font-family: ${fonts.families.mono};
-          font-size: 24px;
-          letter-spacing: -1px;
-          white-space: nowrap;
-          text-align: center;
-        }
-        h1 + p {
-          font-family: ${fonts.families.sans};
-          font-size: 14px;
-          text-align: center;
-        }
-        h1,
-        h1 + p {
-          color: ${colors.contentHeading};
-        }
-      `}
+      css={({ colors, fonts }) => ({
+        paddingTop: "2gu",
+        "h1": {
+          marginBottom: "1gu",
+          fontFamily: fonts.families.mono,
+          fontSize: "24px",
+          letterSpacing: "-1px",
+          whiteSpace: "nowrap",
+          textAlign: "center",
+        },
+        "h1 + p": {
+          fontFamily: fonts.families.sans,
+          fontSize: "14px",
+          textAlign: "center",
+        },
+        "h1, h1 + p": {
+          color: colors.contentHeading,
+        },
+      })}
     >
       <h1>Connect your account</h1>
       <p>Select one of the available wallets</p>
 
       <div
-        css={css`
-          display: grid;
-          gap: 1.5gu;
-          padding-top: 4gu;
-        `}
+        css={{
+          display: "grid",
+          gap: "1.5gu",
+          paddingTop: "4gu",
+        }}
       >
         {PROVIDERS.map(([name, icon, id], index) => (
           <ProviderButton key={index} name={name} icon={icon} id={id} />
         ))}
       </div>
       <p
-        css={({ colors, fonts }) =>
-          css`
-          margin-top: 3gu;
-          text-align: center;
-          color: ${colors.contentDimmed};
-          font-family: ${fonts.families.sans};
-          font-size: 14px;
-          a {
-            text-decoration: underline;
-          }
-        `}
+        css={({ colors, fonts }) => ({
+          marginTop: "3gu",
+          textAlign: "center",
+          color: colors.contentDimmed,
+          fontFamily: fonts.families.sans,
+          fontSize: "14px",
+          "a": {
+            textDecoration: "underline",
+          },
+        })}
       >
         What’s a wallet?{" "}
         <a href="https://ethereum.org/en/wallets/" target="_blank">
@@ -118,34 +114,33 @@ function ProviderButton({
     ? (
       <ButtonArea
         onClick={() => connect(connector)}
-        css={({ colors }) =>
-          css`
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 6gu;
-        padding-left: 2.5gu;
-        padding-right: 1.5gu;
-        background: ${colors.layer2};
-        color: ${colors.contentHeading};
-        &:active {
-          position: relative;
-          top: 1px;
-          left: 1px;
-        }
-      `}
+        css={({ colors }) => ({
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          height: "6gu",
+          paddingLeft: "2.5gu",
+          paddingRight: "1.5gu",
+          background: colors.layer2,
+          color: colors.contentHeading,
+          "&:active": {
+            position: "relative",
+            top: "1px",
+            left: "1px",
+          },
+        })}
       >
         <div
-          css={css`
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          div {
-            display: flex;
-            align-items: center;
-          }
-        `}
+          css={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            "div": {
+              display: "flex",
+              alignItems: "center",
+            },
+          }}
         >
           <div>{name}</div>
           <div>

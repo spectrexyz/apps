@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   AddressBadge,
   Button,
@@ -72,46 +71,45 @@ export function TopBar() {
   return (
     <>
       <div
-        css={css`
-          position: relative;
-          max-width: ${maxWidth}gu;
-          height: ${height}gu;
-          margin: 0 auto;
-        `}
+        css={{
+          position: "relative",
+          maxWidth: `${maxWidth}gu`,
+          height: `${height}gu`,
+          margin: "0 auto",
+        }}
       >
         {appReadyTransition(
           ({ progress, topBarTransform }, ready) =>
             ready && (
               <a.div
                 style={{ opacity: progress, transform: topBarTransform }}
-                css={css`
-                  position: absolute;
-                  inset: 0;
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                  height: ${height}gu;
-                  padding: 0 4gu;
-                `}
+                css={{
+                  position: "absolute",
+                  inset: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  height: `${height}gu`,
+                  padding: "0 4gu",
+                }}
               >
                 <ul
-                  css={({ colors }) =>
-                    css`
-                    display: flex;
-                    list-style: none;
-                    li {
-                      padding-left: 4gu;
-                    }
-                    li:first-of-type {
-                      padding: 0;
-                    }
-                    a {
-                      color: ${colors.content};
-                    }
-                    a.active {
-                      color: ${colors.accent};
-                    }
-                  `}
+                  css={({ colors }) => ({
+                    display: "flex",
+                    listStyle: "none",
+                    "li": {
+                      paddingLeft: "4gu",
+                    },
+                    "li:first-of-type": {
+                      padding: "0",
+                    },
+                    "a": {
+                      color: colors.content,
+                    },
+                    "a.active": {
+                      color: colors.accent,
+                    },
+                  })}
                 >
                   {menuLinks.map(({ label, url }) => (
                     <li key={url}>
@@ -128,25 +126,25 @@ export function TopBar() {
                 <ButtonArea
                   title="Home"
                   onClick={() => setLocation("/")}
-                  css={css`
-                    position: absolute;
-                    inset: 50%;
-                    transform: translate(-50%, -50%);
-                    align-items: center;
-                    height: 100%;
-                    padding: 0 10px;
-                    outline-offset: -2px;
-                  `}
+                  css={{
+                    position: "absolute",
+                    inset: "50%",
+                    transform: "translate(-50%, -50%)",
+                    alignItems: "center",
+                    height: "100%",
+                    padding: "0 10px",
+                    outlineOffset: "-2px",
+                  }}
                 >
                   <img
                     src={logo}
                     alt=""
                     width="64"
                     height="76"
-                    css={css`
-                      width: ${logoSize}gu;
-                      height: auto;
-                    `}
+                    css={{
+                      width: `${logoSize}gu`,
+                      height: "auto",
+                    }}
                   />
                 </ButtonArea>
                 <div>
@@ -225,59 +223,58 @@ export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
       }}
     >
       <div
-        css={css`
-          position: relative;
-          height: 8gu;
-        `}
+        css={{
+          position: "relative",
+          height: "8gu",
+        }}
       >
         {appReadyTransition(
           ({ progress, topBarTransform }, ready) =>
             ready && (
               <a.div
                 style={{ opacity: progress, transform: topBarTransform }}
-                css={css`
-                  position: absolute;
-                  inset: auto 0 0;
-                  height: 100%;
-                `}
+                css={{
+                  position: "absolute",
+                  inset: "auto 0 0",
+                  height: "100%",
+                }}
               >
                 <a.div
                   style={{ transform: innerTransform }}
-                  css={({ colors }) =>
-                    css`
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    height: 100%;
-                    border-bottom: 1px solid ${colors.outline2};
-                  `}
+                  css={({ colors }) => ({
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    height: "100%",
+                    borderBottom: `1px solid ${colors.outline2}`,
+                  })}
                 >
                   <ButtonArea
                     title="Home"
                     onClick={() => setLocation("/")}
-                    css={css`
-                      align-items: center;
-                      height: 100%;
-                      padding: 0 10px;
-                      outline-offset: -2px;
-                    `}
+                    css={{
+                      alignItems: "center",
+                      height: "100%",
+                      padding: "0 10px",
+                      outlineOffset: "-2px",
+                    }}
                   >
                     <img src={logo} alt="" width="40.5" height="48" />
                   </ButtonArea>
                   <ButtonArea
                     title="Menu"
                     onClick={() => setMenuOpened((v) => !v)}
-                    css={css`
-                      position: relative;
-                      align-items: center;
-                      width: calc(4gu + 10px * 2);
-                      height: 100%;
-                      padding: 0 10px;
-                      outline-offset: -2px;
-                      &:active {
-                        transform: translate(1px, 1px);
-                      }
-                    `}
+                    css={{
+                      position: "relative",
+                      alignItems: "center",
+                      width: "calc(4gu + 10px * 2)",
+                      height: "100%",
+                      padding: "0 10px",
+                      outlineOffset: "-2px",
+                      "&:active": {
+                        transform: "translate(1px, 1px)",
+                      },
+                    }}
                   >
                     {menuIconTransition((style, menuOpened) =>
                       menuOpened
@@ -305,14 +302,14 @@ function MenuIcon({
   return (
     <a.div
       style={style}
-      css={css`
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        width: 100%;
-        height: 100%;
-      `}
+      css={{
+        position: "absolute",
+        inset: "0",
+        display: "grid",
+        placeItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
     >
       {icon}
     </a.div>

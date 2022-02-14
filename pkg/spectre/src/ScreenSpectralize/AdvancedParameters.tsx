@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   ButtonText,
   Definition,
@@ -37,9 +36,9 @@ export const AdvancedParameters = memo(function AdvancedParameters({
     <Details
       heading={
         <span
-          css={css`
-            font-size: ${headingFontSize};
-          `}
+          css={{
+            fontSize: headingFontSize,
+          }}
         >
           Advanced parameters
         </span>
@@ -50,21 +49,20 @@ export const AdvancedParameters = memo(function AdvancedParameters({
           label="Edit"
           icon={<IconPencil />}
           onClick={onEdit}
-          css={({ colors, fonts }) =>
-            css`
-              color: ${colors.accent};
-              font-size: 16px;
-              font-family: ${fonts.families.sans};
-            `}
+          css={({ colors, fonts }) => ({
+            color: colors.accent,
+            fontSize: "16px",
+            fontFamily: fonts.families.sans,
+          })}
         />
       )}
     >
       <div
-        css={css`
-          display: grid;
-          grid-template-columns: repeat(${columns}, auto);
-          gap: 4gu;
-        `}
+        css={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns}, auto)`,
+          gap: "4gu",
+        }}
       >
         <Definition
           title="Buyout mechanism"
@@ -87,22 +85,21 @@ export const AdvancedParameters = memo(function AdvancedParameters({
       </div>
 
       <div
-        css={({ colors }) =>
-          css`
-          display: flex;
-          align-items: center;
-          gap: 1gu;
-          padding-top: 3gu;
-          font-size: 12px;
-          color: ${colors.info};
-        `}
+        css={({ colors }) => ({
+          display: "flex",
+          alignItems: "center",
+          gap: "1gu",
+          paddingTop: "3gu",
+          fontSize: "12px",
+          color: colors.info,
+        })}
       >
         <div
-          css={css`
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-          `}
+          css={{
+            display: "flex",
+            alignItems: "center",
+            flexShrink: "0",
+          }}
         >
           <IconWarningOctagon size={2 * gu} />
         </div>

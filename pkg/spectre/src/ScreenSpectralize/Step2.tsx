@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   Address,
   Button,
@@ -112,11 +111,10 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
               label="Creator & community rewards"
               contextual={
                 <span
-                  css={({ colors }) =>
-                    css`
-                    font-size: 18px;
-                    colors: ${colors.contentDimmed};
-                  `}
+                  css={({ colors }) => ({
+                    fontSize: "18px",
+                    colors: colors.contentDimmed,
+                  })}
                 >
                   {data.rewardsPct}%
                 </span>
@@ -137,9 +135,9 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
               error={data.fieldError("rewardsSplit")}
             >
               <div
-                css={css`
-                  padding-bottom: 2gu;
-                `}
+                css={{
+                  paddingBottom: "2gu",
+                }}
               >
                 {data.rewardsSplit.map((account) => (
                   <EthAddressRow
@@ -175,9 +173,9 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
           {layout.below("medium")
             ? (
               <div
-                css={css`
-                padding: 3gu 0;
-              `}
+                css={{
+                  padding: "3gu 0",
+                }}
               >
                 <Button
                   type="submit"
@@ -190,12 +188,12 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
             )
             : (
               <div
-                css={css`
-                display: flex;
-                justify-content: flex-end;
-                gap: 2gu;
-                padding-top: 3gu;
-              `}
+                css={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "2gu",
+                  paddingTop: "3gu",
+                }}
               >
                 <Button
                   label="Back"
@@ -268,24 +266,24 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
         mode="flat-3"
         size="compact"
         onClick={() => setAccount("")}
-        css={css`
-        text-transform: uppercase;
-      `}
+        css={{
+          textTransform: "uppercase",
+        }}
       />
     )
     : (
       <div
         ref={container}
-        css={css`
-        display: flex;
-        align-items: center;
-        gap: 2gu;
-      `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          gap: "2gu",
+        }}
       >
         <div
-          css={css`
-          flex-grow: 1;
-        `}
+          css={{
+            flexGrow: "1",
+          }}
         >
           <TextInput
             error={invalid}
@@ -296,11 +294,11 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
           />
         </div>
         <div
-          css={css`
-          display: flex;
-          align-items: center;
-          gap: 1gu;
-        `}
+          css={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1gu",
+          }}
         >
           <ButtonText label="Cancel" onClick={() => setAccount(null)} />
           <Button label="Add" mode="flat-3" size="compact" type="submit" />

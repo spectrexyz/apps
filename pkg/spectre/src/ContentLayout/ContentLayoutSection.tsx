@@ -1,5 +1,4 @@
-import { css } from "@emotion/react"
-import React, { Children, ReactNode } from "react"
+import { Children, ReactNode } from "react"
 import { useLayout } from "../styles"
 
 type ContentLayoutSectionProps = {
@@ -16,17 +15,15 @@ export function ContentLayoutSection({
   if (type === "two-parts") {
     return (
       <div
-        css={css`
-          display: grid;
-          ${
-          layout.above("large")
-            ? `
-                grid-template-columns: repeat(2, 1fr);
-                gap: 5gu;
-              `
-            : ""
-        };
-        `}
+        css={{
+          display: "grid",
+          ...layout.above("large")
+            ? {
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "5gu",
+            }
+            : {},
+        }}
       >
         {Children.map(children, (part, index) => <div key={index}>{part}</div>)}
       </div>

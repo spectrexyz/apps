@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   AddressBadge,
   Button,
@@ -31,8 +30,8 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
   )
 
   const headingBottomSpace = layout.value({
-    small: css`1gu`,
-    large: css`5.25gu`,
+    small: "1gu",
+    large: "5.25gu",
   })
 
   const fractionalize = () => {
@@ -42,18 +41,17 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      css={css`
-        width: 100%;
-      `}
+      css={{
+        width: "100%",
+      }}
     >
       <ContentLayout>
         <ContentLayoutHeading
           title={
             <span
-              css={({ colors }) =>
-                css`
-                color: ${colors.accent};
-              `}
+              css={({ colors }) => ({
+                color: colors.accent,
+              })}
             >
               {title}
             </span>
@@ -63,35 +61,35 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
           correct before you confirm.
         </ContentLayoutHeading>
         <div
-          css={css`
-            height: ${headingBottomSpace};
-          `}
+          css={{
+            height: headingBottomSpace,
+          }}
         />
         <ContentLayoutSection type="two-parts">
           <div
-            css={css`
-              padding-bottom: 3gu;
-            `}
+            css={{
+              paddingBottom: "3gu",
+            }}
           >
             {data.previewUrl && (
               <img
                 src={data.previewUrl}
                 alt=""
-                css={css`
-                  display: block;
-                  width: 100%;
-                `}
+                css={{
+                  display: "block",
+                  width: "100%",
+                }}
               />
             )}
 
             <div
-              css={css`
-                display: grid;
-                gap: 2gu;
-                grid-template-columns: repeat(2, 1fr);
-                width: 100%;
-                padding: 3gu 0;
-              `}
+              css={{
+                display: "grid",
+                gap: "2gu",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                width: "100%",
+                padding: "3gu 0",
+              }}
             >
               <Definition title="NFT Title" content={data.title} />
               <Definition
@@ -103,12 +101,12 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
           </div>
           <div>
             <div
-              css={css`
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 3gu;
-                padding-bottom: 3gu;
-              `}
+              css={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "3gu",
+                paddingBottom: "3gu",
+              }}
             >
               <Definition
                 title="Token Name"
@@ -151,27 +149,27 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
               title="Allocation of Minting Rewards"
               content={
                 <div
-                  css={css`
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1.5gu;
-                    padding-top: 0.5gu;
-                  `}
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1.5gu",
+                    paddingTop: "0.5gu",
+                  }}
                 >
                   {data.rewardsSplit.map((account) => (
                     <div
                       key={account}
-                      css={css`
-                        display: flex;
-                        gap: 1.5gu;
-                      `}
+                      css={{
+                        display: "flex",
+                        gap: "1.5gu",
+                      }}
                     >
                       <AddressBadge address={account} />
                       <div
-                        css={css`
-                          display: flex;
-                          align-items: center;
-                        `}
+                        css={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
                       >
                         {formatNumber(
                           data.rewardsPct / data.rewardsSplit.length,
@@ -184,9 +182,9 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
               }
             />
             <div
-              css={css`
-                padding-top: 3gu;
-              `}
+              css={{
+                paddingTop: "3gu",
+              }}
             >
               <AdvancedParameters headingFontSize="14px" />
             </div>
@@ -196,9 +194,9 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
           {layout.below("medium")
             ? (
               <div
-                css={css`
-                padding: 3gu 0;
-              `}
+                css={{
+                  padding: "3gu 0",
+                }}
               >
                 <Button
                   label="Fractionalize NFT"
@@ -212,12 +210,12 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
             )
             : (
               <div
-                css={css`
-                display: flex;
-                justify-content: flex-end;
-                gap: 2gu;
-                padding-top: 3gu;
-              `}
+                css={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "2gu",
+                  paddingTop: "3gu",
+                }}
               >
                 <Button
                   label="Back"
@@ -244,13 +242,13 @@ function Truncate({ text }: { text: string }) {
   return (
     <div
       title={text}
-      css={css`
-        max-width: 100%;
-        white-space: nowrap;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      `}
+      css={{
+        maxWidth: "100%",
+        whiteSpace: "nowrap",
+        textAlign: "left",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }}
     >
       {text}
     </div>

@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   Button,
   ButtonIcon,
@@ -39,31 +38,29 @@ export function AdvancedParametersEditModal({
 }) {
   const layout = useLayout()
   const introPadding = layout.value({
-    small: css`2gu 0`,
-    medium: css`2gu 0`,
-    large: css`1.5gu 0 1gu`,
+    small: "2gu 0",
+    medium: "2gu 0",
+    large: "1.5gu 0 1gu",
   })
   return (
     <Modal mode="large" onClose={onClose} visible={visible}>
       <header>
         <h1
-          css={({ fonts }) =>
-            css`
-            font-family: ${fonts.families.mono};
-            font-size: 18px;
-            text-transform: uppercase;
-          `}
+          css={({ fonts }) => ({
+            fontFamily: fonts.families.mono,
+            fontSize: "18px",
+            textTransform: "uppercase",
+          })}
         >
           Edit Advanced Parameters
         </h1>
         <p
-          css={({ colors, fonts }) =>
-            css`
-            padding: ${introPadding};
-            font-family: ${fonts.families.sans};
-            font-size: 14px;
-            color: ${colors.contentDimmed};
-          `}
+          css={({ colors, fonts }) => ({
+            padding: introPadding,
+            fontFamily: fonts.families.sans,
+            fontSize: "14px",
+            color: colors.contentDimmed,
+          })}
         >
           Modifying these settings will affect all transactions triggered with
           the enabled account. You can always reset them to the original
@@ -152,12 +149,11 @@ export function AdvancedParametersEditModalForm({
         }
       >
         <p
-          css={({ colors }) =>
-            css`
-            padding-top: 1gu;
-            font-size: 14px;
-            color: ${colors.contentHeading};
-          `}
+          css={({ colors }) => ({
+            paddingTop: "1gu",
+            fontSize: "14px",
+            color: colors.contentHeading,
+          })}
         >
           Buyout proposals need to be approved or rejected by you (as the NFT
           guardian) before they can be executed. Proposals can stay active for
@@ -227,12 +223,12 @@ export function AdvancedParametersEditModalForm({
       />
 
       <div
-        css={css`
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 2gu;
-          padding-top: 3gu;
-        `}
+        css={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "2gu",
+          paddingTop: "3gu",
+        }}
       >
         <Button
           label="Defaults"
@@ -273,13 +269,13 @@ function IncrementalField({
       dimmed
       contextual={
         <div
-          css={css`
-            position: absolute;
-            inset: 2gu 2gu 2gu auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          `}
+          css={{
+            position: "absolute",
+            inset: "2gu 2gu 2gu auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
         >
           <ButtonIcon
             disabled={!enableIncrease}
@@ -301,12 +297,11 @@ function IncrementalField({
       }
     >
       <p
-        css={({ colors }) =>
-          css`
-          padding-top: 0.5gu;
-          text-transform: uppercase;
-          color: ${colors.accent};
-        `}
+        css={({ colors }) => ({
+          paddingTop: "0.5gu",
+          textTransform: "uppercase",
+          color: colors.accent,
+        })}
       >
         {value}
       </p>
@@ -330,16 +325,15 @@ function TokenWeight({
   })
   return (
     <div
-      css={({ colors }) =>
-        css`
-        position: ${position};
-        inset: 1gu 2gu auto auto;
-        font-size: ${baseFontSize};
-        color: ${colors.accent};
-        .symbol {
-          font-size: ${symbolFontSize};
-        }
-      `}
+      css={({ colors }) => ({
+        position: position as "static" | "absolute",
+        inset: "1gu 2gu auto auto",
+        fontSize: baseFontSize,
+        color: colors.accent,
+        ".symbol": {
+          fontSize: symbolFontSize,
+        },
+      })}
     >
       {tokenWeightPct}
       <span className="symbol">{tokenSymbol}</span>

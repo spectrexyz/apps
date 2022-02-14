@@ -1,5 +1,3 @@
-import { css } from "@emotion/react"
-import React from "react"
 import { useBlockNumber } from "wagmi"
 
 export function SyncStatus({ full = false }) {
@@ -8,32 +6,31 @@ export function SyncStatus({ full = false }) {
   })
   return (
     <div
-      css={({ colors }) =>
-        css`
-        display: flex;
-        align-items: center;
-        height: 4gu;
-        padding: 0 1.5gu;
-        font-size: 14px;
-        color: ${colors.content};
-        background: ${colors.layer2};
-        user-select: none;
-        &:before {
-          content: "";
-          width: 1gu;
-          height: 1gu;
-          margin-right: 1gu;
-          border-radius: 50%;
-          opacity: ${loading ? 0.5 : 1};
-          background: ${error ? colors.negative : colors.positive};
-        }
-      `}
+      css={({ colors }) => ({
+        display: "flex",
+        alignItems: "center",
+        height: "4gu",
+        padding: "0 1.5gu",
+        fontSize: "14px",
+        color: colors.content,
+        background: colors.layer2,
+        userSelect: "none",
+        "&:before": {
+          content: "\"\"",
+          width: "1gu",
+          height: "1gu",
+          marginRight: "1gu",
+          borderRadius: "50%",
+          opacity: loading ? 0.5 : 1,
+          background: error ? colors.negative : colors.positive,
+        },
+      })}
     >
       {full && (
         <span
-          css={css`
-            text-transform: uppercase;
-          `}
+          css={{
+            textTransform: "uppercase",
+          }}
         >
           Block:&nbsp;
         </span>

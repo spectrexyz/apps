@@ -1,4 +1,4 @@
-import { css, Global } from "@emotion/react"
+import { Global } from "@emotion/react"
 import React, { ReactNode, UIEvent } from "react"
 import { useAppScrollUpdater } from "../App/AppScroll"
 import { useLayout } from "../styles"
@@ -23,51 +23,45 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Global
-        styles={css`
-          html {
-            overflow: hidden;
-            min-width: 360px;
-            @media (max-width: 360px) {
-              overflow: auto;
-            }
-          }
-        `}
+        styles={{
+          "html": {
+            overflow: "hidden",
+            minWidth: "360px",
+            "@media (max-width: 360px)": {
+              overflow: "auto",
+            },
+          },
+        }}
       />
       <div
-        css={({ colors }) =>
-          css`
-          position: relative;
-          z-index: 1;
-          color: ${colors.content};
-          background: linear-gradient(
-              ${
-            ("," + colors.background + hexAlpha(compact ? 0.6 : 0.5))
-              .repeat(2)
+        css={({ colors }) => ({
+          position: "relative",
+          zIndex: "1",
+          color: colors.content,
+          background: `linear-gradient( ${
+            ("," + colors.background + hexAlpha(compact ? 0.6 : 0.5)).repeat(2)
               .slice(1)
-          },
-              ${colors.background}
-            ),
-            fixed no-repeat url(/background.webp) ${colors.background};
-          background-size: cover;
-        `}
+          }, ${colors.background}), fixed no-repeat url(/background.webp) ${colors.background}`,
+          backgroundSize: "cover",
+        })}
       >
         <div
           ref={compact ? undefined : appScrollRef}
-          css={css`
-            position: relative;
-            min-width: 360px;
-            height: 100vh;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            overflow-y: ${compact ? "visible" : "auto"};
-            scroll-behavior: smooth;
-          `}
+          css={{
+            position: "relative",
+            minWidth: "360px",
+            height: "100vh",
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            overflowY: compact ? "visible" : "auto",
+            scrollBehavior: "smooth",
+          }}
         >
           <div
-            css={css`
-              flex: 0 0;
-            `}
+            css={{
+              flex: "0 0",
+            }}
           >
             <AppLayoutTopBar
               compact={compact}
@@ -77,36 +71,35 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div
             ref={compact ? appScrollRef : undefined}
             onScroll={handleScroll}
-            css={({ colors }) =>
-              css`
-              flex: 1 1;
-              display: flex;
-              flex-direction: column;
-              overflow-y: ${compact ? "auto" : "visible"};
-              scroll-behavior: smooth;
+            css={({ colors }) => ({
+              flex: "1 1",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: compact ? "auto" : "visible",
+              scrollBehavior: "smooth",
 
-              /* Using a positioned :after rather than an outline,
-             * so that it doesn’t get cut by the top bar. */
-              &:after {
-                position: absolute;
-                inset: 8gu 0;
-                z-index: 2;
-                border: 2px solid ${colors.focus};
-              }
-              &:focus-visible:after {
-                content: "";
-              }
-              &:focus:not(:focus-visible):after {
-                content: none;
-              }
-            `}
+              // Using a positioned :after rather than an outline,
+              // that it doesn’t get cut by the top bar.
+              "&:after": {
+                position: "absolute",
+                inset: "8gu 0",
+                zIndex: "2",
+                border: `2px solid ${colors.focus}`,
+              },
+              "&:focus-visible:after": {
+                content: "\"\"",
+              },
+              "&:focus:not(:focus-visible):after": {
+                content: "none",
+              },
+            })}
           >
             {children}
           </div>
           <div
-            css={css`
-              flex: 0 0;
-            `}
+            css={{
+              flex: "0 0",
+            }}
           >
             <AppLayoutBottomBar compact={compact} />
           </div>

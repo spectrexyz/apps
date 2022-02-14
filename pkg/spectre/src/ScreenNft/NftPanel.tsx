@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   Anchor,
   Button,
@@ -43,17 +42,16 @@ export function NftPanel({ id }: { id: string }) {
                 mode="flat"
                 href={snft.creator.url}
                 external
-                css={({ fonts }) =>
-                  css`
-                  font-family: ${fonts.families.sans};
-                `}
+                css={({ fonts }) => ({
+                  fontFamily: fonts.families.sans,
+                })}
               />
             </PanelSection>
             <PanelSection title="Description">
               <div
-                css={css`
-                  padding-bottom: 5gu;
-                `}
+                css={{
+                  paddingBottom: "5gu",
+                }}
               >
                 {snft.description}
               </div>
@@ -61,11 +59,11 @@ export function NftPanel({ id }: { id: string }) {
             </PanelSection>
             <PanelSection title="Authenticity">
               <div
-                css={css`
-                  display: flex;
-                  flex-direction: column;
-                  gap: 2gu;
-                `}
+                css={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "2gu",
+                }}
               >
                 {snft.authenticity.map(({ name, url }) => (
                   <div key={name + url}>
@@ -74,10 +72,9 @@ export function NftPanel({ id }: { id: string }) {
                       mode="flat-2"
                       href={url}
                       external
-                      css={({ fonts }) =>
-                        css`
-                        font-family: ${fonts.families.sans};
-                      `}
+                      css={({ fonts }) => ({
+                        fontFamily: fonts.families.sans,
+                      })}
                     />
                   </div>
                 ))}
@@ -101,9 +98,9 @@ export function NftPanel({ id }: { id: string }) {
                 <div key={JSON.stringify(event) + date}>
                   {index > 0 && (
                     <div
-                      css={css`
-                        padding: 3gu 0;
-                      `}
+                      css={{
+                        padding: "3gu 0",
+                      }}
                     >
                       <Slashes color={colors.contentHeading2} />
                     </div>
@@ -127,9 +124,9 @@ export function NftPanel({ id }: { id: string }) {
                     )}
                   </div>
                   <div
-                    css={css`
-                      padding-top: 1.5gu;
-                    `}
+                    css={{
+                      paddingTop: "1.5gu",
+                    }}
                   >
                     <time dateTime={date} title={formatDate(date, true)}>
                       {formatDate(date)}
@@ -152,28 +149,27 @@ function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   return (
     <PanelSection title="More NFTs from this creator">
       <div
-        css={({ colors }) =>
-          css`
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-auto-rows: auto;
-          grid-auto-flow: row;
-          gap: 9gu 3gu;
-          img {
-            display: block;
-            width: 100%;
-            margin-bottom: 2gu;
-          }
-          img + div {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 5gu;
-            font-size: 18px;
-            color: ${colors.accent};
-            background: ${colors.layer1};
-          }
-        `}
+        css={({ colors }) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gridAutoRows: "auto",
+          gridAutoFlow: "row",
+          gap: "9gu 3gu",
+          "img": {
+            display: "block",
+            width: "100%",
+            marginBottom: "2gu",
+          },
+          "img + div": {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "5gu",
+            fontSize: "18px",
+            color: colors.accent,
+            background: colors.layer1,
+          },
+        })}
       >
         {snfts.map((snft) => (
           <Link key={snft.id} href={`/nfts/${snft.id}`}>

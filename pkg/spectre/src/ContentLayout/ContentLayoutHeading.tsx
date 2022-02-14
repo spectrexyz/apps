@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ReactNode } from "react"
 import { useLayout } from "../styles"
 
@@ -13,40 +12,38 @@ export function ContentLayoutHeading({
 }: ContentLayoutHeadingProps) {
   const layout = useLayout()
   const introPadding = layout.value({
-    small: css`2gu 0`,
-    medium: css`2gu 0`,
-    large: css`1.5gu 0 1gu`,
+    small: "2gu 0",
+    medium: "2gu 0",
+    large: "1.5gu 0 1gu",
   })
   return (
     <header>
       {!layout.below("medium")
         ? (
           <h1
-            css={({ fonts }) =>
-              css`
-            font-family: ${fonts.families.mono};
-            font-size: 18px;
-            text-transform: uppercase;
-          `}
+            css={({ fonts }) => ({
+              fontFamily: fonts.families.mono,
+              fontSize: "18px",
+              textTransform: "uppercase",
+            })}
           >
             {title}
           </h1>
         )
         : (
           <div
-            css={css`
-            height: 6gu;
-          `}
+            css={{
+              height: "6gu",
+            }}
           />
         )}
       <p
-        css={({ colors, fonts }) =>
-          css`
-          padding: ${introPadding};
-          font-family: ${fonts.families.sans};
-          font-size: 14px;
-          color: ${colors.contentDimmed};
-        `}
+        css={({ colors, fonts }) => ({
+          padding: introPadding,
+          fontFamily: fonts.families.sans,
+          fontSize: "14px",
+          color: colors.contentDimmed,
+        })}
       >
         {children}
       </p>

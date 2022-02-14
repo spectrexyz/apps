@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { Button, ButtonIcon, IconGearSix } from "kit"
 import { ReactNode } from "react"
 import { useLocation } from "wouter"
@@ -15,33 +14,32 @@ export function ScreenBuy() {
         <ButtonIcon
           icon={<IconGearSix />}
           label="Settings"
-          css={css`
-            width: 7gu;
-            height: 100%;
-          `}
+          css={{
+            width: "7gu",
+            height: "100%",
+          }}
         />
       }
     >
       <div
-        css={css`
-          padding-bottom: 3gu;
-        `}
+        css={{
+          paddingBottom: "3gu",
+        }}
       >
         <div
-          css={({ colors }) =>
-            css`
-            width: 100%;
-            margin: 0 auto;
-            padding: 2gu 1gu 3gu;
-            background: ${colors.layer2};
-          `}
+          css={({ colors }) => ({
+            width: "100%",
+            margin: "0 auto",
+            padding: "2gu 1gu 3gu",
+            background: colors.layer2,
+          })}
         >
           <SwapModule />
 
           <div
-            css={css`
-              padding: 0 1gu 3gu;
-            `}
+            css={{
+              padding: "0 1gu 3gu",
+            }}
           >
             <Group heading="Est. price">
               <p>~ 0.0643709 ETH per MAGIC</p>
@@ -94,19 +92,17 @@ function Group({
 }) {
   return (
     <section
-      css={({ fonts }) =>
-        css`
-        padding-top: 2gu;
-        font-family: ${fonts.families.sans};
-        font-size: 14px;
-      `}
+      css={({ fonts }) => ({
+        paddingTop: "2gu",
+        fontFamily: fonts.families.sans,
+        fontSize: "14px",
+      })}
     >
       <h1
-        css={({ colors }) =>
-          css`
-          padding-bottom: 0.5gu;
-          color: ${colors.contentDimmed};
-        `}
+        css={({ colors }) => ({
+          paddingBottom: "0.5gu",
+          color: colors.contentDimmed,
+        })}
       >
         {heading}
       </h1>
@@ -119,58 +115,55 @@ function Distribution({ mint, swap }: { mint: number; swap: number }) {
   return (
     <div>
       <div
-        css={css`
-          padding: 1gu 0;
-        `}
+        css={{
+          padding: "1gu 0",
+        }}
       >
         <div
-          css={css`
-            position: relative;
-            height: 0.5gu;
-          `}
+          css={{
+            position: "relative",
+            height: "0.5gu",
+          }}
         >
           <div
-            css={({ colors }) =>
-              css`
-              position: absolute;
-              inset: 0;
-              border-radius: 4px;
-              background: ${colors.pink};
-            `}
+            css={({ colors }) => ({
+              position: "absolute",
+              inset: "0",
+              borderRadius: "4px",
+              background: colors.pink,
+            })}
           />
           <div
-            css={({ colors }) =>
-              css`
-              position: absolute;
-              inset: 0 ${(1 - mint) * 100}% 0 0;
-              border-radius: 4px;
-              background: ${colors.yellow};
-            `}
+            css={({ colors }) => ({
+              position: "absolute",
+              inset: `0 ${(1 - mint) * 100}% 0 0`,
+              borderRadius: "4px",
+              background: colors.yellow,
+            })}
           />
         </div>
       </div>
 
       <ul
-        css={({ colors }) =>
-          css`
-          li {
-            display: flex;
-            align-items: center;
-            list-style: none;
-            padding: 0.5gu 0 0;
-            &:before {
-              content: "";
-              width: 1gu;
-              height: 1gu;
-              margin-right: 1gu;
-              border-radius: 50%;
-              background: ${colors.yellow};
-            }
-            & + li:before {
-              background: ${colors.pink};
-            }
-          }
-        `}
+        css={({ colors }) => ({
+          "li": {
+            display: "flex",
+            alignItems: "center",
+            listStyle: "none",
+            padding: "0.5gu 0 0",
+            "&:before": {
+              content: "\"\"",
+              width: "1gu",
+              height: "1gu",
+              marginRight: "1gu",
+              borderRadius: "50%",
+              background: colors.yellow,
+            },
+            "& + li:before": {
+              background: colors.pink,
+            },
+          },
+        })}
       >
         <li>62% Minting</li>
         <li>38% Swapping</li>

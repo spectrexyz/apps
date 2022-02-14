@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { forwardRef, ReactNode } from "react"
 
 type PanelSectionProps = {
@@ -11,28 +10,26 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
     return (
       <section
         ref={ref}
-        css={css`
-          padding-top: 8gu;
-        `}
+        css={{
+          paddingTop: "8gu",
+        }}
       >
         {title && (
           <h1
-            css={({ colors }) =>
-              css`
-              padding-bottom: 2gu;
-              font-size: 20px;
-              text-transform: uppercase;
-              color: ${colors.contentHeading2};
-            `}
+            css={({ colors }) => ({
+              paddingBottom: "2gu",
+              fontSize: "20px",
+              textTransform: "uppercase",
+              color: colors.contentHeading2,
+            })}
           >
             {title}
           </h1>
         )}
         <div
-          css={({ fonts }) =>
-            css`
-            font-family: ${fonts.families.sans};
-          `}
+          css={({ fonts }) => ({
+            fontFamily: fonts.families.sans,
+          })}
         >
           {children}
         </div>

@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
 import { ReactNode, useState } from "react"
 import { a, useSpring } from "react-spring"
@@ -46,42 +45,41 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
     ({ progress, screenTransform }, ready) =>
       ready && (
         <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            padding-bottom: ${compactMenuActive ? 0 : 8 * gu}px;
-          `}
+          css={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: "1",
+            paddingBottom: `${compactMenuActive ? 0 : 8 * gu}px`,
+          }}
         >
           {title && compactMenuActive && (
             <div
-              css={css`
-                height: 8gu;
-              `}
+              css={{
+                height: "8gu",
+              }}
             >
               <a.div
                 style={{ transform: headerTransform }}
-                css={({ colors }) =>
-                  css`
-                  position: ${snapHeader ? "absolute" : "static"};
-                  inset: 8gu 0 auto;
-                  z-index: 2;
-                  display: flex;
-                  align-items: center;
-                  height: ${extraRow ? css`14gu` : css`8gu`};
-                  background: ${colors.background};
-                `}
+                css={({ colors }) => ({
+                  position: snapHeader ? "absolute" : "static",
+                  inset: "8gu 0 auto",
+                  zIndex: "2",
+                  display: "flex",
+                  alignItems: "center",
+                  height: extraRow ? "14gu" : "8gu",
+                  background: colors.background,
+                })}
               >
                 <a.div
                   style={{ opacity: progress, transform: screenTransform }}
-                  css={css`
-                    display: flex;
-                    flex-direction: column;
-                    width: 100%;
-                    height: 100%;
-                    transform-origin: 50% 0;
-                    user-select: none;
-                  `}
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                    height: "100%",
+                    transformOrigin: "50% 0",
+                    userSelect: "none",
+                  }}
                 >
                   <CompactBarHeader
                     title={title}
@@ -90,32 +88,31 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
                         onClick={onBack}
                         icon={<IconArrowLeft color={colors.accent} />}
                         label="Back"
-                        css={css`
-                            width: 7gu;
-                            height: 100%;
-                          `}
+                        css={{
+                          width: "7gu",
+                          height: "100%",
+                        }}
                       />
                     )}
                     end={contextual}
                   />
                   {extraRow && (
                     <div
-                      css={css`
-                        width: 100%;
-                        height: 6gu;
-                      `}
+                      css={{
+                        width: "100%",
+                        height: "6gu",
+                      }}
                     >
                       {extraRow}
                     </div>
                   )}
                   <a.div
                     style={{ opacity: headerBorderVisibility }}
-                    css={({ colors }) =>
-                      css`
-                      position: absolute;
-                      inset: auto 0 0;
-                      border-bottom: 1px solid ${colors.outline2};
-                    `}
+                    css={({ colors }) => ({
+                      position: "absolute",
+                      inset: "auto 0 0",
+                      borderBottom: `1px solid ${colors.outline2}`,
+                    })}
                   />
                 </a.div>
               </a.div>
@@ -123,20 +120,20 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
           )}
           <a.div
             style={{ opacity: progress, transform: screenTransform }}
-            css={css`
-              display: flex;
-              flex-direction: column;
-              flex-grow: 1;
-              width: 100%;
-              margin: 0 auto;
-            `}
+            css={{
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: "1",
+              width: "100%",
+              margin: "0 auto",
+            }}
           >
             <div
-              css={css`
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-              `}
+              css={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: "1",
+              }}
             >
               {children}
             </div>
@@ -157,52 +154,51 @@ export function CompactBarHeader({
 }) {
   return (
     <div
-      css={css`
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        height: 8gu;
-      `}
+      css={{
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        height: "8gu",
+      }}
     >
       <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 100%;
-        `}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
       >
         {start && (
           <div
-            css={css`
-              display: flex;
-              align-items: center;
-              height: 100%;
-            `}
+            css={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+            }}
           >
             {start}
           </div>
         )}
         <h1
-          css={({ fonts }) =>
-            css`
-            font-family: ${fonts.families.mono};
-            font-size: 16px;
-            text-transform: uppercase;
-          `}
+          css={({ fonts }) => ({
+            fontFamily: fonts.families.mono,
+            fontSize: "16px",
+            textTransform: "uppercase",
+          })}
         >
           {title}
         </h1>
       </div>
       {end && (
         <div
-          css={css`
-            display: flex;
-            width: 7gu;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-          `}
+          css={{
+            display: "flex",
+            width: "7gu",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           {end}
         </div>
