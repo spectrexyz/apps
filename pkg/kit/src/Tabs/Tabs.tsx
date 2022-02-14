@@ -1,6 +1,6 @@
-import { ReactNode, useCallback } from "react"
+import { ReactNode } from "react"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { ButtonArea } from "../ButtonArea"
@@ -13,8 +13,6 @@ type TabItem = {
 }
 
 type TabsProps = {
-  align?: "center" | "start" | "end"
-  bordered?: boolean
   fullWidth?: boolean
   items: TabItem[]
   onSelect: (index: number) => void
@@ -22,8 +20,6 @@ type TabsProps = {
 }
 
 export function Tabs({
-  align = "center",
-  bordered = false,
   fullWidth = false,
   items,
   onSelect,
@@ -35,23 +31,22 @@ export function Tabs({
   const tabsGeometries = useRef<Array<[number, number]>>([])
   const animateBar = useRef(false)
 
-  const select = useCallback((index) => {
-    onSelect(index)
-    setSelectedGeometry(tabsGeometries.current[index])
+  selected = Math.min(Math.max(0, selected), items.length - 1)
+
+  useEffect(() => {
+    setSelectedGeometry(tabsGeometries.current[selected])
     animateBar.current = true
-  }, [onSelect])
+  }, [selected])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (!isFocused.current) {
-        return
-      }
+      if (!isFocused.current) return
       if (event.key === "ArrowRight") {
-        select((selected + 1) % items.length)
+        onSelect((selected + 1) % items.length)
         return
       }
       if (event.key === "ArrowLeft") {
-        select(selected === 0 ? items.length - 1 : selected - 1)
+        onSelect(selected === 0 ? items.length - 1 : selected - 1)
         return
       }
     }
@@ -59,31 +54,22 @@ export function Tabs({
     return () => {
       document.removeEventListener("keydown", onKeyDown)
     }
-  }, [items, select, selected])
+  }, [items, onSelect, selected])
 
   useEffect(() => {
-    if (!isFocused.current) {
-      return
-    }
-
+    if (!isFocused.current) return
     const selectedButton = container.current?.querySelector(
       "[tabindex=\"0\"]",
     ) as HTMLElement
     selectedButton?.focus()
   }, [selected])
 
-  const justifyContent = useMemo(() => {
-    if (align === "start") return "flex-start"
-    if (align === "end") return "flex-end"
-    return "center"
-  }, [align])
-
   const barSpring = useSpring({
     config: springs.snappy,
     immediate: !animateBar.current,
     transform: `
       translateX(${selectedGeometry[0]}px)
-      scaleX(${selectedGeometry[1] + 5 * gu * 2})
+      scaleX(${selectedGeometry[1]})
     `,
   })
 
@@ -91,38 +77,18 @@ export function Tabs({
     <div
       ref={container}
       role="tablist"
-      css={({ colors }) => ({
+      css={{
         position: "relative",
         display: "flex",
-        justifyContent: justifyContent,
+        justifyContent: "center",
         alignItems: "center",
         width: fullWidth ? "100%" : "auto",
-        height: "calc(6gu + 2px)",
-        paddingBottom: "2px",
-        "&:after": {
-          content: "\"\"",
-          position: "absolute",
-          zIndex: 1,
-          inset: "auto 0 0 0",
-          height: bordered ? 2 : 0,
-          background: colors.layer2,
-        },
-      })}
+        height: "6gu",
+      }}
     >
-      <a.div
-        style={{ transform: barSpring.transform }}
-        css={({ colors }) => ({
-          position: "absolute",
-          zIndex: 2,
-          inset: "auto auto 0 0",
-          width: "1px",
-          height: "2px",
-          background: colors.accent2,
-          transformOrigin: "0 0",
-        })}
-      />
       <div
         css={{
+          position: "relative",
           display: "flex",
           alignItems: "center",
           width: fullWidth ? "100%" : "auto",
@@ -138,46 +104,67 @@ export function Tabs({
         {items.map((tabItem, index) => (
           <Tab
             key={tabItem.tabId}
-            tabItem={tabItem}
-            selected={index === selected}
-            onSelect={() => {
-              select(index)
-            }}
+            fullWidth={fullWidth}
             onGeometry={(left, width) => {
               tabsGeometries.current[index] = [left, width]
-              if (index === selected) {
-                setSelectedGeometry([left, width])
-              }
+              if (index === selected) setSelectedGeometry([left, width])
             }}
+            onSelect={() => {
+              onSelect(index)
+            }}
+            selected={index === selected}
+            tabItem={tabItem}
           />
         ))}
+        <a.div
+          style={{ transform: barSpring.transform }}
+          css={({ colors }) => ({
+            position: "absolute",
+            inset: "100% auto auto 0",
+            zIndex: 2,
+            width: "1px",
+            height: "0",
+            borderBottom: `2px solid ${colors.accent2}`,
+            transformOrigin: "0 0",
+          })}
+        />
       </div>
+      <div
+        css={({ colors }) => ({
+          position: "absolute",
+          inset: "100% 0 auto 0",
+          zIndex: 1,
+          height: "0",
+          borderBottom: `2px solid ${colors.layer2}`,
+        })}
+      />
     </div>
   )
 }
 
 function Tab(
   {
+    fullWidth,
     onSelect,
     onGeometry,
     selected,
     tabItem: { label, tabId, panelId },
   }: {
+    fullWidth: boolean
     onSelect: () => void
     onGeometry: (left: number, width: number) => void
     selected: boolean
     tabItem: TabItem
   },
 ) {
-  const { entry, observe, width } = useDimensions()
+  const { entry, observe, width } = useDimensions({ useBorderBoxSize: true })
+
+  const offsetLeft = (entry?.target as HTMLElement)?.offsetLeft ?? 0
 
   const _onGeometry = useRef(onGeometry)
   useEffect(() => {
-    _onGeometry.current(
-      (entry?.target as HTMLElement)?.offsetLeft ?? 0,
-      width,
-    )
-  }, [entry, width])
+    _onGeometry.current(offsetLeft, width)
+  }, [offsetLeft, width])
 
   return (
     <ButtonArea
@@ -195,11 +182,14 @@ function Tab(
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        padding: "0 5gu",
+        padding: fullWidth ? "0 1gu" : "0 5gu",
         fontSize: "24px",
         fontWeight: selected ? "600" : "400",
         textTransform: "uppercase",
         color: selected ? colors.accent2 : colors.contentDimmed,
+        "&:active": {
+          color: colors.accent2,
+        },
       })}
     >
       {label}
