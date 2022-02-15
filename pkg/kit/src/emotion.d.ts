@@ -9,6 +9,8 @@ declare module "@emotion/react" {
       line: string
       sizes: Dict<string>
       families: Dict<string>
+      mono: string
+      sans: string
     }
   }
 }
