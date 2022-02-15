@@ -7,7 +7,7 @@ export function ErrorSummary({ children }: { children?: ReactNode }) {
         css={({ colors, fonts }) => ({
           marginTop: "2gu",
           padding: "1gu 2gu",
-          fontFamily: fonts.families.sans,
+          fontFamily: fonts.sans,
           fontSize: "14px",
           color: colors.warning,
           background: colors.warningSurface,

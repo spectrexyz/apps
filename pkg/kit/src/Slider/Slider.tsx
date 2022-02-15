@@ -277,7 +277,7 @@ export function Slider({
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            font-family: ${fonts.families.sans};
+            font-family: ${fonts.sans};
             color: ${colors.contentDimmed};
             div {
               cursor: ${onLabelClick ? "pointer" : "default"};

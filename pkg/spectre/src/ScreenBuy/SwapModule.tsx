@@ -43,7 +43,7 @@ export function SwapModule() {
         <p
           css={({ colors, fonts }) => ({
             paddingTop: "1.5gu",
-            fontFamily: fonts.families.sans,
+            fontFamily: fonts.sans,
             fontSize: "12px",
             color: colors.contentDimmed,
           })}

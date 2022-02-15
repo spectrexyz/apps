@@ -12,7 +12,7 @@ export function Definition({ title, content }: DefinitionProps) {
       css={({ fonts }) =>
         css`
         overflow: hidden;
-        font-family: ${fonts.families.sans};
+        font-family: ${fonts.sans};
       `}
     >
       <div

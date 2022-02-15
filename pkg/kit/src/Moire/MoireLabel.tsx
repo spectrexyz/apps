@@ -37,7 +37,7 @@ export function MoireLabel({
         display: "inline-flex",
         alignItems: "center",
         height: "4gu",
-        fontFamily: fonts.families.sans,
+        fontFamily: fonts.sans,
         fontSize: "20px",
         fontWeight: "800",
         color: labelColor || colors.background,

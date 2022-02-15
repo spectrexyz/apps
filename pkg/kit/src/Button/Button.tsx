@@ -111,7 +111,7 @@ export const Button = forwardRef<
           text-decoration: none;
           white-space: nowrap;
           font-size: ${fontSize};
-          font-family: ${fonts.families.mono};
+          font-family: ${fonts.mono};
           color: ${
             (() => {
               if (mode === "flat") return colors.accent

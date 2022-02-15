@@ -94,7 +94,7 @@ function Group({
     <section
       css={({ fonts }) => ({
         paddingTop: "2gu",
-        fontFamily: fonts.families.sans,
+        fontFamily: fonts.sans,
         fontSize: "14px",
       })}
     >

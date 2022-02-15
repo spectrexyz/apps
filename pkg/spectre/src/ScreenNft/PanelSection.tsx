@@ -28,7 +28,7 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
         )}
         <div
           css={({ fonts }) => ({
-            fontFamily: fonts.families.sans,
+            fontFamily: fonts.sans,
           })}
         >
           {children}

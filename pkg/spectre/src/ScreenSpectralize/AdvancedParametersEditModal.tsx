@@ -47,7 +47,7 @@ export function AdvancedParametersEditModal({
       <header>
         <h1
           css={({ fonts }) => ({
-            fontFamily: fonts.families.mono,
+            fontFamily: fonts.mono,
             fontSize: "18px",
             textTransform: "uppercase",
           })}
@@ -57,7 +57,7 @@ export function AdvancedParametersEditModal({
         <p
           css={({ colors, fonts }) => ({
             padding: introPadding,
-            fontFamily: fonts.families.sans,
+            fontFamily: fonts.sans,
             fontSize: "14px",
             color: colors.contentDimmed,
           })}

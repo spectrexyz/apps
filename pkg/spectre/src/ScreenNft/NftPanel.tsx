@@ -73,7 +73,7 @@ export function NftPanel({ id }: { id: string }) {
                       href={url}
                       external
                       css={({ fonts }) => ({
-                        fontFamily: fonts.families.sans,
+                        fontFamily: fonts.sans,
                       })}
                     />
                   </div>

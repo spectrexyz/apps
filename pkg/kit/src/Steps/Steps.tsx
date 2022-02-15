@@ -133,7 +133,7 @@ function StepNumber({
         justify-content: center;
         width: ${NUMBER_SIZE}px;
         height: ${NUMBER_SIZE}px;
-        font-family: ${fonts.families.sans};
+        font-family: ${fonts.sans};
         font-weight: 800;
         font-size: 15px;
         user-select: none;

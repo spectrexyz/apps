@@ -140,7 +140,7 @@ function SecondaryRow({ start, end }: { start?: ReactNode; end?: ReactNode }) {
         align-items: center;
         justify-content: space-between;
         height: 3gu;
-        font-family: ${fonts.families.sans};
+        font-family: ${fonts.sans};
       `}
     >
       <div

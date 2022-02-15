@@ -52,7 +52,7 @@ export const AdvancedParameters = memo(function AdvancedParameters({
           css={({ colors, fonts }) => ({
             color: colors.accent,
             fontSize: "16px",
-            fontFamily: fonts.families.sans,
+            fontFamily: fonts.sans,
           })}
         />
       )}

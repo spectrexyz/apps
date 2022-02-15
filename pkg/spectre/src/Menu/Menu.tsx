@@ -37,7 +37,7 @@ export function Menu({ opened }: { opened: boolean }) {
                 listStyle: "none",
                 "li": {
                   paddingBottom: "2gu",
-                  fontFamily: fonts.families.mono,
+                  fontFamily: fonts.mono,
                   fontSize: "32px",
                 },
                 "a": {

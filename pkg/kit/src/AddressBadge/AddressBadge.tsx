@@ -52,7 +52,7 @@ export function AddressBadge({
         title={address}
         css={({ fonts }) =>
           css`
-          font-family: ${fonts.families.mono};
+          font-family: ${fonts.mono};
           font-size: ${size === "large" ? "24px" : "16px"};
         `}
       >

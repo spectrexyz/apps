@@ -92,7 +92,7 @@ export function TextInput({
           css`
         width: 100%;
         padding: 0;
-        font-family: ${fonts.families.mono};
+        font-family: ${fonts.mono};
         color: ${colors.accent};
         background: transparent;
         resize: vertical;
@@ -114,7 +114,7 @@ export function TextInput({
         width: 100%;
         height: 3.5gu;
         padding: 0;
-        font-family: ${fonts.families.mono};
+        font-family: ${fonts.mono};
         background: transparent;
         border: 0;
         color: ${colors.accent};

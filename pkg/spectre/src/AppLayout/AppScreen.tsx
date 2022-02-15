@@ -225,7 +225,7 @@ function HeaderCompact({
         )}
         <div
           css={({ fonts }) => ({
-            fontFamily: fonts.families.mono,
+            fontFamily: fonts.mono,
             fontSize: "16px",
             textTransform: "uppercase",
           })}

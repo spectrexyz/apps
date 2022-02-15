@@ -47,14 +47,14 @@ export function ConnectAccountInside() {
         paddingTop: "2gu",
         "h1": {
           marginBottom: "1gu",
-          fontFamily: fonts.families.mono,
+          fontFamily: fonts.mono,
           fontSize: "24px",
           letterSpacing: "-1px",
           whiteSpace: "nowrap",
           textAlign: "center",
         },
         "h1 + p": {
-          fontFamily: fonts.families.sans,
+          fontFamily: fonts.sans,
           fontSize: "14px",
           textAlign: "center",
         },
@@ -82,7 +82,7 @@ export function ConnectAccountInside() {
           marginTop: "3gu",
           textAlign: "center",
           color: colors.contentDimmed,
-          fontFamily: fonts.families.sans,
+          fontFamily: fonts.sans,
           fontSize: "14px",
           "a": {
             textDecoration: "underline",

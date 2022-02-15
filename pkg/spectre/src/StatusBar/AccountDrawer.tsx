@@ -155,7 +155,7 @@ export function AccountDrawer({
                           css={({ colors, fonts }) => ({
                             fontSize: "14px",
                             color: colors.contentDimmed,
-                            fontFamily: fonts.families.sans,
+                            fontFamily: fonts.sans,
                           })}
                         >
                           Connected with MetaMask
@@ -219,7 +219,7 @@ function Transactions() {
       >
         <h1
           css={({ colors, fonts }) => ({
-            fontFamily: fonts.families.sans,
+            fontFamily: fonts.sans,
             fontSize: "14px",
             color: colors.contentDimmed,
           })}
@@ -357,7 +357,7 @@ function Transaction({
             css={({ colors, fonts }) => ({
               paddingBottom: "0.75gu",
               textTransform: "uppercase",
-              fontFamily: fonts.families.sans,
+              fontFamily: fonts.sans,
               fontSize: "12px",
               color: colors.contentDimmed,
             })}
@@ -366,7 +366,7 @@ function Transaction({
           </div>
           <div
             css={({ fonts }) => ({
-              fontFamily: fonts.families.sans,
+              fontFamily: fonts.sans,
               fontSize: "14px",
             })}
           >

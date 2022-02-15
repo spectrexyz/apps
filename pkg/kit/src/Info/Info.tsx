@@ -99,7 +99,7 @@ export function Info({
               ? colors.content
               : colors.contentHeading2
           };
-          font-family: ${fonts.families.sans};
+          font-family: ${fonts.sans};
         `}
       >
         {children}

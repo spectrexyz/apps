@@ -140,7 +140,7 @@ export function RadioBox({
             css={({ fonts }) =>
               css`
               margin-left: 1.5gu;
-              font-family: ${fonts.families.mono};
+              font-family: ${fonts.mono};
               font-size: 18px;
               text-transform: uppercase;
             `}

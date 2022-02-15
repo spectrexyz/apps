@@ -126,7 +126,7 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
                       paddingBottom: "1.25gu",
                       fontSize: "14px",
                       color: colors.contentDimmed,
-                      fontFamily: fonts.families.sans,
+                      fontFamily: fonts.sans,
                     })}
                   >
                     Connected with MetaMask

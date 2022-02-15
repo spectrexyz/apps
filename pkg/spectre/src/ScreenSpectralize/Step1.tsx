@@ -69,7 +69,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
             ? (
               <h1
                 css={({ fonts }) => ({
-                  fontFamily: fonts.families.mono,
+                  fontFamily: fonts.mono,
                   fontSize: "18px",
                   textTransform: "uppercase",
                 })}
@@ -87,7 +87,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
           <p
             css={({ colors, fonts }) => ({
               padding: introPadding,
-              fontFamily: fonts.families.sans,
+              fontFamily: fonts.sans,
               fontSize: "14px",
               color: colors.contentDimmed,
             })}
@@ -440,7 +440,7 @@ function NftFilePreview() {
 
                   <span
                     css={({ colors, fonts }) => ({
-                      fontFamily: fonts.families.sans,
+                      fontFamily: fonts.sans,
                       fontSize: "12px",
                       color: colors.contentDimmed,
                     })}

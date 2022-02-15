@@ -77,7 +77,7 @@ export function Main({ children }: MainProps): JSX.Element {
           }
           body {
             font: ${fonts.sizes.normalMono} / ${fonts.line}
-              ${fonts.families.mono};
+              ${fonts.mono};
           }
           h1,
           h2,

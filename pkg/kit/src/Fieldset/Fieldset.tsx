@@ -51,7 +51,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
             }
             header h1 {
               flex-grow: 1;
-              font-family: ${fonts.families.sans};
+              font-family: ${fonts.sans};
               font-size: 12px;
               text-transform: uppercase;
               color: ${dimmed ? colors.contentDimmed : colors.contentHeading};
@@ -82,7 +82,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
               <div
                 css={({ colors, fonts }) =>
                   css`
-                  font-family: ${fonts.families.sans};
+                  font-family: ${fonts.sans};
                   font-size: 12px;
                   color: ${colors.contentDimmed};
                 `}
@@ -94,7 +94,7 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
           <div
             css={({ fonts }) =>
               css`
-              font-family: ${fonts.families.sans};
+              font-family: ${fonts.sans};
             `}
           >
             {typeof children === "function" ? children(labelFor) : children}
