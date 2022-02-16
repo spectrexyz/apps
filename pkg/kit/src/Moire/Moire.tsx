@@ -22,6 +22,7 @@ import snoise from "./snoise.glsl?raw"
 // TODO: instanciate another WebGL rendering on demand for shadow true / false
 
 const BASE_SIZE = 500
+const SHIFT_AREA = 200
 
 type RenderMoireFn = (params: {
   context: CanvasRenderingContext2D
@@ -175,7 +176,7 @@ export function MoireBase({
       Math.max(height, canvas.height / dpr),
     ],
     [0, 0],
-  )
+  ).map((v) => v + SHIFT_AREA)
 
   const { canvas, render } = useOglProgram({
     dimensions: [moireMaxWidth, moireMaxHeight],
@@ -265,6 +266,11 @@ export const Moire = memo(function Moire({
   const renderWidth = (width * dpr) / scale
   const renderHeight = (height * dpr) / scale
 
+  const shift = useRef([
+    -Math.round(Math.random() * SHIFT_AREA),
+    -Math.round(Math.random() * SHIFT_AREA),
+  ])
+
   const render = useCallback(
     ({ baseCanvas, canvas, context }) => {
       if (!canvas || !context || !animate) {
@@ -275,8 +281,8 @@ export const Moire = memo(function Moire({
       const sh = baseCanvas.height
       const dw = sw
       const dh = sh
-      const dx = 0
-      const dy = 0
+      const dx = shift.current[0]
+      const dy = shift.current[1]
 
       context.clearRect(0, 0, renderWidth, renderHeight)
       if (sw > 0 && sh > 0) {
