@@ -1,41 +1,55 @@
-import { css } from "@emotion/react"
 import { ReactNode } from "react"
 import { gu } from "../styles"
 
 type BadgeProps = {
   alt?: string
+  background?: string
+  color?: string
+  fontSize?: string
   icon?: string | ReactNode
   label: ReactNode
+  uppercase?: boolean
 }
 
-export function Badge({ alt, icon, label }: BadgeProps): JSX.Element {
+export function Badge(
+  { alt, background, color, icon, label, uppercase = true, fontSize = "18px" }:
+    BadgeProps,
+): JSX.Element {
   if (typeof icon === "string") {
     icon = <img alt="" src={icon} width={3 * gu} height={3 * gu} />
   }
   return (
     <div
-      title={alt}
-      css={({ colors }) =>
-        css`
-        display: flex;
-        align-items: center;
-        gap: 0.75gu;
-        height: 4gu;
-        padding: ${icon ? css`0 2gu 0 0.5gu` : css`0 1.5gu`};
-        color: ${colors.accent2};
-        background: ${colors.translucid};
-        border-radius: 10gu;
-        user-select: none;
-      `}
+      title={alt ?? (typeof label === "string" ? label : undefined)}
+      css={({ colors }) => ({
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75gu",
+        height: "4gu",
+        padding: icon ? "0 2gu 0 0.5gu" : "0 1.5gu",
+        color: color ? colors[color] ?? color : colors.accent2,
+        background: background
+          ? colors[background] ?? background
+          : colors.translucid,
+        borderRadius: "10gu",
+        userSelect: "none",
+
+        // ellipsis
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      })}
     >
       {icon}
       {typeof label === "string"
         ? (
           <span
-            css={css`
-            font-size: 18px;
-            text-transform: uppercase;
-          `}
+            css={{
+              fontSize,
+              textTransform: uppercase ? "uppercase" : "none",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
           >
             {label}
           </span>
