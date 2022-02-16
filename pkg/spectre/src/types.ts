@@ -8,8 +8,8 @@ export type Snft = {
   image: string
   title: string
   description: string
-  token: { name: string; distribution: number[] }
+  token: { symbol: string; name: string; distribution: number[] }
   creator: { address: string; name: string; url: string }
-  authenticity: { name: string; url: string }[]
   history: { date: string; event: SnftEvent }[]
+  guardian: string
 }

@@ -13,16 +13,13 @@ import nft9 from "../demo-data/nft-9.jpg"
 const NFT_IMAGES = [nft1, nft2, nft3, nft4, nft5, nft6, nft7, nft8, nft9]
 
 const NFT_DESCRIPTION_1 = `
-In 2018, during the twilight of Hong Kong's neon era, stfeyes could frequently be found on the streets of Mong Kok, taking photos of signs that would be forever lost.
+Artworks have always been powerful vectors of collectives structuration and we now see that the internet of money could make us pass from the status of consumer of artworks to a world where artworks are, in their inner form, the organizational layer of tomorrow’s collectives.
 
-When I (Anocam) saw this image, I felt the need to immortalise these lights in my own way. These Lost Nights.
+Artwork specs:
 
-The first collaboration between Anocam x stfeyes
-
-https://twitter.com/stfeyes
-https://twitter.com/anocam_
-
-[1638x2048 MP4 available for collector]
+- 1024 × 1024px
+- 15 sec loop MP4
+- Created Aug 2021
 `
 
 const EVENT_1: SnftEvent = [
@@ -51,7 +48,11 @@ export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => ({
   image,
   title: `Untitled #${index + 1}`,
   description: NFT_DESCRIPTION_1,
-  token: { name: `$TOKEN${index + 1}`, distribution: randomDistribution() },
+  token: {
+    name: `TOKEN${index + 1}`,
+    symbol: `TKN${index + 1}`,
+    distribution: randomDistribution(),
+  },
   creator: [0, 5, 6, 7, 8].includes(index)
     ? {
       address: "0xfabe062eb33af3e68eb3329818d0507949c14142",
@@ -63,10 +64,9 @@ export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => ({
       name: "@someone",
       url: "https://example.org/@someone",
     },
-  authenticity: [
-    { name: "Etherscan", url: "https://example.org/etherscan" },
-    { name: "IPFS", url: "https://example.org/ipfs" },
-  ],
+  guardian: index % 2
+    ? "0xfabe062eb33af3e68eb3329818d0507949c14142"
+    : "0x32dd41219f6a74f739466e6c86091500e81beaa8",
   history: [
     {
       date: "2021-04-29T15:19",
