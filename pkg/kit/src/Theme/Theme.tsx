@@ -23,9 +23,9 @@ export type ThemeContext = {
 const ThemeContext = createContext<ThemeContext>({ colors, fonts })
 
 export function Theme({ children }: { children: ReactNode }): JSX.Element {
-  const context = useMemo(() => ({ colors, fonts }), [])
+  const context = useMemo<ThemeContext>(() => ({ colors, fonts }), [])
   return (
-    <ThemeProvider theme={context as ThemeContext}>
+    <ThemeProvider theme={context}>
       <ThemeContext.Provider value={context}>{children}</ThemeContext.Provider>
     </ThemeProvider>
   )
