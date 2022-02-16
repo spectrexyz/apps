@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring, useTransition } from "react-spring"
 import { IconCheckBold } from "../icons"
@@ -39,20 +38,20 @@ export function Steps({
   return (
     <div
       ref={bounds.observe}
-      css={css`
-        display: flex;
-        overflow: hidden;
-      `}
+      css={{
+        display: "flex",
+        overflow: "hidden",
+      }}
     >
       <div
-        css={css`
-          display: flex;
-          flex-direction: ${direction === "horizontal" ? "row" : "column"};
-          justify-content: space-between;
-          align-items: center;
-          width: ${direction === "horizontal" ? "auto" : `${NUMBER_SIZE}px`};
-          height: ${direction === "horizontal" ? `${NUMBER_SIZE}px` : "auto"};
-        `}
+        css={{
+          display: "flex",
+          flexDirection: direction === "horizontal" ? "row" : "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: direction === "horizontal" ? "auto" : `${NUMBER_SIZE}px`,
+          height: direction === "horizontal" ? `${NUMBER_SIZE}px` : "auto",
+        }}
       >
         {Array.from({ length: steps * 2 - 1 }).map((_, index) => {
           const bar = index % 2 === 1
@@ -124,35 +123,33 @@ function StepNumber({
 
   return (
     <div
-      css={({ fonts }) =>
-        css`
-        flex-shrink: 0;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: ${NUMBER_SIZE}px;
-        height: ${NUMBER_SIZE}px;
-        font-family: ${fonts.sans};
-        font-weight: 800;
-        font-size: 15px;
-        user-select: none;
-      `}
+      css={({ fonts }) => ({
+        flexShrink: "0",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: `${NUMBER_SIZE}px`,
+        height: `${NUMBER_SIZE}px`,
+        fontFamily: fonts.sans,
+        fontWeight: "400",
+        fontSize: "15px",
+        userSelect: "none",
+      })}
     >
       <div
-        css={({ colors }) =>
-          css`
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-          color: ${colors.accentInvertedContent};
-          background: ${colors.accentInverted};
-          border-radius: 50%;
-        `}
+        css={({ colors }) => ({
+          position: "absolute",
+          inset: "0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+          color: colors.accentInvertedContent,
+          background: colors.accentInverted,
+          borderRadius: "50%",
+        })}
       >
         {label}
       </div>
@@ -162,30 +159,29 @@ function StepNumber({
             <a.div
               style={{ opacity, transform }}
               title={label}
-              css={({ colors }) =>
-                css`
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 100%;
-                color: ${colors.accentContent};
-                background: ${colors.accent};
-                border-radius: 50%;
-              `}
+              css={({ colors }) => ({
+                position: "absolute",
+                inset: "0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                color: colors.accentContent,
+                background: colors.accent,
+                borderRadius: "50%",
+              })}
             >
               {labelTransition(({ opacity, transform }, checked) => (
                 <a.span
                   style={{ opacity, transform }}
-                  css={css`
-                    position: absolute;
-                    inset: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  `}
+                  css={{
+                    position: "absolute",
+                    inset: "0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
                   {checked ? <IconCheckBold size={2 * gu} /> : label}
                 </a.span>
@@ -215,24 +211,20 @@ function StepBar({
   })
   return (
     <div
-      css={css`
-        display: flex;
-        flex-shrink: 1;
-        width: ${
-        direction === "horizontal"
+      css={{
+        display: "flex",
+        flexShrink: "1",
+        width: direction === "horizontal"
           ? `${length}px`
-          : `${BAR_THICKNESS}px`
-      };
-        height: ${
-        direction === "horizontal"
+          : `${BAR_THICKNESS}px`,
+        height: direction === "horizontal"
           ? `${BAR_THICKNESS}px`
-          : `${length}px`
-      };
-        background: ${colors.accentInverted};
-        border-radius: 0.25gu;
-        margin: ${direction === "horizontal" ? css`0 1.75gu` : css`1.75gu 0`};
-        overflow: hidden;
-      `}
+          : `${length}px`,
+        background: colors.accentInverted,
+        borderRadius: "0.25gu",
+        margin: direction === "horizontal" ? "0 1.75gu" : "1.75gu 0",
+        overflow: "hidden",
+      }}
     >
       <a.div
         style={{
