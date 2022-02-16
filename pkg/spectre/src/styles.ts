@@ -1,5 +1,5 @@
 import { useViewport } from "@bpierre/use-viewport"
-import { gu } from "kit"
+import { gu, useTheme } from "kit"
 import { useCallback, useMemo } from "react"
 
 export const springs = {
@@ -91,4 +91,16 @@ export function useLayout() {
     () => ({ above, below, ...layout, name: layoutName, value }),
     [above, below, layout, layoutName, value],
   )
+}
+
+export function usePanelTitleStyle() {
+  const { colors, fonts } = useTheme()
+  return useMemo(() => ({
+    display: "block",
+    paddingBottom: "2gu",
+    fontSize: "18px",
+    fontFamily: fonts.mono,
+    textTransform: "uppercase" as "uppercase",
+    color: colors.content,
+  }), [colors, fonts])
 }
