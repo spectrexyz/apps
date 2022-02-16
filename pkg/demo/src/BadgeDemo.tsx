@@ -1,7 +1,7 @@
 import { css } from "@emotion/react"
-import { Badge as KitBadge, gu } from "kit"
+import { Badge, gu } from "kit"
 
-export function Badge() {
+export function BadgeDemo() {
   // <img alt="" src={tokenImage} width={3 * gu} height={3 * gu} />
   return (
     <div
@@ -11,9 +11,9 @@ export function Badge() {
         padding-top: 4gu;
       `}
     >
-      <KitBadge label="Badge label" />
-      <KitBadge label="With icon URL" icon="/token-icon-image.png" />
-      <KitBadge
+      <Badge label="Badge label" />
+      <Badge label="With icon URL" icon="/token-icon-image.png" />
+      <Badge
         label="With icon element"
         icon={
           <img

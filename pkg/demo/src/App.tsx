@@ -6,7 +6,7 @@ import { Kit } from "kit"
 import React, { useEffect, useState } from "react"
 import { FetcherDeclarationEthers, NftProvider } from "use-nft"
 import { Link, Route, Router } from "wouter"
-import { Badge } from "./Badge"
+import { BadgeDemo } from "./BadgeDemo"
 import { Button } from "./Button"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
@@ -27,7 +27,7 @@ import { TokenInput } from "./TokenInput"
 import { Video } from "./Video"
 
 const demos = [
-  ["badge", Badge],
+  ["badge", BadgeDemo],
   ["button", Button],
   ["cards", NftCollection, false],
   ["chart", Chart],
