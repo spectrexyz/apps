@@ -21,6 +21,7 @@ import { Spectre } from "./Spectre"
 import { Steps } from "./Steps"
 import { TabsDemo } from "./TabsDemo"
 import { Toggle } from "./Toggle"
+import { TokenAmountDemo } from "./TokenAmountDemo"
 import { TokenBadge } from "./TokenBadge"
 import { TokenIcon } from "./TokenIcon"
 import { TokenInput } from "./TokenInput"
@@ -45,6 +46,7 @@ const demos = [
   ["token-badge", TokenBadge],
   ["token-icon", TokenIcon],
   ["token-input", TokenInput],
+  ["token-amount", TokenAmountDemo],
   ["video", Video],
 ] as [name: string, component: FC, centered: boolean][]
 
