@@ -84,12 +84,12 @@ export function Radio({
   return (
     <div
       onClick={handleClick}
-      css={css`
-        position: relative;
-        display: inline-block;
-        width: 2.25gu;
-        height: 2.25gu;
-      `}
+      css={{
+        position: "relative",
+        display: "inline-block",
+        width: "2.25gu",
+        height: "2.25gu",
+      }}
     >
       <input
         ref={input}
@@ -105,31 +105,30 @@ export function Radio({
             ? 0
             : -1)}
         type="radio"
-        css={({ colors }) =>
-          css`
-          opacity: 0;
-          pointer-events: none;
-          &:active div:after {
-            content: "";
-            position: absolute;
-            inset: 1gu;
-            background: ${colors.accent};
-            border-radius: 50%;
-          }
-        `}
+        css={({ colors }) => ({
+          opacity: "0",
+          pointerEvents: "none",
+          "&:active div:after": {
+            content: "\"\"",
+            position: "absolute",
+            inset: "1gu",
+            background: colors.accent,
+            borderRadius: "50%",
+          },
+        })}
       />
       <div
-        css={({ colors }) =>
-          css`
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-          background: ${colors.background};
-          border-radius: 50%;
-          outline: ${isFocused && focusVisible ? "2px" : "0"} solid
-            ${colors.focus};
-          outline-offset: 0;
-        `}
+        css={({ colors }) => ({
+          position: "absolute",
+          inset: "0",
+          overflow: "hidden",
+          background: colors.background,
+          borderRadius: "50%",
+          outline: isFocused && focusVisible
+            ? `2px solid ${colors.focus}`
+            : "0",
+          outlineOffset: "0",
+        })}
       >
         <Moire width={2.25 * gu} height={2.25 * gu} scale={0.8} />
       </div>

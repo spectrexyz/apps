@@ -1,6 +1,4 @@
-import type { ReactNode, Ref } from "react"
-
-import { css } from "@emotion/react"
+import { ReactNode } from "react"
 import { useEffect, useRef } from "react"
 import { useFocusVisible } from "../FocusVisible"
 import { Radio } from "./Radio"
@@ -79,57 +77,42 @@ export function RadioBox({
             || id === radioGroup.focusableId)
         ? 0
         : -1}
-      css={({ colors }) =>
-        css`
-        position: relative;
-        width: 100%;
-        padding: 2gu;
-        background: ${colors.layer2};
-        cursor: pointer;
-        &:focus {
-          outline: ${focusVisible ? "2px" : "0"} solid ${colors.focus};
-          & > div:after {
-            ${
-          focusVisible
-            ? css`
-                  outline-color: ${colors.focus};
-                `
-            : ""
-        }
-          }
-        }
-      `}
+      css={({ colors }) => ({
+        position: "relative",
+        width: "100%",
+        padding: "2gu",
+        background: colors.layer2,
+        cursor: "pointer",
+        "&:focus": {
+          outline: `${focusVisible ? "2px" : "0"} solid ${colors.focus}`,
+          "& > div:after": focusVisible ? { outlineColor: colors.focus } : {},
+        },
+      })}
     >
       <div
-        css={({ colors }) =>
-          css`
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1gu;
-          width: 100%;
-          &:after {
-            content: "";
-            position: absolute;
-            inset: 1px;
-            outline: 2px solid
-              ${
-            error
-              ? colors.warning
-              : checked
-              ? colors.accent
-              : "transparent"
-          };
-            pointer-events: none;
-          }
-        `}
+        css={({ colors }) => ({
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "1gu",
+          width: "100%",
+          "&:after": {
+            content: "\"\"",
+            position: "absolute",
+            inset: "1px",
+            outline: `2px solid ${
+              error ? colors.warning : checked ? colors.accent : "transparent"
+            }`,
+            pointerEvents: "none",
+          },
+        })}
       >
         <div
-          css={css`
-            display: flex;
-            align-items: center;
-            width: 100%;
-          `}
+          css={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+          }}
         >
           <Radio
             checked={checked}
@@ -137,25 +120,23 @@ export function RadioBox({
             onChange={handleChange}
           />
           <span
-            css={({ fonts }) =>
-              css`
-              margin-left: 1.5gu;
-              font-family: ${fonts.mono};
-              font-size: 18px;
-              text-transform: uppercase;
-            `}
+            css={({ fonts }) => ({
+              marginLeft: "1.5gu",
+              fontFamily: fonts.mono,
+              fontSize: "18px",
+              textTransform: "uppercase",
+            })}
           >
             {label}
           </span>
         </div>
         <div
-          css={({ colors }) =>
-            css`
-            width: 100%;
-            font-size: 12px;
-            text-align: left;
-            color: ${colors.contentDimmed};
-          `}
+          css={({ colors }) => ({
+            width: "100%",
+            fontSize: "12px",
+            textAlign: "left",
+            color: colors.contentDimmed,
+          })}
         >
           {secondary}
         </div>
