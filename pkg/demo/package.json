@@ -2,7 +2,7 @@
   "name": "demo",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev --port 3001",
     "build": "vite build",
     "serve": "vite preview",
     "kit-assets": "pnpm kit-copy-assets ./public/kit"

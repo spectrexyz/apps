@@ -2,7 +2,7 @@
   "name": "spectre",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev --port 3000",
     "build": "vite build --mode production && cp netlify_redirects dist/_redirects",
     "serve": "vite preview",
     "import:kit-assets": "pnpm kit-copy-assets ./public/kit",
