@@ -25,13 +25,17 @@ const RadioGroupContext = createContext<RadioGroupContext>(
 
 type RadioId = string | number
 
-type RadioGroupProps = {
+type RadioGroupProps<Id extends RadioId> = {
   children: ReactNode
-  selected: RadioId
-  onChange: (id: RadioId) => void
+  selected: Id
+  onChange: (id: Id) => void
 }
 
-function findSiblingId(radios: Set<RadioId>, selected: RadioId, diff: -1 | 1) {
+function findSiblingId<Id extends RadioId>(
+  radios: Set<Id>,
+  selected: Id,
+  diff: -1 | 1,
+) {
   const _radios = [...radios]
   const selectedIndex = _radios.indexOf(selected)
   const newSelectedIndex = selectedIndex + diff
@@ -60,14 +64,14 @@ function findSiblingId(radios: Set<RadioId>, selected: RadioId, diff: -1 | 1) {
   return _radios[0] === undefined ? null : _radios[0]
 }
 
-export function RadioGroup({
+export function RadioGroup<Id extends RadioId>({
   children,
   selected,
   onChange = noop,
-}: RadioGroupProps) {
-  const [radios, setRadios] = useState<Set<RadioId>>(new Set())
+}: RadioGroupProps<Id>) {
+  const [radios, setRadios] = useState<Set<Id>>(new Set())
 
-  const addRadio = useCallback((id: RadioId) => {
+  const addRadio = useCallback((id: Id) => {
     setRadios((radios) => {
       const _radios = new Set(radios)
       _radios.add(id)
@@ -75,7 +79,7 @@ export function RadioGroup({
     })
   }, [])
 
-  const removeRadio = useCallback((id: RadioId) => {
+  const removeRadio = useCallback((id: Id) => {
     setRadios((radios) => {
       const _radios = new Set(radios)
       _radios.delete(id)
@@ -84,14 +88,14 @@ export function RadioGroup({
   }, [])
 
   const selectPrev = () => {
-    const id = findSiblingId(radios, selected, -1)
+    const id = findSiblingId<Id>(radios, selected, -1)
     if (id !== null) {
       onChange(id)
     }
   }
 
   const selectNext = () => {
-    const id = findSiblingId(radios, selected, 1)
+    const id = findSiblingId<Id>(radios, selected, 1)
     if (id !== null) {
       onChange(id)
     }
