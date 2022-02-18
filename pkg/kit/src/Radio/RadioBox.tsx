@@ -9,6 +9,7 @@ type RadioBoxProps = {
   error?: string | boolean
   id?: string | number
   label: ReactNode
+  mode?: "normal" | "alt"
   onChange?: (checked: boolean) => void
   secondary?: ReactNode
 }
@@ -18,6 +19,7 @@ export function RadioBox({
   error,
   id,
   label,
+  mode = "normal",
   onChange,
   secondary,
 }: RadioBoxProps): JSX.Element {
@@ -81,7 +83,9 @@ export function RadioBox({
         position: "relative",
         width: "100%",
         padding: "2gu",
-        background: colors.layer2,
+        background: mode === "alt" && !checked
+          ? colors.background
+          : colors.layer2,
         cursor: "pointer",
         "&:focus": {
           outline: `${focusVisible ? "2px" : "0"} solid ${colors.focus}`,
@@ -101,7 +105,11 @@ export function RadioBox({
             position: "absolute",
             inset: "1px",
             outline: `2px solid ${
-              error ? colors.warning : checked ? colors.accent : "transparent"
+              error
+                ? colors.warning
+                : checked
+                ? (mode === "alt" ? colors.accent2 : colors.accent)
+                : "transparent"
             }`,
             pointerEvents: "none",
           },
@@ -117,14 +125,16 @@ export function RadioBox({
           <Radio
             checked={checked}
             focusOnCheck={false}
+            mode={mode}
             onChange={handleChange}
           />
           <span
-            css={({ fonts }) => ({
+            css={({ colors, fonts }) => ({
               marginLeft: "1.5gu",
               fontFamily: fonts.mono,
               fontSize: "18px",
               textTransform: "uppercase",
+              color: mode === "alt" ? colors.accent2 : colors.content,
             })}
           >
             {label}
@@ -133,9 +143,9 @@ export function RadioBox({
         <div
           css={({ colors }) => ({
             width: "100%",
-            fontSize: "12px",
+            fontSize: mode === "alt" ? "14px" : "12px",
             textAlign: "left",
-            color: colors.contentDimmed,
+            color: mode === "alt" ? colors.accent2 : colors.contentDimmed,
           })}
         >
           {secondary}

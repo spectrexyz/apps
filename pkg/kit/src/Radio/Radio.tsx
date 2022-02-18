@@ -1,15 +1,16 @@
-import { css } from "@emotion/react"
 import { useEffect, useRef, useState } from "react"
 import { a, useTransition } from "react-spring"
 import { useFocusVisible } from "../FocusVisible"
 import { Moire } from "../Moire"
 import { gu, springs } from "../styles"
+import { useTheme } from "../Theme"
 import { useRadioGroup } from "./RadioGroup"
 
 type RadioProps = {
   checked?: boolean
   focusOnCheck?: boolean
   id?: string | number
+  mode?: "normal" | "alt"
   onChange?: (checked: boolean) => void
   tabIndex?: number
 }
@@ -18,6 +19,7 @@ export function Radio({
   checked: checkedProp,
   focusOnCheck,
   id,
+  mode = "normal",
   onChange,
   tabIndex,
 }: RadioProps): JSX.Element {
@@ -77,6 +79,8 @@ export function Radio({
     },
   })
 
+  const { colors } = useTheme()
+
   // Note: we disable some rules here, because ESLint doesn’t seem to see that
   // while the click event is on the div, the keyboard events & implicit role
   // are on the input itself.
@@ -112,7 +116,7 @@ export function Radio({
             content: "\"\"",
             position: "absolute",
             inset: "1gu",
-            background: colors.accent,
+            background: mode === "alt" ? colors.accent2 : colors.accent,
             borderRadius: "50%",
           },
         })}
@@ -130,29 +134,33 @@ export function Radio({
           outlineOffset: "0",
         })}
       >
-        <Moire width={2.25 * gu} height={2.25 * gu} scale={0.8} />
+        <Moire
+          width={2.25 * gu}
+          height={2.25 * gu}
+          scale={0.8}
+          linesColor={mode === "alt" ? colors.accent2 : colors.accent}
+        />
       </div>
       {checkTransition(
         (style, checked) =>
           checked && (
             <a.div
               style={style}
-              css={css`
-                position: absolute;
-                inset: 50% auto auto 50%;
-              `}
+              css={{
+                position: "absolute",
+                inset: "50% auto auto 50%",
+              }}
             >
               <div
-                css={({ colors }) =>
-                  css`
-                  position: absolute;
-                  inset: 50% auto auto 50%;
-                  transform: translate(-50%, -50%);
-                  width: 1.25gu;
-                  height: 1.25gu;
-                  background: ${colors.accent};
-                  border-radius: 50%;
-                `}
+                css={({ colors }) => ({
+                  position: "absolute",
+                  inset: "50% auto auto 50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "1.25gu",
+                  height: "1.25gu",
+                  background: mode === "alt" ? colors.accent2 : colors.accent,
+                  borderRadius: "50%",
+                })}
               />
             </a.div>
           ),
