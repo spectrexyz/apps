@@ -4,11 +4,9 @@ import {
   PlaneView,
 } from "@elchininet/isometric"
 import { useEffect, useRef } from "react"
-import { gu } from "../styles"
+import useDimensions from "react-cool-dimensions"
 import { useTheme } from "../Theme"
 import { list, raf, shuffle } from "../utils"
-
-const SURFACE_DIMENSIONS = [52 * gu, 40 * gu]
 
 const DISTRIBUTION_COLORS = [
   "#6584E0",
@@ -17,6 +15,8 @@ const DISTRIBUTION_COLORS = [
   "#A0A8C2",
   "#F597F8",
 ]
+
+const RATIO = 1.3
 
 function distributionColor(index: number): string {
   return DISTRIBUTION_COLORS[index % DISTRIBUTION_COLORS.length]
@@ -81,20 +81,23 @@ type DistributionProps = {
 export function Distribution({
   values = [100],
 }: DistributionProps): JSX.Element {
-  const ref = useRef(null)
+  const containerRef = useRef(null)
   const { colors } = useTheme()
+  const bounds = useDimensions()
+
+  const { width } = bounds
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!containerRef.current) {
       return
     }
 
     const surface = new IsometricCanvas({
       backgroundColor: "transparent",
-      container: ref.current,
-      height: SURFACE_DIMENSIONS[1],
-      scale: SURFACE_DIMENSIONS[0] * 0.055,
-      width: SURFACE_DIMENSIONS[0],
+      container: containerRef.current,
+      height: (width ?? 0) / RATIO,
+      scale: (width ?? 0) * 0.055,
+      width: width ?? 0,
     })
 
     const { surfaces, surfacesToAnimate } = values.reduce<{
@@ -156,7 +159,11 @@ export function Distribution({
       surface.clear()
       surface.getElement().remove()
     }
-  }, [colors, values])
+  }, [colors, values, width])
 
-  return <div ref={ref} />
+  return (
+    <div ref={bounds.observe} css={{ width: "100%" }}>
+      <div ref={containerRef} />
+    </div>
+  )
 }
