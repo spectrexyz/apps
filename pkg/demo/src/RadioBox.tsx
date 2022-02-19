@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
 import { RadioBox as KitRadioBox, RadioGroup } from "kit"
-import React, { useState } from "react"
+import { useState } from "react"
 
 export function RadioBox() {
   const [selected, setSelected] = useState(0)

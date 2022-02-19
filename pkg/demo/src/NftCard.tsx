@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
 import { fonts, Moire, useDimensions, useTheme } from "kit"
-import React from "react"
+import { memo } from "react"
 import { useNft } from "use-nft"
 
 type NftCardProps = {
@@ -11,7 +11,7 @@ type NftCardProps = {
   }
 }
 
-export const NftCard = React.memo(function NftCard({
+export const NftCard = memo(function NftCard({
   active,
   nft: { contract, tokenId },
 }: NftCardProps) {

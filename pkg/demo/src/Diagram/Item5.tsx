@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { Label } from "./Label"
 import { Serc20 } from "./Serc20"

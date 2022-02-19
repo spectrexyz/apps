@@ -6,7 +6,7 @@ import {
   formatBytes,
   formatNumber,
 } from "kit"
-import React, { useCallback } from "react"
+import { useCallback } from "react"
 import {
   ContentLayout,
   ContentLayoutHeading,

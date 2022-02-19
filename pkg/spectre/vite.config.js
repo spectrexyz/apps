@@ -1,11 +1,11 @@
 import { defineConfig } from "vite"
-import checker from "vite-plugin-checker"
+// import checker from "vite-plugin-checker"
 // import react from "@vitejs/plugin-react"
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => ({
   define: {
-    global: 'globalThis',
+    global: "globalThis",
   },
   build: {
     target: "es2020",
@@ -14,14 +14,18 @@ export default defineConfig(async ({ mode }) => ({
   },
   esbuild: {
     jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
+    jsxInject: `
+      import { Fragment } from 'react'
+      import { jsx } from '@emotion/react'
+    `,
+    jsxFragment: "Fragment",
   },
   optimizeDeps: {
     entries: ["./src/index.tsx"],
   },
   plugins: [
     // react(),
-    checker({ typescript: true }),
+    // checker({ typescript: true }),
   ],
   resolve: {
     dedupe: [

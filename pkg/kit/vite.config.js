@@ -25,7 +25,11 @@ module.exports = defineConfig(async ({ mode }) => ({
   },
   esbuild: {
     jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
+    jsxInject: `
+      import { Fragment } from 'react'
+      import { jsx } from '@emotion/react'
+    `,
+    jsxFragment: "Fragment",
   },
   optimizeDeps: {
     entries: ["./src/index.tsx"],

@@ -1,10 +1,14 @@
-import type { ReactNode } from "react"
-import type { Interpolation, SpringValue } from "react-spring"
-
 import { css } from "@emotion/react"
 import { gu, lerp, list, Moire, smoothPath, useTheme, useUid } from "kit"
-import React, { useCallback, useMemo } from "react"
-import { a, useChain, useSpring, useSpringRef } from "react-spring"
+import { ReactNode, SVGProps, useCallback, useMemo } from "react"
+import {
+  a,
+  Interpolation,
+  SpringValue,
+  useChain,
+  useSpring,
+  useSpringRef,
+} from "react-spring"
 
 type Point = [number, number]
 type Interpolable<T> = SpringValue<T> | Interpolation<T>
@@ -351,7 +355,7 @@ function Label({
   color = "#fff",
   size = 11,
   ...props
-}: React.SVGProps<SVGTextElement> & {
+}: SVGProps<SVGTextElement> & {
   children: ReactNode
   color?: string
   size?: number
@@ -378,7 +382,7 @@ function VariableStrokePath({
   strokeWidthMin = 1,
   width,
   ...props
-}: React.SVGProps<SVGGElement> & {
+}: SVGProps<SVGGElement> & {
   color: string
   d: string
   height: number

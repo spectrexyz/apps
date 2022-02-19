@@ -8,7 +8,7 @@ import {
   IconX,
   springs,
 } from "kit"
-import React, { ReactNode, useEffect, useRef, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { a, SpringValue, useSpring, useTransition } from "react-spring"
 import { useAccount } from "wagmi"
 import { Link, useLocation } from "wouter"

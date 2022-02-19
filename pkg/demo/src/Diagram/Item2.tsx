@@ -1,6 +1,6 @@
 import type { SpringValue } from "react-spring"
 
-import React, { memo, useRef } from "react"
+import { memo, useRef } from "react"
 import { a, to, useSpring } from "react-spring"
 import { Label } from "./Label"
 import { spSlow, WIDTH } from "./shared"

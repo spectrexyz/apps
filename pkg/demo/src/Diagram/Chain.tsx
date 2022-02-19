@@ -1,4 +1,3 @@
-import React from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { Label } from "./Label"
 import { spSlow } from "./shared"

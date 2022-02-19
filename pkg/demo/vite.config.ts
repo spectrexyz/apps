@@ -11,6 +11,10 @@ export default defineConfig({
   },
   esbuild: {
     jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
+    jsxInject: `
+      import { Fragment } from 'react'
+      import { jsx } from '@emotion/react'
+    `,
+    jsxFragment: "Fragment",
   },
 })

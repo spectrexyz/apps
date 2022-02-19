@@ -13,7 +13,7 @@ import {
   TextInput,
   Video,
 } from "kit"
-import React, { useCallback } from "react"
+import { useCallback } from "react"
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"

@@ -16,7 +16,7 @@ import {
   useAmountInput,
   usePrice,
 } from "kit"
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   ContentLayout,
   ContentLayoutHeading,
