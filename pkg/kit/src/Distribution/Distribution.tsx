@@ -3,8 +3,10 @@ import {
   IsometricRectangle,
   PlaneView,
 } from "@elchininet/isometric"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
+import { useSpring, useSpringRef } from "react-spring"
+import { springs } from "../styles"
 import { useTheme } from "../Theme"
 import { list, raf, shuffle } from "../utils"
 
@@ -15,15 +17,52 @@ const DISTRIBUTION_COLORS = [
   "#A0A8C2",
   "#F597F8",
 ]
+const SINGLE_VALUE_COLOR = DISTRIBUTION_COLORS[2]
 
 const RATIO = 1.3
 
-function distributionColor(index: number): string {
-  return DISTRIBUTION_COLORS[index % DISTRIBUTION_COLORS.length]
+function distributionColor(
+  groupIndex: number,
+  valuesFilled: number[],
+  lastSlotEmpty: boolean,
+  emptyColor: string,
+): string {
+  // Emty slot
+  if (lastSlotEmpty && groupIndex === valuesFilled.length - 1) {
+    return emptyColor
+  }
+
+  // A specific color is used for single group distributions
+  if (
+    groupIndex === 0 && (
+      valuesFilled.length === 1
+      || lastSlotEmpty && valuesFilled.length === 2
+    )
+  ) {
+    return SINGLE_VALUE_COLOR
+  }
+
+  // Otherwise we rotate on DISTRIBUTION_COLORS
+  return DISTRIBUTION_COLORS[groupIndex % DISTRIBUTION_COLORS.length]
 }
 
-function randRound(value: number) {
-  return Math.round(Math.random() * value)
+// Fill the distribution array so the total is always 100.
+// Cuts extra values if necessary.
+export function fillDistribution(values: number[]) {
+  const filled = []
+  let total = 0
+  for (const value of values) {
+    total += value
+    if (total > 100) {
+      filled.push(value - total + 100)
+      return filled
+    }
+    filled.push(value)
+  }
+  if (total < 100) {
+    filled.push(100 - total)
+  }
+  return filled
 }
 
 function makeRect(
@@ -78,29 +117,79 @@ type DistributionProps = {
   values: number[]
 }
 
+function useSpringProgress() {
+  const progress = useRef({ value: 0, animating: true })
+  const springRef = useSpringRef()
+
+  useSpring({
+    ref: springRef,
+    config: springs.sluggish,
+    from: { progress: 0 },
+    to: { progress: 1 },
+    onChange({ value }) {
+      progress.current.value = value.progress
+    },
+    onRest() {
+      progress.current.animating = false
+    },
+    onStart() {
+      progress.current.animating = true
+    },
+  })
+
+  return [
+    progress,
+    useCallback(() => {
+      springRef.current[0].stop(true)
+      progress.current.value = 0
+      springRef.current[0].set({ progress: 0 })
+      springRef.current[0].start()
+    }, []),
+  ]
+}
+
 export function Distribution({
   values = [100],
 }: DistributionProps): JSX.Element {
-  const containerRef = useRef(null)
+  const [container, setContainer] = useState<HTMLDivElement>(null)
   const { colors } = useTheme()
   const bounds = useDimensions()
+  const valuesFilled = useMemo(() => fillDistribution(values), [values])
+  const isoCanvas = useRef<null | IsometricCanvas>(null)
+  const lastSlotEmpty = valuesFilled.length > values.length
 
-  const { width } = bounds
+  const [reveal, restartReveal] = useSpringProgress()
 
   useEffect(() => {
-    if (!containerRef.current) {
-      return
+    if (values) {
+      restartReveal()
     }
+  }, [values])
 
-    const surface = new IsometricCanvas({
+  const { width } = bounds
+  useEffect(() => {
+    if (!container) return null
+
+    const _width = width ?? 0
+    isoCanvas.current = new IsometricCanvas({
       backgroundColor: "transparent",
-      container: containerRef.current,
-      height: (width ?? 0) / RATIO,
-      scale: (width ?? 0) * 0.055,
-      width: width ?? 0,
+      container,
+      height: _width / RATIO,
+      scale: _width * 0.055,
+      width: _width,
     })
 
-    const { surfaces, surfacesToAnimate } = values.reduce<{
+    return () => {
+      isoCanvas.current.clear()
+      isoCanvas.current.getElement().remove()
+      isoCanvas.current = null
+    }
+  }, [container, width])
+
+  useEffect(() => {
+    if (!isoCanvas.current) return
+
+    const { surfaces, surfacesToAnimate } = valuesFilled.reduce<{
       cubesIndex: number
       surfaces: IsometricRectangle[]
       surfacesToAnimate: [IsometricRectangle, string][]
@@ -110,7 +199,12 @@ export function Distribution({
           return makeCube(cubesIndex + i, colors.accent, colors.accent)
         })
 
-        const groupColor = distributionColor(groupIndex)
+        const groupColor = distributionColor(
+          groupIndex,
+          valuesFilled,
+          lastSlotEmpty,
+          colors.background,
+        )
 
         const groupSurfacesToAnimate = groupSurfaces.map(
           (surface) =>
@@ -129,41 +223,38 @@ export function Distribution({
       { cubesIndex: 0, surfaces: [], surfacesToAnimate: [] },
     )
 
-    surface.addChildren(...surfaces)
+    isoCanvas.current.addChildren(...surfaces)
 
-    const _surfacesToAnimate = shuffle(surfacesToAnimate)
-
-    const surfacesAmount = () => {
-      const remaining = _surfacesToAnimate.length
-      if (remaining < 10) return randRound(1.2)
-      if (remaining < 20) return randRound(2)
-      if (remaining < 60) return randRound(6)
-      return randRound(10)
-    }
+    const surfacesReveal = shuffle([...surfacesToAnimate])
 
     const stopAnimation = raf(() => {
-      if (_surfacesToAnimate.length < 1) {
+      if (!reveal.current.animating) {
         stopAnimation()
         return
       }
 
-      const surfacesToAnimate = _surfacesToAnimate.splice(0, surfacesAmount())
+      const progressSlice = (arr) =>
+        arr.slice(
+          0,
+          Math.round(reveal.current.value * arr.length),
+        )
 
-      surfacesToAnimate.forEach(([surface, color]) => {
+      const nextBatch = progressSlice(surfacesReveal)
+
+      for (const [surface, color] of nextBatch) {
         surface.fillColor = color
-      })
+      }
     })
 
     return () => {
       stopAnimation()
-      surface.clear()
-      surface.getElement().remove()
+      isoCanvas.current.clear()
     }
-  }, [colors, values, width])
+  }, [colors, lastSlotEmpty, reveal, valuesFilled])
 
   return (
     <div ref={bounds.observe} css={{ width: "100%" }}>
-      <div ref={containerRef} />
+      <div ref={setContainer} />
     </div>
   )
 }

@@ -97,4 +97,9 @@ export const springs = {
     tension: 350,
     friction: 35,
   },
+  sluggish: {
+    mass: 0.5,
+    tension: 250,
+    friction: 50,
+  },
 }
