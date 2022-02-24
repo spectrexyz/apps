@@ -75,8 +75,9 @@ export function Main({ children }: MainProps): JSX.Element {
             scroll-behavior: smooth;
           }
           body {
-            font: ${fonts.sizes.normalMono} / ${fonts.line}
-              ${fonts.mono};
+            font: ${fonts.sizes.normalMono} / ${fonts.line} ${fonts.mono};
+            color: ${colors.content};
+            background: ${colors.background};
           }
           h1,
           h2,
@@ -91,9 +92,8 @@ export function Main({ children }: MainProps): JSX.Element {
           b {
             font-weight: 600;
           }
-          body {
-            color: ${colors.content};
-            background: ${colors.background};
+          table {
+            border-collapse: collapse;
           }
           button,
           input {
