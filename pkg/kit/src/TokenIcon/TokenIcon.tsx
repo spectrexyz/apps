@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { useBaseUrl } from "../BaseUrl"
 import { gu } from "../styles"
 
@@ -28,12 +27,12 @@ export function TokenIcon({
   return (
     <div
       {...props}
-      css={css`
-        display: inline-flex;
-        img {
-          display: block;
-        }
-      `}
+      css={{
+        display: "inline-flex",
+        "img": {
+          display: "block",
+        },
+      }}
     >
       <img
         src={`${assetsUrl}/${fileName(tokenType)}`}

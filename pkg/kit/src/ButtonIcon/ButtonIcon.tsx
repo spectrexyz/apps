@@ -1,11 +1,15 @@
-import { ComponentPropsWithoutRef, ReactNode } from "react"
+import {
+  ComponentPropsWithoutRef,
+  createContext,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useContext,
+} from "react"
 import { ButtonAreaProps } from "../ButtonArea"
-import { ThemeContext } from "../Theme/Theme"
-
-import { css } from "@emotion/react"
-import { createContext, forwardRef, useCallback, useContext } from "react"
 import { ButtonArea } from "../ButtonArea"
 import { gu } from "../styles"
+import { ThemeContext } from "../Theme/Theme"
 
 type ButtonIconMode = "normal" | "outline"
 type ButtonIconSize = "medium" | "small"
@@ -55,28 +59,27 @@ export const ButtonIcon = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [disabled, external, href, onClick])
 
-  const sharedCssStyles = ({ colors }: ThemeContext) =>
-    css`
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: ${size === "small" ? css`3gu` : css`5gu`};
-    height: ${size === "small" ? css`3gu` : css`5gu`};
-    color: ${mode === "outline" ? colors.accent : colors.content};
-    background: ${mode === "outline" ? colors.background : "transparent"};
-    border: ${mode === "outline" ? "1px" : "0"} solid ${colors.accent};
-    outline-offset: ${mode === "outline" ? "-1px" : "-2px"};
-    &:active {
-      transform: translate(1px, 1px);
-    }
-    &:disabled {
-      color: ${colors.contentDimmed};
-      border-color: ${colors.contentDimmed};
-      &:active {
-        transform: none;
-      }
-    }
-  `
+  const sharedCssStyles = ({ colors }: ThemeContext) => ({
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: size === "small" ? "3gu" : "5gu",
+    height: size === "small" ? "3gu" : "5gu",
+    color: mode === "outline" ? colors.accent : colors.content,
+    background: mode === "outline" ? colors.background : "transparent",
+    border: `${mode === "outline" ? "1px" : "0"} solid ${colors.accent}`,
+    outlineOffset: mode === "outline" ? "-1px" : "-2px",
+    "&:active": {
+      transform: "translate(1px, 1px)",
+    },
+    "&:disabled": {
+      color: colors.contentDimmed,
+      borderColor: colors.contentDimmed,
+      "&:active": {
+        transform: "none",
+      },
+    },
+  })
 
   return (
     <ButtonIconContext.Provider value={{ size }}>

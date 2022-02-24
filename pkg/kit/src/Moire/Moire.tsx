@@ -1,10 +1,10 @@
-import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react"
-
-import { css } from "@emotion/react"
 import { Box, Mesh, Program, Renderer } from "ogl"
 import {
+  ComponentPropsWithoutRef,
   createContext,
   memo,
+  ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -231,9 +231,7 @@ export function MoireBase({
       <div
         ref={canvasContainer}
         {...props}
-        css={css`
-          display: none;
-        `}
+        css={{ display: "none" }}
       />
       {children}
     </MoireContext.Provider>
@@ -309,13 +307,13 @@ export const Moire = memo(function Moire({
       width={renderWidth}
       height={renderHeight}
       {...props}
-      css={css`
-        display: block;
-        overflow: hidden;
-        width: ${width}px;
-        height: ${height}px;
-        background: ${backgroundColor || "transparent"};
-      `}
+      css={{
+        display: "block",
+        overflow: "hidden",
+        width,
+        height,
+        background: backgroundColor || "transparent",
+      }}
     />
   )
 })

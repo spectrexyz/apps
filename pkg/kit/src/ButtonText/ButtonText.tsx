@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   ComponentPropsWithoutRef,
   createContext,
@@ -31,24 +30,23 @@ export const ButtonText = forwardRef<
     <ButtonArea
       ref={ref}
       {...props}
-      css={({ colors }) =>
-        css`
-        display: inline-flex;
-        align-items: center;
-        text-transform: uppercase;
-        font-size: 14px;
-        color: ${colors.content};
-        &:active {
-          transform: translate(1px, 1px);
-        }
-      `}
+      css={({ colors }) => ({
+        display: "inline-flex",
+        alignItems: "center",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: colors.content,
+        "&:active": {
+          transform: "translate(1px, 1px)",
+        },
+      })}
     >
       <ButtonTextContext.Provider value={true}>
         {icon}
         <span
-          css={css`
-            padding-left: ${icon ? css`1gu` : "0"};
-          `}
+          css={{
+            paddingLeft: icon ? "1gu" : "0",
+          }}
         >
           {label}
         </span>

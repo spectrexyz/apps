@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ComponentProps, useCallback, useLayoutEffect, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
@@ -41,11 +40,11 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
   return (
     <ButtonArea
       onClick={handleClick}
-      css={css`
-        position: relative;
-        text-transform: uppercase;
-        opacity: ${animate ? "1" : "0"};
-      `}
+      css={{
+        position: "relative",
+        textTransform: "uppercase",
+        opacity: animate ? "1" : "0",
+      }}
     >
       <Container>
         <div ref={boundsStart.observe}>{start}</div>
@@ -56,17 +55,16 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
         style={{
           clipPath: clipPath,
         }}
-        css={css`
-          position: absolute;
-          inset: 0;
-        `}
+        css={{
+          position: "absolute",
+          inset: "0",
+        }}
       >
         <Container
-          css={({ colors }) =>
-            css`
-            color: ${colors.accentContent};
-            background: ${colors.accent};
-          `}
+          css={({ colors }) => ({
+            color: colors.accentContent,
+            background: colors.accent,
+          })}
         >
           <div>{start}</div>
           <div>{end}</div>
@@ -79,18 +77,17 @@ export function Toggle({ labels: [start, end], onChange, value }: ToggleProps) {
 function Container(props: ComponentProps<"div">) {
   return (
     <div
-      css={({ colors }) =>
-        css`
-        display: flex;
-        align-items: center;
-        height: 3gu;
-        color: ${colors.contentDimmed};
-        background: ${colors.background};
-        & > div {
-          padding: 0 1.25gu;
-          white-space: nowrap;
-        }
-      `}
+      css={({ colors }) => ({
+        display: "flex",
+        alignItems: "center",
+        height: "3gu",
+        color: colors.contentDimmed,
+        background: colors.background,
+        "& > div": {
+          padding: "0 1.25gu",
+          whiteSpace: "nowrap",
+        },
+      })}
       {...props}
     />
   )

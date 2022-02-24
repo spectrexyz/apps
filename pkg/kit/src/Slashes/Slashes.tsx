@@ -1,5 +1,3 @@
-import { css } from "@emotion/react"
-
 type SlashesProps = {
   color?: string
 }
@@ -18,13 +16,12 @@ function slashSvgData(color: string): string {
 export function Slashes({ color }: SlashesProps): JSX.Element {
   return (
     <div
-      css={({ colors }) =>
-        css`
-        width: 100%;
-        height: 12px;
-        background-image: url(${slashSvgData(color ?? colors.accent)});
-        background-repeat: round;
-      `}
+      css={({ colors }) => ({
+        width: "100%",
+        height: "12px",
+        backgroundImage: `url(${slashSvgData(color ?? colors.accent)})`,
+        backgroundRepeat: "round",
+      })}
     />
   )
 }

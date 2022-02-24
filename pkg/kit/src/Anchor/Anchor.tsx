@@ -1,7 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
-
-import { css } from "@emotion/react"
-import { forwardRef, useMemo } from "react"
+import { ComponentPropsWithoutRef, forwardRef, ReactNode, useMemo } from "react"
 
 export type AnchorProps =
   & ComponentPropsWithoutRef<"button">
@@ -45,17 +42,16 @@ export const Anchor = forwardRef<
         ref={ref}
         {...anchorProps}
         {...props}
-        css={({ colors }) =>
-          css`
-        outline: 0;
-        text-decoration: underline;
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
+        css={({ colors }) => ({
+          outline: "0",
+          textDecoration: "underline",
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
       >
         {children}
       </a>
@@ -65,24 +61,23 @@ export const Anchor = forwardRef<
         ref={ref}
         onClick={onClick}
         {...props}
-        css={({ colors }) =>
-          css`
-        padding: 0;
-        border: 0;
-        outline: 0;
-        text-decoration: underline;
-        background: none;
-        cursor: pointer;
-        &::-moz-focus-inner {
-          border: 0;
-        }
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
+        css={({ colors }) => ({
+          padding: "0",
+          border: "0",
+          outline: "0",
+          textDecoration: "underline",
+          background: "none",
+          cursor: "pointer",
+          "&::-moz-focus-inner": {
+            border: "0",
+          },
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
       >
         {children}
       </button>

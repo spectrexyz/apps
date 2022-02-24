@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { css, Global } from "@emotion/react"
+import { Global } from "@emotion/react"
 import { useBaseUrl } from "../BaseUrl"
 
 type MainProps = {
@@ -27,101 +27,94 @@ export function Main({ children }: MainProps): JSX.Element {
   return (
     <>
       <Global
-        styles={({ colors, fonts }) =>
-          css`
-          @font-face {
-            font-family: "${FONT_NAME_MONO}";
-            font-weight: 400;
-            font-style: normal;
-            src: url("${assets}/${FONT_FILE_MONO_REGULAR}") format("woff2");
-            unicode-range: ${UNICODE_RANGE_LATIN1};
-          }
-          @font-face {
-            font-family: "${FONT_NAME_MONO}";
-            font-weight: 600;
-            font-style: normal;
-            src: url("${assets}/${FONT_FILE_MONO_MEDIUM}") format("woff2");
-            unicode-range: ${UNICODE_RANGE_LATIN1};
-          }
-          @font-face {
-            font-family: "${FONT_NAME_SANS}";
-            font-weight: 400;
-            font-style: normal;
-            src: url("${assets}/${FONT_FILE_SANS_REGULAR}") format("woff2");
-            unicode-range: ${UNICODE_RANGE_LATIN1};
-          }
-          @font-face {
-            font-family: "${FONT_NAME_SANS}";
-            font-weight: 800;
-            font-style: normal;
-            src: url("${assets}/${FONT_FILE_SANS_BLACK}") format("woff2");
-            unicode-range: ${UNICODE_RANGE_LATIN1};
-          }
-          *,
-          *:before,
-          *:after {
-            box-sizing: border-box;
-          }
-          body,
-          html,
-          h1,
-          h2,
-          pre,
-          p,
-          ul {
-            margin: 0;
-          }
-          html {
-            scroll-behavior: smooth;
-          }
-          body {
-            font: ${fonts.sizes.normalMono} / ${fonts.line} ${fonts.mono};
-            color: ${colors.content};
-            background: ${colors.background};
-          }
-          h1,
-          h2,
-          pre,
-          button,
-          svg,
-          input,
-          textarea {
-            font: inherit;
-          }
-          strong,
-          b {
-            font-weight: 600;
-          }
-          table {
-            border-collapse: collapse;
-          }
-          button,
-          input {
-            color: inherit;
-          }
-          button,
-          [rel="button"] {
-            cursor: pointer;
-          }
-          ul {
-            padding: 0;
-          }
-          a {
-            color: ${colors.link};
-            text-decoration: none;
-            &:focus:not(:focus-visible) {
-              outline: none;
-            }
-            &:focus-visible {
-              outline: 2px solid ${colors.link};
-            }
-          }
-          a,
-          button {
+        styles={[
+          {
+            "@font-face": {
+              fontFamily: `"${FONT_NAME_MONO}"`,
+              fontWeight: "400",
+              fontStyle: "normal",
+              src: `url("${assets}/${FONT_FILE_MONO_REGULAR}") format("woff2")`,
+              unicodeRange: UNICODE_RANGE_LATIN1,
+            },
+          },
+          {
+            "@font-face": {
+              fontFamily: `"${FONT_NAME_MONO}"`,
+              fontWeight: "600",
+              fontStyle: "normal",
+              src: `url("${assets}/${FONT_FILE_MONO_MEDIUM}") format("woff2")`,
+              unicodeRange: UNICODE_RANGE_LATIN1,
+            },
+          },
+          {
+            "@font-face": {
+              fontFamily: `"${FONT_NAME_SANS}"`,
+              fontWeight: "400",
+              fontStyle: "normal",
+              src: `url("${assets}/${FONT_FILE_SANS_REGULAR}") format("woff2")`,
+              unicodeRange: UNICODE_RANGE_LATIN1,
+            },
+          },
+          {
+            "@font-face": {
+              fontFamily: `"${FONT_NAME_SANS}"`,
+              fontWeight: "800",
+              fontStyle: "normal",
+              src: `url("${assets}/${FONT_FILE_SANS_BLACK}") format("woff2")`,
+              unicodeRange: UNICODE_RANGE_LATIN1,
+            },
+          },
+        ]}
+      />
+      <Global
+        styles={({ colors, fonts }) => ({
+          "*:before, *:after": {
+            boxSizing: "border-box",
+          },
+          "body, html, h1, h2, pre, p, ul": {
+            margin: "0",
+          },
+          "html": {
+            scrollBehavior: "smooth",
+          },
+          "body": {
+            font: `${fonts.sizes.normalMono} / ${fonts.line} ${fonts.mono}`,
+            color: colors.content,
+            background: colors.background,
+          },
+          "h1, h2, pre, button, svg, input, textarea": {
+            font: "inherit",
+          },
+          "strong, b": {
+            fontWeight: "600",
+          },
+          "table": {
+            borderCollapse: "collapse",
+          },
+          "button, input": {
+            color: "inherit",
+          },
+          "button, [rel=\"button\"]": {
+            cursor: "pointer",
+          },
+          "ul": {
+            padding: "0",
+          },
+          "a": {
+            color: colors.link,
+            textDecoration: "none",
+            "&:focus:not(:focus-visible)": {
+              outline: "none",
+            },
+            "&:focus-visible": {
+              outline: `2px solid ${colors.link}`,
+            },
+          },
+          "a, button": {
             /* removes the 300ms delay */
-            touch-action: manipulation;
-          }
-        `}
+            touchAction: "manipulation",
+          },
+        })}
       />
       {children}
     </>

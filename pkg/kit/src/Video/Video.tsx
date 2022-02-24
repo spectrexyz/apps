@@ -1,7 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react"
-
-import { css } from "@emotion/react"
-import { useEffect, useRef, useState } from "react"
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react"
 import { ButtonArea } from "../ButtonArea"
 
 import playButton from "./play-button.svg"
@@ -54,49 +51,45 @@ export const Video = function Video({
   }, [])
 
   return (
-    <div
-      css={css`
-        position: relative;
-      `}
-    >
+    <div css={{ position: "relative" }}>
       <video
         ref={videoElement}
         {...props}
         src={src}
         tabIndex={-1}
         autoPlay={false}
-        css={css`
-          display: block;
-          width: 100%;
-        `}
+        css={{
+          display: "block",
+          width: "100%",
+        }}
       />
 
       {poster && !playing && (
         <div
-          css={css`
-            position: absolute;
-            inset: 0;
-            background: url(${poster}) no-repeat 0 0 / cover;
-          `}
+          css={{
+            position: "absolute",
+            inset: "0",
+            background: `url(${poster}) no-repeat 0 0 / cover`,
+          }}
         />
       )}
 
       <ButtonArea
         onClick={playStop}
-        css={css`
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          img {
-            display: ${playing ? "none" : "block"};
-          }
-          &:hover img {
-            display: block;
-          }
-        `}
+        css={{
+          position: "absolute",
+          inset: "0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          "img": {
+            display: playing ? "none" : "block",
+          },
+          "&:hover img": {
+            display: "block",
+          },
+        }}
         title={playing ? "Stop" : "Play"}
       >
         <img src={playing ? stopButton : playButton} alt="" />

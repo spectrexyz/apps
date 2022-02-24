@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   ChangeEvent,
   DetailedHTMLProps,
@@ -88,20 +87,19 @@ export function TextInput({
         ref={textareaRef}
         {...sharedProps}
         {...(props as TextAreaProps)}
-        css={({ colors, fonts }) =>
-          css`
-        width: 100%;
-        padding: 0;
-        font-family: ${fonts.mono};
-        color: ${colors.accent};
-        background: transparent;
-        resize: vertical;
-        border: 0;
-        &:focus {
-          outline: 2px solid ${colors.focus};
-          outline-offset: 3px;
-        }
-      `}
+        css={({ colors, fonts }) => ({
+          width: "100%",
+          padding: "0",
+          fontFamily: fonts.mono,
+          color: colors.accent,
+          background: "transparent",
+          resize: "vertical",
+          border: "0",
+          "&:focus": {
+            outline: `2px solid ${colors.focus}`,
+            outlineOffset: "3px",
+          },
+        })}
       />
     )
     : (
@@ -109,21 +107,20 @@ export function TextInput({
         ref={inputRef}
         {...sharedProps}
         {...(props as InputProps)}
-        css={({ colors, fonts }) =>
-          css`
-        width: 100%;
-        height: 3.5gu;
-        padding: 0;
-        font-family: ${fonts.mono};
-        background: transparent;
-        border: 0;
-        color: ${colors.accent};
-        outline-offset: 3px;
-        outline: ${error ? "2px" : "0"} solid ${colors.warning};
-        &:focus {
-          outline: 2px solid ${error ? colors.warning : colors.focus};
-        }
-      `}
+        css={({ colors, fonts }) => ({
+          width: "100%",
+          height: "3.5gu",
+          padding: "0",
+          fontFamily: fonts.mono,
+          background: "transparent",
+          border: "0",
+          color: colors.accent,
+          outlineOffset: "3px",
+          outline: `${error ? "2px" : "0"} solid ${colors.warning}`,
+          "&:focus": {
+            outline: `2px solid ${error ? colors.warning : colors.focus}`,
+          },
+        })}
       />
     )
 }

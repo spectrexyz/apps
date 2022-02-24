@@ -1,6 +1,5 @@
 import type { ReactNode, RefObject } from "react"
 
-import { css } from "@emotion/react"
 import { colord } from "colord"
 import FocusTrap from "focus-trap-react"
 import { memo, useState } from "react"
@@ -75,70 +74,63 @@ export const Popup = memo(function Popup({
                     pointerEvents: visible ? "auto" : "none",
                     transform,
                   }}
-                  css={({ colors }) =>
-                    css`
-                    padding: 4gu;
-                    ${
-                      mode === "translucid"
-                        ? css`
-                          background: ${
-                          colord(colors.translucid)
-                            .alpha(supportsBackdropFilters ? 0.6 : 1)
-                            .toHex()
-                        };
-                          backdrop-filter: blur(40px);
-                          border-radius: 6px;
-                        `
-                        : css`
-                          background: ${colors.layer1};
-                          border: 1px solid ${colors.outline};
-                        `
-                    }
-                  `}
+                  css={({ colors }) => (
+                    mode === "translucid"
+                      ? {
+                        padding: "4gu",
+                        background: colord(colors.translucid).alpha(
+                          supportsBackdropFilters ? 0.6 : 1,
+                        ).toHex(),
+                        backdropFilter: "blur(40px)",
+                        borderRadius: "6px",
+                      }
+                      : {
+                        padding: "4gu",
+                        background: colors.layer1,
+                        border: `1px solid ${colors.outline}`,
+                      }
+                  )}
                 >
                   <a.div
                     style={{
                       opacity: blur.to((v) => 1 - v),
                     }}
-                    css={css`
-                      display: ${
-                      mode === "translucid"
-                        && supportsBackdropFilters
+                    css={{
+                      display: mode === "translucid" && supportsBackdropFilters
                         ? "block"
-                        : "none"
-                    };
-                      position: absolute;
-                      z-index: 1;
-                      inset: 0;
-                      background: rgb(43, 44, 97);
-                      border-radius: 6px;
-                    `}
+                        : "none",
+                      position: "absolute",
+                      zIndex: "1",
+                      inset: "0",
+                      background: "rgb(43, 44, 97)",
+                      borderRadius: "6px",
+                    }}
                   />
                   <div
-                    css={css`
-                      position: relative;
-                      z-index: 2;
-                    `}
+                    css={{
+                      position: "relative",
+                      zIndex: "2",
+                    }}
                   >
                     {closeButton && (
                       <div
-                        css={css`
-                          display: flex;
-                          justify-content: flex-end;
-                        `}
+                        css={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
                       >
                         <ButtonArea
                           onClick={onClose}
-                          css={css`
-                            position: relative;
-                            display: flex;
-                            width: 2.5gu;
-                            height: 2.5gu;
-                            &:active {
-                              top: 1px;
-                              left: 1px;
-                            }
-                          `}
+                          css={{
+                            position: "relative",
+                            display: "flex",
+                            width: "2.5gu",
+                            height: "2.5gu",
+                            "&:active": {
+                              top: "1px",
+                              left: "1px",
+                            },
+                          }}
                         >
                           <IconX size={2.5 * gu} color={colors.contentDimmed} />
                         </ButtonArea>
@@ -181,10 +173,10 @@ function Position({ opener, children, width }: PositionProps): JSX.Element {
       ref={setContainer}
       style={popperStyles.popper}
       {...popperAttributes.popper}
-      css={css`
-        z-index: 2;
-        width: ${width}px;
-      `}
+      css={{
+        zIndex: "2",
+        width,
+      }}
     >
       {children}
     </div>

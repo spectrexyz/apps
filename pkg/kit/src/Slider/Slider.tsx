@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import {
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
@@ -148,121 +147,116 @@ export function Slider({
       tabIndex={0}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      css={({ colors }) =>
-        css`
-        position: relative;
-        min-width: ${MIN_WIDTH}px;
-        padding: 0 0 ${labels ? css`1.5gu` : "0"};
-        user-select: none;
-        &:focus-visible {
-          outline: ${focused ? "2px" : "0"} solid ${colors.focus};
-        }
-      `}
+      css={({ colors }) => ({
+        position: "relative",
+        minWidth: `${MIN_WIDTH}px`,
+        padding: `0 0 ${labels ? "1.5gu" : "0"}`,
+        userSelect: "none",
+        "&:focus-visible": {
+          outline: `${focused ? "2px" : "0"} solid ${colors.focus}`,
+        },
+      })}
     >
       <div
         ref={handleRef}
         onMouseDown={dragStart}
         onTouchStart={dragStart}
-        css={css`
-          position: relative;
-          height: ${HEIGHT}px;
-          cursor: pointer;
-        `}
+        css={{
+          position: "relative",
+          height: HEIGHT,
+          cursor: "pointer",
+        }}
       >
         <div
-          css={css`
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: ${BAR_HEIGHT}px;
-          `}
+          css={{
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "50%",
+            transform: "translateY(-50%)",
+            height: BAR_HEIGHT,
+          }}
         >
           <div
-            css={css`
-              position: absolute;
-              inset: 0;
-              overflow: hidden;
-              border-radius: ${BAR_HEIGHT / 2}px;
-            `}
+            css={{
+              position: "absolute",
+              inset: "0",
+              overflow: "hidden",
+              borderRadius: BAR_HEIGHT / 2,
+            }}
           >
             <div
               ref={barBounds.observe}
-              css={({ colors }) =>
-                css`
-                position: absolute;
-                inset: 0;
-                background: ${colors.accentInverted};
-              `}
+              css={({ colors }) => ({
+                position: "absolute",
+                inset: "0",
+                background: colors.accentInverted,
+              })}
             />
             <a.div
               style={{ transform: moveSpring.activeBarTransform }}
-              css={({ colors }) =>
-                css`
-                position: absolute;
-                inset: 0;
-                transform-origin: 0 0;
-                background: ${colors.accent};
-              `}
+              css={({ colors }) => ({
+                position: "absolute",
+                inset: "0",
+                transformOrigin: "0 0",
+                background: colors.accent,
+              })}
             />
           </div>
         </div>
 
         <div
-          css={css`
-            overflow: hidden;
-            pointer-events: none;
-            width: calc(100% + ${HANDLE_SIZE}px);
-            height: 100%;
-            transform-origin: 50% 50%;
-            transform: translate(-${HANDLE_SIZE / 2}px, 0);
-          `}
+          css={{
+            overflow: "hidden",
+            pointerEvents: "none",
+            width: `calc(100% + ${HANDLE_SIZE}px)`,
+            height: "100%",
+            transformOrigin: "50% 50%",
+            transform: `translate(-${HANDLE_SIZE / 2}px, 0)`,
+          }}
         >
           <a.div
             style={{ transform: moveSpring.handleTransform }}
-            css={css`
-              width: calc(100% - ${HANDLE_SIZE}px);
-              height: 100%;
-              transform-origin: 50% 50%;
-            `}
+            css={{
+              width: `calc(100% - ${HANDLE_SIZE}px)`,
+              height: "100%",
+              transformOrigin: "50% 50%",
+            }}
           >
             <div
-              css={({ colors }) =>
-                css`
-                overflow: hidden;
-                position: absolute;
-                inset: calc(50% - ${HANDLE_SIZE / 2}px) 0 0;
-                width: ${HANDLE_SIZE}px;
-                height: ${HANDLE_SIZE}px;
-                border-radius: 50%;
-                background: ${colors.layer2};
-              `}
+              css={({ colors }) => ({
+                overflow: "hidden",
+                position: "absolute",
+                inset: `calc(50% - ${HANDLE_SIZE / 2}px) 0 0`,
+                width: `${HANDLE_SIZE}px`,
+                height: `${HANDLE_SIZE}px`,
+                borderRadius: "50%",
+                background: colors.layer2,
+              })}
             >
               <Moire
                 width={HANDLE_SIZE}
                 height={HANDLE_SIZE}
                 scale={0.8}
-                css={css`
-                  position: absolute;
-                  inset: 0;
-                `}
+                css={{
+                  position: "absolute",
+                  inset: "0",
+                }}
               />
             </div>
             <div
-              css={({ colors }) =>
-                css`
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: ${HANDLE_OUTLINE}px;
-                width: ${HANDLE_SIZE - HANDLE_OUTLINE * 2}px;
-                height: ${HANDLE_SIZE - HANDLE_OUTLINE * 2}px;
-                border-radius: 50%;
-                background: ${colors.accent};
-                cursor: pointer;
-                pointer-events: auto;
-              `}
+              css={({ colors }) => ({
+                position: "absolute",
+                top: "50%",
+                transform: "translateY(-50%)",
+                left: HANDLE_OUTLINE,
+                width: HANDLE_SIZE - HANDLE_OUTLINE * 2,
+                height: HANDLE_SIZE - HANDLE_OUTLINE * 2,
+                borderRadius: "50%",
+                background: colors.accent,
+                cursor: "pointer",
+                pointerEvents: "auto",
+              })}
             />
           </a.div>
         </div>
@@ -270,19 +264,18 @@ export function Slider({
 
       {labels && (
         <div
-          css={({ colors, fonts }) =>
-            css`
-            position: absolute;
-            inset: auto 0 0;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-family: ${fonts.sans};
-            color: ${colors.contentDimmed};
-            div {
-              cursor: ${onLabelClick ? "pointer" : "default"};
-            }
-          `}
+          css={({ colors, fonts }) => ({
+            position: "absolute",
+            inset: "auto 0 0",
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: "12px",
+            fontFamily: fonts.sans,
+            color: colors.contentDimmed,
+            "div": {
+              cursor: onLabelClick ? "pointer" : "default",
+            },
+          })}
         >
           <div onClick={onLabelClick && (() => onLabelClick("start"))}>
             {labels[0]}

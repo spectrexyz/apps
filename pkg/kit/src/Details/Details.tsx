@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import { ReactNode, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring, useTransition } from "react-spring"
@@ -43,16 +42,15 @@ export function Details({
 
   return (
     <section
-      css={css`
-        position: relative;
-      `}
+      css={{
+        position: "relative",
+      }}
     >
       <header
-        css={({ colors }) =>
-          css`
-          position: relative;
-          background: ${fullWidth ? colors.layer2 : "transparent"};
-        `}
+        css={({ colors }) => ({
+          position: "relative",
+          background: fullWidth ? colors.layer2 : "transparent",
+        })}
       >
         {!fullWidth
           && opening(
@@ -62,57 +60,55 @@ export function Details({
                   style={{
                     transform: headingWidth.to((v) => `scaleX(${v})`),
                   }}
-                  css={({ colors }) =>
-                    css`
-                    position: absolute;
-                    z-index: 1;
-                    inset: 0;
-                    left: calc(50% - 5gu / 2);
-                    background: ${colors.layer2};
-                    transform-origin: 0 0;
-                  `}
+                  css={({ colors }) => ({
+                    position: "absolute",
+                    zIndex: "1",
+                    inset: "0",
+                    left: "calc(50% - 5gu / 2)",
+                    background: colors.layer2,
+                    transformOrigin: "0 0",
+                  })}
                 />
               ),
           )}
         <div
-          css={css`
-            position: relative;
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 6gu;
-          `}
+          css={{
+            position: "relative",
+            zIndex: "2",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "6gu",
+          }}
         >
           <h1
-            css={css`
-              width: ${headingBaseWidth ?? "100%"};
-            `}
+            css={{
+              width: headingBaseWidth ?? "100%",
+            }}
           >
             <ButtonArea
               onClick={() => setOpened((v) => !v)}
-              css={({ colors }) =>
-                css`
-                display: flex;
-                align-items: center;
-                gap: 1gu;
-                width: 100%;
-                height: 6gu;
-                padding: 0 2gu;
-                text-transform: uppercase;
-                white-space: nowrap;
-                color: ${colors.accent2};
-                background: ${colors.layer2};
-              `}
+              css={({ colors }) => ({
+                display: "flex",
+                alignItems: "center",
+                gap: "1gu",
+                width: "100%",
+                height: "6gu",
+                padding: "0 2gu",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+                color: colors.accent2,
+                background: colors.layer2,
+              })}
             >
               {heading}
               <a.div
                 style={{ transform: arrowRotationTransform }}
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  transform-origin: 50% 50%;
-                `}
+                css={{
+                  display: "flex",
+                  alignItems: "center",
+                  transformOrigin: "50% 50%",
+                }}
               >
                 <IconCaretDown size={2 * gu} />
               </a.div>
@@ -123,9 +119,9 @@ export function Details({
               opened && contextual && (
                 <a.div
                   style={{ opacity: contentHeight }}
-                  css={css`
-                    padding-right: 2gu;
-                  `}
+                  css={{
+                    paddingRight: "2gu",
+                  }}
                 >
                   {contextual}
                 </a.div>
@@ -142,25 +138,24 @@ export function Details({
                   (v) => `${v * contentBounds.height}px`,
                 ),
               }}
-              css={({ colors }) =>
-                css`
-                position: relative;
-                overflow: hidden;
-                background: ${colors.layer2};
-              `}
+              css={({ colors }) => ({
+                position: "relative",
+                overflow: "hidden",
+                background: colors.layer2,
+              })}
             >
               <div
                 ref={contentBounds.observe}
-                css={css`
-                  position: absolute;
-                  bottom: 0;
-                `}
+                css={{
+                  position: "absolute",
+                  bottom: "0",
+                }}
               >
                 <a.div
                   style={{ opacity: contentHeight.to([0, 0.8, 1], [0, 0, 1]) }}
-                  css={css`
-                    padding: 1gu 2gu 2gu;
-                  `}
+                  css={{
+                    padding: "1gu 2gu 2gu",
+                  }}
                 >
                   {children}
                 </a.div>
