@@ -37,7 +37,7 @@ function distributionColor(groupIndex: number, mode?: string) {
 export function NftOwnership({ snft }: { snft: Snft }) {
   const distributionInView = useInView()
   const [showDistribution, setShowDistribution] = useState(false)
-  const [mode, setMode] = useState<DisplayMode>("minted-supply")
+  const [mode, setMode] = useState<DisplayMode>("distribution")
 
   const { inView } = distributionInView
   useEffect(() => {
