@@ -127,9 +127,9 @@ export function shortenAddress(address: string, charsLength = 4): string {
   ).toLowerCase()
 }
 
-const addressRe = /^0x[0-9a-fA-F]{40}$/
+const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
 export function isAddress(address: string): boolean {
-  return addressRe.test(address)
+  return ADDRESS_RE.test(address)
 }
 
 const emailRe = /.+@.+/
@@ -310,4 +310,139 @@ export function pick<T extends object, U extends keyof T>(
   const values = Object.create(null)
   for (const k of paths) values[k] = obj[k]
   return values
+}
+
+export type Share = {
+  amount: bigint | null
+  index: number
+  percentage: number
+  type: "amount" | "rest"
+}
+
+export function calculateShares(
+  balances: bigint[],
+  {
+    total: _total,
+    limit = balances.length,
+  }: {
+    total?: bigint
+    limit?: number
+  } = {},
+): Share[] {
+  const total = _total === undefined
+    ? balances.reduce((t, v) => t + v, 0n)
+    : _total
+
+  // percentage + two digits (only used to sort by closest to the next integer)
+  const pctPrecision = 10000
+
+  // Calculate the percentages of all the shares
+  const shares: Share[] = balances
+    .filter((amount) => amount > 0n)
+    .map((amount, index) => ({
+      amount,
+      index,
+      percentage: Number(amount * BigInt(pctPrecision) / total),
+      type: "amount" as "amount",
+    }))
+    .sort((a, b) => Number(b.percentage - a.percentage))
+
+  const hasRest = balances.length > limit
+
+  // convert the percentage back to a number
+  const stakePercentageAsNumber = (stake: Share) => ({
+    ...stake,
+    percentage: (stake.percentage / pctPrecision) * 100,
+  })
+
+  // Add the “Rest” item or update an existing one
+  const addRest = (
+    shares: Share[],
+    restPercentage: number,
+  ) => {
+    if (restPercentage === 0) return shares
+
+    let rest = shares.find((s) => s.amount === null)
+    if (!rest) {
+      rest = {
+        amount: null,
+        index: -1,
+        percentage: 0,
+        type: "rest",
+      }
+      shares.push(rest)
+    }
+
+    rest.percentage += restPercentage
+    return shares
+  }
+
+  const addCalculatedRest = (
+    includedShares: Share[],
+    excludedShares: Share[],
+  ) => {
+    return addRest(
+      includedShares,
+      excludedShares.reduce((total, s) => total + s.percentage, 0),
+    )
+  }
+
+  // the shares to be included (not adjusted yet)
+  const includedShares = (
+    hasRest
+      ? addCalculatedRest(
+        shares.slice(0, limit - 1),
+        shares.slice(limit - 1),
+      )
+      : shares
+  ).map(stakePercentageAsNumber)
+
+  // Round to the next integer some stake percentages until we get to 100%.
+  // Start with the percentages that are the closest to the next integer.
+  const missingPct = includedShares.reduce(
+    (total, stake) => total - Math.floor(stake.percentage),
+    100,
+  )
+  const sharesToAdjust = includedShares
+    .map((stake, index) => [index, stake.percentage])
+    .sort((a, b) => (b[1] % 1) - (a[1] % 1))
+    .slice(0, missingPct)
+    .map(([index]) => index)
+
+  const adjustStakePercentage = (stake: Share, index: number) => ({
+    ...stake,
+    percentage: sharesToAdjust.includes(index)
+      ? Math.ceil(stake.percentage)
+      : Math.floor(stake.percentage),
+  })
+
+  const adjustedShares = includedShares.map(adjustStakePercentage)
+
+  // If the total is higher than the provided balances
+  const addMissingPercentage = (shares: Share[]) => {
+    const total = shares.reduce((t, s) => t + s.percentage, 0)
+    return total < 100 ? addRest(shares, 100 - total) : shares
+  }
+
+  // Check if there is any 0% item in the list
+  const firstZeroIndex = adjustedShares.findIndex(
+    ({ percentage }) => percentage === 0,
+  )
+
+  if (firstZeroIndex === -1) {
+    return addMissingPercentage(adjustedShares)
+  }
+
+  return addMissingPercentage(
+    // Remove the 0% items and group them in a “Rest” item.
+    hasRest
+      ? // A “Rest” item already exists, we can remove the 0% items.
+        adjustedShares.slice(0, firstZeroIndex)
+      : // A “Rest” item needs to be added and can not be zero,
+      // so we replace the first non-zero percentage by “Rest”.
+        addRest(
+          adjustedShares.slice(0, firstZeroIndex - 1),
+          adjustedShares[firstZeroIndex - 1].percentage,
+        ),
+  )
 }
