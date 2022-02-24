@@ -3,52 +3,55 @@ import {
   IsometricRectangle,
   PlaneView,
 } from "@elchininet/isometric"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import useDimensions from "react-cool-dimensions"
 import { useSpring, useSpringRef } from "react-spring"
 import { springs } from "../styles"
 import { useTheme } from "../Theme"
 import { list, raf, shuffle } from "../utils"
 
-const DISTRIBUTION_COLORS = [
+type Mode = "percentage" | "distribution"
+
+type Cube =
+  | [IsometricRectangle]
+  | [IsometricRectangle, IsometricRectangle]
+  | [IsometricRectangle, IsometricRectangle, IsometricRectangle]
+
+const DEFAULT_EMPTY_COLOR = "#58FFCA"
+
+const DEFAULT_DISTRIBUTION_COLORS = [
   "#6584E0",
   "#C0BBFF",
   "#F8FFA6",
   "#A0A8C2",
   "#F597F8",
 ]
-const SINGLE_VALUE_COLOR = DISTRIBUTION_COLORS[2]
+const DEFAULT_PERCENTAGE_COLOR = DEFAULT_DISTRIBUTION_COLORS[2]
 
-const RATIO = 1.3
+const RATIO = 4 / 3
 
-function distributionColor(
+function colorDefault(
   groupIndex: number,
-  valuesFilled: number[],
-  lastSlotEmpty: boolean,
-  emptyColor: string,
+  mode: Mode,
 ): string {
-  // Emty slot
-  if (lastSlotEmpty && groupIndex === valuesFilled.length - 1) {
-    return emptyColor
+  if (mode === "percentage") {
+    return DEFAULT_PERCENTAGE_COLOR
   }
-
-  // A specific color is used for single group distributions
-  if (
-    groupIndex === 0 && (
-      valuesFilled.length === 1
-      || lastSlotEmpty && valuesFilled.length === 2
-    )
-  ) {
-    return SINGLE_VALUE_COLOR
-  }
-
-  // Otherwise we rotate on DISTRIBUTION_COLORS
-  return DISTRIBUTION_COLORS[groupIndex % DISTRIBUTION_COLORS.length]
+  return DEFAULT_DISTRIBUTION_COLORS[
+    groupIndex % DEFAULT_DISTRIBUTION_COLORS.length
+  ]
 }
 
 // Fill the distribution array so the total is always 100.
 // Cuts extra values if necessary.
-export function fillDistribution(values: number[]) {
+export function correctDistribution(values: number[]) {
   const filled = []
   let total = 0
   for (const value of values) {
@@ -88,37 +91,36 @@ function makeCube(
   index: number,
   baseColor: string,
   strokeColor: string,
-): IsometricRectangle[] {
+): Cube {
   const col = 10 - (index % 10)
   const row = Math.floor(index / 10)
 
   const x = row + col - 10
   const y = col - 4.5
 
-  const rects: IsometricRectangle[] = []
-
   // top
-  rects.push(makeRect(PlaneView.TOP, x, y, baseColor, strokeColor))
+  const cube: Cube = [
+    makeRect(PlaneView.TOP, x, y, baseColor, strokeColor),
+  ]
 
   // left
   if (row === 9) {
-    rects.push(makeRect(PlaneView.SIDE, x + 1, y - 1, baseColor, strokeColor))
+    cube.push(makeRect(PlaneView.SIDE, x + 1, y - 1, baseColor, strokeColor))
   }
 
   // right
   if (col === 1) {
-    rects.push(makeRect(PlaneView.FRONT, x - 1, y - 2, baseColor, strokeColor))
+    cube.push(makeRect(PlaneView.FRONT, x - 1, y - 2, baseColor, strokeColor))
   }
 
-  return rects
+  return cube
 }
 
-type DistributionProps = {
-  values: number[]
-}
-
-function useSpringProgress() {
-  const progress = useRef({ value: 0, animating: true })
+function useSpringProgress(): [
+  RefObject<{ value: number; running: boolean }>,
+  () => void,
+] {
+  const progress = useRef({ value: 0, running: true })
   const springRef = useSpringRef()
 
   useSpring({
@@ -130,127 +132,146 @@ function useSpringProgress() {
       progress.current.value = value.progress
     },
     onRest() {
-      progress.current.animating = false
+      progress.current.running = false
     },
     onStart() {
-      progress.current.animating = true
+      progress.current.running = true
     },
   })
 
-  return [
-    progress,
-    useCallback(() => {
-      springRef.current[0].stop(true)
-      progress.current.value = 0
-      springRef.current[0].set({ progress: 0 })
-      springRef.current[0].start()
-    }, []),
-  ]
+  const restart = useCallback(() => {
+    springRef.current[0].stop(true)
+    progress.current.value = 0
+    springRef.current[0].set({ progress: 0 })
+    springRef.current[0].start()
+  }, [])
+
+  return [progress, restart]
+}
+
+function surfaceEntries(
+  values: number[],
+  cubes: Cube[],
+  mode: Mode,
+  color: ColorFn,
+  colorEmpty: string,
+) {
+  const surfaceEntries: Array<[IsometricRectangle, string]> = []
+  let cubesIndex = 0
+
+  for (const [groupIndex, groupSize] of values.entries()) {
+    const empty = mode === "percentage" && groupIndex === 1
+    const groupColor = empty ? colorEmpty : color(groupIndex, mode)
+
+    const groupSurfaceEntries = cubes.slice(
+      cubesIndex,
+      cubesIndex + groupSize,
+    ).flat().map((surface) =>
+      [surface, groupColor] as [IsometricRectangle, string]
+    )
+
+    surfaceEntries.push(...groupSurfaceEntries)
+    cubesIndex += groupSize
+  }
+
+  return surfaceEntries
+}
+
+type ColorFn = typeof colorDefault
+
+type DistributionProps = {
+  color?: ColorFn
+  colorEmpty?: string
+  startFromEmpty?: boolean
+  values: number[]
 }
 
 export function Distribution({
-  values = [100],
+  color = colorDefault,
+  colorEmpty = DEFAULT_EMPTY_COLOR,
+  startFromEmpty = true,
+  values: valuesNonCorrected = [100],
 }: DistributionProps): JSX.Element {
-  const [container, setContainer] = useState<HTMLDivElement>(null)
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const { colors } = useTheme()
   const bounds = useDimensions()
-  const valuesFilled = useMemo(() => fillDistribution(values), [values])
   const isoCanvas = useRef<null | IsometricCanvas>(null)
-  const lastSlotEmpty = valuesFilled.length > values.length
+  const isoCubes = useRef<Cube[]>([])
+
+  const [mode, values] = useMemo<[Mode, number[]]>(() => [
+    valuesNonCorrected.length === 1 ? "percentage" : "distribution",
+    correctDistribution(valuesNonCorrected),
+  ], [valuesNonCorrected])
 
   const [reveal, restartReveal] = useSpringProgress()
-
   useEffect(() => {
     if (values) {
       restartReveal()
     }
-  }, [values])
+  }, [restartReveal, values])
 
   const { width } = bounds
   useEffect(() => {
-    if (!container) return null
+    if (!container) return
 
-    const _width = width ?? 0
     isoCanvas.current = new IsometricCanvas({
       backgroundColor: "transparent",
       container,
-      height: _width / RATIO,
-      scale: _width * 0.055,
-      width: _width,
+      height: Math.round(width / RATIO),
+      scale: width * 0.055,
+      width,
     })
 
+    isoCubes.current = list(100, (index) => (
+      makeCube(index, colorEmpty, colors.background)
+    ))
+
+    isoCanvas.current.addChildren(...isoCubes.current.flat())
+
     return () => {
-      isoCanvas.current.clear()
-      isoCanvas.current.getElement().remove()
+      if (isoCanvas.current) {
+        isoCanvas.current.clear()
+        isoCanvas.current.getElement().remove()
+      }
       isoCanvas.current = null
+      isoCubes.current = []
     }
-  }, [container, width])
+  }, [colorEmpty, colors, container, width])
 
   useEffect(() => {
     if (!isoCanvas.current) return
 
-    const { surfaces, surfacesToAnimate } = valuesFilled.reduce<{
-      cubesIndex: number
-      surfaces: IsometricRectangle[]
-      surfacesToAnimate: [IsometricRectangle, string][]
-    }>(
-      ({ cubesIndex, surfaces, surfacesToAnimate }, groupSize, groupIndex) => {
-        const groupSurfaces = list(groupSize).flatMap((i) => {
-          return makeCube(cubesIndex + i, colors.accent, colors.accent)
-        })
+    const entries = shuffle(surfaceEntries(
+      values,
+      isoCubes.current,
+      mode,
+      color,
+      colorEmpty,
+    ))
 
-        const groupColor = distributionColor(
-          groupIndex,
-          valuesFilled,
-          lastSlotEmpty,
-          colors.background,
-        )
-
-        const groupSurfacesToAnimate = groupSurfaces.map(
-          (surface) =>
-            [
-              surface,
-              surface.planeView === "TOP" ? groupColor : colors.background,
-            ] as [IsometricRectangle, string],
-        )
-
-        return {
-          surfaces: [...surfaces, ...groupSurfaces],
-          surfacesToAnimate: [...surfacesToAnimate, ...groupSurfacesToAnimate],
-          cubesIndex: cubesIndex + groupSize,
-        }
-      },
-      { cubesIndex: 0, surfaces: [], surfacesToAnimate: [] },
-    )
-
-    isoCanvas.current.addChildren(...surfaces)
-
-    const surfacesReveal = shuffle([...surfacesToAnimate])
+    const progressSlice = (arr) =>
+      arr.slice(0, Math.round(reveal.current.value * arr.length))
 
     const stopAnimation = raf(() => {
-      if (!reveal.current.animating) {
+      if (!reveal.current.running) {
         stopAnimation()
         return
       }
-
-      const progressSlice = (arr) =>
-        arr.slice(
-          0,
-          Math.round(reveal.current.value * arr.length),
-        )
-
-      const nextBatch = progressSlice(surfacesReveal)
-
-      for (const [surface, color] of nextBatch) {
+      for (const [surface, color] of progressSlice(entries)) {
         surface.fillColor = color
       }
     })
 
     return () => {
       stopAnimation()
-      isoCanvas.current.clear()
+
+      if (startFromEmpty) {
+        entries.forEach(([surface]) => {
+          surface.fillColor = colorEmpty
+        })
+      }
     }
-  }, [colors, lastSlotEmpty, reveal, valuesFilled])
+  }, [color, colorEmpty, mode, reveal, startFromEmpty, values])
 
   return (
     <div ref={bounds.observe} css={{ width: "100%" }}>
