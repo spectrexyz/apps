@@ -1,15 +1,30 @@
-export type SnftEvent = [
-  metadata: [category: string, url: string],
-  description: string,
-]
+import { Address } from "kit"
+
+export type SnftEvent = {
+  date: string
+  subject: Address
+  description: string
+}
+
+export type Distribution = Array<{
+  address: Address | null
+  quantity: bigint
+}>
 
 export type Snft = {
   id: string
   image: string
   title: string
   description: string
-  token: { symbol: string; name: string; distribution: number[] }
+  token: {
+    distribution: Distribution
+    minted: bigint
+    name: string
+    priceEth: number
+    supply: bigint
+    symbol: string
+  }
   creator: { address: string; name: string; url: string }
-  history: { date: string; event: SnftEvent }[]
+  history: SnftEvent[]
   guardian: string
 }

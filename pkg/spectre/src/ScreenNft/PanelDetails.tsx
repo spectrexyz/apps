@@ -14,33 +14,35 @@ export function PanelDetails({
       css={{
         maxWidth: "160gu",
         margin: "0 auto",
-        paddingTop: "7.5gu",
+        paddingTop: "8gu",
       }}
     >
-      <h1
-        css={{
-          paddingBottom: "5gu",
-          fontSize: "32px",
-        }}
-      >
-        {title}
-      </h1>
       <div
         css={{
           display: "flex",
           justifyContent: "space-between",
+          width: "100%",
         }}
       >
         <div
           css={{
-            width: "80gu",
+            width: "72gu",
           }}
         >
+          <h1
+            css={({ fonts }) => ({
+              fontFamily: fonts.sans,
+              fontSize: "40px",
+            })}
+          >
+            {"Spectre is a super long NFT title that overflows in 2 lines"
+              || title}
+          </h1>
           {primary}
         </div>
         <div
           css={{
-            width: "52gu",
+            width: "72gu",
           }}
         >
           {secondary}

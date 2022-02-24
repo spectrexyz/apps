@@ -93,14 +93,16 @@ export function useLayout() {
   )
 }
 
-export function usePanelTitleStyle() {
+export function useLabelStyle(
+  { size = "medium" }: ({ size?: "medium" | "small" }) = {},
+) {
   const { colors, fonts } = useTheme()
   return useMemo(() => ({
     display: "block",
-    paddingBottom: "2gu",
-    fontSize: "18px",
-    fontFamily: fonts.mono,
+    paddingBottom: size === "small" ? 0 : "2gu",
+    fontSize: size === "small" ? "12px" : "18px",
+    fontFamily: size === "small" ? fonts.sans : fonts.mono,
     textTransform: "uppercase" as "uppercase",
-    color: colors.content,
-  }), [colors, fonts])
+    color: size === "small" ? colors.contentDimmed : colors.content,
+  }), [colors, fonts, size])
 }

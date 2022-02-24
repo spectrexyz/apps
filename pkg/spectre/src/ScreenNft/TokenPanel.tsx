@@ -1,19 +1,8 @@
-import { css } from "@emotion/react"
-import {
-  Anchor,
-  Button,
-  ButtonIcon,
-  IconHeartStraightFilled,
-  IconLifebuoy,
-  IconMagnifyingGlassPlus,
-  Info,
-  Popup,
-} from "kit"
-import React, { useCallback, useRef, useState } from "react"
+import { Anchor, Button, IconLifebuoy, Info, Popup } from "kit"
+import { useCallback, useRef, useState } from "react"
 import { useLocation } from "wouter"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
-import { ViewArea } from "./ViewArea"
 
 const PARAMETER_DESC = `
   Do you want a jelly baby? Don't be sad Grace. You'll do great things. Jamie,
@@ -45,43 +34,17 @@ export function TokenPanel({ id }: { id: string }) {
   const [_, setLocation] = useLocation()
   return (
     <section>
-      <ViewArea
-        actionButtons={
-          <>
-            <ButtonIcon
-              icon={<IconHeartStraightFilled />}
-              mode="outline"
-              label="Add to favorites"
-            />
-            <ButtonIcon
-              icon={<IconMagnifyingGlassPlus />}
-              mode="outline"
-              label="Zoom"
-            />
-          </>
-        }
-        labelDisplay="FRACTIONALIZED"
-        label="Fractionalized"
-      >
-        <div
-          css={css`
-            height: 20gu;
-          `}
-        >
-          s-token
-        </div>
-      </ViewArea>
       <PanelDetails
         title="$SUB277"
         primary={
           <>
             <PanelSection>
               <div
-                css={css`
-                  p + p {
-                    margin-top: 3gu;
-                  }
-                `}
+                css={{
+                  "p + p": {
+                    marginTop: "3gu",
+                  },
+                }}
               >
                 <p>
                   <Anchor href="https://example.org/">
@@ -94,9 +57,9 @@ export function TokenPanel({ id }: { id: string }) {
                   New-New-New-New-New-New-New-New-New-New-New-New-New New York.
                 </p>
                 <div
-                  css={css`
-                    padding-top: 5gu;
-                  `}
+                  css={{
+                    paddingTop: "5gu",
+                  }}
                 >
                   <Button
                     label="Buy $SUB277 token"
@@ -110,11 +73,11 @@ export function TokenPanel({ id }: { id: string }) {
             </PanelSection>
             <PanelSection title="Fractionalization parameters">
               <div
-                css={css`
-                  display: flex;
-                  flex-wrap: wrap;
-                  gap: 2gu;
-                `}
+                css={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "2gu",
+                }}
               >
                 {PARAMETERS.map(([label, value]) => (
                   <Parameter key={label + value} label={label} value={value} />
@@ -155,11 +118,10 @@ function Parameter({ label, value }: { label: string; value: string }) {
         label={`${label}: ${value}`}
         mode="flat"
         onClick={() => setPopupVisible(true)}
-        css={({ colors, fonts }) =>
-          css`
-          font-family: ${fonts.families.sans};
-          color: ${colors.contentHeading};
-        `}
+        css={({ colors, fonts }) => ({
+          fontFamily: fonts.sans,
+          color: colors.contentHeading,
+        })}
       />
       <Popup
         onClose={useCallback(() => setPopupVisible(false), [])}
@@ -167,26 +129,24 @@ function Parameter({ label, value }: { label: string; value: string }) {
         visible={popupVisible}
       >
         <section
-          css={css`
-            padding: 3gu;
-          `}
+          css={{
+            padding: "3gu",
+          }}
         >
           <h1
-            css={({ colors }) =>
-              css`
-              padding-bottom: 1gu;
-              text-transform: uppercase;
-              color: ${colors.contentHeading};
-            `}
+            css={({ colors }) => ({
+              paddingBottom: "1gu",
+              textTransform: "uppercase",
+              color: colors.contentHeading,
+            })}
           >
             {label}
           </h1>
           <p
-            css={({ colors, fonts }) =>
-              css`
-              font-family: ${fonts.families.sans};
-              color: ${colors.contentHeading2};
-            `}
+            css={({ colors, fonts }) => ({
+              fontFamily: fonts.sans,
+              color: colors.contentHeading2,
+            })}
           >
             {PARAMETER_DESC}
           </p>
@@ -205,12 +165,12 @@ function LabelledValues({
 }) {
   return (
     <div
-      css={css`
-        display: grid;
-        grid-auto-rows: auto;
-        grid-template-columns: repeat(${cols}, 1fr);
-        gap: 3gu;
-      `}
+      css={{
+        display: "grid",
+        gridAutoRows: "auto",
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gap: "3gu",
+      }}
     >
       {values.map(([label, value]) => (
         <LabelledValue key={label + value} label={label} value={value} />
@@ -224,12 +184,11 @@ function LabelledValue({ label, value }: { label: string; value: string }) {
     <section>
       <h1>{label}</h1>
       <div
-        css={({ fonts }) =>
-          css`
-          font-family: ${fonts.families.mono};
-          font-size: 32px;
-          font-weight: 400;
-        `}
+        css={({ fonts }) => ({
+          fontFamily: fonts.mono,
+          fontSize: "32px",
+          fontWeight: "400",
+        })}
       >
         {value}
       </div>

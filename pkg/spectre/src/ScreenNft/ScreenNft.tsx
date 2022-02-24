@@ -1,87 +1,134 @@
-import React, { useCallback, useRef } from "react"
-import { css } from "@emotion/react"
-import { useLocation } from "wouter"
 import {
   ButtonIcon,
+  gu,
   IconArrowLeft,
   IconArrowRight,
-  IconHeartStraightFilled,
   IconMagnifyingGlassPlus,
+  IconShare,
   IconSquaresFour,
   Tabs,
-  gu,
 } from "kit"
-import { AppScreen } from "../AppLayout/AppScreen"
-import { useSnftsAdjacent, useSnft } from "../snft-hooks"
+import { ReactNode, useCallback, useMemo } from "react"
+import { useLocation } from "wouter"
+import { usePreventNextScrollReset } from "../App/AppScroll"
+import { AppScreen } from "../AppLayout/AppScreen2"
+import { useSnft, useSnftsAdjacent } from "../snft-hooks"
+import { useLayout } from "../styles"
 import { NftPanel } from "./NftPanel"
 import { TokenPanel } from "./TokenPanel"
 import { ViewArea } from "./ViewArea"
+
+const tabs = [
+  {
+    label: "NFT",
+    panelId: "nft-panel-nft",
+    tabId: "nft-tab-nft",
+  },
+  {
+    label: "Fractions",
+    panelId: "nft-panel-fractions",
+    tabId: "nft-tab-fractions",
+  },
+  {
+    label: "Pool",
+    panelId: "nft-panel-pool",
+    tabId: "nft-tab-pool",
+  },
+]
+
+const panels = [
+  ["nft", ""],
+  ["fractions", "/fractions"],
+  ["pool", "/pool"],
+]
 
 export function ScreenNft({
   id,
   panel,
 }: {
   id: string
-  panel: "serc20" | "nft"
+  panel: "pool" | "fractions" | "nft"
 }) {
   const [_, setLocation] = useLocation()
-  const tokenPanel = panel === "serc20"
-
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
+  const preventNextScrollReset = usePreventNextScrollReset()
+
+  const tabIndex = useMemo(() => (
+    panels.findIndex(([_panel]) => _panel === panel)
+  ), [panel])
 
   const handlePrevNft = useCallback(() => {
     if (nftPrev) {
-      setLocation(`/nfts/${nftPrev.id}${panel === "serc20" ? "/serc20" : ""}`)
+      setLocation(`/nfts/${nftPrev.id}${panels[tabIndex][1]}`)
     }
-  }, [nftPrev, panel, setLocation])
+  }, [nftPrev, panel, setLocation, tabIndex])
 
   const handleNextNft = useCallback(() => {
     if (nftNext) {
-      setLocation(`/nfts/${nftNext.id}${panel === "serc20" ? "/serc20" : ""}`)
+      setLocation(`/nfts/${nftNext.id}${panels[tabIndex][1]}`)
     }
-  }, [nftNext, panel, setLocation])
+  }, [nftNext, panel, setLocation, tabIndex])
 
   const handleSelectPanel = useCallback(
     (index) => {
-      setLocation(`/nfts/${id}${index === 1 ? "/serc20" : ""}`)
+      preventNextScrollReset()
+      setLocation(`/nfts/${id}${panels[index][1]}`)
     },
-    [id, tokenPanel, setLocation]
+    [id, preventNextScrollReset, setLocation],
   )
 
   const snft = useSnft(id)
 
-  const tabs = useRef([
-    {
-      label: "NFT",
-      panelId: "nft-panel-nft",
-      tabId: "nft-tab-nft",
-    },
-    {
-      label: "sERC20",
-      panelId: "nft-panel-serc20",
-      tabId: "nft-tab-serc20",
-    },
-  ])
+  const layout = useLayout()
 
   return (
-    <AppScreen mode="minimal" title="NFT" onBack={() => {}}>
+    <AppScreen
+      compactBar={layout.below("medium") && {
+        title: "NFT",
+        onBack: () => {},
+      }}
+    >
       <ViewArea
         height={62.5 * gu}
         labelDisplay="FRACTIONALIZED"
         label="Fractionalized"
         actionButtons={
           <>
-            <ButtonIcon
-              icon={<IconHeartStraightFilled />}
-              mode="outline"
-              label="Add to favorites"
+            <ButtonIconLabel
+              icon={<IconShare />}
+              label="Share"
+              labelPosition="left"
+              onClick={() => {}}
+              disabled={false}
             />
-            <ButtonIcon
-              external
+            <ButtonIconLabel
               href={snft?.image}
               icon={<IconMagnifyingGlassPlus />}
               label="Zoom"
-              mode="outline"
+              labelPosition="left"
+              disabled={false}
+            />
+          </>
+        }
+        navigationButtons={
+          <>
+            <ButtonIconLabel
+              icon={<IconArrowLeft />}
+              label="Prev"
+              labelFull="Previous"
+              onClick={handlePrevNft}
+              disabled={!(nftPrev)}
+            />
+            <ButtonIconLabel
+              icon={<IconSquaresFour />}
+              label="All"
+              onClick={() => {}}
+            />
+            <ButtonIconLabel
+              icon={<IconArrowRight />}
+              label="Next"
+              onClick={handleNextNft}
+              disabled={!nftNext}
             />
           </>
         }
@@ -90,77 +137,87 @@ export function ScreenNft({
       </ViewArea>
 
       <div
-        css={css`
-          padding-top: 6.5gu;
-        `}
-      />
-
-      <Tabs
-        align="start"
-        bordered
-        items={tabs.current}
-        onSelect={handleSelectPanel}
-        selected={panel === "nft" ? 0 : 1}
+        css={{
+          paddingTop: "6.5gu",
+        }}
       />
 
       <div
-        css={css`
-          position: relative;
-          display: flex;
-          justify-content: center;
-          width: 100%;
-          max-width: 160gu;
-          margin: 0 auto;
-        `}
+        css={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          maxWidth: "160gu",
+          margin: "0 auto",
+        }}
       >
-        <div
-          css={css`
-            position: absolute;
-            inset: 0 auto auto 0;
-            display: flex;
-            gap: 1.5gu;
-          `}
-        >
-          {nftPrev ? (
-            <ButtonIcon
-              icon={<IconArrowLeft />}
-              label="Previous"
-              mode="outline"
-              onClick={handlePrevNft}
-            />
-          ) : (
-            <div
-              css={css`
-                width: 5gu;
-                height: 5gu;
-              `}
-            />
-          )}
-          {nftNext && (
-            <ButtonIcon
-              icon={<IconArrowRight />}
-              label="Next"
-              mode="outline"
-              onClick={handleNextNft}
-            />
-          )}
-        </div>
-        <div
-          css={css`
-            position: absolute;
-            inset: 0 0 auto auto;
-          `}
-        >
-          <ButtonIcon icon={<IconSquaresFour />} mode="outline" label="Grid" />
+        <div css={{ width: "100%" }}>
+          <Tabs
+            items={tabs}
+            onSelect={handleSelectPanel}
+            selected={tabIndex}
+          />
         </div>
       </div>
-      <div
-        css={css`
-          padding-top: 3gu;
-        `}
-      >
-        {tokenPanel ? <TokenPanel id={id} /> : <NftPanel id={id} />}
-      </div>
+      {panel === "nft" && <NftPanel id={id} />}
+      {panel === "fractions" && <TokenPanel id={id} />}
+      {panel === "pool" && <TokenPanel id={id} />}
     </AppScreen>
+  )
+}
+
+function ButtonIconLabel(
+  {
+    disabled = false,
+    href,
+    icon,
+    label,
+    labelFull = label,
+    labelPosition = "bottom",
+    onClick,
+  }: {
+    disabled?: boolean
+    href?: string
+    icon: ReactNode
+    label: string
+    labelFull?: string
+    labelPosition?: "left" | "bottom"
+    onClick?: () => void
+  },
+) {
+  return (
+    <div
+      title={labelFull}
+      css={{
+        display: "flex",
+        flexDirection: labelPosition === "bottom" ? "column" : "row-reverse",
+        gap: "1.5gu",
+      }}
+    >
+      <ButtonIcon
+        disabled={disabled}
+        external={Boolean(href)}
+        href={href}
+        icon={icon}
+        label={labelFull}
+        mode="outline"
+        onClick={onClick}
+      />
+      <div
+        css={({ colors, fonts }) => ({
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "12px",
+          fontFamily: fonts.sans,
+          textTransform: "uppercase",
+          color: colors.contentDimmed,
+          userSelect: "none",
+        })}
+      >
+        {label}
+      </div>
+    </div>
   )
 }
