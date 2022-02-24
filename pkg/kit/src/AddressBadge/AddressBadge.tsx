@@ -1,11 +1,12 @@
-import { css } from "@emotion/react"
 import { EthIcon } from "../EthIcon"
+import { gu } from "../styles"
 import { shortenAddress } from "../utils"
 
 type AddressBadgeProps = {
   address: string
   ensName?: string
   error?: boolean
+  rounded?: boolean
   size?: "medium" | "large"
   transparent?: boolean
 }
@@ -14,47 +15,51 @@ export function AddressBadge({
   address,
   ensName,
   error = false,
+  rounded = false,
   size = "medium",
   transparent = false,
 }: AddressBadgeProps): JSX.Element {
-  const iconSize = size === "large" ? 32 : 20
+  let iconSize = rounded ? 3 * gu : 2.5 * gu
+  if (size === "large") iconSize = 4 * gu
+
   return (
     <div
-      css={({ colors }) =>
-        css`
-        display: flex;
-        align-items: center;
-        height: 4gu;
-        padding: ${transparent ? "0" : css`0 1gu`};
-        user-select: none;
-        color: ${colors.accent};
-        background: ${
-          error
-            ? colors.negative
-            : transparent
-            ? "none"
-            : colors.layer1
-        };
-      `}
+      css={({ colors }) => ({
+        display: "flex",
+        alignItems: "center",
+        height: "4gu",
+        padding: transparent ? "0" : `0 1gu`,
+        userSelect: "none",
+        color: colors.accent,
+        background: error
+          ? colors.negative
+          : transparent
+          ? "none"
+          : colors.layer1,
+        borderRadius: rounded ? "10gu" : "0",
+      })}
     >
       <div
-        css={css`
-          display: flex;
-          align-items: center;
-          width: ${iconSize}px;
-          height: ${iconSize}px;
-          margin-right: ${size === "large" ? css`2gu` : css`1.25gu`};
-        `}
+        css={{
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          width: iconSize,
+          height: iconSize,
+          marginLeft: rounded ? "-0.5gu" : "0",
+          marginRight: size === "large" ? "2gu" : "1.25gu",
+          borderRadius: rounded ? "50%" : "0",
+        }}
       >
         <EthIcon address={address} size={iconSize} />
       </div>
       <div
         title={address}
-        css={({ fonts }) =>
-          css`
-          font-family: ${fonts.mono};
-          font-size: ${size === "large" ? "24px" : "16px"};
-        `}
+        css={({ fonts }) => ({
+          fontFamily: fonts.mono,
+          fontSize: size === "large" ? "24px" : "16px",
+          whiteSpace: "nowrap",
+        })}
       >
         {ensName ?? shortenAddress(address)}
       </div>
