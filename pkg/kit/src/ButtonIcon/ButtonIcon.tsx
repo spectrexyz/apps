@@ -12,7 +12,7 @@ import { gu } from "../styles"
 import { ThemeContext } from "../Theme/Theme"
 
 type ButtonIconMode = "normal" | "outline"
-type ButtonIconSize = "medium" | "small"
+type ButtonIconSize = "large" | "medium" | "small"
 
 type ButtonIconProps = ButtonAreaProps & {
   disabled?: boolean
@@ -42,7 +42,7 @@ export const ButtonIcon = forwardRef<
     label,
     mode = "normal",
     onClick,
-    size = "medium",
+    size = "large",
     ...props
   },
   ref,
@@ -59,12 +59,16 @@ export const ButtonIcon = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [disabled, external, href, onClick])
 
+  let cssSize = "5gu"
+  if (size === "small") cssSize = "3gu"
+  if (size === "medium") cssSize = "4gu"
+
   const sharedCssStyles = ({ colors }: ThemeContext) => ({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    width: size === "small" ? "3gu" : "5gu",
-    height: size === "small" ? "3gu" : "5gu",
+    width: cssSize,
+    height: cssSize,
     color: mode === "outline" ? colors.accent : colors.content,
     background: mode === "outline" ? colors.background : "transparent",
     border: `${mode === "outline" ? "1px" : "0"} solid ${colors.accent}`,
@@ -108,5 +112,7 @@ export const ButtonIcon = forwardRef<
 export function useButtonIconIconSize() {
   const context = useContext(ButtonIconContext)
   if (!context) return null
-  return context.size === "small" ? 2 * gu : 3 * gu
+  if (context.size === "small") return 2.5 * gu
+  if (context.size === "medium") return 2.5 * gu
+  return 3 * gu
 }
