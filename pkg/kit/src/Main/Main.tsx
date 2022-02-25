@@ -68,7 +68,7 @@ export function Main({ children }: MainProps): JSX.Element {
       />
       <Global
         styles={({ colors, fonts }) => ({
-          "*:before, *:after": {
+          "*, *:before, *:after": {
             boxSizing: "border-box",
           },
           "body, html, h1, h2, pre, p, ul": {
