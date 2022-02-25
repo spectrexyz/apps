@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { ButtonArea } from "../ButtonArea"
-import { gu, springs } from "../styles"
+import { springs } from "../styles"
 
 type TabItem = {
   label: ReactNode
@@ -13,6 +13,7 @@ type TabItem = {
 }
 
 type TabsProps = {
+  compact?: boolean
   fullWidth?: boolean
   items: TabItem[]
   onSelect: (index: number) => void
@@ -20,6 +21,7 @@ type TabsProps = {
 }
 
 export function Tabs({
+  compact = false,
   fullWidth = false,
   items,
   onSelect,
@@ -42,10 +44,12 @@ export function Tabs({
     const onKeyDown = (event: KeyboardEvent) => {
       if (!isFocused.current) return
       if (event.key === "ArrowRight") {
+        event.preventDefault()
         onSelect((selected + 1) % items.length)
         return
       }
       if (event.key === "ArrowLeft") {
+        event.preventDefault()
         onSelect(selected === 0 ? items.length - 1 : selected - 1)
         return
       }
@@ -104,14 +108,13 @@ export function Tabs({
         {items.map((tabItem, index) => (
           <Tab
             key={tabItem.tabId}
+            compact={compact}
             fullWidth={fullWidth}
             onGeometry={(left, width) => {
               tabsGeometries.current[index] = [left, width]
               if (index === selected) setSelectedGeometry([left, width])
             }}
-            onSelect={() => {
-              onSelect(index)
-            }}
+            onSelect={() => onSelect(index)}
             selected={index === selected}
             tabItem={tabItem}
           />
@@ -144,12 +147,14 @@ export function Tabs({
 
 function Tab(
   {
+    compact,
     fullWidth,
-    onSelect,
     onGeometry,
+    onSelect,
     selected,
     tabItem: { label, tabId, panelId },
   }: {
+    compact: boolean
     fullWidth: boolean
     onSelect: () => void
     onGeometry: (left: number, width: number) => void
@@ -183,7 +188,7 @@ function Tab(
         justifyContent: "center",
         height: "100%",
         padding: fullWidth ? "0 1gu" : "0 5gu",
-        fontSize: "24px",
+        fontSize: compact ? "16px" : "24px",
         fontWeight: selected ? "600" : "400",
         textTransform: "uppercase",
         color: selected ? colors.accent2 : colors.contentDimmed,
