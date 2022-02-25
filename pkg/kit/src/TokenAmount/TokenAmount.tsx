@@ -2,12 +2,15 @@ import { ReactNode } from "react"
 import { TokenIcon } from "../TokenIcon"
 
 type TokenAmountProps = {
+  compact?: boolean
   converted?: ReactNode
   symbol: string
   value: string
 }
 
-export function TokenAmount({ converted, symbol, value }: TokenAmountProps) {
+export function TokenAmount(
+  { compact = false, converted, symbol, value }: TokenAmountProps,
+) {
   const [whole, fraction] = value.split(".")
   return (
     <div css={{ display: "flex", flexDirection: "column" }}>
@@ -20,7 +23,12 @@ export function TokenAmount({ converted, symbol, value }: TokenAmountProps) {
         })}
       >
         <TokenIcon tokenType={symbol === "ETH" ? "eth" : "serc20"} />
-        <div css={{ fontSize: "32px", transform: "translateY(-1px)" }}>
+        <div
+          css={{
+            fontSize: compact ? "24px" : "32px",
+            transform: "translateY(-1px)",
+          }}
+        >
           <span>{whole}</span>
           <span css={{ fontSize: "18px" }}>{fraction && `.${fraction}`}</span>
           <span css={{ fontSize: "18px", marginLeft: "1gu" }}>{symbol}</span>
