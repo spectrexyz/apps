@@ -1,5 +1,6 @@
 import { Link } from "wouter"
 import { useSnftsByCreator } from "../snft-hooks"
+import { useLayout } from "../styles"
 import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
@@ -7,6 +8,7 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   const snfts = useSnftsByCreator(snftFrom.creator.address, {
     exclude: [snftFrom.id],
   })
+  const layout = useLayout()
   return (
     <PanelSection title="Other NFTs from this creator">
       <div
@@ -15,7 +17,7 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
           gridTemplateColumns: "1fr 1fr",
           gridAutoRows: "auto",
           gridAutoFlow: "row",
-          gap: "9gu 3gu",
+          gap: layout.below("large") ? "3gu" : "9gu 3gu",
           "img": {
             display: "block",
             width: "100%",
@@ -35,7 +37,7 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
       >
         {snfts.map((snft) => (
           <Link key={snft.id} href={`/nfts/${snft.id}`}>
-            <img src={snft.image} alt="" />
+            <img src={snft.image.url} alt="" />
             <div>{snft.title}</div>
           </Link>
         ))}

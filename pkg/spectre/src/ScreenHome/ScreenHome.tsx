@@ -31,7 +31,7 @@ export function ScreenHome() {
           <Button
             label="NFT"
             onClick={() => {
-              setLocation(`/nfts/${Math.round(Math.random() * 9)}`)
+              setLocation(`/nfts/${Math.ceil(Math.random() * 9)}`)
             }}
             wide
           />

@@ -1,50 +1,35 @@
 import { ReactNode } from "react"
+import { useLayout } from "../styles"
 
-export function PanelDetails({
-  primary,
-  secondary,
-  title,
-}: {
+export function PanelDetails({ primary, secondary }: {
   primary: ReactNode
   secondary: ReactNode
-  title: ReactNode
 }) {
+  const layout = useLayout()
   return (
     <div
       css={{
         maxWidth: "160gu",
         margin: "0 auto",
-        paddingTop: "8gu",
+        paddingTop: layout.below("large") ? "2gu" : "8gu",
       }}
     >
       <div
-        css={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-        }}
-      >
-        <div
-          css={{
-            width: "72gu",
+        css={layout.below("large")
+          ? {
+            padding: "2gu",
+          }
+          : {
+            display: "grid",
+            gridTemplateColumns: "72gu 72gu",
+            justifyContent: "space-between",
+            width: "100%",
           }}
-        >
-          <h1
-            css={({ fonts }) => ({
-              fontFamily: fonts.sans,
-              fontSize: "40px",
-            })}
-          >
-            {"Spectre is a super long NFT title that overflows in 2 lines"
-              || title}
-          </h1>
+      >
+        <div>
           {primary}
         </div>
-        <div
-          css={{
-            width: "72gu",
-          }}
-        >
+        <div>
           {secondary}
         </div>
       </div>

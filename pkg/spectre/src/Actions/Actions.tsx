@@ -12,12 +12,7 @@ const ACTIONS = [
 
 export function Actions() {
   return (
-    <div
-      css={{
-        display: "flex",
-        gap: "1.5gu",
-      }}
-    >
+    <div css={{ display: "flex", gap: "1.5gu" }}>
       {ACTIONS.map(([label, icon, url], index) => {
         const anchor = url.startsWith("#")
         const targetProp = anchor ? {} : { target: "_blank" }

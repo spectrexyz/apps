@@ -13,7 +13,7 @@ import nft8 from "../demo-data/nft-8.jpg"
 import nft9 from "../demo-data/nft-9.jpg"
 
 const randFn = new Rand("1234")
-const rand = (value?: number = 1) => value * randFn.next()
+const rand = (value: number = 1) => value * randFn.next()
 
 const NFT_IMAGES = [nft1, nft2, nft3, nft4, nft5, nft6, nft7, nft8, nft9]
 
@@ -75,7 +75,11 @@ export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => {
   const minted = 500_000n + BigInt(Math.round(rand(500_000)))
   return ({
     id: `${index + 1}`,
-    image,
+    image: {
+      url: image,
+      width: 500,
+      height: 500,
+    },
     title: `Untitled #${index + 1}`,
     description: NFT_DESCRIPTION_1,
     token: {

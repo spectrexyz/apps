@@ -1,4 +1,5 @@
 import { forwardRef, ReactNode } from "react"
+import { useLayout } from "../styles"
 import { useLabelStyle } from "../styles"
 
 type PanelSectionProps = {
@@ -8,13 +9,12 @@ type PanelSectionProps = {
 
 export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
   function PanelSection({ title, children }, ref) {
+    const layout = useLayout()
     const titleStyle = useLabelStyle()
     return (
       <section
         ref={ref}
-        css={{
-          paddingTop: "8gu",
-        }}
+        css={{ paddingTop: layout.below("large") ? "4gu" : "8gu" }}
       >
         {title && <h1 css={titleStyle}>{title}</h1>}
         <div

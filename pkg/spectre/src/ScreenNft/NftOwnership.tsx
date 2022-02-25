@@ -12,7 +12,7 @@ import {
 } from "kit"
 import { ReactNode, useEffect, useMemo, useState } from "react"
 import useInView from "react-cool-inview"
-import { useLabelStyle } from "../styles"
+import { useLabelStyle, useLayout } from "../styles"
 import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
@@ -38,6 +38,7 @@ export function NftOwnership({ snft }: { snft: Snft }) {
   const distributionInView = useInView()
   const [showDistribution, setShowDistribution] = useState(false)
   const [mode, setMode] = useState<DisplayMode>("distribution")
+  const layout = useLayout()
 
   const { inView } = distributionInView
   useEffect(() => {
@@ -63,7 +64,17 @@ export function NftOwnership({ snft }: { snft: Snft }) {
       title="Collective ownership"
     >
       <RadioGroup selected={mode} onChange={setMode}>
-        <div css={{ display: "flex", gap: "3gu", padding: "1gu 0 2gu" }}>
+        <div
+          css={layout.below("large")
+            ? {
+              display: "grid",
+              gridTemplateColumns: "100%",
+              gridTemplateRows: "auto auto",
+              gap: "3gu",
+              width: "100%",
+            }
+            : { display: "flex", gap: "3gu", padding: "1gu 0 2gu" }}
+        >
           <RadioBox
             id="distribution"
             label="Distribution"
@@ -104,6 +115,7 @@ function DistributionList({ shares, token }: {
   }>
   token: Snft["token"]
 }) {
+  const layout = useLayout()
   const [more, setMore] = useState(false)
   const { distribution, priceEth, symbol } = token
 
@@ -145,8 +157,12 @@ function DistributionList({ shares, token }: {
           <tr>
             <th>Addresses</th>
             <th>Ownership</th>
-            <th>Fractions</th>
-            <th>Value</th>
+            {!layout.below("large") && (
+              <>
+                <th>Fractions</th>
+                <th>Value</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -169,19 +185,28 @@ function DistributionList({ shares, token }: {
                 <td>
                   {share.percentage}%
                 </td>
-                <td>
-                  {share.amount === null ? "−" : formatAmount(share.amount, 0)}
-                  {" "}
-                  <span css={({ colors }) => ({ color: colors.contentDimmed })}>
-                    {symbol}
-                  </span>
-                </td>
-                <td>
-                  {formatNumber(Number(share.amount) * priceEth)}{" "}
-                  <span css={({ colors }) => ({ color: colors.contentDimmed })}>
-                    ETH
-                  </span>
-                </td>
+                {!layout.below("large") && (
+                  <>
+                    <td>
+                      {share.amount === null
+                        ? "−"
+                        : formatAmount(share.amount, 0)}{" "}
+                      <span
+                        css={({ colors }) => ({ color: colors.contentDimmed })}
+                      >
+                        {symbol}
+                      </span>
+                    </td>
+                    <td>
+                      {formatNumber(Number(share.amount) * priceEth)}{" "}
+                      <span
+                        css={({ colors }) => ({ color: colors.contentDimmed })}
+                      >
+                        ETH
+                      </span>
+                    </td>
+                  </>
+                )}
               </tr>
             )
           })}
@@ -243,11 +268,13 @@ function BadgeSimple({ label }: { label: ReactNode }) {
 
 function MintedSupplySummary({ token }: { token: Snft["token"] }) {
   const labelStyle = useLabelStyle({ size: "small" })
+  const layout = useLayout()
   return (
     <div
       css={{
         display: "grid",
-        gridTemplateColumns: "auto auto",
+        gridTemplateColumns: layout.below("large") ? "auto" : "auto auto",
+        gap: layout.below("large") ? "4gu" : "0",
       }}
     >
       <div>
@@ -277,7 +304,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
         css={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-end",
+          alignItems: layout.below("large") ? "flex-start" : "flex-end",
         }}
       >
         <div css={labelStyle}>You own</div>

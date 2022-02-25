@@ -1,8 +1,8 @@
 import { Address } from "kit"
 
 export type SnftEvent = {
+  address: Address
   date: string
-  subject: Address
   description: string
 }
 
@@ -13,7 +13,7 @@ export type Distribution = Array<{
 
 export type Snft = {
   id: string
-  image: string
+  image: { url: string; width: number; height: number }
   title: string
   description: string
   token: {

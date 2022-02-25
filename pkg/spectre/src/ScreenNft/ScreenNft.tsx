@@ -1,6 +1,5 @@
 import {
   ButtonIcon,
-  gu,
   IconArrowLeft,
   IconArrowRight,
   IconMagnifyingGlassPlus,
@@ -14,9 +13,9 @@ import { usePreventNextScrollReset } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen2"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
+import { NftImage } from "./NftImage"
 import { NftPanel } from "./NftPanel"
 import { TokenPanel } from "./TokenPanel"
-import { ViewArea } from "./ViewArea"
 
 const tabs = [
   {
@@ -77,70 +76,69 @@ export function ScreenNft({
     [id, preventNextScrollReset, setLocation],
   )
 
-  const snft = useSnft(id)
+  const onBack = useCallback(() => {
+    setLocation("/")
+  }, [setLocation])
 
+  const snft = useSnft(id)
   const layout = useLayout()
 
   return (
     <AppScreen
       compactBar={layout.below("medium") && {
-        title: "NFT",
-        onBack: () => {},
+        title: snft?.title,
+        onBack,
       }}
     >
-      <ViewArea
-        height={62.5 * gu}
-        labelDisplay="FRACTIONALIZED"
-        label="Fractionalized"
-        actionButtons={
-          <>
-            <ButtonIconLabel
-              icon={<IconShare />}
-              label="Share"
-              labelPosition="left"
-              onClick={() => {}}
-              disabled={false}
-            />
-            <ButtonIconLabel
-              href={snft?.image}
-              icon={<IconMagnifyingGlassPlus />}
-              label="Zoom"
-              labelPosition="left"
-              disabled={false}
-            />
-          </>
-        }
-        navigationButtons={
-          <>
-            <ButtonIconLabel
-              icon={<IconArrowLeft />}
-              label="Prev"
-              labelFull="Previous"
-              onClick={handlePrevNft}
-              disabled={!(nftPrev)}
-            />
-            <ButtonIconLabel
-              icon={<IconSquaresFour />}
-              label="All"
-              onClick={() => {}}
-            />
-            <ButtonIconLabel
-              icon={<IconArrowRight />}
-              label="Next"
-              onClick={handleNextNft}
-              disabled={!nftNext}
-            />
-          </>
-        }
-      >
-        <img alt="" src={snft?.image} width="500" />
-      </ViewArea>
+      {snft?.image && (
+        <NftImage
+          image={snft.image}
+          label="Fractionalized"
+          labelDisplay="FRACTIONALIZED"
+          actionButtons={
+            <>
+              <ButtonIconLabel
+                icon={<IconShare />}
+                label="Share"
+                labelPosition="left"
+                onClick={() => {}}
+                disabled={false}
+              />
+              <ButtonIconLabel
+                href={snft.image.url}
+                icon={<IconMagnifyingGlassPlus />}
+                label="Zoom"
+                labelPosition="left"
+                disabled={false}
+              />
+            </>
+          }
+          navigationButtons={
+            <>
+              <ButtonIconLabel
+                icon={<IconArrowLeft />}
+                label="Prev"
+                labelFull="Previous"
+                onClick={handlePrevNft}
+                disabled={!(nftPrev)}
+              />
+              <ButtonIconLabel
+                icon={<IconSquaresFour />}
+                label="All"
+                onClick={() => {}}
+              />
+              <ButtonIconLabel
+                icon={<IconArrowRight />}
+                label="Next"
+                onClick={handleNextNft}
+                disabled={!nftNext}
+              />
+            </>
+          }
+        />
+      )}
 
-      <div
-        css={{
-          paddingTop: "6.5gu",
-        }}
-      />
+      <div css={{ paddingTop: layout.below("large") ? "2gu" : "6.5gu" }} />
 
       <div
         css={{
@@ -154,6 +152,8 @@ export function ScreenNft({
       >
         <div css={{ width: "100%" }}>
           <Tabs
+            compact={layout.below("large")}
+            fullWidth={layout.below("large")}
             items={tabs}
             onSelect={handleSelectPanel}
             selected={tabIndex}
@@ -167,25 +167,32 @@ export function ScreenNft({
   )
 }
 
-function ButtonIconLabel(
-  {
-    disabled = false,
-    href,
-    icon,
-    label,
-    labelFull = label,
-    labelPosition = "bottom",
-    onClick,
-  }: {
-    disabled?: boolean
-    href?: string
-    icon: ReactNode
-    label: string
-    labelFull?: string
-    labelPosition?: "left" | "bottom"
-    onClick?: () => void
-  },
-) {
+function ButtonIconLabel({
+  disabled = false,
+  href,
+  icon,
+  label,
+  labelFull = label,
+  labelPosition = "bottom",
+  onClick,
+}: {
+  disabled?: boolean
+  href?: string
+  icon: ReactNode
+  label: string
+  labelFull?: string
+  labelPosition?: "left" | "bottom"
+  onClick?: () => void
+}) {
+  const layout = useLayout()
+  const buttonIconSize = layout.value({
+    small: "medium",
+    large: "large",
+  })
+  const showLabel = layout.value({
+    small: false,
+    large: true,
+  })
   return (
     <div
       title={labelFull}
@@ -203,21 +210,24 @@ function ButtonIconLabel(
         label={labelFull}
         mode="outline"
         onClick={onClick}
+        size={buttonIconSize}
       />
-      <div
-        css={({ colors, fonts }) => ({
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "12px",
-          fontFamily: fonts.sans,
-          textTransform: "uppercase",
-          color: colors.contentDimmed,
-          userSelect: "none",
-        })}
-      >
-        {label}
-      </div>
+      {showLabel && (
+        <div
+          css={({ colors, fonts }) => ({
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "12px",
+            fontFamily: fonts.sans,
+            textTransform: "uppercase",
+            color: colors.contentDimmed,
+            userSelect: "none",
+          })}
+        >
+          {label}
+        </div>
+      )}
     </div>
   )
 }
