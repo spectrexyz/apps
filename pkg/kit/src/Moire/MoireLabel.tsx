@@ -60,7 +60,7 @@ export function MoireLabel({
             height={bounds.height}
             linesColor={linesColor || colors.lightBackground}
             backgroundColor={background || colors.background}
-            scale={0.5}
+            scale={0.2}
           />
         )}
       </span>
