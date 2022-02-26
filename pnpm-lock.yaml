@@ -167,6 +167,7 @@ importers:
       '@typescript-eslint/parser': ^5.12.1
       '@vitejs/plugin-react': ^1.2.0
       buffer: ^6.0.3
+      csstype: ^3.0.10
       eslint: ^8.9.0
       eslint-plugin-import: ^2.25.4
       eslint-plugin-react: ^7.28.0
@@ -195,6 +196,7 @@ importers:
       '@emotion/cache': 11.7.1
       '@emotion/react': 11.8.1_react@17.0.2
       buffer: 6.0.3
+      csstype: 3.0.10
       ethers: 5.5.4
       events: 3.3.0
       kit: link:../kit
