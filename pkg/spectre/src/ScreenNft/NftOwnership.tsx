@@ -65,7 +65,7 @@ export function NftOwnership({ snft }: { snft: Snft }) {
     >
       <RadioGroup selected={mode} onChange={setMode}>
         <div
-          css={layout.below("large")
+          css={layout.below("xlarge")
             ? {
               display: "grid",
               gridTemplateColumns: "100%",
@@ -157,7 +157,7 @@ function DistributionList({ shares, token }: {
           <tr>
             <th>Addresses</th>
             <th>Ownership</th>
-            {!layout.below("large") && (
+            {!layout.below("xlarge") && (
               <>
                 <th>Fractions</th>
                 <th>Value</th>
@@ -185,7 +185,7 @@ function DistributionList({ shares, token }: {
                 <td>
                   {share.percentage}%
                 </td>
-                {!layout.below("large") && (
+                {!layout.below("xlarge") && (
                   <>
                     <td>
                       {share.amount === null
@@ -273,8 +273,8 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
     <div
       css={{
         display: "grid",
-        gridTemplateColumns: layout.below("large") ? "auto" : "auto auto",
-        gap: layout.below("large") ? "4gu" : "0",
+        gridTemplateColumns: layout.below("xlarge") ? "auto" : "auto auto",
+        gap: layout.below("xlarge") ? "4gu" : "0",
       }}
     >
       <div>
@@ -304,7 +304,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
         css={{
           display: "flex",
           flexDirection: "column",
-          alignItems: layout.below("large") ? "flex-start" : "flex-end",
+          alignItems: layout.below("xlarge") ? "flex-start" : "flex-end",
         }}
       >
         <div css={labelStyle}>You own</div>

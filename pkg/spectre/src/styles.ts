@@ -63,7 +63,7 @@ export function useLayout() {
       medium?: T
       large?: T
       xlarge?: T
-    }): T => {
+    }): typeof values[keyof typeof values] => {
       if (values.small === undefined) {
         throw new Error(
           "The “small” breakpoint is required with layout.value()",
@@ -71,7 +71,7 @@ export function useLayout() {
       }
 
       if (values[layoutName] !== undefined) {
-        return values[layoutName] as T
+        return values[layoutName]
       }
 
       let breakPointName = layoutName
@@ -82,7 +82,7 @@ export function useLayout() {
         }
         breakPointName = breakpoint
       }
-      return values[breakPointName] as T
+      return values[breakPointName]
     },
     [layoutName],
   )

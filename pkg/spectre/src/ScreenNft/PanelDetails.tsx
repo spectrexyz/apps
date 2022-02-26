@@ -6,19 +6,18 @@ export function PanelDetails({ primary, secondary }: {
   secondary: ReactNode
 }) {
   const layout = useLayout()
+  console.log('?', layout.below('xlarge'));
   return (
     <div
       css={{
         maxWidth: "160gu",
         margin: "0 auto",
-        paddingTop: layout.below("large") ? "2gu" : "8gu",
+        paddingTop: layout.below("xlarge") ? "2gu" : "8gu",
       }}
     >
       <div
-        css={layout.below("large")
-          ? {
-            padding: "2gu",
-          }
+        css={layout.below("xlarge")
+          ? { padding: "2gu" }
           : {
             display: "grid",
             gridTemplateColumns: "72gu 72gu",

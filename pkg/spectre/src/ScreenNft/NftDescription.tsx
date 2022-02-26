@@ -10,7 +10,7 @@ export function NftDescription({ snft }: { snft: Snft }) {
       <h1
         css={({ fonts }) => ({
           fontFamily: fonts.sans,
-          fontSize: layout.below("large") ? "24px" : "40px",
+          fontSize: layout.below("xlarge") ? "24px" : "40px",
         })}
       >
         {snft.title}

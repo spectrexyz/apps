@@ -17,7 +17,7 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
           gridTemplateColumns: "1fr 1fr",
           gridAutoRows: "auto",
           gridAutoFlow: "row",
-          gap: layout.below("large") ? "3gu" : "9gu 3gu",
+          gap: layout.below("xlarge") ? "3gu" : "9gu 3gu",
           "img": {
             display: "block",
             width: "100%",

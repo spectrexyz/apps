@@ -1,3 +1,4 @@
+import { Property as CssP } from "csstype"
 import { MoireLabel, useTheme } from "kit"
 import { ReactNode } from "react"
 import { useLayout } from "../styles"
@@ -22,24 +23,24 @@ export function NftImage({
 
   const buttonsGap = layout.value({
     small: "1.5gu",
-    large: "2gu",
+    xlarge: "2gu",
   })
   const navButtonsInset = layout.value({
     small: "2gu auto auto 2gu",
-    large: "8gu auto auto 0",
+    xlarge: "8gu auto auto 0",
   })
   const actionButtonsInset = layout.value({
     small: "auto 2gu 2gu auto",
-    large: "auto 0 3gu auto",
+    xlarge: "auto 0 3gu auto",
   })
-  const actionButtonsDirection = layout.value({
+  const actionButtonsDirection = layout.value<CssP.FlexDirection>({
     small: "row",
-    large: "column",
+    xlarge: "column",
   })
 
   const imgMaxWidth = layout.value({
     small: "calc(100% - 4gu)",
-    large: "100%",
+    xlarge: "100%",
   })
 
   return (
@@ -64,22 +65,22 @@ export function NftImage({
           maxWidth: "160gu",
         }}
       >
-        {layout.above("medium") && (
-          <div
-            css={{
-              position: "absolute",
-              inset: "8gu 0 auto auto",
-            }}
-          >
-            <MoireLabel
-              background={colors.layer2}
-              label={labelDisplay}
-              labelColor={colors.background}
-              linesColor={colors.accent2}
-              title={label}
-            />
-          </div>
-        )}
+        <div
+          css={{
+            position: "absolute",
+            inset: layout.below("xlarge")
+              ? "auto auto 2gu 2gu"
+              : "8gu 0 auto auto",
+          }}
+        >
+          <MoireLabel
+            background={colors.layer2}
+            label={labelDisplay}
+            labelColor={colors.background}
+            linesColor={colors.accent2}
+            title={label}
+          />
+        </div>
         <div
           css={{
             position: "absolute",

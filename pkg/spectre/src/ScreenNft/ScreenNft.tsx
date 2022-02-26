@@ -138,7 +138,7 @@ export function ScreenNft({
         />
       )}
 
-      <div css={{ paddingTop: layout.below("large") ? "2gu" : "6.5gu" }} />
+      <div css={{ paddingTop: layout.below("xlarge") ? "2gu" : "6.5gu" }} />
 
       <div
         css={{
@@ -152,8 +152,8 @@ export function ScreenNft({
       >
         <div css={{ width: "100%" }}>
           <Tabs
-            compact={layout.below("large")}
-            fullWidth={layout.below("large")}
+            compact={layout.below("xlarge")}
+            fullWidth={layout.below("xlarge")}
             items={tabs}
             onSelect={handleSelectPanel}
             selected={tabIndex}
@@ -187,11 +187,11 @@ function ButtonIconLabel({
   const layout = useLayout()
   const buttonIconSize = layout.value({
     small: "medium",
-    large: "large",
+    xlarge: "large",
   })
   const showLabel = layout.value({
     small: false,
-    large: true,
+    xlarge: true,
   })
   return (
     <div

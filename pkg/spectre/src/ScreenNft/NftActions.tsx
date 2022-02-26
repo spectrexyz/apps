@@ -18,12 +18,12 @@ export function NftActions() {
         <div>
           <h2 css={labelStyle}>Buyout price</h2>
           <TokenAmount
-            compact={layout.below("large")}
+            compact={layout.below("xlarge")}
             converted="$1,367,258"
             symbol="ETH"
             value="435.18"
           />
-          {!layout.below("large") && (
+          {!layout.below("xlarge") && (
             <>
               <div css={{ height: "3gu" }} />
               <Button label="NFT buyout" mode="primary" wide />
@@ -33,12 +33,12 @@ export function NftActions() {
         <div>
           <h2 css={labelStyle}>Fraction price</h2>
           <TokenAmount
-            compact={layout.below("large")}
+            compact={layout.below("xlarge")}
             converted="$20.23"
             symbol="ETH"
             value="0.0018"
           />
-          {!layout.below("large") && (
+          {!layout.below("xlarge") && (
             <>
               <div css={{ height: "3gu" }} />
               <Button label="Buy fractions" wide />
@@ -46,7 +46,7 @@ export function NftActions() {
           )}
         </div>
       </div>
-      {layout.below("large") && (
+      {layout.below("xlarge") && (
         <div
           css={{
             display: "flex",
@@ -55,8 +55,8 @@ export function NftActions() {
             paddingTop: "2gu",
           }}
         >
-          <Button label="NFT buyout" mode="primary" compact wide />
-          <Button label="Buy fractions" compact wide />
+          <Button label="NFT buyout" mode="primary" size="compact" wide />
+          <Button label="Buy fractions" size="compact" wide />
         </div>
       )}
     </PanelSection>

@@ -11,7 +11,7 @@ export function NftDetails({ snft }: { snft: Snft }) {
       css={{
         display: "grid",
         gap: "3gu",
-        ...(layout.below("large")
+        ...(layout.below("xlarge")
           ? {
             gridTemplateRows: "auto auto auto",
             gridTemplateColumns: "100%",
@@ -59,7 +59,7 @@ export function NftDetails({ snft }: { snft: Snft }) {
             css={{
               display: "flex",
               overflow: "hidden",
-              paddingTop: layout.below("large") ? 0 : "1gu",
+              paddingTop: layout.below("xlarge") ? 0 : "1gu",
               maxWidth: "100%",
             }}
           >

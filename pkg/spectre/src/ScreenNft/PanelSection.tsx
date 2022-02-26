@@ -14,7 +14,7 @@ export const PanelSection = forwardRef<HTMLElement, PanelSectionProps>(
     return (
       <section
         ref={ref}
-        css={{ paddingTop: layout.below("large") ? "4gu" : "8gu" }}
+        css={{ paddingTop: layout.below("xlarge") ? "4gu" : "8gu" }}
       >
         {title && <h1 css={titleStyle}>{title}</h1>}
         <div
