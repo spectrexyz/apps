@@ -7,12 +7,17 @@ export function useSnft(_id: string): Snft | undefined {
 
 export function useSnftsByCreator(
   creatorAddress: string,
-  { exclude = [] }: { exclude?: string[] } = {},
+  { exclude = [], limit }: {
+    exclude?: string[]
+    limit?: number
+  } = {},
 ): Snft[] {
-  return SNFTS.filter(
-    ({ id, creator }) =>
-      !exclude.includes(id) && creator.address === creatorAddress,
+  const snfts = SNFTS.filter(
+    ({ id, creator }) => {
+      return !exclude.includes(id) && creator.address === creatorAddress
+    },
   )
+  return limit === undefined ? snfts : snfts.slice(0, limit)
 }
 
 export function useSnftsAdjacent(

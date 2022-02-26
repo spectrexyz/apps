@@ -7,21 +7,32 @@ import { PanelSection } from "./PanelSection"
 export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   const snfts = useSnftsByCreator(snftFrom.creator.address, {
     exclude: [snftFrom.id],
+    limit: 4,
   })
+
   const layout = useLayout()
+  const gridTemplateColumns = layout.value({
+    small: "1fr",
+    xlarge: "1fr 1fr",
+  })
+  const imgSpacing = layout.value({
+    small: "1.5gu",
+    xlarge: "2gu",
+  })
+
   return (
     <PanelSection title="Other NFTs from this creator">
       <div
         css={({ colors }) => ({
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns,
           gridAutoRows: "auto",
           gridAutoFlow: "row",
           gap: layout.below("xlarge") ? "3gu" : "9gu 3gu",
           "img": {
             display: "block",
             width: "100%",
-            marginBottom: "2gu",
+            marginBottom: imgSpacing,
             borderRadius: "6px",
           },
           "img + div": {

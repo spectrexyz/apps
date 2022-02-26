@@ -25,7 +25,7 @@ export function NftPanel({ id }: { id: string }) {
             <NftDescription snft={snft} />
             {layout.below("xlarge") && <NftDetails snft={snft} />}
             {!layout.below("xlarge") && <NftProvenance />}
-            <MoreNfts snftFrom={snft} />
+            {!layout.below("xlarge") && <MoreNfts snftFrom={snft} />}
           </>
         }
         secondary={
@@ -35,6 +35,7 @@ export function NftPanel({ id }: { id: string }) {
             {layout.below("xlarge") && <NftProvenance />}
             <NftOwnership snft={snft} />
             <NftHistory snft={snft} />
+            {layout.below("xlarge") && <MoreNfts snftFrom={snft} />}
           </>
         }
       />
