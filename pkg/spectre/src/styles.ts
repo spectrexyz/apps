@@ -1,6 +1,7 @@
 import { useViewport } from "@bpierre/use-viewport"
+import throttle from "just-throttle"
 import { gu, useTheme } from "kit"
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export const springs = {
   appear: {
@@ -91,6 +92,79 @@ export function useLayout() {
     () => ({ above, below, ...layout, name: layoutName, value }),
     [above, below, layout, layoutName, value],
   )
+}
+
+type Dimensions = { width: number; height: number }
+
+function viewportSize() {
+  return {
+    height: window.innerHeight,
+    width: window.innerWidth,
+  }
+}
+
+export function useViewportValue<Value extends unknown>(
+  cb: (
+    viewportDimensions: Dimensions,
+  ) => Array<[condition: boolean, value: Value]>,
+) {
+  const lastIndex = useRef(-1)
+
+  const [value, setValue] = useState<Value>(() => {
+    const entries = cb(viewportSize())
+    const index = entries.findIndex(([condition]) => condition)
+    if (index === -1) {
+      throw new Error(
+        "useViewportValue(): at least one condition should be true",
+      )
+    }
+    lastIndex.current = index
+    return entries[index][1]
+  })
+
+  const cbRef = useRef<ReturnType<typeof throttle>>()
+  useEffect(() => {
+    cbRef.current?.cancel()
+    cbRef.current = throttle(cb, 100, { leading: true, trailing: true })
+  }, [cb])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const onResize = () => {
+      if (cancelled) return
+
+      const entries = cbRef.current?.(viewportSize()) as
+        | undefined
+        | Array<[condition: boolean, value: Value]>
+
+      if (!entries) {
+        return
+      }
+
+      const index = entries.findIndex(([condition]) => condition)
+
+      if (index === -1) {
+        throw new Error(
+          "useViewportValue(): at least one condition should be true",
+        )
+      }
+
+      if (lastIndex.current !== index) {
+        lastIndex.current = index
+        setValue(entries[index][1])
+      }
+    }
+
+    window.addEventListener("resize", onResize)
+    return () => {
+      cancelled = true
+      cbRef.current?.cancel()
+      window.removeEventListener("resize", onResize)
+    }
+  }, [])
+
+  return value
 }
 
 export function useLabelStyle(
