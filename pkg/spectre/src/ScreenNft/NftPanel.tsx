@@ -17,28 +17,59 @@ export function NftPanel({ id }: { id: string }) {
     return null
   }
 
+  const [primary, secondary, after = null] = (() => {
+    if (layout.above("xlarge")) {
+      return [
+        <>
+          <NftDescription snft={snft} />
+          <NftProvenance />
+          <MoreNfts snftFrom={snft} />
+        </>,
+        <>
+          <NftDetails snft={snft} />
+          <NftActions />
+          <NftOwnership snft={snft} />
+          <NftHistory snft={snft} />
+        </>,
+      ]
+    }
+
+    if (layout.above("medium")) {
+      return [
+        <>
+          <NftDescription snft={snft} />
+          <NftDetails snft={snft} />
+          <NftHistory snft={snft} />
+        </>,
+        <>
+          <NftActions />
+          <NftProvenance />
+          <NftOwnership snft={snft} />
+        </>,
+        <MoreNfts snftFrom={snft} />,
+      ]
+    }
+
+    // small
+    return [
+      <>
+        <NftDescription snft={snft} />
+        <NftDetails snft={snft} />
+      </>,
+      <>
+        <NftActions />
+        <NftProvenance />
+        <NftOwnership snft={snft} />
+        <NftHistory snft={snft} />
+        <MoreNfts snftFrom={snft} />
+      </>,
+    ]
+  })()
+
   return (
     <section>
-      <PanelDetails
-        primary={
-          <>
-            <NftDescription snft={snft} />
-            {layout.below("xlarge") && <NftDetails snft={snft} />}
-            {!layout.below("xlarge") && <NftProvenance />}
-            {!layout.below("xlarge") && <MoreNfts snftFrom={snft} />}
-          </>
-        }
-        secondary={
-          <>
-            {!layout.below("xlarge") && <NftDetails snft={snft} />}
-            <NftActions />
-            {layout.below("xlarge") && <NftProvenance />}
-            <NftOwnership snft={snft} />
-            <NftHistory snft={snft} />
-            {layout.below("xlarge") && <MoreNfts snftFrom={snft} />}
-          </>
-        }
-      />
+      <PanelDetails primary={primary} secondary={secondary} />
+      {after}
     </section>
   )
 }
