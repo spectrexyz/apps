@@ -76,10 +76,6 @@ type Axes = {
   end: Axis
 }
 
-function crisp(value: number) {
-  return Math.round(value) + 0.5
-}
-
 export function Chart({
   width = 660,
   height = 440,
