@@ -1,5 +1,4 @@
 import {
-  ADDRESS_RE,
   Anchor,
   Button,
   EthIcon,
@@ -73,7 +72,7 @@ export function NftHistory({ snft }: { snft: Snft }) {
   )
 }
 
-function EventDescription({ description }) {
+function EventDescription({ description }: { description: string }) {
   return (
     <>
       {description.split(/([^\s]+\.eth|0x[0-9a-fA-F]{40})/).map((token, i) => (

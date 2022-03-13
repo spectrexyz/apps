@@ -46,7 +46,9 @@ export function NftPanel({ id }: { id: string }) {
           <NftProvenance />
           <NftOwnership snft={snft} />
         </>,
-        <MoreNfts snftFrom={snft} />,
+        <>
+          <MoreNfts snftFrom={snft} />
+        </>,
       ]
     }
 

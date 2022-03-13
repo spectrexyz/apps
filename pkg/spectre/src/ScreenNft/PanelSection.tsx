@@ -1,6 +1,5 @@
 import { forwardRef, ReactNode } from "react"
-import { useLayout } from "../styles"
-import { useLabelStyle } from "../styles"
+import { useLayout, useLabelStyle } from "../styles"
 
 type PanelSectionProps = {
   title?: ReactNode

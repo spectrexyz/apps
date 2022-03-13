@@ -13,7 +13,7 @@ import nft8 from "../demo-data/nft-8.jpg"
 import nft9 from "../demo-data/nft-9.jpg"
 
 const randFn = new Rand("1234")
-const rand = (value: number = 1) => value * randFn.next()
+const rand = (value = 1) => value * randFn.next()
 
 const NFT_IMAGES = [nft1, nft2, nft3, nft4, nft5, nft6, nft7, nft8, nft9]
 
@@ -22,7 +22,7 @@ Artworks have always been powerful vectors of collectives structuration and we n
 
 Artwork specs:
 
-- 1024 × 1024px
+- 1024 × 1024px
 - 15 sec loop MP4
 - Created Aug 2021
 `

@@ -42,7 +42,7 @@ export function AppScreen({
     if (mode === "minimal") return "0px"
     if (compactMenuActive) return `${2 * gu}px`
     return `0 ${4 * gu}px ${4 * gu}px`
-  }, [])
+  }, [mode, compactMenuActive])
 
   return appReadyTransition(
     ({ progress, screenTransform }, ready) =>

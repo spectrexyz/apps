@@ -1,4 +1,4 @@
-import { ButtonIcon, gu, IconArrowsDownUp, TokenInput } from "kit"
+import { ButtonIcon, gu, IconArrowsDownUp, noop, TokenInput } from "kit"
 import { useState } from "react"
 
 export function SwapModule() {
@@ -28,7 +28,7 @@ export function SwapModule() {
         }}
       >
         <ButtonIcon
-          onClick={() => {}}
+          onClick={noop}
           icon={<IconArrowsDownUp size={4 * gu} />}
           label="Sell MAGIC"
         />

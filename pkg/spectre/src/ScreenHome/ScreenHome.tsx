@@ -4,7 +4,7 @@ import { AppScreen } from "../AppLayout/AppScreen2"
 import { useSpectralize } from "../ScreenSpectralize/use-spectralize"
 
 export function ScreenHome() {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const spectralize = useSpectralize()
   return (
     <AppScreen compactBar={null}>

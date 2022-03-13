@@ -27,13 +27,13 @@ type AppScrollProps = { children: ReactNode }
 export function AppScroll({ children }: AppScrollProps) {
   const callbacks = useRef<((scrollY: number) => void)[]>([])
 
-  const addCallback = useCallback((cb) => {
+  const addCallback = useCallback((cb: (scrollY: number) => void) => {
     callbacks.current.push(cb)
   }, [])
   const removeCallback = useCallback((cb) => {
     callbacks.current = callbacks.current.filter((_cb) => _cb !== cb)
   }, [])
-  const updateAppScroll = useCallback((value) => {
+  const updateAppScroll = useCallback((value: number) => {
     callbacks.current.forEach((cb) => cb(value))
   }, [])
 
@@ -83,12 +83,11 @@ export function useAppScroll(callback: (scrollY: number) => void) {
   const { addCallback, removeCallback } = useContext(AppScrollContext)
 
   useEffect(() => {
-    if (!_callback.current) {
-      return
-    }
-    addCallback(_callback.current)
+    const cb = _callback.current
+    if (!cb) return
+    addCallback(cb)
     return () => {
-      removeCallback(_callback.current)
+      removeCallback(cb)
     }
   }, [addCallback, removeCallback])
 }

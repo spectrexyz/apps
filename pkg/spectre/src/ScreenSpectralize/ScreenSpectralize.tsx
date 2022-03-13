@@ -14,7 +14,7 @@ import { useSpectralize } from "./use-spectralize"
 const STEPS = [Step1, Step2, Step3, StepSummary]
 
 export function ScreenSpectralize() {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const [{ data: accountData }] = useAccount({ fetchEns: false })
 
   const layout = useLayout()

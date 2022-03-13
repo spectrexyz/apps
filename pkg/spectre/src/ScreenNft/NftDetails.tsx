@@ -1,6 +1,5 @@
 import { Badge, TokenBadge } from "kit"
-import { useLayout } from "../styles"
-import { useLabelStyle } from "../styles"
+import { useLabelStyle, useLayout } from "../styles"
 import { Snft } from "../types"
 
 export function NftDetails({ snft }: { snft: Snft }) {
@@ -32,6 +31,7 @@ export function NftDetails({ snft }: { snft: Snft }) {
             color="contentHeading"
             background="layer1"
             label={snft.creator.name}
+            key="creator"
           />,
         ],
         [
@@ -40,6 +40,7 @@ export function NftDetails({ snft }: { snft: Snft }) {
             uppercase={false}
             fontSize="16px"
             label={snft.guardian}
+            key="guardian"
           />,
         ],
         [
@@ -47,6 +48,7 @@ export function NftDetails({ snft }: { snft: Snft }) {
           <TokenBadge
             label={snft.token.symbol}
             tokenType="serc20"
+            key="fraction"
           />,
         ],
       ].map((

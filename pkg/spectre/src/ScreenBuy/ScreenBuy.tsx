@@ -5,7 +5,7 @@ import { AppScreen } from "../AppLayout/AppScreen"
 import { SwapModule } from "./SwapModule"
 
 export function ScreenBuy() {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   return (
     <AppScreen
       title="Buy MAGIC"
@@ -165,8 +165,8 @@ function Distribution({ mint, swap }: { mint: number; swap: number }) {
           },
         })}
       >
-        <li>62% Minting</li>
-        <li>38% Swapping</li>
+        <li>{100 - Math.round(swap * 100)}% Minting</li>
+        <li>{Math.round(swap * 100)}% Swapping</li>
       </ul>
     </div>
   )

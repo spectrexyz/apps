@@ -1,4 +1,5 @@
-import { Property as CssP } from "csstype"
+import type { Property as CssP } from "csstype"
+
 import { MoireLabel, useTheme } from "kit"
 import { ReactNode } from "react"
 import { useLayout } from "../styles"
@@ -44,18 +45,7 @@ export function NftImage({
   })
 
   return (
-    <div
-      css={{
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        margin: "0 auto",
-        padding: "8gu 0",
-        background: colors.layer2,
-      }}
-    >
+    <>
       <div
         css={{
           position: "absolute",
@@ -119,6 +109,6 @@ export function NftImage({
       >
         <img alt="" src={image.url} width={image.width} height={image.height} />
       </div>
-    </div>
+    </>
   )
 }

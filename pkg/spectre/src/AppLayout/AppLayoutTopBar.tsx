@@ -33,7 +33,7 @@ export function AppLayoutTopBar({
 }
 
 export function TopBar() {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
@@ -183,7 +183,7 @@ export function TopBar() {
 }
 
 export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
 
   const [shouldHide, setShouldHide] = useState(false)

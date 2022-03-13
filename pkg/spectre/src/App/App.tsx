@@ -13,7 +13,7 @@ import { AppReady } from "./AppReady"
 import { AppScroll } from "./AppScroll"
 import { AppViewport } from "./AppViewport"
 
-export default function App() {
+export function App() {
   return (
     <AppProviders>
       <Switch>
@@ -49,6 +49,7 @@ export default function App() {
 }
 
 function AppProviders({ children }: { children: ReactNode }) {
+  const queryClient = useMemo(() => new QueryClient(), [])
   return (
     <FlatTree
       items={[
@@ -56,7 +57,7 @@ function AppProviders({ children }: { children: ReactNode }) {
           <Kit baseUrl="/kit">{children}</Kit>
         ),
         ({ children }: { children: ReactNode }) => (
-          <QueryClientProvider client={useMemo(() => new QueryClient(), [])}>
+          <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>
         ),

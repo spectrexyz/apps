@@ -44,7 +44,7 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
     (() => { invalid: boolean; account: Address | null }) | undefined
   >()
   const handleSubmit = useCallback(
-    (event) => {
+    (event: SubmitEvent) => {
       event.preventDefault()
 
       // Add an account to the rewards split

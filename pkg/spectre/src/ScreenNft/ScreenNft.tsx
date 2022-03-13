@@ -5,6 +5,7 @@ import {
   IconMagnifyingGlassPlus,
   IconShare,
   IconSquaresFour,
+  noop,
   Tabs,
 } from "kit"
 import { ReactNode, useCallback, useMemo } from "react"
@@ -13,9 +14,10 @@ import { usePreventNextScrollReset } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen2"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
+import { FractionsChart } from "./FractionsChart"
+import { FractionsPanel } from "./FractionsPanel"
 import { NftImage } from "./NftImage"
 import { NftPanel } from "./NftPanel"
-import { TokenPanel } from "./TokenPanel"
 
 const tabs = [
   {
@@ -48,7 +50,7 @@ export function ScreenNft({
   id: string
   panel: "pool" | "fractions" | "nft"
 }) {
-  const [_, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
   const preventNextScrollReset = usePreventNextScrollReset()
 
@@ -60,18 +62,20 @@ export function ScreenNft({
     if (nftPrev) {
       setLocation(`/nfts/${nftPrev.id}${panels[tabIndex][1]}`)
     }
-  }, [nftPrev, panel, setLocation, tabIndex])
+  }, [nftPrev, setLocation, tabIndex])
 
   const handleNextNft = useCallback(() => {
     if (nftNext) {
       setLocation(`/nfts/${nftNext.id}${panels[tabIndex][1]}`)
     }
-  }, [nftNext, panel, setLocation, tabIndex])
+  }, [nftNext, setLocation, tabIndex])
 
   const handleSelectPanel = useCallback(
-    (index) => {
+    (index: number) => {
       preventNextScrollReset()
-      setLocation(`/nfts/${id}${panels[index][1]}`)
+      if (panels[index]) {
+        setLocation(`/nfts/${id}${panels[index][1]}`)
+      }
     },
     [id, preventNextScrollReset, setLocation],
   )

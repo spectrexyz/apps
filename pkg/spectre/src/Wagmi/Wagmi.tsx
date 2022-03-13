@@ -10,7 +10,7 @@ import { CHAIN_ID, INFURA_PROJECT_ID } from "../environment"
 const CHAIN = defaultChains.find((chain) => chain.id === CHAIN_ID)
 
 if (!CHAIN) {
-  throw new Error("CHAIN_ID not found: " + CHAIN_ID)
+  throw new Error(`CHAIN_ID not found: ${CHAIN_ID}`)
 }
 
 if (!INFURA_PROJECT_ID) {

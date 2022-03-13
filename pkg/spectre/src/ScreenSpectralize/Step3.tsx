@@ -16,7 +16,7 @@ import {
   useAmountInput,
   usePrice,
 } from "kit"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import {
   ContentLayout,
   ContentLayoutHeading,
@@ -54,7 +54,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
   const { suggestFromBuyout, updateSuggestFromBuyout } = data
 
   const handleSubmit = useCallback(
-    (event) => {
+    (event: SubmitEvent) => {
       event.preventDefault()
       if (suggestFromBuyout) {
         updateSuggestFromBuyout(false)

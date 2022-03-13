@@ -1,6 +1,6 @@
 import { useBlockNumber } from "wagmi"
 
-export function SyncStatus({ full = false }) {
+export function SyncStatus({ full = false }: { full?: boolean }) {
   const [{ data: blockNumber, error, loading }] = useBlockNumber({
     watch: true,
   })

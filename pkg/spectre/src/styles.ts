@@ -59,12 +59,12 @@ export function useLayout() {
 
   // Get a value depending on the current layout
   const value = useCallback(
-    <T extends unknown>(values: {
+    <T>(values: {
       small: T
       medium?: T
       large?: T
       xlarge?: T
-    }): typeof values[keyof typeof values] => {
+    }): T => {
       if (values.small === undefined) {
         throw new Error(
           "The “small” breakpoint is required with layout.value()",
@@ -72,18 +72,18 @@ export function useLayout() {
       }
 
       if (values[layoutName] !== undefined) {
-        return values[layoutName]
+        return values[layoutName] as T
       }
 
       let breakPointName = layoutName
       while (values[breakPointName] === undefined) {
-        let breakpoint = closestBreakpoint(breakPointName)
+        const breakpoint = closestBreakpoint(breakPointName)
         if (breakpoint === breakPointName) {
           return values.small
         }
         breakPointName = breakpoint
       }
-      return values[breakPointName]
+      return values[breakPointName] as T
     },
     [layoutName],
   )
@@ -103,7 +103,7 @@ function viewportSize() {
   }
 }
 
-export function useViewportValue<Value extends unknown>(
+export function useViewportValue<Value>(
   cb: (
     viewportDimensions: Dimensions,
   ) => Array<[condition: boolean, value: Value]>,
@@ -176,7 +176,7 @@ export function useLabelStyle(
     paddingBottom: size === "small" ? 0 : "2gu",
     fontSize: size === "small" ? "12px" : "18px",
     fontFamily: size === "small" ? fonts.sans : fonts.mono,
-    textTransform: "uppercase" as "uppercase",
+    textTransform: "uppercase" as const,
     color: size === "small" ? colors.contentDimmed : colors.content,
   }), [colors, fonts, size])
 }

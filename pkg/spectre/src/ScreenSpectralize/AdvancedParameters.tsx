@@ -7,7 +7,7 @@ import {
   IconPencil,
   IconWarningOctagon,
 } from "kit"
-import { memo, useMemo } from "react"
+import { memo } from "react"
 import { useSpectralize } from "./use-spectralize"
 
 type AdvancedParametersProps = {

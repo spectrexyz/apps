@@ -218,12 +218,12 @@ function ButtonBar({
   onClick,
   start,
 }: {
-  end: ReactNode
+  end: ReactNode | (() => ReactNode)
   onClick: () => void
-  start: ReactNode
+  start: ReactNode | (() => ReactNode)
 }) {
-  if (typeof start === "function") start = start()
-  if (typeof end === "function") end = end()
+  if (typeof start === "function") start = start() as ReactNode
+  if (typeof end === "function") end = end() as ReactNode
   return onClick
     ? (
       <ButtonArea

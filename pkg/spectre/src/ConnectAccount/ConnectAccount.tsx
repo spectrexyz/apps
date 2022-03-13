@@ -90,7 +90,7 @@ export function ConnectAccountInside() {
         })}
       >
         What’s a wallet?{" "}
-        <a href="https://ethereum.org/en/wallets/" target="_blank">
+        <a href="https://ethereum.org/en/wallets/" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </p>

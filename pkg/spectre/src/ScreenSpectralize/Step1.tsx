@@ -25,7 +25,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
   const layout = useLayout()
 
   const handleSubmit = useCallback(
-    (event) => {
+    (event: SubmitEvent) => {
       event.preventDefault()
       onNext()
     },
@@ -243,7 +243,7 @@ function NftFileSelector({
     <div>
       {file ? <NftFilePreview /> : (
         <RadioGroup
-          onChange={(fileType) => updateFileType(fileType as FileType)}
+          onChange={(fileType: FileType) => updateFileType(fileType)}
           selected={fileType}
         >
           <div
@@ -333,6 +333,7 @@ function NftFilePreview() {
           <a
             href={fileUrl ?? undefined}
             target="_blank"
+            rel="noreferrer"
             css={{
               display: "block",
               position: "relative",

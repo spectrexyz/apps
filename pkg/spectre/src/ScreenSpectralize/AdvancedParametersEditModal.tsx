@@ -13,7 +13,7 @@ import {
   Toggle,
   WEEK_MS,
 } from "kit"
-import { ReactNode, useCallback, useMemo, useState } from "react"
+import { ReactNode, useCallback, useMemo } from "react"
 import { useLayout } from "../styles"
 import { useAdvancedParametersForm, useSpectralize } from "./use-spectralize"
 
@@ -114,7 +114,7 @@ export function AdvancedParametersEditModalForm({
   }
 
   const handleSubmit = useCallback(
-    (event) => {
+    (event: SubmitEvent) => {
       event.preventDefault()
       event.stopPropagation()
       save()

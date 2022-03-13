@@ -22,7 +22,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
   const layout = useLayout()
 
   const handleSubmit = useCallback(
-    (event) => {
+    (event: SubmitEvent) => {
       event.preventDefault()
       onNext()
     },
@@ -120,13 +120,13 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
                 title="Initial Token Price"
                 content={
                   <Truncate
-                    text={`${formatAmount(data.initialTokenPrice, 18)} ETH`}
+                    text={`${formatAmount(data.initialTokenPrice, 18)} ETH`}
                   />
                 }
               />
               <Definition
                 title="Initial Market Cap"
-                content={`${formatAmount(data.totalMarketCap, 18)} ETH`}
+                content={`${formatAmount(data.totalMarketCap, 18)} ETH`}
               />
               <Definition
                 title="Max Token Supply Cap"
@@ -138,7 +138,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
               />
               <Definition
                 title="Buyout Price"
-                content={`${formatAmount(data.nftBuyoutPrice, 18)} ETH`}
+                content={`${formatAmount(data.nftBuyoutPrice, 18)} ETH`}
               />
               <Definition
                 title="Minting Rewards"

@@ -1,5 +1,5 @@
 import { Address, Direction, isEmail, pick, WEEK_MS } from "kit"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import zustand from "zustand"
 import shallow from "zustand/shallow"
 
@@ -497,7 +497,7 @@ export function useAdvancedParametersFormReload(): () => void {
     (state) => pick(state, advancedParamsKeys),
     shallow,
   )
-  const load = useAdvancedParametersFormStore((state) => state.load)
+  const load = useAdvancedParametersFormStore(({ load }) => load)
 
   return useCallback(() => {
     load(savedState)
@@ -511,9 +511,9 @@ export function useAdvancedParametersForm(): AdvancedParametersForm & {
   const formState = useAdvancedParametersFormStore()
 
   const saveAdvancedParameters = useSpectralize(
-    (state) => state.saveAdvancedParameters,
+    ({ saveAdvancedParameters }) => saveAdvancedParameters,
   )
-  const reset = useAdvancedParametersFormStore((state) => state.reset)
+  const reset = useAdvancedParametersFormStore(({ reset }) => reset)
 
   const save = useCallback(() => {
     saveAdvancedParameters(formState)
