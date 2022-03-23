@@ -2,8 +2,10 @@ import { springs } from "kit"
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react"
 import { a, TransitionFn, useTransition } from "react-spring"
@@ -21,8 +23,11 @@ export type AppReadyTransition = TransitionFn<
 >
 
 type AppReadyContext = {
+  addTransitionEndCb: (cb: () => void) => void
   appReady: boolean
   appReadyTransition: AppReadyTransition
+  removeTransitionEndCb: (cb: () => void) => void
+  transitionEnded: boolean
 }
 
 const AppReadyContext = createContext<AppReadyContext>({} as AppReadyContext)
@@ -30,7 +35,10 @@ const AppReadyContext = createContext<AppReadyContext>({} as AppReadyContext)
 type AppReadyProps = { children: ReactNode }
 
 export function AppReady({ children }: AppReadyProps) {
-  const [ready, setReady] = useState(false)
+  const [{ ready, transitionEnded }, setReadyState] = useState({
+    ready: false,
+    transitionEnded: false,
+  })
 
   const appReadyTransition = useTransition(ready, {
     config: springs.lazy,
@@ -54,6 +62,22 @@ export function AppReady({ children }: AppReadyProps) {
     },
   })
 
+  const transitionEndCbs = useRef<(() => void)[] | null>([])
+  const addTransitionEndCb = useCallback((cb: () => void) => {
+    if (transitionEndCbs.current) {
+      transitionEndCbs.current.push(cb)
+    } else {
+      cb()
+    }
+  }, [])
+  const removeTransitionEndCb = useCallback((cb: () => void) => {
+    if (transitionEndCbs.current) {
+      transitionEndCbs.current = transitionEndCbs.current.filter(
+        (_cb) => _cb === cb,
+      )
+    }
+  }, [])
+
   const splashTransition = useTransition(!ready, {
     config: springs.appear,
     from: {
@@ -68,15 +92,31 @@ export function AppReady({ children }: AppReadyProps) {
       opacity: 0,
       logoTransform: "scale3d(2, 2, 1) rotate3d(0, 0, 1, 0deg)",
     },
+    onRest: () => {
+      transitionEndCbs.current?.forEach((cb) => cb())
+      transitionEndCbs.current = null
+      setReadyState((s) => ({ ...s, transitionEnded: true }))
+    },
   })
 
   useEffect(() => {
-    const id = setTimeout(() => setReady(true), 400)
+    const id = setTimeout(
+      () => setReadyState((s) => ({ ...s, ready: true })),
+      400,
+    )
     return () => clearTimeout(id)
   }, [])
 
   return (
-    <AppReadyContext.Provider value={{ appReady: ready, appReadyTransition }}>
+    <AppReadyContext.Provider
+      value={{
+        addTransitionEndCb,
+        appReady: ready,
+        appReadyTransition,
+        removeTransitionEndCb,
+        transitionEnded,
+      }}
+    >
       {splashTransition(
         ({ opacity, logoTransform }, loading) =>
           loading && (
@@ -106,6 +146,32 @@ export function AppReady({ children }: AppReadyProps) {
   )
 }
 
-export function useAppReady() {
-  return useContext(AppReadyContext)
+export function useAppReady(
+  { onTransitionEnd }: { onTransitionEnd?: () => void } = {},
+) {
+  const {
+    appReady,
+    appReadyTransition,
+    transitionEnded,
+    addTransitionEndCb,
+    removeTransitionEndCb,
+  } = useContext(AppReadyContext)
+
+  useEffect(() => {
+    if (!onTransitionEnd) return
+    addTransitionEndCb(onTransitionEnd)
+    return () => {
+      removeTransitionEndCb(onTransitionEnd)
+    }
+  }, [
+    addTransitionEndCb,
+    onTransitionEnd,
+    removeTransitionEndCb,
+  ])
+
+  return {
+    appReady,
+    appReadyTransition,
+    transitionEnded,
+  }
 }

@@ -8,10 +8,11 @@ import {
   noop,
   Tabs,
 } from "kit"
-import { ReactNode, useCallback, useMemo } from "react"
+import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { usePreventNextScrollReset } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen2"
+import { tokenPrices } from "../demo-data/token-prices"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"
@@ -53,6 +54,7 @@ export function ScreenNft({
   const [, setLocation] = useLocation()
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
   const preventNextScrollReset = usePreventNextScrollReset()
+  const [chartTimeScale, setChartTimeScale] = useState("DAY")
 
   const tabIndex = useMemo(() => (
     panels.findIndex(([_panel]) => _panel === panel)
@@ -94,53 +96,84 @@ export function ScreenNft({
         onBack,
       }}
     >
-      {snft?.image && (
-        <NftImage
-          image={snft.image}
-          label="Fractionalized"
-          labelDisplay="FRACTIONALIZED"
-          actionButtons={
-            <>
-              <ButtonIconLabel
-                icon={<IconShare />}
-                label="Share"
-                labelPosition="left"
-                onClick={() => {}}
-                disabled={false}
-              />
-              <ButtonIconLabel
-                href={snft.image.url}
-                icon={<IconMagnifyingGlassPlus />}
-                label="Zoom"
-                labelPosition="left"
-                disabled={false}
-              />
-            </>
-          }
-          navigationButtons={
-            <>
-              <ButtonIconLabel
-                icon={<IconArrowLeft />}
-                label="Prev"
-                labelFull="Previous"
-                onClick={handlePrevNft}
-                disabled={!(nftPrev)}
-              />
-              <ButtonIconLabel
-                icon={<IconSquaresFour />}
-                label="All"
-                onClick={() => {}}
-              />
-              <ButtonIconLabel
-                icon={<IconArrowRight />}
-                label="Next"
-                onClick={handleNextNft}
-                disabled={!nftNext}
-              />
-            </>
-          }
-        />
-      )}
+      <div
+        css={({ colors }) => ({
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          margin: "0 auto",
+          padding: "8gu 0",
+          background: colors.layer2,
+        })}
+      >
+        {panel === "nft" && snft?.image && (
+          <NftImage
+            image={snft.image}
+            label="Fractionalized"
+            labelDisplay="FRACTIONALIZED"
+            actionButtons={
+              <>
+                <ButtonIconLabel
+                  icon={<IconShare />}
+                  label="Share"
+                  labelPosition="left"
+                  onClick={noop}
+                  disabled={false}
+                />
+                <ButtonIconLabel
+                  href={snft.image.url}
+                  icon={<IconMagnifyingGlassPlus />}
+                  label="Zoom"
+                  labelPosition="left"
+                  disabled={false}
+                />
+              </>
+            }
+            navigationButtons={
+              <>
+                <ButtonIconLabel
+                  icon={<IconArrowLeft />}
+                  label="Prev"
+                  labelFull="Previous"
+                  onClick={handlePrevNft}
+                  disabled={!(nftPrev)}
+                />
+                <ButtonIconLabel
+                  icon={<IconSquaresFour />}
+                  label="All"
+                  onClick={noop}
+                />
+                <ButtonIconLabel
+                  icon={<IconArrowRight />}
+                  label="Next"
+                  onClick={handleNextNft}
+                  disabled={!nftNext}
+                />
+              </>
+            }
+          />
+        )}
+        {panel === "fractions" && (
+          <div
+            css={{
+              aspectRatio: "2 / 1",
+              width: layout.value({
+                small: "100%",
+                medium: "80gu",
+                large: "120gu",
+              }),
+            }}
+          >
+            <FractionsChart
+              compact={layout.below("medium")}
+              scale={chartTimeScale}
+              onScaleChange={setChartTimeScale}
+            />
+          </div>
+        )}
+      </div>
 
       <div css={{ paddingTop: layout.below("xlarge") ? "2gu" : "6.5gu" }} />
 
@@ -165,8 +198,8 @@ export function ScreenNft({
         </div>
       </div>
       {panel === "nft" && <NftPanel id={id} />}
-      {panel === "fractions" && <TokenPanel id={id} />}
-      {panel === "pool" && <TokenPanel id={id} />}
+      {panel === "fractions" && false && <FractionsPanel id={id} />}
+      {panel === "pool" && <FractionsPanel id={id} />}
     </AppScreen>
   )
 }

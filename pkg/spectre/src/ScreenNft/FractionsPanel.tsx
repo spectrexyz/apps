@@ -30,12 +30,11 @@ const PERF_METRICS: [string, string][] = [
   ["Liquidity pool weight", "37% / 63%"],
 ]
 
-export function TokenPanel({ id }: { id: string }) {
-  const [_, setLocation] = useLocation()
+export function FractionsPanel({ id }: { id: string }) {
+  const [, setLocation] = useLocation()
   return (
     <section>
       <PanelDetails
-        title="$SUB277"
         primary={
           <>
             <PanelSection>
