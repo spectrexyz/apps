@@ -1,6 +1,6 @@
 #version 300 es
 
-precision highp float;
+precision lowp float;
 
 uniform vec2 resolution;
 uniform float seed;
