@@ -26,6 +26,7 @@ export type ButtonMode =
   | "flat-2" // layer2 (lighter)
   | "flat-3" // dark blue
   | "outline"
+  | "outline-2"
 export type ButtonSize =
   | "medium"
   | "compact" // "compact" is a small button with large text
@@ -46,6 +47,7 @@ export type ButtonProps =
     label: string
     mode?: ButtonMode
     onClick?: () => void
+    selected?: boolean
     // wether the shadow should be part of the button box or not
     shadowInBox?: ShadowInBox
     size?: ButtonSize
@@ -67,6 +69,7 @@ export const Button = forwardRef<
     label,
     mode = "secondary",
     onClick,
+    selected = false,
     shadowInBox = false,
     size = "medium",
     uppercase = false,
@@ -98,8 +101,11 @@ export const Button = forwardRef<
     if (mode === "primary") return colors.accentContent
     if (mode === "primary-2") return colors.accent2Content
     if (mode === "secondary-2") return colors.accent2
+    if (mode === "outline-2") {
+      return selected ? colors.accent2Content : colors.accent2
+    }
     return colors.accent // secondary
-  }, [mode])
+  }, [mode, selected])
 
   return (
     <ButtonContext.Provider value={{ size }}>
@@ -155,6 +161,7 @@ export const Button = forwardRef<
           icon={icon}
           label={label}
           mode={mode}
+          selected={selected}
           size={size}
         />
       </ButtonArea>
@@ -165,7 +172,12 @@ export const Button = forwardRef<
 type ButtonInProps =
   & Pick<
     ButtonProps,
-    "adjustLabelAlignment" | "horizontalPadding" | "icon" | "label" | "size"
+    | "adjustLabelAlignment"
+    | "horizontalPadding"
+    | "icon"
+    | "label"
+    | "selected"
+    | "size"
   >
   & Pick<Required<ButtonProps>, "mode">
 
@@ -175,6 +187,7 @@ function ButtonIn({
   icon,
   label,
   mode,
+  selected,
   size,
 }: ButtonInProps) {
   const flat = mode.startsWith("flat")
@@ -194,12 +207,14 @@ function ButtonIn({
     if (mode === "flat-3") return colors.background
     if (mode === "primary") return colors.accent
     if (mode === "primary-2") return colors.accent2
+    if (mode === "outline-2" && selected) return colors.accent2
     return colors.background // secondary, secondary-2
-  }, [mode])
+  }, [mode, selected])
 
   const borderColor = useMemo(() => {
     if (mode === "primary-2") return colors.accent2
     if (mode === "secondary-2") return colors.accent2
+    if (mode === "outline-2") return colors.accent2
     return colors.accent
   }, [mode])
 
@@ -258,7 +273,7 @@ function ButtonIn({
           {label}
         </div>
       </div>
-      {!flat && mode !== "outline" && (
+      {!flat && mode !== "outline" && mode !== "outline-2" && (
         <div
           css={{
             position: "absolute",
