@@ -93,9 +93,11 @@ export function AppReady({ children }: AppReadyProps) {
       logoTransform: "scale3d(2, 2, 1) rotate3d(0, 0, 1, 0deg)",
     },
     onRest: () => {
-      transitionEndCbs.current?.forEach((cb) => cb())
-      transitionEndCbs.current = null
-      setReadyState((s) => ({ ...s, transitionEnded: true }))
+      if (ready) {
+        transitionEndCbs.current?.forEach((cb) => cb())
+        transitionEndCbs.current = null
+        setReadyState((s) => ({ ...s, transitionEnded: true }))
+      }
     },
   })
 
@@ -163,11 +165,7 @@ export function useAppReady(
     return () => {
       removeTransitionEndCb(onTransitionEnd)
     }
-  }, [
-    addTransitionEndCb,
-    onTransitionEnd,
-    removeTransitionEndCb,
-  ])
+  }, [addTransitionEndCb, onTransitionEnd, removeTransitionEndCb])
 
   return {
     appReady,

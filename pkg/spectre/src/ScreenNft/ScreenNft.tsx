@@ -1,3 +1,5 @@
+import type { TimeScale } from "./FractionsChart"
+
 import {
   ButtonIcon,
   IconArrowLeft,
@@ -54,7 +56,7 @@ export function ScreenNft({
   const [, setLocation] = useLocation()
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
   const preventNextScrollReset = usePreventNextScrollReset()
-  const [chartTimeScale, setChartTimeScale] = useState("DAY")
+  const [chartTimeScale, setChartTimeScale] = useState<TimeScale>("DAY")
 
   const tabIndex = useMemo(() => (
     panels.findIndex(([_panel]) => _panel === panel)
@@ -88,6 +90,20 @@ export function ScreenNft({
 
   const snft = useSnft(id)
   const layout = useLayout()
+
+  const normalizedHistory = useMemo(() => {
+    const history = Object.entries(tokenPrices).find(([scale]) =>
+      scale === chartTimeScale
+    )?.[1]
+
+    if (!history) {
+      throw new Error(`Wrong timescale value (${chartTimeScale})`)
+    }
+
+    const max = Math.max(...history)
+    const min = Math.min(...history)
+    return history.map((v) => ((v - min) / (max - min)))
+  }, [chartTimeScale])
 
   return (
     <AppScreen
@@ -168,8 +184,9 @@ export function ScreenNft({
           >
             <FractionsChart
               compact={layout.below("medium")}
-              scale={chartTimeScale}
               onScaleChange={setChartTimeScale}
+              scale={chartTimeScale}
+              values={normalizedHistory}
             />
           </div>
         )}

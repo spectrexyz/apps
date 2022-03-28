@@ -1,4 +1,4 @@
-import { ButtonText, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
+import { Button, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
 import { useCallback, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
 import {
@@ -11,16 +11,20 @@ import {
 } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 
-type Point = [number, number]
-type Interpolable<T> = SpringValue<T> | Interpolation<T>
-type Padding = { sides: number; top: number; graphTop: number; bottom: number }
+export type Point = [number, number]
+export type Interpolable<T> = SpringValue<T> | Interpolation<T>
+export type Padding = {
+  sides: number
+  top: number
+  graphTop: number
+  bottom: number
+}
+export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
 
 const BORDER = 1.5
 const PADDING: Padding = { sides: 60, top: 20, graphTop: 86, bottom: 55 }
 
-const VALUES_DEFAULTS = [0.74, 0.5, 0.4, 0.5]
-
-type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
+const VALUES_DEFAULTS = [1, 0.74, 0.5, 0, 0.4, 0.5]
 
 export const TIME_SCALES = new Map<
   TimeScale,
@@ -30,7 +34,7 @@ export const TIME_SCALES = new Map<
   ["WEEK", ["1 week", "1W"]],
   ["MONTH", ["1 month", "1M"]],
   ["YEAR", ["1 year", "1Y"]],
-  ["ALL", ["All", "All"]],
+  ["ALL", ["All", "ALL"]],
 ])
 
 const TIME_SCALES_AS_ENTRIES = Array.from(TIME_SCALES.entries())
@@ -44,9 +48,8 @@ export function FractionsChart({
   compact?: boolean
   scale: TimeScale
   onScaleChange: (scale: TimeScale) => void
-  values: number[]
+  values: number[] // 0 => 1 numbers
 }) {
-  const { colors } = useTheme()
   const bounds = useDimensions()
   const width = bounds.width
   const height = bounds.height
@@ -75,17 +78,12 @@ export function FractionsChart({
     ref: timeScaleButtonsTransitionRef,
     config: { mass: 1, tension: 800, friction: 150 },
     delay: 400,
-    from: {
-      opacity: 0,
-      transform: "translateY(20px)",
-    },
-    to: {
-      opacity: 1,
-      transform: "translateY(0px)",
-    },
+    from: { opacity: 0, transform: "translateY(20px)" },
+    to: { opacity: 1, transform: "translateY(0px)" },
   })
 
   const appReady = useAppReady()
+
   useChain(
     appReady.transitionEnded
       ? [curveReveal1Ref, curveReveal2Ref, timeScaleButtonsTransitionRef]
@@ -102,7 +100,7 @@ export function FractionsChart({
       const totalHeight = height - padding.bottom - padding.graphTop
       return [
         padding.sides + totalWidth * x,
-        height - padding.bottom - totalHeight * y,
+        height - padding.bottom - totalHeight * y - 10, // -10 = above the fadeout part
       ]
     },
     [width, height],
@@ -117,7 +115,7 @@ export function FractionsChart({
               width={width - 1}
               height={height - 1}
               backgroundColor="#5E4572"
-              scale={1}
+              scale={1.3}
             />
           </div>
           <svg
@@ -148,8 +146,10 @@ export function FractionsChart({
                 auto
                 ${padding.sides}px
               `,
-              display: "flex",
-              justifyContent: "space-between",
+              display: "grid",
+              gridTemplateColumns: `repeat(${TIME_SCALES.size}, 6gu)`,
+              justifyContent: "center",
+              gap: "1.5gu",
               fontSize: 14,
               textTransform: "uppercase",
             }}
@@ -158,14 +158,12 @@ export function FractionsChart({
               ([name, [label, labelShort]], index) => {
                 return (
                   <div key={index}>
-                    <ButtonText
-                      title={label}
+                    <Button
                       label={labelShort}
-                      css={{
-                        color: name === scale
-                          ? colors.content
-                          : colors.contentDimmed,
-                      }}
+                      mode="outline-2"
+                      selected={name === scale}
+                      size="compact"
+                      title={label}
                       onClick={() => onScaleChange(name)}
                     />
                   </div>
@@ -177,10 +175,6 @@ export function FractionsChart({
       )}
     </div>
   )
-}
-
-function Disc({ color = "#58FFCA" }: { color: string }) {
-  return <circle r="4" fill={color} />
 }
 
 function Curve({
@@ -242,36 +236,6 @@ function Curve({
     },
     [height, graphPoint],
   )
-
-  // const endPointFrom: Point = [
-  //   curvePoints[curvePoints.length - 1][0],
-  //   graphPoint(1, 0)[1],
-  // ]
-  // const endPointTo: Point = [
-  //   curvePoints[curvePoints.length - 1][0],
-  //   curvePoints[curvePoints.length - 1][1],
-  // ]
-
-  // +4 horizontally to ensure that no gradient is visible during the reveal.
-  // -1 horizontally to prevent pixel rounding issues.
-  // +1 vertically to prevent pixel rounding issues.
-  // const revealRectangleInterpolation = showLineProgress.to(
-  //   (p: number) => `
-  //     M
-  //       ${lerp(p, padding.sides, width - (width - endPointTo[0])) - 1}
-  //       ${padding.top}
-  //     L
-  //       ${width - (width - endPointTo[0]) + 4}
-  //       ${padding.top}
-  //     L
-  //       ${width - (width - endPointTo[0]) + 4}
-  //       ${height - padding.bottom + 1}
-  //     L
-  //       ${lerp(p, padding.sides, width - (width - endPointTo[0])) - 1}
-  //       ${height - padding.bottom + 1}
-  //     Z
-  //   `,
-  // )
 
   const { colors } = useTheme()
 
@@ -338,32 +302,62 @@ function Curve({
 
       <g>
         <mask id={`${uid}-fadeout-mask`}>
-          <linearGradient id={`gradient-${uid}-fadeout`}>
-            <stop
-              offset="0%"
-              stopColor="#fff"
-            />
-            <stop
-              offset="10%"
-              stopColor="#000"
-            />
-            <stop
-              offset="90%"
-              stopColor="#000"
-            />
-            <stop
-              offset="100%"
-              stopColor="#fff"
-            />
-          </linearGradient>
           <rect
-            fill={`url(#gradient-${uid}-fadeout)`}
+            fill="#000"
             height={height - padding.bottom - padding.top}
             width={width - padding.sides * 2}
             x={padding.sides}
             y={padding.top}
           />
         </mask>
+        <linearGradient id={`gradient-${uid}-fadeout-sides`}>
+          <stop
+            offset="0%"
+            stopColor={colors.layer2}
+          />
+          <stop
+            offset="6%"
+            stopColor={colors.layer2 + "00"}
+          />
+          <stop
+            offset="94%"
+            stopColor={colors.layer2 + "00"}
+          />
+          <stop
+            offset="100%"
+            stopColor={colors.layer2}
+          />
+        </linearGradient>
+        <linearGradient
+          id={`gradient-${uid}-fadeout-bottom`}
+          x1="0%"
+          x2="0%"
+          y1="100%"
+          y2="90%"
+        >
+          <stop
+            offset="0%"
+            stopColor={colors.layer2}
+          />
+          <stop
+            offset="100%"
+            stopColor={colors.layer2 + "00"}
+          />
+        </linearGradient>
+        <rect
+          fill={`url(#gradient-${uid}-fadeout-bottom)`}
+          height={height - padding.bottom - padding.top}
+          width={width - padding.sides * 2}
+          x={padding.sides}
+          y={padding.top + 1 /* rounding fix */}
+        />
+        <rect
+          fill={`url(#gradient-${uid}-fadeout-sides)`}
+          height={height - padding.bottom - padding.top}
+          width={width - padding.sides * 2}
+          x={padding.sides}
+          y={padding.top}
+        />
         <rect
           width={width}
           height={height}
@@ -371,22 +365,6 @@ function Curve({
           mask={`url(#${uid}-fadeout-mask)`}
         />
       </g>
-
-      {
-        /*<a.g
-        transform={showLineProgress.to([0, 0.8, 1], [0, 0, 1]).to(
-          (p) => `
-            translate(
-              ${lerp(p as number, endPointFrom[0], endPointTo[0])}
-              ${lerp(p as number, endPointFrom[1], endPointTo[1])}
-            )
-            scale(${p} ${p})
-          `,
-        )}
-      >
-        <Disc color="#58FFCA" />
-      </a.g>*/
-      }
     </g>
   )
 }

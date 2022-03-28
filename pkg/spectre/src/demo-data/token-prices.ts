@@ -1,5 +1,8 @@
-export const tokenPrices = {
-  "day": [
+export const tokenPrices: Record<
+  "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
+  number[]
+> = {
+  "DAY": [
     2777.21,
     2767.86,
     2775.04,
@@ -25,7 +28,7 @@ export const tokenPrices = {
     2776.85,
     2781.17,
   ],
-  "week": [
+  "WEEK": [
     2654.22,
     2565.91,
     2556.42,
@@ -55,7 +58,7 @@ export const tokenPrices = {
     2814.67,
     2781.17,
   ],
-  "month": [
+  "MONTH": [
     2893.56,
     2780.08,
     2764.44,
@@ -87,7 +90,7 @@ export const tokenPrices = {
     2814.67,
     2781.17,
   ],
-  "year": [
+  "YEAR": [
     1920,
     1964.23,
     2432.54,
@@ -141,7 +144,7 @@ export const tokenPrices = {
     2774.89,
     2781.17,
   ],
-  "all": [
+  "ALL": [
     12.61,
     13.93,
     14.64,
