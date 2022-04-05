@@ -6,7 +6,6 @@ uniform vec2 resolution;
 uniform float seed;
 uniform float speed;
 uniform float time;
-uniform bool shadow;
 
 out vec4 fragColor;
 
@@ -14,13 +13,6 @@ out vec4 fragColor;
 
 const vec3 linesColor = vec3(1.0, 1.0, 1.0);
 const vec3 backgroundColor = vec3(0.0, 0.0, 0.0);
-
-float shadowAlpha(vec2 uv, float t) {
-  float noise = snoise(vec3(uv.x + uv.y / 8.0, uv.y / 8.0, t + seed)) * 0.05;
-  float alpha = mod(noise, 0.1) / 0.1;
-  alpha = (min(alpha * 0.4, 1.0) - max(alpha - 0.6, 0.0)) * 4.0;
-  return clamp(alpha, 0.0, 1.0);
-}
 
 //  fwidth isolines technique adapted from
 //  https://www.shadertoy.com/view/Xt3yDS
@@ -43,7 +35,7 @@ void main() {
   vec3 px = mix(
     mix(linesColor, backgroundColor, lines),
     backgroundColor,
-    shadow? shadowAlpha(uv, t) : 0.0
+    0.0
   );
 
   lowp float alpha = px.x * (1.0 / 3.0) + px.y * (1.0 / 3.0) + px.z * (1.0 / 3.0);

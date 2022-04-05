@@ -19,16 +19,16 @@ import moireVertex from "./moire.vert?raw"
 import snoise from "./snoise.glsl?raw"
 /* eslint-enable import/no-unresolved */
 
-// TODO: instanciate another WebGL rendering on demand for shadow true / false
-
 const BASE_SIZE = 500
-const SHIFT_AREA = 200
+const Y_SHIFT = 40
 
 type RenderMoireFn = (params: {
   context: CanvasRenderingContext2D
   canvas: HTMLCanvasElement
   baseCanvas: HTMLCanvasElement
 }) => void
+
+type Dimensions = [width: number, height: number]
 
 const MoireContext = createContext<{
   addMoire: (canvas: HTMLCanvasElement, render: RenderMoireFn) => void
@@ -38,12 +38,10 @@ const MoireContext = createContext<{
 function useOglProgram({
   dimensions: [width, height],
   parent,
-  shadow,
   speed,
 }: {
-  dimensions: [width: number, height: number]
+  dimensions: Dimensions
   parent: RefObject<HTMLElement>
-  shadow: boolean
   speed: number
 }) {
   width = Math.round(width)
@@ -58,7 +56,6 @@ function useOglProgram({
   const uniforms = useRef({
     resolution: [width, height],
     seed: Math.random() * 1000,
-    shadow,
     speed,
     time: 1,
   })
@@ -66,14 +63,13 @@ function useOglProgram({
   useEffect(() => {
     uniforms.current.resolution[0] = BASE_SIZE
     uniforms.current.resolution[1] = BASE_SIZE
-    uniforms.current.shadow = shadow
     uniforms.current.speed = speed
-  }, [height, speed, width, shadow])
+  }, [height, speed, width])
 
   useEffect(() => {
     if (!parent.current) return
 
-    const renderer = new Renderer({ dpr, alpha: true })
+    const renderer = new Renderer({ alpha: true, depth: false, dpr })
     const { gl } = renderer
 
     parent.current.appendChild(gl.canvas)
@@ -150,14 +146,12 @@ function useAnimate(
 type MoireBaseProps = ComponentPropsWithoutRef<"div"> & {
   animate?: boolean
   children: ReactNode
-  shadow?: boolean
   speed?: number
 }
 
 export function MoireBase({
   animate = true,
   children,
-  shadow = false,
   speed = 1,
   ...props
 }: MoireBaseProps): JSX.Element {
@@ -176,12 +170,11 @@ export function MoireBase({
       Math.max(height, canvas.height / dpr),
     ],
     [0, 0],
-  ).map((v) => v + SHIFT_AREA)
+  ).map((v) => v)
 
   const { canvas, render } = useOglProgram({
-    dimensions: [moireMaxWidth, moireMaxHeight],
+    dimensions: [moireMaxWidth, moireMaxHeight + Y_SHIFT],
     parent: canvasContainer,
-    shadow,
     speed,
   })
 
@@ -227,7 +220,12 @@ export function MoireBase({
   }, [])
 
   return (
-    <MoireContext.Provider value={{ addMoire, removeMoire }}>
+    <MoireContext.Provider
+      value={{
+        addMoire,
+        removeMoire,
+      }}
+    >
       <div
         ref={canvasContainer}
         {...props}
@@ -244,7 +242,6 @@ type MoireProps = ComponentPropsWithoutRef<"canvas"> & {
   height: number
   linesColor?: string
   scale?: number
-  shadow?: boolean
   width: number
 }
 
@@ -254,7 +251,6 @@ export const Moire = memo(function Moire({
   height,
   linesColor = "rgb(88, 255, 202)",
   scale = 1,
-  shadow = false,
   width,
   ...props
 }: MoireProps): JSX.Element {
@@ -264,10 +260,7 @@ export const Moire = memo(function Moire({
   const renderWidth = (width * dpr) / scale
   const renderHeight = (height * dpr) / scale
 
-  const shift = useRef([
-    -Math.round(Math.random() * SHIFT_AREA),
-    -Math.round(Math.random() * SHIFT_AREA),
-  ])
+  const yShift = useRef(-Math.round(Math.random() * Y_SHIFT))
 
   const render = useCallback(
     ({ baseCanvas, canvas, context }) => {
@@ -279,8 +272,8 @@ export const Moire = memo(function Moire({
       const sh = baseCanvas.height
       const dw = sw
       const dh = sh
-      const dx = shift.current[0]
-      const dy = shift.current[1]
+      const dx = 0
+      const dy = yShift.current
 
       context.clearRect(0, 0, renderWidth, renderHeight)
       if (sw > 0 && sh > 0) {
