@@ -6,7 +6,21 @@ declare module "ogl" {
   type Uniforms = Record<string, { value: unknown }>
 
   class Renderer {
-    constructor(options: { dpr: number; alpha: boolean })
+    constructor(options: {
+      alpha?: boolean
+      antialias?: boolean
+      autoClear?: boolean
+      canvas?: HTMLCanvasElement
+      depth?: boolean
+      dpr?: number
+      height?: number
+      powerPreference?: "high-performance" | "low-power" | "default"
+      premultipliedAlpha?: boolean
+      preserveDrawingBuffer?: boolean
+      stencil?: boolean
+      webgl?: 1 | 2
+      width?: number
+    })
     setSize(width: number, height: number): void
     render({ scene: Mesh }): void
     gl: Gl
