@@ -207,7 +207,7 @@ function ButtonIn({
     if (mode === "flat-3") return colors.background
     if (mode === "primary") return colors.accent
     if (mode === "primary-2") return colors.accent2
-    if (mode === "outline-2" && selected) return colors.accent2
+    if (mode === "outline-2") return selected ? colors.accent2 : colors.layer2
     return colors.background // secondary, secondary-2
   }, [mode, selected])
 
