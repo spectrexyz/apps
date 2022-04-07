@@ -7,6 +7,7 @@ import { NftDetails } from "./NftDetails"
 import { NftHistory } from "./NftHistory"
 import { NftOwnership } from "./NftOwnership"
 import { NftProvenance } from "./NftProvenance"
+import { NftTitle } from "./NftTitle"
 import { PanelDetails } from "./PanelDetails"
 
 export function NftPanel({ id }: { id: string }) {
@@ -21,6 +22,7 @@ export function NftPanel({ id }: { id: string }) {
     if (layout.above("xlarge")) {
       return [
         <>
+          <NftTitle snft={snft} />
           <NftDescription snft={snft} />
           <NftProvenance />
           <MoreNfts snftFrom={snft} />
@@ -37,6 +39,7 @@ export function NftPanel({ id }: { id: string }) {
     if (layout.above("medium")) {
       return [
         <>
+          <NftTitle snft={snft} />
           <NftDescription snft={snft} />
           <NftDetails snft={snft} />
           <NftHistory snft={snft} />
@@ -55,6 +58,7 @@ export function NftPanel({ id }: { id: string }) {
     // small
     return [
       <>
+        <NftTitle snft={snft} />
         <NftDescription snft={snft} />
         <NftDetails snft={snft} />
       </>,

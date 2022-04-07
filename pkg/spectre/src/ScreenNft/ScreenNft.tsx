@@ -8,19 +8,25 @@ import {
   IconShare,
   IconSquaresFour,
   noop,
+  Radio,
+  RadioGroup,
   Tabs,
 } from "kit"
 import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
-import { usePreventNextScrollReset } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen2"
+import { poolEthWeights } from "../demo-data"
 import { tokenPrices } from "../demo-data/token-prices"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"
 import { FractionsPanel } from "./FractionsPanel"
+import { MintedChart } from "./MintedChart"
 import { NftImage } from "./NftImage"
 import { NftPanel } from "./NftPanel"
+import { PoolChart } from "./PoolChart"
+
+type GraphType = "market-cap" | "minted-supply"
 
 const tabs = [
   {
@@ -55,8 +61,9 @@ export function ScreenNft({
 }) {
   const [, setLocation] = useLocation()
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
-  const preventNextScrollReset = usePreventNextScrollReset()
   const [chartTimeScale, setChartTimeScale] = useState<TimeScale>("DAY")
+  const [poolChartScale, setPoolChartScale] = useState<TimeScale>("DAY")
+  const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
   const tabIndex = useMemo(() => (
     panels.findIndex(([_panel]) => _panel === panel)
@@ -76,12 +83,11 @@ export function ScreenNft({
 
   const handleSelectPanel = useCallback(
     (index: number) => {
-      preventNextScrollReset()
       if (panels[index]) {
         setLocation(`/nfts/${id}${panels[index][1]}`)
       }
     },
-    [id, preventNextScrollReset, setLocation],
+    [id, setLocation],
   )
 
   const onBack = useCallback(() => {
@@ -174,19 +180,135 @@ export function ScreenNft({
         {panel === "fractions" && (
           <div
             css={{
-              aspectRatio: "2 / 1",
+              position: "relative",
+              display: layout.value({
+                small: "grid",
+                medium: "block",
+              }),
+              aspectRatio: layout.value({
+                small: "auto",
+                medium: "2 / 1",
+              }),
               width: layout.value({
                 small: "100%",
                 medium: "80gu",
-                large: "120gu",
+                large: "110gu",
+              }),
+              height: layout.value({
+                small: "45gu",
+                medium: "auto",
               }),
             }}
           >
-            <FractionsChart
-              compact={layout.below("medium")}
-              onScaleChange={setChartTimeScale}
-              scale={chartTimeScale}
-              values={normalizedHistory}
+            <div
+              css={{
+                position: "absolute",
+                zIndex: 2,
+                inset: layout.value({
+                  small: "0 auto auto 2gu",
+                  medium: "0 auto auto 7gu",
+                }),
+              }}
+            >
+              <RadioGroup selected={graphType} onChange={setGraphType}>
+                <div
+                  css={({ colors, fonts }) => ({
+                    display: "flex",
+                    gap: layout.below("medium") ? "2gu" : "3.5gu",
+                    "label": {
+                      display: "flex",
+                      gap: "1.5gu",
+                      alignItems: "center",
+                      height: "5gu",
+                      padding: "0 1.5gu 0 1gu",
+                      fontFamily: fonts.families.mono,
+                      fontSize: layout.below("medium") ? "14px" : "18px",
+                      textTransform: "uppercase",
+                      whiteSpace: "nowrap",
+                      color: colors.accent2,
+                      cursor: "pointer",
+                      border: `1px solid transparent`,
+                      userSelect: "none",
+                      "&.selected": {
+                        borderColor: colors.accent2,
+                      },
+                    },
+                  })}
+                >
+                  <label
+                    className={graphType === "market-cap" ? "selected" : ""}
+                  >
+                    <Radio id="market-cap" mode="alt" />
+                    Market cap
+                  </label>
+                  <label
+                    className={graphType === "minted-supply" ? "selected" : ""}
+                  >
+                    <Radio id="minted-supply" mode="alt" />
+                    Minted supply
+                  </label>
+                </div>
+              </RadioGroup>
+            </div>
+            {graphType === "market-cap" && (
+              <FractionsChart
+                compact={layout.below("medium")}
+                onScaleChange={setChartTimeScale}
+                scale={chartTimeScale}
+                values={normalizedHistory}
+              />
+            )}
+            {graphType === "minted-supply" && (
+              <MintedChart
+                onScaleChange={() => {}}
+                scale="DAY"
+                values={[
+                  0.2,
+                  0.3,
+                  0.3,
+                  0.4,
+                  0.45,
+                  0.45,
+                  0.45,
+                  0.45,
+                  0.47,
+                  0.47,
+                  0.49,
+                  0.49,
+                  0.49,
+                  0.66,
+                ]}
+              />
+            )}
+          </div>
+        )}
+        {panel === "pool" && (
+          <div
+            css={{
+              position: "relative",
+              display: layout.value({
+                small: "grid",
+                medium: "block",
+              }),
+              aspectRatio: layout.value({
+                small: "auto",
+                medium: "2 / 1",
+              }),
+              width: layout.value({
+                small: "100%",
+                medium: "80gu",
+                large: "110gu",
+              }),
+              height: layout.value({
+                small: "45gu",
+                medium: "auto",
+              }),
+            }}
+          >
+            <PoolChart
+              onScaleChange={setPoolChartScale}
+              scale={poolChartScale}
+              ethWeight={poolEthWeights[poolChartScale]}
             />
           </div>
         )}
@@ -215,7 +337,7 @@ export function ScreenNft({
         </div>
       </div>
       {panel === "nft" && <NftPanel id={id} />}
-      {panel === "fractions" && false && <FractionsPanel id={id} />}
+      {panel === "fractions" && <FractionsPanel id={id} />}
       {panel === "pool" && <FractionsPanel id={id} />}
     </AppScreen>
   )

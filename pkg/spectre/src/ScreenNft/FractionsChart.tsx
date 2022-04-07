@@ -1,4 +1,6 @@
-import { Button, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
+import type { TimeScale } from "./TimeScaleButtons"
+
+import { Button, gu, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
 import { useCallback, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
 import {
@@ -10,112 +12,85 @@ import {
   useSpringRef,
 } from "react-spring"
 import { useAppReady } from "../App/AppReady"
+import { TimeScaleButtons } from "./TimeScaleButtons"
 
 export type Point = [number, number]
 export type Interpolable<T> = SpringValue<T> | Interpolation<T>
-export type Padding = {
-  sides: number
-  top: number
-  graphTop: number
+
+type GraphGeometry = {
+  canvasHeight: number
+  canvasWidth: number
   bottom: number
+  height: number
+  left: number
+  right: number
+  top: number
+  width: number
 }
-export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
 
 const BORDER = 1.5
-const PADDING: Padding = { sides: 60, top: 20, graphTop: 86, bottom: 55 }
-
-const VALUES_DEFAULTS = [1, 0.74, 0.5, 0, 0.4, 0.5]
-
-export const TIME_SCALES = new Map<
-  TimeScale,
-  [label: string, labelShort: string]
->([
-  ["DAY", ["1 day", "1D"]],
-  ["WEEK", ["1 week", "1W"]],
-  ["MONTH", ["1 month", "1M"]],
-  ["YEAR", ["1 year", "1Y"]],
-  ["ALL", ["All", "ALL"]],
-])
-
-const TIME_SCALES_AS_ENTRIES = Array.from(TIME_SCALES.entries())
 
 export function FractionsChart({
   compact = false,
   onScaleChange,
   scale,
-  values = VALUES_DEFAULTS,
+  values,
 }: {
   compact?: boolean
-  scale: TimeScale
   onScaleChange: (scale: TimeScale) => void
+  scale: TimeScale
   values: number[] // 0 => 1 numbers
 }) {
   const bounds = useDimensions()
   const width = bounds.width
   const height = bounds.height
-  const padding = compact
-    ? { sides: 0, top: 0, graphTop: 0, bottom: 0 }
-    : PADDING
 
-  const curveReveal1Ref = useSpringRef()
-  const curveReveal1 = useSpring({
-    ref: curveReveal1Ref,
-    config: { mass: 1, tension: 300, friction: 80 },
-    from: { progress: 0 },
-    to: { progress: 1 },
-  })
+  const graphGeometry = useMemo<GraphGeometry>(() => {
+    const tspacing = 10 * gu // top spacing
+    const bspacing = 7 * gu // bottom spacing
+    const hspacing = 2 * gu // horizontal spacing
+    return {
+      bottom: height - bspacing,
+      canvasHeight: height,
+      canvasWidth: width,
+      height: height - tspacing - bspacing,
+      left: hspacing,
+      right: width - hspacing,
+      top: tspacing,
+      width: width - hspacing * 2,
+    }
+  }, [height, width])
 
-  const curveReveal2Ref = useSpringRef()
-  const curveReveal2 = useSpring({
-    ref: curveReveal2Ref,
-    config: { mass: 1, tension: 300, friction: 280 },
-    from: { progress: 0 },
-    to: { progress: 1 },
-  })
-
-  const timeScaleButtonsTransitionRef = useSpringRef()
-  const timeScaleButtonsTransition = useSpring({
-    ref: timeScaleButtonsTransitionRef,
-    config: { mass: 1, tension: 800, friction: 150 },
-    delay: 400,
-    from: { opacity: 0, transform: "translateY(20px)" },
-    to: { opacity: 1, transform: "translateY(0px)" },
-  })
-
-  const appReady = useAppReady()
-
-  useChain(
-    appReady.transitionEnded
-      ? [curveReveal1Ref, curveReveal2Ref, timeScaleButtonsTransitionRef]
-      : [],
-    appReady.transitionEnded
-      ? [0, 0.5, 0.7]
-      : [],
-  )
-
-  // transforms 0 => 1 values into coordinates
+  // transforms normalized values into coordinates
   const graphPoint = useCallback(
-    (x, y): Point => {
-      const totalWidth = width - padding.sides * 2
-      const totalHeight = height - padding.bottom - padding.graphTop
-      return [
-        padding.sides + totalWidth * x,
-        height - padding.bottom - totalHeight * y - 10, // -10 = above the fadeout part
-      ]
-    },
-    [width, height],
+    (x, y): Point => [
+      lerp(x, graphGeometry.left, graphGeometry.right),
+      lerp(y, graphGeometry.bottom - 5 * gu, graphGeometry.top), // -5gu = move the minimum above the fadeout part
+    ],
+    [graphGeometry],
   )
+
+  const {
+    curveReveal1,
+    curveReveal2,
+    timeScaleButtonsTransition,
+  } = useReveal()
 
   return (
-    <div ref={bounds.observe} css={{ height: "100%" }}>
+    <div ref={bounds.observe} css={{ overflow: "hidden", height: "100%" }}>
       {width > 0 && (
         <div css={{ position: "relative", width, height }}>
-          <div css={{ position: "absolute", inset: "0" }}>
+          <div
+            css={{
+              position: "absolute",
+              top: `${graphGeometry.top}px`,
+              left: `${graphGeometry.left}px`,
+            }}
+          >
             <Moire
-              width={width - 1}
-              height={height - 1}
+              width={graphGeometry.width}
+              height={graphGeometry.height}
               backgroundColor="#5E4572"
-              scale={1.3}
             />
           </div>
           <svg
@@ -128,13 +103,33 @@ export function FractionsChart({
               graphPoint={graphPoint}
               height={height}
               multiplier={1.1}
-              padding={padding}
+              graphGeometry={graphGeometry}
               showLineProgress={curveReveal1.progress}
               showFillProgress={curveReveal2.progress}
               steps={values.length - 1}
               values={values}
               width={width}
             />
+            {
+              /*<rect
+              x={0}
+              y={0}
+              width={graphGeometry.canvasWidth}
+              height={graphGeometry.canvasHeight}
+              fill="transparent"
+              stroke="yellow"
+              strokeWidth="0.5"
+            />
+            <rect
+              x={graphGeometry.left}
+              y={graphGeometry.top}
+              width={graphGeometry.width}
+              height={graphGeometry.height}
+              fill="transparent"
+              stroke="red"
+              strokeWidth="0.5"
+            />*/
+            }
           </svg>
           <a.div
             style={timeScaleButtonsTransition}
@@ -142,34 +137,18 @@ export function FractionsChart({
               position: "absolute",
               inset: `
                 ${height - 40}px
-                ${padding.sides}px
                 auto
-                ${padding.sides}px
+                auto
+                ${graphGeometry.left}px
               `,
-              display: "grid",
-              gridTemplateColumns: `repeat(${TIME_SCALES.size}, 6gu)`,
-              justifyContent: "center",
-              gap: "1.5gu",
-              fontSize: 14,
-              textTransform: "uppercase",
+              width: `${graphGeometry.width}px`,
             }}
           >
-            {TIME_SCALES_AS_ENTRIES.map(
-              ([name, [label, labelShort]], index) => {
-                return (
-                  <div key={index}>
-                    <Button
-                      label={labelShort}
-                      mode="outline-2"
-                      selected={name === scale}
-                      size="compact"
-                      title={label}
-                      onClick={() => onScaleChange(name)}
-                    />
-                  </div>
-                )
-              },
-            )}
+            <TimeScaleButtons
+              compact={compact}
+              onChange={onScaleChange}
+              value={scale}
+            />
           </a.div>
         </div>
       )}
@@ -178,20 +157,20 @@ export function FractionsChart({
 }
 
 function Curve({
+  graphGeometry,
   graphPoint,
   height,
   multiplier,
-  padding,
-  showLineProgress,
   showFillProgress,
+  showLineProgress,
   steps,
   values,
   width,
 }: {
+  graphGeometry: GraphGeometry
   graphPoint: (x: number, y: number) => Point
   height: number
   multiplier: number
-  padding: Padding
   showLineProgress: Interpolable<number>
   showFillProgress: Interpolable<number>
   steps: number
@@ -202,39 +181,41 @@ function Curve({
 
   const [curvePoints, curvePointsMultiplied] = useMemo(() => {
     return [
-      values.map<Point>((value, index) => graphPoint(index / steps, value)),
       values.map<Point>((value, index) =>
-        graphPoint(index / steps, value * multiplier)
+        graphPoint(index / steps, value * (1 / multiplier))
       ),
+      values.map<Point>((value, index) => graphPoint(index / steps, value)),
     ]
   }, [multiplier, steps, values, graphPoint])
 
   const curvePath = useCallback(
     (curvePoints: Point[], progress: number, close: boolean) => {
       const start = graphPoint(0, 0)
+
       let path = `
         M ${start[0]} ${start[1]}
-        ${
-        smoothPath(
-          curvePoints.map((point) => [
-            point[0],
-            lerp(progress, height - padding.bottom, point[1]),
-          ]),
-          0.2,
-        )
-      }
       `
+
+      path += smoothPath(
+        curvePoints.map((point) => [
+          point[0],
+          lerp(progress, graphGeometry.bottom, point[1]),
+        ]),
+        0.2,
+      )
+
       if (close) {
         const lastX = curvePoints[curvePoints.length - 1][0]
         path += `
-          L ${lastX} ${height - padding.bottom}
-          L ${padding.sides} ${height - padding.bottom}
+          L ${lastX} ${graphGeometry.bottom}
+          L ${graphGeometry.left} ${graphGeometry.bottom}
           Z
         `
       }
+
       return path
     },
-    [height, graphPoint],
+    [graphPoint, graphGeometry],
   )
 
   const { colors } = useTheme()
@@ -261,10 +242,10 @@ function Curve({
 
       <mask id={`${uid}-reveal-mask`}>
         <a.rect
-          x={padding.sides}
-          y={padding.top}
-          width={width - padding.sides * 2}
-          height={height - padding.bottom - padding.top}
+          x={graphGeometry.left}
+          y={0}
+          width={graphGeometry.width}
+          height={graphGeometry.canvasHeight}
           transform={showLineProgress.to((v: number) => `scale(${v}, 1)`)}
           fill="white"
         />
@@ -301,15 +282,6 @@ function Curve({
       />
 
       <g>
-        <mask id={`${uid}-fadeout-mask`}>
-          <rect
-            fill="#000"
-            height={height - padding.bottom - padding.top}
-            width={width - padding.sides * 2}
-            x={padding.sides}
-            y={padding.top}
-          />
-        </mask>
         <linearGradient id={`gradient-${uid}-fadeout-sides`}>
           <stop
             offset="0%"
@@ -346,25 +318,59 @@ function Curve({
         </linearGradient>
         <rect
           fill={`url(#gradient-${uid}-fadeout-bottom)`}
-          height={height - padding.bottom - padding.top}
-          width={width - padding.sides * 2}
-          x={padding.sides}
-          y={padding.top + 1 /* rounding fix */}
+          height={graphGeometry.height}
+          width={graphGeometry.width}
+          x={graphGeometry.left}
+          y={graphGeometry.top + 1 /* rounding fix */}
         />
         <rect
           fill={`url(#gradient-${uid}-fadeout-sides)`}
-          height={height - padding.bottom - padding.top}
-          width={width - padding.sides * 2}
-          x={padding.sides}
-          y={padding.top}
-        />
-        <rect
-          width={width}
-          height={height}
-          fill={colors.layer2}
-          mask={`url(#${uid}-fadeout-mask)`}
+          height={graphGeometry.height}
+          width={graphGeometry.width}
+          x={graphGeometry.left}
+          y={graphGeometry.top}
         />
       </g>
     </g>
   )
+}
+
+function useReveal() {
+  const curveReveal1Ref = useSpringRef()
+  const curveReveal1 = useSpring({
+    ref: curveReveal1Ref,
+    config: { mass: 1, tension: 300, friction: 80 },
+    from: { progress: 0 },
+    to: { progress: 1 },
+  })
+
+  const curveReveal2Ref = useSpringRef()
+  const curveReveal2 = useSpring({
+    ref: curveReveal2Ref,
+    config: { mass: 1, tension: 300, friction: 280 },
+    from: { progress: 0 },
+    to: { progress: 1 },
+  })
+
+  const timeScaleButtonsTransitionRef = useSpringRef()
+  const timeScaleButtonsTransition = useSpring({
+    ref: timeScaleButtonsTransitionRef,
+    config: { mass: 1, tension: 800, friction: 80 },
+    delay: 400,
+    from: { opacity: 0, transform: "translateY(20px)" },
+    to: { opacity: 1, transform: "translateY(0px)" },
+  })
+
+  const appReady = useAppReady()
+
+  useChain(
+    appReady.transitionEnded
+      ? [curveReveal1Ref, curveReveal2Ref, timeScaleButtonsTransitionRef]
+      : [],
+    appReady.transitionEnded
+      ? [0, 0.5, 0.5]
+      : [],
+  )
+
+  return { curveReveal1, curveReveal2, timeScaleButtonsTransition }
 }

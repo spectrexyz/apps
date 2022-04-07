@@ -132,3 +132,14 @@ export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => {
     ],
   })
 })
+
+export const poolEthWeights: Record<
+  "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
+  [ethWeightStart: number, ethWeightEnd: number]
+> = {
+  "DAY": [0.2, 0.3],
+  "WEEK": [0.2, 0.5],
+  "MONTH": [0.2, 0.6],
+  "YEAR": [0.2, 0.7],
+  "ALL": [0.2, 0.8],
+}

@@ -2,7 +2,9 @@ import { Button, TokenAmount } from "kit"
 import { useLabelStyle, useLayout } from "../styles"
 import { PanelSection } from "./PanelSection"
 
-export function NftActions() {
+export function NftActions(
+  { highlight = "buyout" }: { highlight?: "buyout" | "fractions" },
+) {
   const labelStyle = useLabelStyle({ size: "small" })
   const layout = useLayout()
   return (
@@ -26,7 +28,11 @@ export function NftActions() {
           {!layout.below("xlarge") && (
             <>
               <div css={{ height: "3gu" }} />
-              <Button label="NFT buyout" mode="primary" wide />
+              <Button
+                label="NFT buyout"
+                mode={highlight === "buyout" ? "primary" : "secondary"}
+                wide
+              />
             </>
           )}
         </div>
@@ -41,7 +47,11 @@ export function NftActions() {
           {!layout.below("xlarge") && (
             <>
               <div css={{ height: "3gu" }} />
-              <Button label="Buy fractions" wide />
+              <Button
+                label="Buy fractions"
+                wide
+                mode={highlight === "fractions" ? "primary" : "secondary"}
+              />
             </>
           )}
         </div>
@@ -55,8 +65,18 @@ export function NftActions() {
             paddingTop: "2gu",
           }}
         >
-          <Button label="NFT buyout" mode="primary" size="compact" wide />
-          <Button label="Buy fractions" size="compact" wide />
+          <Button
+            label="NFT buyout"
+            mode={highlight === "buyout" ? "primary" : "secondary"}
+            size="compact"
+            wide
+          />
+          <Button
+            label="Buy fractions"
+            mode={highlight === "fractions" ? "primary" : "secondary"}
+            size="compact"
+            wide
+          />
         </div>
       )}
     </PanelSection>
