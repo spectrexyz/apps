@@ -15,7 +15,7 @@ import {
 import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen2"
-import { poolEthWeights } from "../demo-data"
+import { minted, poolEthWeights } from "../demo-data"
 import { tokenPrices } from "../demo-data/token-prices"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
@@ -61,8 +61,7 @@ export function ScreenNft({
 }) {
   const [, setLocation] = useLocation()
   const [nftPrev, nftNext] = useSnftsAdjacent(id)
-  const [chartTimeScale, setChartTimeScale] = useState<TimeScale>("DAY")
-  const [poolChartScale, setPoolChartScale] = useState<TimeScale>("DAY")
+  const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
   const tabIndex = useMemo(() => (
@@ -99,17 +98,17 @@ export function ScreenNft({
 
   const normalizedHistory = useMemo(() => {
     const history = Object.entries(tokenPrices).find(([scale]) =>
-      scale === chartTimeScale
+      scale === timeScale
     )?.[1]
 
     if (!history) {
-      throw new Error(`Wrong timescale value (${chartTimeScale})`)
+      throw new Error(`Wrong timescale value (${timeScale})`)
     }
 
     const max = Math.max(...history)
     const min = Math.min(...history)
     return history.map((v) => ((v - min) / (max - min)))
-  }, [chartTimeScale])
+  }, [timeScale])
 
   return (
     <AppScreen
@@ -253,31 +252,16 @@ export function ScreenNft({
             {graphType === "market-cap" && (
               <FractionsChart
                 compact={layout.below("medium")}
-                onScaleChange={setChartTimeScale}
-                scale={chartTimeScale}
+                onScaleChange={setTimeScale}
+                scale={timeScale}
                 values={normalizedHistory}
               />
             )}
             {graphType === "minted-supply" && (
               <MintedChart
-                onScaleChange={() => {}}
-                scale="DAY"
-                values={[
-                  0.2,
-                  0.3,
-                  0.3,
-                  0.4,
-                  0.45,
-                  0.45,
-                  0.45,
-                  0.45,
-                  0.47,
-                  0.47,
-                  0.49,
-                  0.49,
-                  0.49,
-                  0.66,
-                ]}
+                onScaleChange={setTimeScale}
+                scale={timeScale}
+                values={minted[timeScale]}
               />
             )}
           </div>
@@ -306,9 +290,9 @@ export function ScreenNft({
             }}
           >
             <PoolChart
-              onScaleChange={setPoolChartScale}
-              scale={poolChartScale}
-              ethWeight={poolEthWeights[poolChartScale]}
+              onScaleChange={setTimeScale}
+              scale={timeScale}
+              ethWeight={poolEthWeights[timeScale]}
             />
           </div>
         )}
