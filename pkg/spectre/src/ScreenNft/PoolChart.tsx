@@ -72,6 +72,11 @@ export function PoolChart({
 
   const { timeScaleButtonsTransition } = useReveal()
 
+  const closestPctIndexesStart: [number, number] = [
+    Math.round(ethWeight[0] * 10),
+    Math.round((1 - ethWeight[0]) * 10),
+  ]
+
   return (
     <div ref={bounds.observe} css={{ overflow: "hidden", height: "100%" }}>
       {width > 0 && (
@@ -83,7 +88,10 @@ export function PoolChart({
             css={{ position: "absolute", inset: "0 auto auto 0" }}
           >
             <Grid graphGeometry={graphGeometry} />
-            <Frame graphPoint={graphPoint} />
+            <Frame
+              closestPctIndexesStart={closestPctIndexesStart}
+              graphPoint={graphPoint}
+            />
             <TwoLines
               from={[ethWeight[0], 1 - ethWeight[0]]}
               graphPoint={graphPoint}
@@ -151,12 +159,12 @@ function TwoLines(
   const { colors } = useTheme()
   const [showDiscs, setShowDiscs] = useState(false)
   const trail = useTrail(2, {
-    delay: 600,
+    delay: 200,
     config: { mass: 1, tension: 400, friction: 200 },
     from: { progress: 0 },
     to: { progress: 1 },
     onChange: ({ value: { progress } }) => {
-      if (progress > 0.9) {
+      if (progress > 0.87) {
         setShowDiscs(true)
       }
     },
@@ -178,7 +186,7 @@ function TwoLines(
             d={`M${from_} L${to_}`}
             fill="transparent"
             pathLength={1}
-            stroke={index === 0 ? "#F597F8" : colors.accent}
+            stroke={index === 0 ? colors.accent3 : colors.accent}
             strokeWidth={progress.to([0, 1], [0, 3])}
             strokeDasharray={1}
             opacity={progress}
@@ -196,7 +204,7 @@ function TwoLines(
             cx={x}
             cy={y}
             r={progress.to([0, 0.85, 1], [0, 0, 1]).to((v) => v * 7)}
-            fill={index === 0 ? "#F597F8" : colors.accent}
+            fill={index === 0 ? colors.accent3 : colors.accent}
           />
         )
       })}
@@ -204,7 +212,8 @@ function TwoLines(
   )
 }
 
-function Frame({ graphPoint }: {
+function Frame({ closestPctIndexesStart, graphPoint }: {
+  closestPctIndexesStart: [number, number]
   graphPoint: GraphPointFn
 }) {
   const { colors } = useTheme()
@@ -234,14 +243,24 @@ function Frame({ graphPoint }: {
         strokeDasharray={1}
         strokeDashoffset={progress.to((v) => 1 - v)}
       />
-      {dashesTrail.map(({ progress }, i) => (
-        <DashPercent
-          key={i}
-          index={i}
-          graphPoint={graphPoint}
-          progress={progress}
-        />
-      ))}
+      {dashesTrail.map(({ progress }, i) => {
+        let active: [string, string] | undefined = undefined
+        if (i === closestPctIndexesStart[0] - 1) {
+          active = [colors.accent3, "ETH"]
+        }
+        if (i === closestPctIndexesStart[1] - 1) {
+          active = [colors.accent, "MOI"]
+        }
+        return (
+          <DashPercent
+            key={i}
+            index={i}
+            graphPoint={graphPoint}
+            progress={progress}
+            active={active}
+          />
+        )
+      })}
     </g>
   )
 }
@@ -347,10 +366,12 @@ function GridLine(
 
 function DashPercent(
   {
+    active: [activeColor, activeLabel] = [],
     graphPoint,
     index,
     progress,
   }: {
+    active?: [string, string]
     graphPoint: GraphPointFn
     index: number
     progress: Interpolable<number>
@@ -374,7 +395,7 @@ function DashPercent(
         strokeDashoffset={progress.to((v: number) => 1 - v)}
       />
       <a.text
-        fill={colors.contentDimmed}
+        fill={activeColor ?? colors.contentDimmed}
         fontSize="14"
         textAnchor="end"
         x={x - 18}
@@ -382,7 +403,7 @@ function DashPercent(
         opacity={labelProgress}
         transform={labelProgress.to((v) => `translate(${6 * (1 - v)})`)}
       >
-        {(index + 1) * 10}%
+        {activeLabel} {(index + 1) * 10}%
       </a.text>
     </g>
   )

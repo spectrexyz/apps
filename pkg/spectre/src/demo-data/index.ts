@@ -137,10 +137,10 @@ export const poolEthWeights: Record<
   "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
   [ethWeightStart: number, ethWeightEnd: number]
 > = {
-  "DAY": [0.2, 0.3],
-  "WEEK": [0.2, 0.5],
-  "MONTH": [0.2, 0.6],
-  "YEAR": [0.2, 0.7],
+  "DAY": [0.7, 0.8],
+  "WEEK": [0.5, 0.8],
+  "MONTH": [0.4, 0.8],
+  "YEAR": [0.3, 0.8],
   "ALL": [0.2, 0.8],
 }
 
