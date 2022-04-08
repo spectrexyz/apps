@@ -322,7 +322,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
             },
           })}
         >
-          <strong>{formatAmount(2825, 0)}</strong> {token.symbol}
+          <strong>{formatAmount(2825n, 0)}</strong> {token.symbol}
         </div>
       </div>
     </div>
