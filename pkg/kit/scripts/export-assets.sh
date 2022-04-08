@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-printf "Exporting assets (src/ to dist-assets/)…"
+printf "Exporting assets from src/ to dist-assets/…"
 
 rsync \
   -zarv \
