@@ -1,7 +1,9 @@
+import type { MouseEvent, RefObject } from "react"
+import type { PickAnimated, SpringValues } from "react-spring"
 import type { TimeScale } from "./TimeScaleButtons"
 
-import { Button, gu, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
-import { useCallback, useMemo } from "react"
+import { co, gu, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
+import { useCallback, useMemo, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import {
   a,
@@ -13,6 +15,14 @@ import {
 } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { TimeScaleButtons } from "./TimeScaleButtons"
+
+const attr = (
+  ref: RefObject<HTMLElement | SVGElement>,
+  name: string,
+  value: string | number,
+) => {
+  ref.current?.setAttribute(name, String(value))
+}
 
 export type Point = [number, number]
 export type Interpolable<T> = SpringValue<T> | Interpolation<T>
@@ -35,12 +45,15 @@ export function FractionsChart({
   onScaleChange,
   scale,
   values,
+  multiplier = 1.1,
 }: {
   compact?: boolean
   onScaleChange: (scale: TimeScale) => void
   scale: TimeScale
   values: number[] // 0 => 1 numbers
+  multiplier: number
 }) {
+  const { colors } = useTheme()
   const bounds = useDimensions()
   const width = bounds.width
   const height = bounds.height
@@ -76,6 +89,52 @@ export function FractionsChart({
     timeScaleButtonsTransition,
   } = useReveal()
 
+  const svgRef = useRef<SVGSVGElement>(null)
+  const buyoutDot = useLabelDot({
+    label: (index) => {
+      return [`NFT buyout price: $${825 * (index + 1)}K`]
+    },
+    position: "above",
+  })
+
+  const marketCapDot = useLabelDot({
+    label: (index) => {
+      return [
+        `MOIRÉ total market cap: $${749 * (index + 1)}K`,
+        `MOIRÉ token price: $${1.64 * (index + 1)}`,
+      ]
+    },
+    position: "below",
+  })
+
+  const mouseGraphPosition = (event: MouseEvent<SVGSVGElement>) => {
+    const svgRect = svgRef.current?.getBoundingClientRect()
+    if (!svgRect) {
+      return { inBounds: false, x: 0, y: 0 }
+    }
+
+    const x = event.pageX - svgRect.x
+    const y = event.pageY - svgRect.y
+
+    const inBounds = !(
+      y < graphGeometry.top
+      || y > graphGeometry.bottom
+      // || x < graphGeometry.left
+      // || x > graphGeometry.right
+    )
+
+    const valueIndex = Math.round(
+      (x - graphGeometry.left) / graphGeometry.width * (values.length - 1),
+    )
+
+    return {
+      inBounds,
+      valueIndex,
+      x: valueIndex / (values.length - 1),
+      y: values[valueIndex],
+    }
+  }
+
   return (
     <div ref={bounds.observe} css={{ overflow: "hidden", height: "100%" }}>
       {width > 0 && (
@@ -94,15 +153,34 @@ export function FractionsChart({
             />
           </div>
           <svg
+            ref={svgRef}
             viewBox={`0 0 ${width} ${height}`}
             width={width}
             height={height}
             css={{ position: "absolute", inset: "0 auto auto 0" }}
+            onMouseLeave={() => {
+              buyoutDot.hide()
+              marketCapDot.hide()
+            }}
+            onMouseMove={(event) => {
+              const { inBounds, valueIndex, x, y } = mouseGraphPosition(event)
+
+              if (inBounds) {
+                buyoutDot.position(valueIndex, ...graphPoint(x, y))
+                marketCapDot.position(
+                  valueIndex,
+                  ...graphPoint(x, y / multiplier),
+                )
+              } else {
+                buyoutDot.hide()
+                marketCapDot.hide()
+              }
+            }}
           >
             <Curve
               graphPoint={graphPoint}
               height={height}
-              multiplier={1.1}
+              multiplier={multiplier}
               graphGeometry={graphGeometry}
               showLineProgress={curveReveal1.progress}
               showFillProgress={curveReveal2.progress}
@@ -110,6 +188,13 @@ export function FractionsChart({
               values={values}
               width={width}
             />
+            <Dot color="rgb(245, 151, 248)" {...buyoutDot.dotProps} />
+            <Dot color={colors.accent} {...marketCapDot.dotProps} />
+            <RectLabel
+              color="rgb(245, 151, 248)"
+              {...buyoutDot.rectLabelProps}
+            />
+            <RectLabel color={colors.accent} {...marketCapDot.rectLabelProps} />
             {
               /*<rect
               x={0}
@@ -332,6 +417,121 @@ function Curve({
         />
       </g>
     </g>
+  )
+}
+
+function useLabelDot(
+  { label, position }: {
+    label: (index: number) => string[]
+    position: "above" | "below"
+  },
+) {
+  const circleRef = useRef<SVGCircleElement>(null)
+  const rectRef = useRef<SVGRectElement>(null)
+  const lastPosition = useRef([0, 0])
+
+  const [animate, setAnimate] = useState(false)
+  const [rectPosition, setRectPosition] = useState([0, 0])
+  const [textLines, setTextLines] = useState([""])
+
+  const { transform: rectTransform } = useSpring({
+    config: { mass: 1, tension: 800, friction: 50 },
+    immediate: !animate,
+    transform: `translate(${rectPosition.join(" ")})`,
+    position: rectPosition,
+  })
+
+  const opacity = (opacity: number) => {
+    attr(circleRef, "opacity", opacity)
+    attr(rectRef, "opacity", opacity)
+  }
+
+  return {
+    hide: () => {
+      // opacity(0)
+      // setAnimate(false)
+    },
+    position: (valueIndex: number, x: number, y: number) => {
+      if (lastPosition.current[0] === x && lastPosition.current[1] === y) {
+        return
+      }
+
+      lastPosition.current = [x, y]
+
+      attr(circleRef, "cx", x)
+      attr(circleRef, "cy", y)
+
+      let rectX = x - 180
+      let rectY = y + (position === "above" ? -34 : 0)
+
+      if (rectX < 40) {
+        rectX += 200
+      }
+
+      setTextLines(label(valueIndex))
+      setRectPosition([rectX, rectY])
+      setAnimate(true)
+      opacity(1)
+    },
+    rectLabelProps: { circleRef, rectRef, rectTransform, textLines },
+    dotProps: { circleRef, rectRef, rectTransform },
+  }
+}
+
+function RectLabel(
+  { color, rectRef, rectTransform, textLines }: {
+    color: string
+    rectRef: RefObject<SVGRectElement>
+    rectTransform: SpringValue<string>
+    textLines: string[]
+  },
+) {
+  return (
+    <g>
+      <a.rect
+        ref={rectRef}
+        fill="#141D2F"
+        height="30"
+        opacity="0"
+        stroke={color}
+        strokeWidth={1}
+        transform={rectTransform}
+        width="160"
+        x="0"
+        y="0"
+      />
+      {
+        /*textLines.map((line, i) => (
+        <a.text
+          key={i}
+          fill={color}
+          transform={rectTransform}
+          x="0"
+          y="0"
+        >
+          {line}
+        </a.text>
+      ))*/
+      }
+    </g>
+  )
+}
+
+function Dot(
+  { circleRef, color }: {
+    circleRef: RefObject<SVGCircleElement>
+    color: string
+  },
+) {
+  return (
+    <circle
+      ref={circleRef}
+      fill={color}
+      opacity="0"
+      r={0.75 * gu}
+      stroke={co(color).alpha(0.4).toHex()}
+      strokeWidth="10px"
+    />
   )
 }
 
