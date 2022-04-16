@@ -1,4 +1,4 @@
-import type { TimeScale } from "./FractionsChart"
+import type { TimeScale } from "../types"
 
 import {
   ButtonIcon,
@@ -205,7 +205,7 @@ export function ScreenNft({
                 zIndex: 2,
                 inset: layout.value({
                   small: "0 auto auto 2gu",
-                  medium: "0 auto auto 7gu",
+                  medium: "0 auto auto 3gu",
                 }),
               }}
             >
@@ -251,6 +251,7 @@ export function ScreenNft({
             </div>
             {graphType === "market-cap" && (
               <FractionsChart
+                multiplier={1.1}
                 compact={layout.below("medium")}
                 onScaleChange={setTimeScale}
                 scale={timeScale}

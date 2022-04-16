@@ -1,18 +1,11 @@
 import type { MouseEvent, RefObject } from "react"
-import type { PickAnimated, SpringValues } from "react-spring"
+import type { Interpolation, SpringValue } from "react-spring"
 import type { TimeScale } from "./TimeScaleButtons"
 
 import { co, gu, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
 import { useCallback, useMemo, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
-import {
-  a,
-  Interpolation,
-  SpringValue,
-  useChain,
-  useSpring,
-  useSpringRef,
-} from "react-spring"
+import { a, useChain, useSpring, useSpringRef } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { TimeScaleButtons } from "./TimeScaleButtons"
 
@@ -45,7 +38,7 @@ export function FractionsChart({
   onScaleChange,
   scale,
   values,
-  multiplier = 1.1,
+  multiplier,
 }: {
   compact?: boolean
   onScaleChange: (scale: TimeScale) => void
@@ -59,7 +52,7 @@ export function FractionsChart({
   const height = bounds.height
 
   const graphGeometry = useMemo<GraphGeometry>(() => {
-    const tspacing = 10 * gu // top spacing
+    const tspacing = 18 * gu // top spacing
     const bspacing = 7 * gu // bottom spacing
     const hspacing = 2 * gu // horizontal spacing
     return {
@@ -110,7 +103,7 @@ export function FractionsChart({
   const mouseGraphPosition = (event: MouseEvent<SVGSVGElement>) => {
     const svgRect = svgRef.current?.getBoundingClientRect()
     if (!svgRect) {
-      return { inBounds: false, x: 0, y: 0 }
+      return { inBounds: false, valueIndex: -1, x: 0, y: 0 }
     }
 
     const x = event.pageX - svgRect.x
@@ -188,33 +181,47 @@ export function FractionsChart({
               values={values}
               width={width}
             />
-            <Dot color="rgb(245, 151, 248)" {...buyoutDot.dotProps} />
+
+            {[
+              ["Total Market Cap", "$749K", colors.accent],
+              ["Fraction Price", "$1.64", colors.accent],
+              ["NFT Buyout Price", "$825K", colors.accent3],
+            ].map(([label, value, color], i) => (
+              <text
+                key={i}
+                fill={colors.contentDimmed}
+                fontSize="12"
+                x="24"
+                y={10 * gu + 3 * gu * i}
+              >
+                {label}: <tspan fill={color}>{value}</tspan>
+              </text>
+            ))}
+
+            <Dot color={colors.accent3} {...buyoutDot.dotProps} />
             <Dot color={colors.accent} {...marketCapDot.dotProps} />
-            <RectLabel
-              color="rgb(245, 151, 248)"
-              {...buyoutDot.rectLabelProps}
-            />
-            <RectLabel color={colors.accent} {...marketCapDot.rectLabelProps} />
-            {
-              /*<rect
-              x={0}
-              y={0}
-              width={graphGeometry.canvasWidth}
-              height={graphGeometry.canvasHeight}
-              fill="transparent"
-              stroke="yellow"
-              strokeWidth="0.5"
-            />
-            <rect
-              x={graphGeometry.left}
-              y={graphGeometry.top}
-              width={graphGeometry.width}
-              height={graphGeometry.height}
-              fill="transparent"
-              stroke="red"
-              strokeWidth="0.5"
-            />*/
-            }
+            {null && (
+              <g>
+                <rect
+                  x={0}
+                  y={0}
+                  width={graphGeometry.canvasWidth}
+                  height={graphGeometry.canvasHeight}
+                  fill="transparent"
+                  stroke="yellow"
+                  strokeWidth="0.5"
+                />
+                <rect
+                  x={graphGeometry.left}
+                  y={graphGeometry.top}
+                  width={graphGeometry.width}
+                  height={graphGeometry.height}
+                  fill="transparent"
+                  stroke="red"
+                  strokeWidth="0.5"
+                />
+              </g>
+            )}
           </svg>
           <a.div
             style={timeScaleButtonsTransition}
@@ -448,8 +455,8 @@ function useLabelDot(
 
   return {
     hide: () => {
-      // opacity(0)
-      // setAnimate(false)
+      opacity(0)
+      setAnimate(false)
     },
     position: (valueIndex: number, x: number, y: number) => {
       if (lastPosition.current[0] === x && lastPosition.current[1] === y) {
@@ -476,45 +483,6 @@ function useLabelDot(
     rectLabelProps: { circleRef, rectRef, rectTransform, textLines },
     dotProps: { circleRef, rectRef, rectTransform },
   }
-}
-
-function RectLabel(
-  { color, rectRef, rectTransform, textLines }: {
-    color: string
-    rectRef: RefObject<SVGRectElement>
-    rectTransform: SpringValue<string>
-    textLines: string[]
-  },
-) {
-  return (
-    <g>
-      <a.rect
-        ref={rectRef}
-        fill="#141D2F"
-        height="30"
-        opacity="0"
-        stroke={color}
-        strokeWidth={1}
-        transform={rectTransform}
-        width="160"
-        x="0"
-        y="0"
-      />
-      {
-        /*textLines.map((line, i) => (
-        <a.text
-          key={i}
-          fill={color}
-          transform={rectTransform}
-          x="0"
-          y="0"
-        >
-          {line}
-        </a.text>
-      ))*/
-      }
-    </g>
-  )
 }
 
 function Dot(

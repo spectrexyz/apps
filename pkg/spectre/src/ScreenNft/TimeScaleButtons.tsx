@@ -1,6 +1,6 @@
-import { Button } from "kit"
+import type { TimeScale } from "../types"
 
-export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
+import { Button } from "kit"
 
 export const TIME_SCALES = new Map<
   TimeScale,

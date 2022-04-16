@@ -1,5 +1,7 @@
 import { Address } from "kit"
 
+export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
+
 export type SnftEvent = {
   address: Address
   date: string
