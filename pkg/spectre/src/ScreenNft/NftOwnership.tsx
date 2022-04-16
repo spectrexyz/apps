@@ -11,7 +11,7 @@ import {
   RadioGroup,
 } from "kit"
 import { ReactNode, useEffect, useMemo, useState } from "react"
-import useInView from "react-cool-inview"
+import { useInView } from "react-cool-inview"
 import { useLabelStyle, useLayout } from "../styles"
 import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
