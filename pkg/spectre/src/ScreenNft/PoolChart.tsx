@@ -1,7 +1,7 @@
-import type { TimeScale } from "./TimeScaleButtons"
+import type { TimeScale } from "../types"
 
-import { gu, lerp, list, useTheme } from "kit"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { gu, lerp, useTheme } from "kit"
+import { useCallback, useMemo, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import {
   a,
@@ -63,7 +63,7 @@ export function PoolChart({
 
   // transforms normalized values into coordinates
   const graphPoint = useCallback(
-    (x, y): Point => [
+    (x: number, y: number): Point => [
       Math.round(lerp(x, graphGeometry.left, graphGeometry.right)),
       Math.round(lerp(y, graphGeometry.bottom, graphGeometry.top)),
     ],

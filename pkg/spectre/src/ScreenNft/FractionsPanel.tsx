@@ -1,4 +1,4 @@
-import { IconHeartbeat, Tip } from "kit"
+import { Tip } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsMetrics } from "./FractionsMetrics"

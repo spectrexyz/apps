@@ -1,4 +1,4 @@
-import { Button, TokenAmount } from "kit"
+import { TokenAmount } from "kit"
 import { useLabelStyle, useLayout } from "../styles"
 import { PanelSection } from "./PanelSection"
 

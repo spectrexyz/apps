@@ -90,7 +90,11 @@ export function ConnectAccountInside() {
         })}
       >
         What’s a wallet?{" "}
-        <a href="https://ethereum.org/en/wallets/" target="_blank" rel="noreferrer">
+        <a
+          href="https://ethereum.org/en/wallets/"
+          target="_blank"
+          rel="noreferrer"
+        >
           Learn more
         </a>
       </p>
@@ -113,7 +117,9 @@ function ProviderButton({
   return connector
     ? (
       <ButtonArea
-        onClick={() => connect(connector)}
+        onClick={() => {
+          void connect(connector)
+        }}
         css={({ colors }) => ({
           display: "flex",
           alignItems: "center",
