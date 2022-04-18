@@ -207,3 +207,5 @@ export const minted: Record<
     0.66,
   ],
 }
+
+export const buyoutMultiplier = 1.1
