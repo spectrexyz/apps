@@ -121,13 +121,11 @@ export function FractionsChart({
       ref={bounds.observe}
       tabIndex={0}
       {...peekHistory.bindFocusEvents}
-      css={({ colors }) => ({
+      css={{
         overflow: "hidden",
         height: "100%",
-        "&:focus": {
-          outline: 0, // the focus state is represented by the curve dot
-        },
-      })}
+        "&:focus": { outline: 0 }, // the focus state is represented by the curve dot
+      }}
     >
       {width > 0 && (
         <div css={{ position: "relative", width, height }}>
