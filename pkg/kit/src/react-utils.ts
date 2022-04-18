@@ -9,22 +9,47 @@ import {
 } from "react"
 import { fromDecimals, toDecimals, uid } from "./utils"
 
-export function useEsc(callback: () => void, condition: boolean): void {
+export function useKey(
+  key: string,
+  callback: () => void,
+  condition: boolean = true,
+) {
   const _cb = useRef(callback)
   useEffect(() => {
     if (!condition) {
       return
     }
-
     const keydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === key) {
         _cb.current()
       }
     }
-
     document.addEventListener("keydown", keydown)
     return () => document.removeEventListener("keydown", keydown)
-  }, [condition])
+  }, [condition, key])
+}
+
+export function useEsc(callback: () => void, condition: boolean = true): void {
+  useKey("Escape", callback, condition)
+}
+
+export function useFocus() {
+  const [focused, setFocused] = useState(false)
+  return {
+    bindEvents: {
+      onFocus: (event: FocusEvent) => {
+        if (event.target === event.currentTarget) {
+          setFocused(true)
+        }
+      },
+      onBlur: (event: FocusEvent) => {
+        if (event.target === event.currentTarget) {
+          setFocused(false)
+        }
+      },
+    },
+    focused,
+  }
 }
 
 export function useUid(prefix = "uid"): string {
