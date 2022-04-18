@@ -57,10 +57,12 @@ export function Radio({
     }
   }
 
+  const firstRender = useRef(true)
   useEffect(() => {
-    if (checked && focusOnCheck) {
+    if (checked && focusOnCheck && !firstRender.current) {
       input.current?.focus()
     }
+    firstRender.current = false
   }, [checked, focusOnCheck])
 
   const checkTransition = useTransition(checked, {
