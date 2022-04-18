@@ -2,6 +2,7 @@ import type { TimeScale } from "../types"
 
 import {
   ButtonIcon,
+  formatAmount,
   IconArrowLeft,
   IconArrowRight,
   IconMagnifyingGlassPlus,
@@ -15,7 +16,7 @@ import {
 import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen2"
-import { minted, poolEthWeights } from "../demo-data"
+import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
 import { tokenPrices } from "../demo-data/token-prices"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
@@ -96,19 +97,35 @@ export function ScreenNft({
   const snft = useSnft(id)
   const layout = useLayout()
 
-  const normalizedHistory = useMemo(() => {
-    const history = Object.entries(tokenPrices).find(([scale]) =>
-      scale === timeScale
-    )?.[1]
-
+  const history = useMemo(() => {
+    const history = Object.entries(tokenPrices).find(([scale]) => {
+      return scale === timeScale
+    })?.[1]
     if (!history) {
       throw new Error(`Wrong timescale value (${timeScale})`)
     }
+    return history
+  }, [timeScale])
 
+  const normalizedHistory = useMemo(() => {
     const max = Math.max(...history)
     const min = Math.min(...history)
     return history.map((v) => ((v - min) / (max - min)))
-  }, [timeScale])
+  }, [history])
+
+  const fractionChartLabels = useCallback((valueIndex: number) => {
+    const price = history[valueIndex]
+    const supply = 100_000_000
+
+    const format = (value: number) =>
+      `$${formatAmount(value, 0, { compact: true, digits: 2 })}`
+
+    return {
+      buyoutPrice: format(supply * price * buyoutMultiplier),
+      marketCap: format(supply * price),
+      price: format(price),
+    }
+  }, [history])
 
   return (
     <AppScreen
@@ -251,11 +268,12 @@ export function ScreenNft({
             </div>
             {graphType === "market-cap" && (
               <FractionsChart
-                multiplier={1.1}
+                multiplier={buyoutMultiplier}
                 compact={layout.below("medium")}
                 onScaleChange={setTimeScale}
                 scale={timeScale}
                 values={normalizedHistory}
+                labels={fractionChartLabels}
               />
             )}
             {graphType === "minted-supply" && (

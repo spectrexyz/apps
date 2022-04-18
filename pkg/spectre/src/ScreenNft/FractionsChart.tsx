@@ -1,9 +1,27 @@
 import type { MouseEvent, RefObject } from "react"
 import type { Interpolation, SpringValue } from "react-spring"
-import type { TimeScale } from "./TimeScaleButtons"
+import type { TimeScale } from "../types"
 
-import { co, gu, lerp, Moire, smoothPath, useTheme, useUid } from "kit"
-import { useCallback, useMemo, useRef, useState } from "react"
+import {
+  clamp,
+  co,
+  gu,
+  lerp,
+  Moire,
+  smoothPath,
+  useFocus,
+  useKey,
+  useTheme,
+  useUid,
+} from "kit"
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useChain, useSpring, useSpringRef } from "react-spring"
 import { useAppReady } from "../App/AppReady"
@@ -17,7 +35,7 @@ const attr = (
   ref.current?.setAttribute(name, String(value))
 }
 
-export type Point = [number, number]
+export type Point = [x: number, y: number]
 export type Interpolable<T> = SpringValue<T> | Interpolation<T>
 
 type GraphGeometry = {
@@ -35,16 +53,22 @@ const BORDER = 1.5
 
 export function FractionsChart({
   compact = false,
+  labels,
+  multiplier,
   onScaleChange,
   scale,
   values,
-  multiplier,
 }: {
   compact?: boolean
+  labels: (index: number) => {
+    buyoutPrice: string
+    marketCap: string
+    price: string
+  }
+  multiplier: number
   onScaleChange: (scale: TimeScale) => void
   scale: TimeScale
   values: number[] // 0 => 1 numbers
-  multiplier: number
 }) {
   const { colors } = useTheme()
   const bounds = useDimensions()
@@ -69,10 +93,12 @@ export function FractionsChart({
 
   // transforms normalized values into coordinates
   const graphPoint = useCallback(
-    (x, y): Point => [
-      lerp(x, graphGeometry.left, graphGeometry.right),
-      lerp(y, graphGeometry.bottom - 5 * gu, graphGeometry.top), // -5gu = move the minimum above the fadeout part
-    ],
+    (x: number, y: number): Point => {
+      return [
+        lerp(x, graphGeometry.left, graphGeometry.right),
+        lerp(y, graphGeometry.bottom - 5 * gu, graphGeometry.top), // -5gu = move the minimum above the fadeout part
+      ]
+    },
     [graphGeometry],
   )
 
@@ -82,54 +108,27 @@ export function FractionsChart({
     timeScaleButtonsTransition,
   } = useReveal()
 
-  const svgRef = useRef<SVGSVGElement>(null)
-  const buyoutDot = useLabelDot({
-    label: (index) => {
-      return [`NFT buyout price: $${825 * (index + 1)}K`]
-    },
-    position: "above",
+  const peekHistory = usePeekHistory({
+    graphGeometry,
+    graphPoint,
+    labels,
+    multiplier,
+    values,
   })
-
-  const marketCapDot = useLabelDot({
-    label: (index) => {
-      return [
-        `MOIRÉ total market cap: $${749 * (index + 1)}K`,
-        `MOIRÉ token price: $${1.64 * (index + 1)}`,
-      ]
-    },
-    position: "below",
-  })
-
-  const mouseGraphPosition = (event: MouseEvent<SVGSVGElement>) => {
-    const svgRect = svgRef.current?.getBoundingClientRect()
-    if (!svgRect) {
-      return { inBounds: false, valueIndex: -1, x: 0, y: 0 }
-    }
-
-    const x = event.pageX - svgRect.x
-    const y = event.pageY - svgRect.y
-
-    const inBounds = !(
-      y < graphGeometry.top
-      || y > graphGeometry.bottom
-      // || x < graphGeometry.left
-      // || x > graphGeometry.right
-    )
-
-    const valueIndex = Math.round(
-      (x - graphGeometry.left) / graphGeometry.width * (values.length - 1),
-    )
-
-    return {
-      inBounds,
-      valueIndex,
-      x: valueIndex / (values.length - 1),
-      y: values[valueIndex],
-    }
-  }
 
   return (
-    <div ref={bounds.observe} css={{ overflow: "hidden", height: "100%" }}>
+    <div
+      ref={bounds.observe}
+      tabIndex={0}
+      {...peekHistory.bindFocusEvents}
+      css={({ colors }) => ({
+        overflow: "hidden",
+        height: "100%",
+        "&:focus": {
+          outline: 0, // the focus state is represented by the curve dot
+        },
+      })}
+    >
       {width > 0 && (
         <div css={{ position: "relative", width, height }}>
           <div
@@ -146,29 +145,12 @@ export function FractionsChart({
             />
           </div>
           <svg
-            ref={svgRef}
+            ref={peekHistory.svgRef}
             viewBox={`0 0 ${width} ${height}`}
             width={width}
             height={height}
+            {...peekHistory.bindSvgEvents}
             css={{ position: "absolute", inset: "0 auto auto 0" }}
-            onMouseLeave={() => {
-              buyoutDot.hide()
-              marketCapDot.hide()
-            }}
-            onMouseMove={(event) => {
-              const { inBounds, valueIndex, x, y } = mouseGraphPosition(event)
-
-              if (inBounds) {
-                buyoutDot.position(valueIndex, ...graphPoint(x, y))
-                marketCapDot.position(
-                  valueIndex,
-                  ...graphPoint(x, y / multiplier),
-                )
-              } else {
-                buyoutDot.hide()
-                marketCapDot.hide()
-              }
-            }}
           >
             <Curve
               graphPoint={graphPoint}
@@ -182,24 +164,37 @@ export function FractionsChart({
               width={width}
             />
 
-            {[
-              ["Total Market Cap", "$749K", colors.accent],
-              ["Fraction Price", "$1.64", colors.accent],
-              ["NFT Buyout Price", "$825K", colors.accent3],
-            ].map(([label, value, color], i) => (
-              <text
-                key={i}
-                fill={colors.contentDimmed}
-                fontSize="12"
-                x="24"
-                y={10 * gu + 3 * gu * i}
-              >
-                {label}: <tspan fill={color}>{value}</tspan>
-              </text>
-            ))}
+            <Label
+              label="Fraction Price"
+              row={0}
+              value={"$1.64"}
+              valueRef={peekHistory.labelRefPrice}
+            />
 
-            <Dot color={colors.accent3} {...buyoutDot.dotProps} />
-            <Dot color={colors.accent} {...marketCapDot.dotProps} />
+            <Label
+              label="Total Market Cap"
+              row={1}
+              value={"$749K"}
+              valueRef={peekHistory.labelRefMarketCap}
+            />
+
+            <Label
+              color={colors.accent3}
+              label="NFT Buyout Price"
+              row={2}
+              value={"$825K"}
+              valueRef={peekHistory.labelRefBuyoutPrice}
+            />
+
+            <Dot
+              ref={peekHistory.dotRefBuyoutPrice}
+              color={colors.accent3}
+            />
+            <Dot
+              ref={peekHistory.dotRefMarketCap}
+              color={colors.accent}
+            />
+
             {null && (
               <g>
                 <rect
@@ -427,79 +422,209 @@ function Curve({
   )
 }
 
-function useLabelDot(
-  { label, position }: {
-    label: (index: number) => string[]
-    position: "above" | "below"
+// Handles the hover (+ touch & keyboard) behavior on the graph
+function usePeekHistory(
+  {
+    graphGeometry,
+    graphPoint,
+    labels,
+    multiplier,
+    values,
+  }: {
+    graphGeometry: GraphGeometry
+    graphPoint: (x: number, y: number) => Point
+    labels: (index: number) => {
+      buyoutPrice: string
+      marketCap: string
+      price: string
+    }
+    multiplier: number
+    values: number[] // 0 => 1 numbers
   },
 ) {
-  const circleRef = useRef<SVGCircleElement>(null)
-  const rectRef = useRef<SVGRectElement>(null)
-  const lastPosition = useRef([0, 0])
+  const svgRef = useRef<SVGSVGElement>(null)
 
-  const [animate, setAnimate] = useState(false)
-  const [rectPosition, setRectPosition] = useState([0, 0])
-  const [textLines, setTextLines] = useState([""])
+  const dotRefBuyoutPrice = useRef<SVGCircleElement>(null)
+  const dotRefMarketCap = useRef<SVGCircleElement>(null)
 
-  const { transform: rectTransform } = useSpring({
-    config: { mass: 1, tension: 800, friction: 50 },
-    immediate: !animate,
-    transform: `translate(${rectPosition.join(" ")})`,
-    position: rectPosition,
-  })
+  const labelRefBuyoutPrice = useRef<SVGTSpanElement>(null)
+  const labelRefMarketCap = useRef<SVGTSpanElement>(null)
+  const labelRefPrice = useRef<SVGTSpanElement>(null)
 
-  const opacity = (opacity: number) => {
-    attr(circleRef, "opacity", opacity)
-    attr(rectRef, "opacity", opacity)
+  const lastIndex = values.length - 1
+
+  const positionFromIndex = useCallback((index: number): Point => {
+    return [index / lastIndex, values[index]]
+  }, [lastIndex, values])
+
+  const mouseGraphPosition = useCallback((event: MouseEvent<SVGSVGElement>) => {
+    const svgRect = svgRef.current?.getBoundingClientRect()
+    if (!svgRect) {
+      return { inBounds: false, valueIndex: -1, x: 0, y: 0 }
+    }
+
+    const x = event.pageX - svgRect.x
+    const y = event.pageY - svgRect.y
+
+    const inBounds = y > graphGeometry.top && y < graphGeometry.bottom
+
+    const valueIndex = clamp(
+      Math.round(
+        (x - graphGeometry.left) / graphGeometry.width * lastIndex,
+      ),
+      0,
+      lastIndex,
+    )
+
+    return {
+      inBounds,
+      valueIndex,
+    }
+  }, [graphGeometry, lastIndex])
+
+  const updateLabels = useCallback((index: number) => {
+    const positionLabels = labels(index)
+    const labelRefData: Array<[RefObject<SVGTSpanElement>, string]> = [
+      [labelRefBuyoutPrice, positionLabels.buyoutPrice],
+      [labelRefMarketCap, positionLabels.marketCap],
+      [labelRefPrice, positionLabels.price],
+    ]
+    labelRefData.forEach(([ref, content]) => {
+      if (ref.current) {
+        ref.current.innerHTML = content
+      }
+    })
+  }, [
+    labelRefBuyoutPrice,
+    labelRefMarketCap,
+    labelRefPrice,
+    labels,
+  ])
+
+  const visible = useRef(false)
+  const lastVisibleIndex = useRef(lastIndex)
+
+  const show = useCallback((index: number) => {
+    if (lastVisibleIndex.current === index && visible.current) {
+      return
+    }
+
+    visible.current = true
+    lastVisibleIndex.current = index
+
+    const [x, y] = positionFromIndex(index)
+    const buyoutPoint = graphPoint(x, y)
+    const marketCapPoint = graphPoint(x, y / multiplier)
+
+    attr(dotRefBuyoutPrice, "cx", buyoutPoint[0])
+    attr(dotRefBuyoutPrice, "cy", buyoutPoint[1])
+    attr(dotRefBuyoutPrice, "opacity", 1)
+
+    attr(dotRefMarketCap, "cx", marketCapPoint[0])
+    attr(dotRefMarketCap, "cy", marketCapPoint[1])
+    attr(dotRefMarketCap, "opacity", 1)
+
+    updateLabels(index)
+  }, [dotRefBuyoutPrice, dotRefMarketCap, graphPoint, multiplier, updateLabels])
+
+  const hide = useCallback(() => {
+    visible.current = false
+    attr(dotRefBuyoutPrice, "opacity", 0)
+    attr(dotRefMarketCap, "opacity", 0)
+    updateLabels(lastIndex)
+  }, [
+    dotRefBuyoutPrice,
+    dotRefMarketCap,
+    lastIndex,
+    updateLabels,
+  ])
+
+  const bindSvgEvents = {
+    onMouseLeave: () => {
+      if (!focused) {
+        hide()
+      }
+    },
+    onMouseMove: (event: MouseEvent<SVGSVGElement>) => {
+      const { inBounds, valueIndex } = mouseGraphPosition(event)
+      if (inBounds) {
+        show(valueIndex)
+      } else {
+        hide()
+      }
+    },
   }
 
+  const { focused, bindEvents: bindFocusEvents } = useFocus()
+  useKey("ArrowLeft", () => {
+    show(Math.max(0, lastVisibleIndex.current - 1))
+  }, focused)
+  useKey("ArrowRight", () => {
+    show(Math.min(lastIndex, lastVisibleIndex.current + 1))
+  }, focused)
+
+  useEffect(() => {
+    if (focused) {
+      show(lastVisibleIndex.current)
+    } else {
+      hide()
+    }
+  }, [focused, hide, show])
+
   return {
-    hide: () => {
-      opacity(0)
-      setAnimate(false)
-    },
-    position: (valueIndex: number, x: number, y: number) => {
-      if (lastPosition.current[0] === x && lastPosition.current[1] === y) {
-        return
-      }
-
-      lastPosition.current = [x, y]
-
-      attr(circleRef, "cx", x)
-      attr(circleRef, "cy", y)
-
-      let rectX = x - 180
-      let rectY = y + (position === "above" ? -34 : 0)
-
-      if (rectX < 40) {
-        rectX += 200
-      }
-
-      setTextLines(label(valueIndex))
-      setRectPosition([rectX, rectY])
-      setAnimate(true)
-      opacity(1)
-    },
-    rectLabelProps: { circleRef, rectRef, rectTransform, textLines },
-    dotProps: { circleRef, rectRef, rectTransform },
+    bindFocusEvents,
+    bindSvgEvents,
+    dotRefBuyoutPrice,
+    dotRefMarketCap,
+    hide,
+    labelRefBuyoutPrice,
+    labelRefMarketCap,
+    labelRefPrice,
+    show,
+    svgRef,
   }
 }
 
-function Dot(
-  { circleRef, color }: {
-    circleRef: RefObject<SVGCircleElement>
-    color: string
+const Dot = forwardRef<SVGCircleElement, { color: string }>(
+  function Dot({ color }, ref) {
+    return (
+      <circle
+        ref={ref}
+        fill={color}
+        opacity="0"
+        r={0.75 * gu}
+        stroke={co(color).alpha(0.4).toHex()}
+        strokeWidth="10px"
+      />
+    )
+  },
+)
+
+function Label(
+  { label, value, valueRef, color, row }: {
+    color?: string
+    label: string
+    row: number
+    value: string
+    valueRef: RefObject<SVGTSpanElement>
   },
 ) {
+  const { colors } = useTheme()
   return (
-    <circle
-      ref={circleRef}
-      fill={color}
-      opacity="0"
-      r={0.75 * gu}
-      stroke={co(color).alpha(0.4).toHex()}
-      strokeWidth="10px"
-    />
+    <text
+      fill={colors.contentDimmed}
+      fontSize="12"
+      x="24"
+      y={10 * gu + 3 * gu * row}
+    >
+      {label}:{" "}
+      <tspan
+        ref={valueRef}
+        fill={color ?? colors.accent}
+      >
+        {value}
+      </tspan>
+    </text>
   )
 }
 
