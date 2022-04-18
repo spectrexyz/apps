@@ -455,29 +455,24 @@ function usePeekHistory(
     return [index / lastIndex, values[index]]
   }, [lastIndex, values])
 
-  const mouseGraphPosition = useCallback((event: MouseEvent<SVGSVGElement>) => {
+  const valueIndexFromPosition = useCallback((pageX: number, pageY: number) => {
     const svgRect = svgRef.current?.getBoundingClientRect()
-    if (!svgRect) {
-      return { inBounds: false, valueIndex: -1, x: 0, y: 0 }
-    }
+    if (!svgRect) return -1
 
-    const x = event.pageX - svgRect.x
-    const y = event.pageY - svgRect.y
+    const x = pageX - svgRect.x
+    const y = pageY - svgRect.y
 
+    // The horizontal spacing around the graph is considered in bounds on purpose
     const inBounds = y > graphGeometry.top && y < graphGeometry.bottom
+    if (!inBounds) return -1
 
-    const valueIndex = clamp(
+    return clamp(
       Math.round(
         (x - graphGeometry.left) / graphGeometry.width * lastIndex,
       ),
       0,
       lastIndex,
     )
-
-    return {
-      inBounds,
-      valueIndex,
-    }
   }, [graphGeometry, lastIndex])
 
   const updateLabels = useCallback((index: number) => {
@@ -537,19 +532,24 @@ function usePeekHistory(
     updateLabels,
   ])
 
+  const move = useCallback((pageX: number, pageY: number) => {
+    const valueIndex = valueIndexFromPosition(pageX, pageY)
+    if (valueIndex === -1) {
+      hide()
+    } else {
+      show(valueIndex)
+    }
+  }, [hide, show, valueIndexFromPosition])
+
   const bindSvgEvents = {
     onMouseLeave: () => {
-      if (!focused) {
-        hide()
-      }
+      if (!focused) hide()
     },
-    onMouseMove: (event: MouseEvent<SVGSVGElement>) => {
-      const { inBounds, valueIndex } = mouseGraphPosition(event)
-      if (inBounds) {
-        show(valueIndex)
-      } else {
-        hide()
-      }
+    onMouseMove: (event: MouseEvent) => {
+      move(event.pageX, event.pageY)
+    },
+    onTouchMove: (event: TouchEvent) => {
+      move(event.touches[0].pageX, event.touches[0].pageY)
     },
   }
 
