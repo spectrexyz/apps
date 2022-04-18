@@ -38,6 +38,10 @@ module.exports = {
     "@typescript-eslint/no-this-alias": "warn",
     "@typescript-eslint/unbound-method": "off",
 
+    // doesn’t detect inputs nested in a component so disabling it is easier
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/no-noninteractive-tabindex": "off",
+
     "import/extensions": [
       "error",
       {
