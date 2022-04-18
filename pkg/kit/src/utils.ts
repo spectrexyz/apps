@@ -167,13 +167,17 @@ export function formatDate(date: string | Date, full = false): string {
 export function formatNumber(
   value: bigint | number | string,
   digits: number | bigint = 2,
-  { trailingZeros = false }: { trailingZeros?: boolean } = {},
+  { trailingZeros = false, compact = false }: {
+    compact?: boolean
+    trailingZeros?: boolean
+  } = {},
 ): string {
   digits = Number(digits)
   return (
     new Intl.NumberFormat("en-US", {
       minimumFractionDigits: trailingZeros ? digits : 0,
       maximumFractionDigits: digits,
+      notation: compact ? "compact" : "standard",
     }).format as (value: bigint | number | string) => string
   )(String(value))
 }
@@ -183,7 +187,7 @@ export function formatAmount(
   amount: bigint,
   decimals: number | bigint,
   optionsOrDigits:
-    | { digits?: number | bigint; trailingZeros?: boolean }
+    | { compact?: boolean; digits?: number | bigint; trailingZeros?: boolean }
     | number
     | bigint = {},
 ): string {
@@ -194,17 +198,19 @@ export function formatAmount(
     typeof optionsOrDigits === "number"
     || typeof optionsOrDigits === "bigint"
   ) {
-    optionsOrDigits = {
-      digits: optionsOrDigits,
-      trailingZeros: false,
-    }
+    optionsOrDigits = { digits: optionsOrDigits }
   }
 
-  const { digits = decimals, trailingZeros = false } = optionsOrDigits
+  const {
+    compact = false,
+    digits = decimals,
+    trailingZeros = false,
+  } = optionsOrDigits
+
   const _digits = BigInt(digits)
 
   if (decimals === 0n) {
-    return formatNumber(amount, _digits)
+    return formatNumber(amount, _digits, { compact })
   }
 
   const decimalsDivisor = 10n ** decimals
@@ -226,7 +232,7 @@ export function formatAmount(
   return formatNumber(
     fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
     _digits,
-    { trailingZeros },
+    { compact, trailingZeros },
   )
 }
 
