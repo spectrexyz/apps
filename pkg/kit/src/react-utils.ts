@@ -14,23 +14,20 @@ export function useKey(
   callback: () => void,
   condition: boolean = true,
 ) {
-  const _cb = useRef(callback)
   useEffect(() => {
-    if (!condition) {
-      return
-    }
+    if (!condition) return
+
     const keydown = (event: KeyboardEvent) => {
       if (event.key === key) {
-        _cb.current()
+        callback()
       }
     }
-    document.addEventListener("keydown", keydown)
-    return () => document.removeEventListener("keydown", keydown)
-  }, [condition, key])
-}
 
-export function useEsc(callback: () => void, condition: boolean = true): void {
-  useKey("Escape", callback, condition)
+    document.addEventListener("keydown", keydown)
+    return () => {
+      document.removeEventListener("keydown", keydown)
+    }
+  }, [callback, condition, key])
 }
 
 export function useFocus() {

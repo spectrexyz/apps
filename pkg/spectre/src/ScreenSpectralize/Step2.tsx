@@ -8,7 +8,7 @@ import {
   isAddress,
   Slider,
   TextInput,
-  useEsc,
+  useKey,
 } from "kit"
 import {
   MutableRefObject,
@@ -248,11 +248,11 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
     return { invalid: true, account: null }
   }
 
-  useEsc(() => {
+  useKey("Escape", () => {
     if (isFocused()) {
       setAccount(null)
     }
-  }, true)
+  })
 
   useEffect(() => {
     setInvalid(false)
