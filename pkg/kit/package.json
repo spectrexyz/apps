@@ -58,6 +58,7 @@
     "colord": "^2.9.2",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^8.9.2",
+    "just-throttle": "^4.0.1",
     "ms": "^3.0.0-canary.1",
     "ogl": "^0.0.91",
     "pretty-bytes": "^6.0.0",

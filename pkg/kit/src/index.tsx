@@ -5,6 +5,7 @@ export * from "./types"
 export { colord as co } from "colord"
 export { default as FocusTrap } from "focus-trap-react"
 export { default as ms } from "ms"
+export { default as throttle } from "just-throttle"
 export { default as useDimensions } from "react-cool-dimensions"
 export { useDropzone } from "react-dropzone"
 
