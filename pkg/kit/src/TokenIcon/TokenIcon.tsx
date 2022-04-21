@@ -9,7 +9,7 @@ type TokenIconProps = {
 }
 
 function fileName(tokenType: TokenIconProps["tokenType"]): string {
-  if (tokenType === "eth") return "ethereum.svg"
+  if (tokenType === "eth") return "ethereum.png"
   if (tokenType === "serc20") return "serc20.png"
   throw new Error("wrong tokenType")
 }
