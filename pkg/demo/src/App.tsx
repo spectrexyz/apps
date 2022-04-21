@@ -14,6 +14,7 @@ import { Distribution } from "./Distribution"
 import { Icon } from "./Icon"
 import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
+import { PoolWeightDemo } from "./PoolWeightDemo"
 import { Radio } from "./Radio"
 import { RadioBox } from "./RadioBox"
 import { Slider } from "./Slider"
@@ -36,6 +37,7 @@ const demos = [
   ["distribution", Distribution],
   ["icon", Icon],
   ["moire", Moire],
+  ["pool-weight", PoolWeightDemo],
   ["radio", Radio],
   ["radiobox", RadioBox],
   ["slider", Slider],
@@ -43,10 +45,10 @@ const demos = [
   ["steps", Steps],
   ["tabs", TabsDemo],
   ["toggle", Toggle],
+  ["token-amount", TokenAmountDemo],
   ["token-badge", TokenBadge],
   ["token-icon", TokenIcon],
   ["token-input", TokenInput],
-  ["token-amount", TokenAmountDemo],
   ["video", Video],
 ] as [name: string, component: FC, centered: boolean][]
 
