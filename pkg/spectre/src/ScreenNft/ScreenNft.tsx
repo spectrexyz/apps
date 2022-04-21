@@ -26,6 +26,7 @@ import { MintedChart } from "./MintedChart"
 import { NftImage } from "./NftImage"
 import { NftPanel } from "./NftPanel"
 import { PoolChart } from "./PoolChart"
+import { PoolPanel } from "./PoolPanel"
 
 type GraphType = "market-cap" | "minted-supply"
 
@@ -118,7 +119,9 @@ export function ScreenNft({
     const supply = 100_000_000
 
     const format = (value: number) =>
-      `$${formatAmount(value, 0, { compact: true, digits: 2 })}`
+      `$${
+        formatAmount(BigInt(Math.round(value)), 0, { compact: true, digits: 2 })
+      }`
 
     return {
       buyoutPrice: format(supply * price * buyoutMultiplier),
@@ -341,7 +344,7 @@ export function ScreenNft({
       </div>
       {panel === "nft" && <NftPanel id={id} />}
       {panel === "fractions" && <FractionsPanel id={id} />}
-      {panel === "pool" && <FractionsPanel id={id} />}
+      {panel === "pool" && <PoolPanel id={id} />}
     </AppScreen>
   )
 }

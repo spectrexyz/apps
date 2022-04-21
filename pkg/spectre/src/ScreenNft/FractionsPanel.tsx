@@ -1,7 +1,7 @@
 import { Tip } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
-import { FractionsMetrics } from "./FractionsMetrics"
+import { Metrics } from "./Metrics"
 import { NftActions } from "./NftActions"
 import { NftDetails } from "./NftDetails"
 import { NftHistory } from "./NftHistory"
@@ -95,5 +95,59 @@ function TokenHealthTip() {
         is very good at opening doors.
       </Tip>
     </div>
+  )
+}
+
+function FractionsMetrics() {
+  return (
+    <Metrics
+      heading="Metrics"
+      metrics={[
+        {
+          heading: "Market cap",
+          content: {
+            type: "tokenAmount",
+            value: {
+              converted: "$1,367,258",
+              symbol: "ETH",
+              value: "435.18",
+            },
+          },
+        },
+        {
+          heading: "Minted supply",
+          content: {
+            type: "tokenAmount",
+            value: {
+              converted: "680,925 MOI",
+              symbol: "%",
+              value: "65",
+            },
+          },
+        },
+        {
+          heading: "Minting fees",
+          content: {
+            type: "tokenAmount",
+            value: {
+              converted: "$67,258",
+              symbol: "ETH",
+              value: "12.17",
+            },
+          },
+        },
+        {
+          heading: "Trading fees",
+          content: {
+            type: "tokenAmount",
+            value: {
+              converted: "$208,423",
+              symbol: "ETH",
+              value: "31.06",
+            },
+          },
+        },
+      ]}
+    />
   )
 }

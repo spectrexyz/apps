@@ -1,4 +1,5 @@
 import { AddressBadge, Button, IconEye } from "kit"
+import { useLayout } from "../styles"
 import { PanelSection } from "./PanelSection"
 
 export function TokenContractInfo(
@@ -7,6 +8,7 @@ export function TokenContractInfo(
     repoUrl: string
   },
 ) {
+  const layout = useLayout()
   return (
     <PanelSection title="Token contract info">
       <p css={({ colors }) => ({ color: colors.contentDimmed })}>
@@ -28,9 +30,10 @@ export function TokenContractInfo(
           external
           href={repoUrl}
           icon={<IconEye />}
-          label="View on GitHub"
+          label={layout.below("medium") ? "GitHub" : "View on GitHub"}
           mode="flat"
           size="compact"
+          title="View on GitHub"
           uppercase
         />
       </div>
