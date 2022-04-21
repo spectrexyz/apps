@@ -1,6 +1,5 @@
 import { useViewport } from "@bpierre/use-viewport"
-import throttle from "just-throttle"
-import { gu, useTheme } from "kit"
+import { gu, throttle, useTheme } from "kit"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export const springs = {
