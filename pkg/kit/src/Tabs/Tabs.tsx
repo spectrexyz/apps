@@ -30,15 +30,9 @@ export function Tabs({
   const container = useRef<HTMLDivElement>(null)
   const isFocused = useRef(false)
   const [selectedGeometry, setSelectedGeometry] = useState([0, 0])
-  const tabsGeometries = useRef<Array<[number, number]>>([])
   const animateBar = useRef(false)
 
   selected = Math.min(Math.max(0, selected), items.length - 1)
-
-  useEffect(() => {
-    setSelectedGeometry(tabsGeometries.current[selected])
-    animateBar.current = true
-  }, [selected])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -77,20 +71,44 @@ export function Tabs({
     `,
   })
 
+  const { observe, width } = useDimensions()
+  const previousWidth = useRef(width)
+  const tabsGeometry = useRef<[number, number][]>([])
+
+  useEffect(() => {
+    animateBar.current = true
+
+    // update dimensions
+    if (width !== previousWidth.current) {
+      const buttons = Array.from(
+        container.current?.querySelectorAll("button") ?? [],
+      )
+      buttons.forEach((button, index) => {
+        tabsGeometry.current[index] = [button.offsetLeft, button.offsetWidth]
+      })
+      previousWidth.current = width
+    }
+
+    // update selected dimensions
+    setSelectedGeometry(tabsGeometry.current[selected] ?? [0, 0])
+  }, [selected, width])
+
   return (
     <div
       ref={container}
       role="tablist"
       css={{
+        overflow: "hidden",
         position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         width: fullWidth ? "100%" : "auto",
-        height: "6gu",
+        height: "calc(6gu + 2px)",
       }}
     >
       <div
+        ref={observe}
         css={{
           position: "relative",
           display: "flex",
@@ -110,10 +128,6 @@ export function Tabs({
             key={tabItem.tabId}
             compact={compact}
             fullWidth={fullWidth}
-            onGeometry={(left, width) => {
-              tabsGeometries.current[index] = [left, width]
-              if (index === selected) setSelectedGeometry([left, width])
-            }}
             onSelect={() => onSelect(index)}
             selected={index === selected}
             tabItem={tabItem}
@@ -135,7 +149,7 @@ export function Tabs({
       <div
         css={({ colors }) => ({
           position: "absolute",
-          inset: "100% 0 auto 0",
+          inset: "6gu 0 auto 0",
           zIndex: 1,
           height: "0",
           borderBottom: `2px solid ${colors.layer2}`,
@@ -149,7 +163,6 @@ function Tab(
   {
     compact,
     fullWidth,
-    onGeometry,
     onSelect,
     selected,
     tabItem: { label, tabId, panelId },
@@ -157,23 +170,12 @@ function Tab(
     compact: boolean
     fullWidth: boolean
     onSelect: () => void
-    onGeometry: (left: number, width: number) => void
     selected: boolean
     tabItem: TabItem
   },
 ) {
-  const { entry, observe, width } = useDimensions({ useBorderBoxSize: true })
-
-  const offsetLeft = (entry?.target as HTMLElement)?.offsetLeft ?? 0
-
-  const _onGeometry = useRef(onGeometry)
-  useEffect(() => {
-    _onGeometry.current(offsetLeft, width)
-  }, [offsetLeft, width])
-
   return (
     <ButtonArea
-      ref={observe}
       aria-controls={panelId}
       aria-selected={selected}
       id={tabId}
