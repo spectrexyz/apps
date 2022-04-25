@@ -15,7 +15,7 @@ import {
 } from "kit"
 import { ReactNode, useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
-import { AppScreen } from "../AppLayout/AppScreen2"
+import { AppScreen } from "../AppLayout/AppScreen"
 import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
 import { tokenPrices } from "../demo-data/token-prices"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"

@@ -1,6 +1,6 @@
 import { Button } from "kit"
 import { useLocation } from "wouter"
-import { AppScreen } from "../AppLayout/AppScreen2"
+import { AppScreen } from "../AppLayout/AppScreen"
 import { useSpectralize } from "../ScreenSpectralize/use-spectralize"
 
 export function ScreenHome() {
