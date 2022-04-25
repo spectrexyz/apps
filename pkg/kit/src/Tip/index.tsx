@@ -1,1 +1,1 @@
-export { Tip } from "./Tip"
+export { Tip, useTipIconSize } from "./Tip"
