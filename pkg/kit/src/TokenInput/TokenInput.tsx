@@ -1,5 +1,6 @@
 import { ChangeEvent, ReactNode, useCallback } from "react"
 import { Button } from "../Button"
+import { ButtonText } from "../ButtonText"
 import { gu } from "../styles"
 import { TokenIcon } from "../TokenIcon"
 
@@ -81,6 +82,7 @@ export function TokenInput({
               css={{
                 height: "3gu",
                 textTransform: "uppercase",
+                fontSize: "14px",
               }}
             />
           )}
@@ -112,16 +114,18 @@ export function TokenInput({
       {hasBalanceRow && (
         <SecondaryRow
           end={balanceConverted}
+          onStartClick={onBalanceClick}
           start={
-            <span
-              onClick={onBalanceClick}
-              css={{
-                cursor: onBalanceClick ? "pointer" : "default",
-                userSelect: "none",
-              }}
-            >
-              <span>Balance:</span> {balance} {symbol}
-            </span>
+            <>
+              <span
+                css={({ colors }) => ({
+                  color: colors.contentDimmed,
+                })}
+              >
+                Balance:
+              </span>{" "}
+              {balance} {symbol}
+            </>
           }
         />
       )}
@@ -129,7 +133,19 @@ export function TokenInput({
   )
 }
 
-function SecondaryRow({ start, end }: { start?: ReactNode; end?: ReactNode }) {
+function SecondaryRow(
+  {
+    end,
+    onEndClick,
+    onStartClick,
+    start,
+  }: {
+    end?: ReactNode
+    onEndClick?: () => void
+    onStartClick?: () => void
+    start?: ReactNode
+  },
+) {
   return (
     <div
       css={({ fonts }) => ({
@@ -138,21 +154,15 @@ function SecondaryRow({ start, end }: { start?: ReactNode; end?: ReactNode }) {
         justifyContent: "space-between",
         height: "3gu",
         fontFamily: fonts.sans,
+        fontSize: "14px",
       })}
     >
-      <div
-        css={({ colors }) => ({
-          fontSize: "12px",
-          "span": {
-            color: colors.contentDimmed,
-          },
-        })}
-      >
-        {start}
-      </div>
-      <div css={{ fontSize: "14px" }}>
-        {end}
-      </div>
+      {onStartClick
+        ? <ButtonText onClick={onStartClick} label={start} uppercase={false} />
+        : <div>{start}</div>}
+      {onEndClick
+        ? <ButtonText onClick={onEndClick} label={end} uppercase={false} />
+        : <div>{end}</div>}
     </div>
   )
 }
