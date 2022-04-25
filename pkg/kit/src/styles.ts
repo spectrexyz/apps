@@ -62,6 +62,7 @@ export const colors = {
   link: "#C0BBFF",
   focus: "#C0BBFF",
   content: "#EDFCFF",
+  contentStrong: "#FCFAFA",
   contentHeading: "#FCFAFA",
   contentHeading2: "#AAFFE4",
   contentDimmed: "#A0A8C2",
