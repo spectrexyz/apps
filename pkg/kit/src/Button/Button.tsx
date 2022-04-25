@@ -25,12 +25,14 @@ export type ButtonMode =
   | "flat" // layer1
   | "flat-2" // layer2 (lighter)
   | "flat-3" // dark blue
-  | "outline"
-  | "outline-2"
+  | "outline" // green
+  | "outline-2" // purple
+  | "outline-3" // orange
 export type ButtonSize =
   | "medium"
   | "compact" // "compact" is a small button with large text
   | "small"
+  | "mini"
 export type ShadowInBox = false | true | "width" | "height"
 
 export type ButtonProps =
@@ -82,12 +84,14 @@ export const Button = forwardRef<
   const vShift = shadowInBox === "height" || shadowInBox === true
 
   const heightBase = useMemo(() => {
+    if (size === "mini") return 3 * gu
     if (size === "small") return 4 * gu
     if (size === "compact") return 4 * gu
     return 5.5 * gu
   }, [size])
 
   const fontSize = useMemo(() => {
+    if (size === "mini") return "14px"
     if (size === "small") return "14px"
     if (size === "compact") return "16px"
     return "18px"
@@ -104,6 +108,7 @@ export const Button = forwardRef<
     if (mode === "outline-2") {
       return selected ? colors.accent2Content : colors.accent2
     }
+    if (mode === "outline-3") return colors.warning
     return colors.accent // secondary
   }, [mode, selected])
 
@@ -196,6 +201,7 @@ function ButtonIn({
 
   const _horizontalPadding = useMemo(() => {
     if (horizontalPadding !== undefined) return horizontalPadding
+    if (size === "mini") return 1 * gu
     if (size === "small") return 1.5 * gu
     if (size === "compact") return 1.25 * gu
     return 3 * gu
@@ -208,6 +214,7 @@ function ButtonIn({
     if (mode === "primary") return colors.accent
     if (mode === "primary-2") return colors.accent2
     if (mode === "outline-2") return selected ? colors.accent2 : colors.layer2
+    if (mode === "outline-3") return colors.background
     return colors.background // secondary, secondary-2
   }, [mode, selected])
 
@@ -215,6 +222,7 @@ function ButtonIn({
     if (mode === "primary-2") return colors.accent2
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") return colors.accent2
+    if (mode === "outline-3") return colors.warning
     return colors.accent
   }, [mode])
 
@@ -273,46 +281,50 @@ function ButtonIn({
           {label}
         </div>
       </div>
-      {!flat && mode !== "outline" && mode !== "outline-2" && (
-        <div
-          css={{
-            position: "absolute",
-            zIndex: "1",
-            inset: "0",
-            transform: `translate(${SHADOW_OFFSET}px, ${SHADOW_OFFSET}px)`,
-            pointerEvents: "none",
-          }}
-        >
+      {!flat
+        && mode !== "outline"
+        && mode !== "outline-2"
+        && mode !== "outline-3"
+        && (
           <div
-            className="active-shadow"
-            css={({ colors }) => ({
-              position: "absolute",
-              inset: "0",
-              background: mode === "primary-2" || mode === "secondary-2"
-                ? colors.accent2
-                : colors.accent,
-              opacity: "0",
-            })}
-          />
-          <div
-            ref={shadowBounds.observe}
-            className="shadow"
             css={{
               position: "absolute",
+              zIndex: "1",
               inset: "0",
-              overflow: "hidden",
+              transform: `translate(${SHADOW_OFFSET}px, ${SHADOW_OFFSET}px)`,
+              pointerEvents: "none",
             }}
           >
-            <Moire
-              width={Math.ceil(shadowBounds.width)}
-              height={Math.ceil(shadowBounds.height)}
-              linesColor={mode === "primary-2" || mode === "secondary-2"
-                ? colors.accent2
-                : undefined}
+            <div
+              className="active-shadow"
+              css={({ colors }) => ({
+                position: "absolute",
+                inset: "0",
+                background: mode === "primary-2" || mode === "secondary-2"
+                  ? colors.accent2
+                  : colors.accent,
+                opacity: "0",
+              })}
             />
+            <div
+              ref={shadowBounds.observe}
+              className="shadow"
+              css={{
+                position: "absolute",
+                inset: "0",
+                overflow: "hidden",
+              }}
+            >
+              <Moire
+                width={Math.ceil(shadowBounds.width)}
+                height={Math.ceil(shadowBounds.height)}
+                linesColor={mode === "primary-2" || mode === "secondary-2"
+                  ? colors.accent2
+                  : undefined}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   )
 }
