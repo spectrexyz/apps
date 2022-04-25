@@ -1,7 +1,16 @@
-import { ThemeContext } from "kit"
+import "@emotion/react"
+
+type Dict<T> = { [name: string]: T }
 
 declare module "@emotion/react" {
-  /* eslint-disable @typescript-eslint/no-empty-interface */
-  export interface Theme extends ThemeContext {}
-  /* eslint-enable @typescript-eslint/no-empty-interface */
+  export interface Theme {
+    colors: Dict<string>
+    fonts: {
+      line: string
+      sizes: Dict<string>
+      families: Dict<string>
+      mono: string
+      sans: string
+    }
+  }
 }
