@@ -29,7 +29,7 @@ export function NftPanel({ id }: { id: string }) {
         </>,
         <>
           <NftDetails snft={snft} />
-          <NftActions />
+          <NftActions snft={snft} />
           <NftOwnership snft={snft} />
           <NftHistory snft={snft} />
         </>,

@@ -1,6 +1,7 @@
+import type { Snft } from "../types"
+
 import { Badge, TokenBadge } from "kit"
 import { useLabelStyle, useLayout } from "../styles"
-import { Snft } from "../types"
 
 export function NftDetails({ snft }: { snft: Snft }) {
   const labelStyle = useLabelStyle()

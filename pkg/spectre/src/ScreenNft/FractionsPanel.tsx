@@ -1,4 +1,4 @@
-import { Tip } from "kit"
+import { IconHeartbeat, Tip } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
@@ -33,7 +33,7 @@ export function FractionsPanel({ id }: { id: string }) {
           <FractionsMetrics />
         </>,
         <>
-          <NftActions highlight="fractions" />
+          <NftActions highlight="fractions" snft={snft} />
           <TokenHealthTip />
           <NftHistory snft={snft} />
         </>,
@@ -48,7 +48,7 @@ export function FractionsPanel({ id }: { id: string }) {
           <NftHistory snft={snft} />
         </>,
         <>
-          <NftActions highlight="fractions" />
+          <NftActions highlight="fractions" snft={snft} />
           <TokenContractInfo
             contractAddress={tokenContract}
             repoUrl={tokenRepoUrl}
@@ -64,7 +64,7 @@ export function FractionsPanel({ id }: { id: string }) {
         <NftDetails snft={snft} />
       </>,
       <>
-        <NftActions highlight="fractions" />
+        <NftActions highlight="fractions" snft={snft} />
         <TokenContractInfo
           contractAddress={tokenContract}
           repoUrl={tokenRepoUrl}
@@ -87,7 +87,7 @@ export function FractionsPanel({ id }: { id: string }) {
 function TokenHealthTip() {
   return (
     <div css={{ paddingTop: "8gu" }}>
-      <Tip title="Token health tip">
+      <Tip title="Token health tip" icon={<IconHeartbeat />}>
         There’s something else I’ve always wanted to say: Allons-y, Alonso! I’m
         sorry. I’m so sorry. Goodbye…my Sarah Jane! Don’t you think she looks
         tired? Oh, yes. Harmless is just the word: that’s why I like it! Doesn’t
