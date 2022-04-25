@@ -20,12 +20,13 @@ type ButtonTextProps =
     icon?: ReactNode
     label: ReactNode
     onClick?: () => void
+    uppercase?: boolean
   }
 
 export const ButtonText = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   ButtonTextProps
->(function ButtonText({ icon, label, ...props }, ref) {
+>(function ButtonText({ icon, label, uppercase = true, ...props }, ref) {
   return (
     <ButtonArea
       ref={ref}
@@ -33,7 +34,7 @@ export const ButtonText = forwardRef<
       css={({ colors }) => ({
         display: "inline-flex",
         alignItems: "center",
-        textTransform: "uppercase",
+        textTransform: uppercase ? "uppercase" : "none",
         fontSize: "14px",
         color: colors.content,
         "&:active": {
@@ -43,11 +44,7 @@ export const ButtonText = forwardRef<
     >
       <ButtonTextContext.Provider value={true}>
         {icon}
-        <span
-          css={{
-            paddingLeft: icon ? "1gu" : "0",
-          }}
-        >
+        <span css={{ paddingLeft: icon ? "1gu" : "0" }}>
           {label}
         </span>
       </ButtonTextContext.Provider>
