@@ -1,3 +1,5 @@
+import type { FormEvent, ReactNode } from "react"
+
 import {
   Button,
   ButtonIcon,
@@ -7,13 +9,14 @@ import {
   formatDuration,
   IconArrowDown,
   IconArrowUp,
+  Incremental,
   Modal,
   norm,
   Slider,
   Toggle,
   WEEK_MS,
 } from "kit"
-import { ReactNode, useCallback, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useLayout } from "../styles"
 import { useAdvancedParametersForm, useSpectralize } from "./use-spectralize"
 
@@ -114,7 +117,7 @@ export function AdvancedParametersEditModalForm({
   }
 
   const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       event.stopPropagation()
       save()
@@ -161,7 +164,7 @@ export function AdvancedParametersEditModalForm({
         </p>
       </Fieldset>
 
-      <IncrementalField
+      <Incremental
         label="Buyout Timelock"
         onDecrease={handleBuyoutMechanismDecrease}
         onIncrease={handleBuyoutMechanismIncrease}
@@ -204,7 +207,7 @@ export function AdvancedParametersEditModalForm({
         />
       </Fieldset>
 
-      <IncrementalField
+      <Incremental
         enableDecrease={mintingFees > 1}
         enableIncrease={mintingFees < 99}
         label="Minting Fees"
@@ -213,7 +216,7 @@ export function AdvancedParametersEditModalForm({
         value={`${mintingFees}%`}
       />
 
-      <IncrementalField
+      <Incremental
         enableDecrease={tradingFees > 1}
         enableIncrease={tradingFees < 99}
         label="Trading Fees"
@@ -248,67 +251,6 @@ export function AdvancedParametersEditModalForm({
   )
 }
 
-function IncrementalField({
-  enableDecrease,
-  enableIncrease,
-  label,
-  onDecrease,
-  onIncrease,
-  value,
-}: {
-  enableDecrease: boolean
-  enableIncrease: boolean
-  label: ReactNode
-  onDecrease: () => void
-  onIncrease: () => void
-  value: ReactNode
-}) {
-  return (
-    <Fieldset
-      label={label}
-      dimmed
-      contextual={
-        <div
-          css={{
-            position: "absolute",
-            inset: "2gu 2gu 2gu auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <ButtonIcon
-            disabled={!enableIncrease}
-            icon={<IconArrowUp />}
-            label="Increase"
-            mode="outline"
-            size="small"
-            onClick={onIncrease}
-          />
-          <ButtonIcon
-            disabled={!enableDecrease}
-            icon={<IconArrowDown />}
-            label="Decrease"
-            mode="outline"
-            size="small"
-            onClick={onDecrease}
-          />
-        </div>
-      }
-    >
-      <p
-        css={({ colors }) => ({
-          paddingTop: "0.5gu",
-          textTransform: "uppercase",
-          color: colors.accent,
-        })}
-      >
-        {value}
-      </p>
-    </Fieldset>
-  )
-}
-
 function TokenWeight({
   tokenWeight,
   tokenSymbol,
@@ -337,7 +279,7 @@ function TokenWeight({
     >
       {tokenWeightPct}
       <span className="symbol">{tokenSymbol}</span>
-      <span>/</span>
+      <span>{" / "}</span>
       {ethWeightPct}
       <span className="symbol">ETH</span>
     </div>
