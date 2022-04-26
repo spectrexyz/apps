@@ -1,9 +1,11 @@
 import { ButtonIcon, noop, TokenInput } from "kit"
 import { useState } from "react"
+import { useSnft } from "../snft-hooks"
 
 import arrowsSwap from "./arrows-swap.svg"
 
-export function SwapModule() {
+export function SwapModule({ id }: { id: string }) {
+  const snft = useSnft(id)
   const [ethValue, setEthValue] = useState("100")
   return (
     <div>
@@ -31,7 +33,7 @@ export function SwapModule() {
         <ButtonIcon
           onClick={noop}
           icon={<img src={arrowsSwap} alt="" />}
-          label="Invert (sell MAGIC)"
+          label={`Invert (sell ${snft?.token.symbol})`}
         />
       </div>
       <div
@@ -41,7 +43,13 @@ export function SwapModule() {
         })}
       >
         <FromTo label="To (estimated)" />
-        <TokenInput onChange={setEthValue} symbol="MAGIC" value={ethValue} />
+        {snft && (
+          <TokenInput
+            onChange={setEthValue}
+            symbol={snft?.token.symbol}
+            value={ethValue}
+          />
+        )}
       </div>
     </div>
   )

@@ -2,13 +2,10 @@ import type { FormEvent, ReactNode } from "react"
 
 import {
   Button,
-  ButtonIcon,
   closestIndexFromSortedNumbers,
   DAY_MS,
   Fieldset,
   formatDuration,
-  IconArrowDown,
-  IconArrowUp,
   Incremental,
   Modal,
   norm,

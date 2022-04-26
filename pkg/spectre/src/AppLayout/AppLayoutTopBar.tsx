@@ -246,6 +246,7 @@ export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
                     alignItems: "center",
                     justifyContent: "space-between",
                     height: "100%",
+                    background: colors.background,
                     borderBottom: `1px solid ${colors.outline2}`,
                   })}
                 >

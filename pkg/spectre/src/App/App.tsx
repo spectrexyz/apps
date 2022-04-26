@@ -40,7 +40,7 @@ export function App() {
 
         {/* Swap */}
         <Route path="/nfts/:id/buy">
-          <ScreenBuy />
+          {({ id }) => <ScreenBuy id={id} />}
         </Route>
         <Route>Not found</Route>
       </Switch>

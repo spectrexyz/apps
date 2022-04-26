@@ -49,7 +49,7 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
             display: "flex",
             flexDirection: "column",
             flexGrow: "1",
-            paddingBottom: `${compactMenuActive ? 0 : 8 * gu}px`,
+            paddingBottom: `${compactMenuActive ? 4 * gu : 8 * gu}px`,
           }}
         >
           {title && compactMenuActive && (
