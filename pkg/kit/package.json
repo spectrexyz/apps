@@ -1,6 +1,7 @@
 {
   "name": "kit",
   "private": true,
+  "type": "module",
   "main": "dist/kit.cjs.js",
   "module": "dist/kit.es.js",
   "types": "dist/kit.es.d.ts",

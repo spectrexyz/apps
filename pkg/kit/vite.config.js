@@ -1,13 +1,12 @@
-import path from "path"
 import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
 
-module.exports = defineConfig(async ({ mode }) => ({
+export default defineConfig(async ({ mode }) => ({
   build: {
     target: ["es2020", "esnext"],
     outDir: "dist",
     lib: {
-      entry: path.resolve(__dirname, "src/index.tsx"),
+      entry: "src/index.tsx",
       formats: ["es", "cjs"],
       fileName: (format) => `kit.${format}.js`,
     },
