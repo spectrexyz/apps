@@ -1,4 +1,5 @@
 import { defineConfig } from "vite"
+import pluginRewriteAll from "vite-plugin-rewrite-all"
 // import checker from "vite-plugin-checker"
 // import react from "@vitejs/plugin-react"
 
@@ -24,6 +25,7 @@ export default defineConfig(async ({ mode }) => ({
     entries: ["./src/index.tsx"],
   },
   plugins: [
+    pluginRewriteAll(),
     // react(),
     // checker({ typescript: true }),
   ],
