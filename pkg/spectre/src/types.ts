@@ -26,7 +26,12 @@ export type Snft = {
     supply: bigint
     symbol: string
   }
-  creator: { address: string; name: string; url: string }
+  creator: {
+    address: string
+    name: string
+    resolvedAddress: Address
+    url: string
+  }
   history: SnftEvent[]
   guardian: string
 }

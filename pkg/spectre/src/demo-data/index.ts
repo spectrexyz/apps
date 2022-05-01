@@ -1,21 +1,63 @@
+import {
+  rand,
+  randCatchPhrase,
+  randFloat,
+  randNumber,
+  random,
+  randUser,
+  seed as falsoSeed,
+} from "@ngneat/falso"
 import { Address, list } from "kit"
-import Rand from "rand-seed"
 import { Snft } from "../types"
 
-import nft1 from "../demo-data/nft-1.jpg"
-import nft2 from "../demo-data/nft-2.jpg"
-import nft3 from "../demo-data/nft-3.jpg"
-import nft4 from "../demo-data/nft-4.jpg"
-import nft5 from "../demo-data/nft-5.jpg"
-import nft6 from "../demo-data/nft-6.jpg"
-import nft7 from "../demo-data/nft-7.jpg"
-import nft8 from "../demo-data/nft-8.jpg"
-import nft9 from "../demo-data/nft-9.jpg"
+falsoSeed("123")
 
-const randFn = new Rand("1234")
-const rand = (value = 1) => value * randFn.next()
+function hsla(h: number, s: number, l: number, a: number) {
+  return `hsla(${h}, ${s}%, ${l}%, ${a}%)`
+}
 
-const NFT_IMAGES = [nft1, nft2, nft3, nft4, nft5, nft6, nft7, nft8, nft9]
+function nftImage(style: ReturnType<typeof nftStyle>) {
+  const background = hsla(
+    randNumber({ min: style.backgroundHueMin, max: style.backgroundHueMax }),
+    30,
+    70,
+    100,
+  )
+  const items = list<[number, number, string]>(
+    randNumber({
+      min: style.elementsMin,
+      max: style.elementsMax,
+    }),
+    () => [
+      randNumber({ min: style.posMin, max: style.posMax }),
+      randNumber({ min: style.sizeMin, max: style.sizeMax }),
+      hsla(randNumber({ min: 0, max: 360 }), style.s, style.l, style.a),
+    ],
+  )
+  const svg = `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="100"
+      height="100"
+    >
+      <rect width="100%" height="100%" fill="${background}"/>`
+    + items.map(([xy, size, fill]) => `
+      <rect 
+        fill="${fill}"
+        height="${size}%"
+        rx="${style.radius}"
+        ry="${style.radius}"
+        width="${size}%"
+        x="${xy - size / 2}%"
+        y="${xy - size / 2}%"
+      />
+    `).join("")
+    + `
+    </svg>
+  `
+
+  return "data:image/svg+xml," + encodeURIComponent(svg)
+}
 
 const NFT_DESCRIPTION_1 = `
 Artworks have always been powerful vectors of collectives structuration and we now see that the internet of money could make us pass from the status of consumer of artworks to a world where artworks are, in their inner form, the organizational layer of tomorrow’s collectives.
@@ -32,11 +74,13 @@ const EVENT_1 = {
   address: event1Address,
   description: "NFT fractionalized by nft.eth",
 }
+
 const event2Address = randomAddress()
 const EVENT_2 = {
   address: event2Address,
   description: `NFT bought out for 432 ETH by ${event2Address}`,
 }
+
 const event3Address = randomAddress()
 const EVENT_3 = {
   address: event3Address,
@@ -45,20 +89,17 @@ const EVENT_3 = {
 
 function randomAddress() {
   const chars = "abcdefABCDEF1234567890"
-  return "0x" + list(40, () => (
-    chars[Math.floor(rand(chars.length))]
-  )).join("")
+  return "0x" + list(40, () => rand([...chars])).join("")
 }
 
 function randomDistribution(minted: bigint) {
-  const { floor } = Math
   const distribution: Array<{ address: Address | null; quantity: bigint }> = []
 
   let qtyToAssign = minted
   while (qtyToAssign > 0) {
-    const quantity = 10_000n + BigInt(
-      floor(rand(rand(rand(Number(qtyToAssign))))),
-    )
+    const quantity = 10_000n + BigInt(Math.round(
+      random() * random() * random() * Number(qtyToAssign),
+    ))
     distribution.push({ address: randomAddress(), quantity })
     qtyToAssign -= quantity
   }
@@ -70,67 +111,104 @@ function randomDistribution(minted: bigint) {
   return distribution
 }
 
-export const SNFTS: Snft[] = NFT_IMAGES.map((image, index) => {
+function randomCreator() {
+  const user = randUser()
+  const nickname = user.email.split("@")[0]
+    .replace(/[-\+\.]/g, "_")
+    .replace(/[0-9]+/g, "")
+  return {
+    address: `${nickname}.eth`,
+    resolvedAddress: randomAddress(),
+    name: user.firstName + " " + user.lastName,
+    url: `https://example.org/${nickname}`,
+  }
+}
+
+let nftIndex = 0
+
+function randomNft(
+  creator: ReturnType<typeof randomCreator>,
+  style: ReturnType<typeof nftStyle>,
+) {
   const supply = 1_000_000n
-  const minted = 500_000n + BigInt(Math.round(rand(500_000)))
+  const minted = 500_000n + BigInt(Math.round(random() * 500_000))
+  const title = randCatchPhrase().split(" ").slice(
+    0,
+    randNumber({ min: -2, max: -1 }),
+  ).join(" ")
+  const distribution = randomDistribution(minted)
+  const image = nftImage(style)
+  nftIndex++
+
   return ({
-    id: `${index + 1}`,
+    id: `${nftIndex}`,
     image: {
       url: image,
       width: 500,
       height: 500,
     },
-    title: `Untitled #${index + 1}`,
+    title,
     description: NFT_DESCRIPTION_1,
     token: {
-      distribution: randomDistribution(minted),
-      minted: BigInt(minted),
-      name: `TOKEN${index + 1}`,
-      priceEth: 0.001 + rand(0.01),
+      distribution,
+      minted,
+      name: `TOKEN${nftIndex}`,
+      priceEth: 0.001 + random() * 0.01,
       supply: BigInt(supply),
-      symbol: `TKN${index + 1}`,
+      symbol: `TKN${nftIndex}`,
     },
-    creator: [0, 5, 6, 7, 8].includes(index)
-      ? {
-        address: "0xfabe062eb33af3e68eb3329818d0507949c14142",
-        name: "@raxacoricofallapatorius",
-        url: "https://example.org/@raxacoricofallapatorius",
-      }
-      : {
-        address: "0x32dd41219f6a74f739466e6c86091500e81beaa8",
-        name: "@someone",
-        url: "https://example.org/@someone",
-      },
-    guardian: index % 2
+    creator: { ...creator },
+    guardian: nftIndex % 2
       ? "0xfabe062eb33af3e68eb3329818d0507949c14142"
       : "0x32dd41219f6a74f739466e6c86091500e81beaa8",
     history: [
-      {
-        ...EVENT_1,
-        date: "2021-04-29T15:19",
-      },
-      {
-        ...EVENT_2,
-        date: "2021-04-25T20:37",
-      },
-      {
-        ...EVENT_3,
-        date: "2021-04-22T21:31",
-      },
-      {
-        ...EVENT_2,
-        date: "2021-04-15T01:22",
-      },
-      {
-        ...EVENT_2,
-        date: "2021-04-14T11:38",
-      },
-      {
-        ...EVENT_3,
-        date: "2021-04-11T14:47",
-      },
+      { ...EVENT_1, date: "2021-04-29T15:19" },
+      { ...EVENT_2, date: "2021-04-25T20:37" },
+      { ...EVENT_3, date: "2021-04-22T21:31" },
+      { ...EVENT_2, date: "2021-04-15T01:22" },
+      { ...EVENT_2, date: "2021-04-14T11:38" },
+      { ...EVENT_3, date: "2021-04-11T14:47" },
     ],
   })
+}
+
+function nftStyle() {
+  const elementsMin = randNumber({ min: 1, max: 2 })
+  const elementsMax = elementsMin + randNumber({ min: 1, max: 6 })
+
+  const sizeMin = randNumber({ min: 2, max: 30 })
+  const sizeMax = sizeMin + randNumber({ min: 2, max: 20 })
+
+  const posMin = randNumber({ min: sizeMax / 2, max: 50 })
+  const posMax = posMin + randNumber({ min: 0, max: 50 - sizeMax / 2 })
+
+  const backgroundHueMin = randNumber({ min: 0, max: 360 - 80 })
+  const backgroundHueMax = backgroundHueMin + 80
+
+  const radius = randNumber({ min: 0, max: sizeMin })
+
+  return {
+    backgroundHueMax,
+    backgroundHueMin,
+    elementsMax,
+    elementsMin,
+    posMax,
+    posMin,
+    radius,
+    sizeMax,
+    sizeMin,
+    s: randNumber({ min: 40, max: 80 }),
+    l: randNumber({ min: 40, max: 80 }),
+    a: randNumber({ min: 30, max: 100 }),
+  }
+}
+
+export const SNFTS: Snft[] = list(16, randomCreator).flatMap((creator) => {
+  const style = nftStyle()
+  return list(
+    randNumber({ min: 2, max: 8 }),
+    () => randomNft(creator, style),
+  )
 })
 
 export const poolEthWeights: Record<

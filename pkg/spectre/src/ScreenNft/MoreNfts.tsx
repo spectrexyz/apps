@@ -84,7 +84,7 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
             },
           })}
         >
-          {snfts.map((snft) => (
+          {snfts.data?.map((snft) => (
             <Link key={snft.id} href={`/nfts/${snft.id}`}>
               <img src={snft.image.url} alt="" />
               <div>{snft.title}</div>

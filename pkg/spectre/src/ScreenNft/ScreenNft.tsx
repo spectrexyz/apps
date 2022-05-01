@@ -1,7 +1,8 @@
+import type { ComponentProps } from "react"
 import type { TimeScale } from "../types"
 
 import {
-  ButtonIcon,
+  ButtonIconLabel as KitButtonIconLabel,
   formatAmount,
   IconArrowLeft,
   IconArrowRight,
@@ -13,7 +14,7 @@ import {
   RadioGroup,
   Tabs,
 } from "kit"
-import { ReactNode, useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
@@ -161,14 +162,12 @@ export function ScreenNft({
                   label="Share"
                   labelPosition="left"
                   onClick={noop}
-                  disabled={false}
                 />
                 <ButtonIconLabel
                   href={snft.image.url}
                   icon={<IconMagnifyingGlassPlus />}
                   label="Zoom"
                   labelPosition="left"
-                  disabled={false}
                 />
               </>
             }
@@ -179,7 +178,7 @@ export function ScreenNft({
                   label="Prev"
                   labelFull="Previous"
                   onClick={handlePrevNft}
-                  disabled={!(nftPrev)}
+                  disabled={!nftPrev}
                 />
                 <ButtonIconLabel
                   icon={<IconSquaresFour />}
@@ -349,67 +348,13 @@ export function ScreenNft({
   )
 }
 
-function ButtonIconLabel({
-  disabled = false,
-  href,
-  icon,
-  label,
-  labelFull = label,
-  labelPosition = "bottom",
-  onClick,
-}: {
-  disabled?: boolean
-  href?: string
-  icon: ReactNode
-  label: string
-  labelFull?: string
-  labelPosition?: "left" | "bottom"
-  onClick?: () => void
-}) {
+interface ButtonIconLabelProps extends ComponentProps<typeof ButtonIconLabel> {}
+function ButtonIconLabel(props: ButtonIconLabelProps) {
   const layout = useLayout()
-  const buttonIconSize = layout.value({
-    small: "medium",
-    xlarge: "large",
-  })
-  const showLabel = layout.value({
-    small: false,
-    xlarge: true,
-  })
   return (
-    <div
-      title={labelFull}
-      css={{
-        display: "flex",
-        flexDirection: labelPosition === "bottom" ? "column" : "row-reverse",
-        gap: "1.5gu",
-      }}
-    >
-      <ButtonIcon
-        disabled={disabled}
-        external={Boolean(href)}
-        href={href}
-        icon={icon}
-        label={labelFull}
-        mode="outline"
-        onClick={onClick}
-        size={buttonIconSize}
-      />
-      {showLabel && (
-        <div
-          css={({ colors, fonts }) => ({
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "12px",
-            fontFamily: fonts.sans,
-            textTransform: "uppercase",
-            color: colors.contentDimmed,
-            userSelect: "none",
-          })}
-        >
-          {label}
-        </div>
-      )}
-    </div>
+    <KitButtonIconLabel
+      {...props}
+      compact={layout.below("xlarge")}
+    />
   )
 }

@@ -1,49 +1,78 @@
-import { ReactNode, useMemo } from "react"
+import type { ReactNode } from "react"
 
 import { FlatTree, Kit } from "kit"
+import { useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { Route, Switch } from "wouter"
+import { Route, Router, Switch } from "wouter"
+import makeMatcher from "wouter/matcher"
 import { AppLayout } from "../AppLayout/AppLayout"
 import { ScreenBuy } from "../ScreenBuy/ScreenBuy"
 import { ScreenHome } from "../ScreenHome/ScreenHome"
 import { ScreenNft } from "../ScreenNft/ScreenNft"
+import { ScreenProfile } from "../ScreenProfile/ScreenProfile"
 import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize"
 import { Wagmi } from "../Wagmi"
 import { AppReady } from "./AppReady"
 import { AppScroll } from "./AppScroll"
 import { AppViewport } from "./AppViewport"
 
+const defaultMatcher = makeMatcher()
+const routeMatcher: ReturnType<typeof makeMatcher> = (pattern, path) => {
+  if (pattern === "/:address") {
+    const address = path.slice(1).match(/^(?:.+\.eth|0x[0-9a-fA-F]{40})$/)?.[0]
+    return address ? [true, { address }] : [false, null]
+  }
+  return defaultMatcher(pattern, path)
+}
+
 export function App() {
   return (
     <AppProviders>
-      <Switch>
-        {/* Home */}
-        <Route path="/">
-          <ScreenHome />
-        </Route>
+      <Router matcher={routeMatcher}>
+        <Switch>
+          {/* Home */}
+          <Route path="/">
+            <ScreenHome />
+          </Route>
 
-        {/* Fractionalize */}
-        <Route path="/fractionalize">
-          <ScreenSpectralize />
-        </Route>
+          {/* Fractionalize */}
+          <Route path="/fractionalize">
+            <ScreenSpectralize />
+          </Route>
 
-        {/* NFTs */}
-        <Route path="/nfts/:id/pool">
-          {({ id }) => <ScreenNft id={id} panel="pool" />}
-        </Route>
-        <Route path="/nfts/:id/fractions">
-          {({ id }) => <ScreenNft id={id} panel="fractions" />}
-        </Route>
-        <Route path="/nfts/:id">
-          {({ id }) => <ScreenNft id={id} panel="nft" />}
-        </Route>
+          {/* NFTs */}
+          <Route path="/nfts/:id/pool">
+            {({ id }) => <ScreenNft id={id} panel="pool" />}
+          </Route>
+          <Route path="/nfts/:id/fractions">
+            {({ id }) => <ScreenNft id={id} panel="fractions" />}
+          </Route>
+          <Route path="/nfts/:id">
+            {({ id }) => <ScreenNft id={id} panel="nft" />}
+          </Route>
 
-        {/* Swap */}
-        <Route path="/nfts/:id/buy">
-          {({ id }) => <ScreenBuy id={id} />}
-        </Route>
-        <Route>Not found</Route>
-      </Switch>
+          {/* Swap */}
+          <Route path="/nfts/:id/buy">
+            {({ id }) => <ScreenBuy id={id} />}
+          </Route>
+
+          {/* Profile */}
+          <Route path="/:address">
+            {({ address }) => <ScreenProfile address={address} />}
+          </Route>
+
+          <Route>
+            <div
+              css={{
+                padding: "3gu",
+                textAlign: "center",
+              }}
+            >
+              Not found
+            </div>
+          </Route>
+        </Switch>
+      </Router>
     </AppProviders>
   )
 }
