@@ -1,3 +1,5 @@
+import type { FormEvent, StepProps } from "./types"
+
 import {
   Button,
   closestIndexFromSortedNumbers,
@@ -25,7 +27,6 @@ import {
 import { useLayout } from "../styles"
 import { AdvancedParameters } from "./AdvancedParameters"
 import { AdvancedParametersEditModal } from "./AdvancedParametersEditModal"
-import { StepProps } from "./types"
 import {
   useAdvancedParametersFormReload,
   useSpectralize,
@@ -54,7 +55,7 @@ export function Step3({ title, onNext, onPrev }: StepProps) {
   const { suggestFromBuyout, updateSuggestFromBuyout } = data
 
   const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       if (suggestFromBuyout) {
         updateSuggestFromBuyout(false)

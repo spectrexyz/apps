@@ -1,3 +1,6 @@
+import type { FormEvent, MutableRefObject } from "react"
+import type { StepProps } from "./types"
+
 import {
   Address,
   Button,
@@ -10,13 +13,7 @@ import {
   TextInput,
   useKey,
 } from "kit"
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
 import {
   ContentLayout,
@@ -26,7 +23,6 @@ import {
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"
 import { EthAddressRow } from "./EthAddressRow"
-import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
 const REWARDS_MAX = 50
@@ -44,7 +40,7 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
     (() => { invalid: boolean; account: Address | null }) | undefined
   >()
   const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
 
       // Add an account to the rewards split

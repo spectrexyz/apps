@@ -1,3 +1,6 @@
+import type { FormEvent } from "react"
+import type { StepProps } from "./types"
+
 import {
   Button,
   ButtonIcon,
@@ -17,7 +20,6 @@ import { useCallback } from "react"
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"
-import { StepProps } from "./types"
 import { FileType, useSpectralize } from "./use-spectralize"
 
 export function Step1({ onNext, onPrev, title }: StepProps) {
@@ -25,7 +27,7 @@ export function Step1({ onNext, onPrev, title }: StepProps) {
   const layout = useLayout()
 
   const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       onNext()
     },
@@ -232,7 +234,7 @@ function NftFileSelector({
       file={file}
       onFile={updateFile}
       label={layout.name === "medium" ? "Upload" : "Upload file"}
-      accept={NFT_FILE_TYPES[fileType].mediaTypes}
+      accept={NFT_FILE_TYPES[fileType].accept}
       css={{
         paddingTop: "1gu",
       }}
@@ -432,7 +434,7 @@ function NftFilePreview() {
                   }}
                 >
                   <FileUpload
-                    accept={NFT_FILE_TYPES.image.mediaTypes}
+                    accept={NFT_FILE_TYPES.image.accept}
                     file={previewFile}
                     label="Thumbnail"
                     onFile={updatePreviewFile}
