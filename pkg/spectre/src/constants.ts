@@ -1,29 +1,35 @@
 export const NFT_FILE_TYPES = {
   image: {
     label: "JPG,PNG,SVG,WEBP",
-    mediaTypes: [
-      "image/avif",
-      "image/gif",
-      "image/jpeg",
-      "image/jxl",
-      "image/png",
-      "image/svg+xml",
-      "image/webp",
-    ],
+    accept: {
+      "image/*": [
+        ".avif",
+        ".gif",
+        ".jpeg",
+        ".jpg",
+        ".jxl",
+        ".png",
+        ".svg",
+        ".webp",
+      ],
+    },
   },
   video: {
     label: "MP4,WEBM,GIF",
-    mediaTypes: ["image/gif", "video/mp4", "video/webm", "video/ogg"],
+    accept: {
+      "image/gif": [".gif"],
+      "video/*": [".mp4", ".ogv", ".webm"],
+    },
   },
   audio: {
     label: "MP3,WAV,FLAC",
-    mediaTypes: [
-      "audio/flac",
-      "audio/mp3",
-      "audio/mpeg",
-      "audio/ogg",
-      "audio/wav",
-      "audio/webm",
-    ],
+    accept: {
+      "audio/*": [
+        ".flac",
+        ".mp3",
+        ".ogg",
+        ".wav",
+      ],
+    },
   },
 }

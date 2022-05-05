@@ -5,7 +5,7 @@ import { IconArrowCounterClockwise, IconUploadSimple } from "../icons"
 import { gu } from "../styles"
 
 type FileUploadProps = {
-  accept?: string[]
+  accept?: { [key: string]: string[] }
   className?: string
   file?: File | null
   label?: string
