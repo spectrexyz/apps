@@ -1,6 +1,8 @@
+import type { ReactNode } from "react"
+
 import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
-import { ReactNode, useState } from "react"
-import { a, useSpring } from "react-spring"
+import { useEffect, useRef, useState } from "react"
+import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"
 import { useLayout } from "../styles"
@@ -16,9 +18,12 @@ type AppScreenProps = {
       title?: ReactNode
       extraRow?: ReactNode
     }
+  loading?: boolean | ReactNode
 }
 
-export function AppScreen({ children, compactBar }: AppScreenProps) {
+export function AppScreen(
+  { children, compactBar, loading = false }: AppScreenProps,
+) {
   const { colors } = useTheme()
   const { appReadyTransition } = useAppReady()
 
@@ -38,6 +43,29 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
     headerBorderVisibility: Number(snapHeader),
   })
 
+  const [hasBeenLoading, setHasBeenLoading] = useState(false)
+  useEffect(() => {
+    if (loading) {
+      setHasBeenLoading(true)
+    }
+  }, [loading])
+
+  const childrenTransitions = useTransition(!loading, {
+    from: hasBeenLoading && {
+      opacity: 0,
+      transformOrigin: "50% 0",
+      transform: "translateY(2px) scale(0.98)",
+    },
+    enter: {
+      opacity: 1,
+      transform: "translateY(0) scale(1)",
+    },
+  })
+  const loaderTransitions = useTransition(Boolean(loading), {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+  })
+
   const layout = useLayout()
   const compactMenuActive = layout.below("large")
 
@@ -53,11 +81,7 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
           }}
         >
           {title && compactMenuActive && (
-            <div
-              css={{
-                height: "8gu",
-              }}
-            >
+            <div css={{ height: "8gu" }}>
               <a.div
                 style={{ transform: headerTransform }}
                 css={({ colors }) => ({
@@ -135,7 +159,31 @@ export function AppScreen({ children, compactBar }: AppScreenProps) {
                 flexGrow: "1",
               }}
             >
-              {children}
+              {childrenTransitions((styles, item) =>
+                item && (
+                  <a.div style={styles}>
+                    {children}
+                  </a.div>
+                )
+              )}
+              {loaderTransitions((styles, item) =>
+                item && (
+                  <a.div
+                    style={styles}
+                    css={({ colors }) => ({
+                      position: "absolute",
+                      inset: "0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "16px",
+                      color: colors.content,
+                    })}
+                  >
+                    Loading…
+                  </a.div>
+                )
+              )}
             </div>
           </a.div>
         </div>
