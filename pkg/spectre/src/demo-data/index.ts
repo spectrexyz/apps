@@ -1,19 +1,60 @@
 import {
   rand,
   randCatchPhrase,
-  randFloat,
   randNumber,
   random,
   randUser,
-  seed as falsoSeed,
+  seed,
 } from "@ngneat/falso"
 import { Address, list } from "kit"
 import { Snft } from "../types"
 
-falsoSeed("123")
+seed("123")
+
+function toSvg(source: string) {
+  return "data:image/svg+xml," + encodeURIComponent(`
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="100"
+      height="100"
+    >
+      ${source}
+    </svg>
+  `)
+}
 
 function hsla(h: number, s: number, l: number, a: number) {
   return `hsla(${h}, ${s}%, ${l}%, ${a}%)`
+}
+
+function authorPicture(style: ReturnType<typeof nftStyle>, letter: string) {
+  const background = hsla(
+    randNumber({ min: style.backgroundHueMin, max: style.backgroundHueMax }),
+    30,
+    70,
+    100,
+  )
+  return toSvg([
+    `<rect width="100%" height="100%" fill="${background}"/>`,
+    `<text
+       dominant-baseline="central"
+       fill="white"
+       text-anchor="middle"
+       x="50%"
+       y="50%"
+       style="font:40px sans-serif"
+     >${letter.toUpperCase()}</text>`,
+  ].join(""))
+}
+
+function authorBio() {
+  return rand([
+    `Co-founder @DistribGallery / Former Phd in communication sciences #Rennes2 \\\\ @spectrexyz //`,
+    `coordination games @curvelabs @spectrexyz`,
+    `Ethical design, technology & people /// @spectrexyz /// Big list-maker, daydreamer & sci-fi nerd ✫ Prev. @AragonProject , @farfetch & @Canonical.`,
+    `Hacking web3 stuff | Former co-founder & tech lead @pando_network @distribgallery @AragonBlackTeam | Former professor in communication sciences @UnivRennes_2`,
+    `WWW · OSS · P2P · GUI · @spectrexyz`,
+  ])
 }
 
 function nftImage(style: ReturnType<typeof nftStyle>) {
@@ -34,14 +75,9 @@ function nftImage(style: ReturnType<typeof nftStyle>) {
       hsla(randNumber({ min: 0, max: 360 }), style.s, style.l, style.a),
     ],
   )
-  const svg = `
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="100"
-      height="100"
-    >
-      <rect width="100%" height="100%" fill="${background}"/>`
-    + items.map(([xy, size, fill]) => `
+  return toSvg([
+    `<rect width="100%" height="100%" fill="${background}"/>`,
+    items.map(([xy, size, fill]) => `
       <rect 
         fill="${fill}"
         height="${size}%"
@@ -51,12 +87,8 @@ function nftImage(style: ReturnType<typeof nftStyle>) {
         x="${xy - size / 2}%"
         y="${xy - size / 2}%"
       />
-    `).join("")
-    + `
-    </svg>
-  `
-
-  return "data:image/svg+xml," + encodeURIComponent(svg)
+    `).join(""),
+  ].join(""))
 }
 
 const NFT_DESCRIPTION_1 = `
@@ -88,7 +120,7 @@ const EVENT_3 = {
 }
 
 function randomAddress() {
-  const chars = "abcdefABCDEF1234567890"
+  const chars = "abcdefabcdef1234567890"
   return "0x" + list(40, () => rand([...chars])).join("")
 }
 
@@ -111,15 +143,19 @@ function randomDistribution(minted: bigint) {
   return distribution
 }
 
-function randomCreator() {
+function randomCreator(style: ReturnType<typeof nftStyle>) {
   const user = randUser()
+  const avatar = authorPicture(style, user.firstName[0])
+  const bio = authorBio()
   const nickname = user.email.split("@")[0]
     .replace(/[-\+\.]/g, "_")
     .replace(/[0-9]+/g, "")
   return {
     address: `${nickname}.eth`,
-    resolvedAddress: randomAddress(),
+    avatar,
+    bio,
     name: user.firstName + " " + user.lastName,
+    resolvedAddress: randomAddress(),
     url: `https://example.org/${nickname}`,
   }
 }
@@ -203,13 +239,18 @@ function nftStyle() {
   }
 }
 
-export const SNFTS: Snft[] = list(16, randomCreator).flatMap((creator) => {
+export const SNFTS: Snft[] = list(16).flatMap(() => {
   const style = nftStyle()
+  const creator = randomCreator(style)
   return list(
     randNumber({ min: 2, max: 8 }),
     () => randomNft(creator, style),
   )
 })
+
+export const CREATORS_BY_ENS_NAME = new Map(
+  SNFTS.map((snft) => [snft.creator.address, snft.creator]),
+)
 
 export const poolEthWeights: Record<
   "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",

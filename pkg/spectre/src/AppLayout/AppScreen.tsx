@@ -51,11 +51,13 @@ export function AppScreen(
   }, [loading])
 
   const childrenTransitions = useTransition(!loading, {
-    from: hasBeenLoading && {
-      opacity: 0,
-      transformOrigin: "50% 0",
-      transform: "translateY(2px) scale(0.98)",
-    },
+    from: hasBeenLoading
+      ? {
+        opacity: 0,
+        transformOrigin: "50% 0",
+        transform: "translateY(2px) scale(0.98)",
+      }
+      : undefined,
     enter: {
       opacity: 1,
       transform: "translateY(0) scale(1)",

@@ -1,3 +1,5 @@
+import type { Address, AddressOrEnsName, EnsName } from "./types"
+
 import ms from "ms"
 import prettyBytes from "pretty-bytes"
 
@@ -128,8 +130,18 @@ export function shortenAddress(address: string, charsLength = 4): string {
 }
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
-export function isAddress(address: string): boolean {
+export function isAddress(address: string): address is Address {
   return ADDRESS_RE.test(address)
+}
+
+export function isEnsName(address: string): address is EnsName {
+  return address.endsWith(".eth") && address.length > 4
+}
+
+export function isAddressOrEnsName(
+  address: string,
+): address is AddressOrEnsName {
+  return isAddress(address) || isEnsName(address)
 }
 
 const emailRe = /.+@.+/

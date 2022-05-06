@@ -63,9 +63,11 @@ export function ScreenNft({
   panel: "pool" | "fractions" | "nft"
 }) {
   const [, setLocation] = useLocation()
-  const [nftPrev, nftNext] = useSnftsAdjacent(id)
+  const snftsAdjacent = useSnftsAdjacent(id)
   const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
+
+  const [nftPrev, nftNext] = snftsAdjacent?.data ?? []
 
   const tabIndex = useMemo(() => (
     panels.findIndex(([_panel]) => _panel === panel)
@@ -171,7 +173,7 @@ export function ScreenNft({
                 />
               </>
             }
-            navigationButtons={
+            navigationButtons={snftsAdjacent.data && (
               <>
                 <ButtonIconLabel
                   icon={<IconArrowLeft />}
@@ -192,7 +194,7 @@ export function ScreenNft({
                   disabled={!nftNext}
                 />
               </>
-            }
+            )}
           />
         )}
         {panel === "fractions" && (

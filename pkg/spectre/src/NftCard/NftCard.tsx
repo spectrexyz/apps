@@ -1,8 +1,15 @@
+import type { ReactNode } from "react"
 import type { Snft } from "../types"
 
-import { Button, co } from "kit"
+import { co } from "kit"
 
-export function NftCard({ snft }: { snft: Snft }) {
+export function NftCard({
+  action,
+  snft,
+}: {
+  action?: ReactNode
+  snft: Snft
+}) {
   return (
     <section
       css={({ colors }) => ({
@@ -35,7 +42,7 @@ export function NftCard({ snft }: { snft: Snft }) {
         </h1>
         <p
           css={({ colors, fonts }) => ({
-            padding: "2gu 0 3gu",
+            padding: action ? "2gu 0 3gu" : "2gu 0 0",
             fontFamily: fonts.sans,
             fontSize: "16px",
             color: colors.accent2,
@@ -43,7 +50,7 @@ export function NftCard({ snft }: { snft: Snft }) {
         >
           {snft.creator.name}
         </p>
-        <Button label="Fractionalize" mode="primary" wide />
+        {action}
       </div>
     </section>
   )

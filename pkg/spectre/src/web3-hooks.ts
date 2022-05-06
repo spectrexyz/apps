@@ -1,13 +1,17 @@
 import type { AddressOrEnsName } from "kit"
 
 import { useQuery } from "react-query"
-import { useAccount, useProvider } from "wagmi"
+import { useProvider } from "wagmi"
+import { CREATORS_BY_ENS_NAME } from "./demo-data"
 import { addressesEqual } from "./utils"
 
 export function useIsConnectedAddress(address: AddressOrEnsName) {
-  const [{ data }] = useAccount({ fetchEns: false })
   const provider = useProvider()
-  const connectedAddress = data?.address
+
+  // const [{ data }] = useAccount({ fetchEns: false })
+  // const connectedAddress = data?.address
+  const connectedAddress = Array.from(CREATORS_BY_ENS_NAME.values())[0].address
+
   return useQuery(
     ["is-connected-address", address, connectedAddress],
     async () => {

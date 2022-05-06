@@ -27,7 +27,9 @@ export type Snft = {
     symbol: string
   }
   creator: {
+    avatar: string
     address: string
+    bio: string
     name: string
     resolvedAddress: Address
     url: string

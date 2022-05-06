@@ -67,10 +67,6 @@ export function usePath() {
   return [location, setLocation]
 }
 
-export function isValidEmail(value: string) {
-  return /(.+)@(.+){2,}\.(.+){2,}/.test(value)
-}
-
 export async function resolveAddress(
   provider: Provider,
   address: AddressOrEnsName,

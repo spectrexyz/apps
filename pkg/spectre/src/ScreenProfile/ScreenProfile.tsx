@@ -1,5 +1,6 @@
 import {
   AddressBadge,
+  Button,
   ButtonIcon,
   ButtonIconLabel,
   IconEnvelopeSimple,
@@ -14,8 +15,9 @@ import { useState } from "react"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { NftCard } from "../NftCard"
-import { useSnftsByCreator } from "../snft-hooks"
+import { useSnftCreator, useSnftsByCreator } from "../snft-hooks"
 import { useLayout } from "../styles"
+import { useIsConnectedAddress } from "../web3-hooks"
 
 const resolvedAddress = "0xfabe062eb33af3e68eb3329818d0507949c14142"
 
@@ -35,111 +37,162 @@ export function ScreenProfile({
   const layout = useLayout()
   const [activeTab, setActiveTab] = useState(0)
   const snfts = useSnftsByCreator(address)
-  return (
-    <AppScreen compactBar={null}>
-      <div
-        css={{
-          width: "100%",
-          maxWidth: "160gu",
-          margin: "0 auto",
-          paddingTop: "6gu",
-        }}
-      >
-        <header
-          css={{
-            position: "relative",
-            paddingBottom: "8gu",
-            textAlign: "center",
-          }}
-        >
-          <div>
-            <img
-              alt=""
-              height="120"
-              src="https://bpier.re/avatar.png"
-              width="120"
-              css={{
-                display: "block",
-                margin: "0 auto",
-                borderRadius: "50%",
-              }}
-            />
-          </div>
-          <div css={{ paddingTop: "3gu", fontSize: "32px" }}>
-            {address}
-          </div>
-          <div
-            css={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              paddingTop: "2gu",
-            }}
-          >
-            <AddressBadge
-              address={resolvedAddress}
-              rounded
-              showCopy
-              showExplore
-            />
-          </div>
-          <div
-            css={({ colors }) => ({
-              paddingTop: "3gu",
-              color: colors.accent2,
-            })}
-          >
-            WWW · OSS · P2P · GUI
-          </div>
-          <div css={{ paddingTop: "4gu" }}>
-            <ButtonIcon icon={<IconLinkSimple />} label="Website" />
-            <ButtonIcon icon={<IconEnvelopeSimple />} label="Email" />
-            <ButtonIcon icon={<IconTwitterLogo />} label="Twitter" />
-          </div>
+  const creator = useSnftCreator(address)
 
+  const isConnectedAddress = useIsConnectedAddress(address)
+
+  const maxWidth = layout.value({
+    small: "100%",
+    large: "160gu",
+  })
+
+  const spaceBelowTabs = layout.value({
+    small: "3gu",
+    xlarge: "8gu",
+  })
+
+  return (
+    <AppScreen compactBar={null} loading={!creator.data}>
+      {creator.data && (
+        <>
           <div
             css={{
-              position: "absolute",
-              inset: "0 0 auto auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1.5gu",
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              paddingTop: "6gu",
             }}
           >
-            <ButtonIconLabel
-              icon={<IconGearSix />}
-              label="Settings"
-              labelPosition="left"
-              onClick={noop}
-            />
-            <ButtonIconLabel
-              icon={<IconPencil />}
-              label="Edit profile"
-              labelPosition="left"
-              onClick={noop}
+            <div css={{ height: "52gu" }}>
+              {creator.data && (
+                <header
+                  css={{
+                    position: "relative",
+                    paddingBottom: "8gu",
+                    textAlign: "center",
+                  }}
+                >
+                  <div
+                    css={{
+                      overflow: "hidden",
+                      width: "120px",
+                      height: "120px",
+                      margin: "0 auto",
+                      borderRadius: "50%",
+                      "img": {
+                        display: "block",
+                      },
+                    }}
+                  >
+                    <img
+                      alt=""
+                      height="120"
+                      src={creator.data.avatar}
+                      width="120"
+                    />
+                  </div>
+                  <div css={{ paddingTop: "3gu", fontSize: "32px" }}>
+                    {address}
+                  </div>
+                  <div
+                    css={{
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                      paddingTop: "2gu",
+                    }}
+                  >
+                    <AddressBadge
+                      address={resolvedAddress}
+                      rounded
+                      showCopy
+                      showExplore
+                    />
+                  </div>
+                  <div
+                    title={creator.data.bio}
+                    css={({ colors }) => ({
+                      maxWidth: "60gu",
+                      margin: "0 auto",
+                      paddingTop: "3gu",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      color: colors.accent2,
+                    })}
+                  >
+                    {creator.data.bio}
+                  </div>
+                  <div css={{ paddingTop: "4gu" }}>
+                    <ButtonIcon icon={<IconLinkSimple />} label="Website" />
+                    <ButtonIcon
+                      icon={<IconEnvelopeSimple />}
+                      label="Email"
+                    />
+                    <ButtonIcon
+                      icon={<IconTwitterLogo />}
+                      label="Twitter"
+                    />
+                  </div>
+
+                  {isConnectedAddress.data && (
+                    <div
+                      css={{
+                        position: "absolute",
+                        inset: "0 2gu auto auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1.5gu",
+                      }}
+                    >
+                      <ButtonIconLabel
+                        icon={<IconGearSix />}
+                        label="Settings"
+                        labelPosition="left"
+                        onClick={noop}
+                      />
+                      <ButtonIconLabel
+                        icon={<IconPencil />}
+                        label="Edit profile"
+                        labelPosition="left"
+                        onClick={noop}
+                      />
+                    </div>
+                  )}
+                </header>
+              )}
+            </div>
+            <Tabs
+              compact={layout.below("xlarge")}
+              fullWidth={layout.below("xlarge")}
+              items={tabs}
+              onSelect={setActiveTab}
+              selected={activeTab}
             />
           </div>
-        </header>
-        <Tabs
-          compact={layout.below("xlarge")}
-          fullWidth={layout.below("xlarge")}
-          items={tabs}
-          onSelect={setActiveTab}
-          selected={activeTab}
-        />
-      </div>
-      <div css={{ paddingTop: "8gu" }}>
-        {snfts.data && (
-          <Grid>
-            {snfts.data.map((snft) => (
-              <NftCard
-                key={snft.id}
-                snft={snft}
-              />
-            ))}
-          </Grid>
-        )}
-      </div>
+          <div
+            css={{
+              maxWidth,
+              margin: "0 auto",
+              paddingTop: spaceBelowTabs,
+            }}
+          >
+            {activeTab === 0 && snfts.data && (
+              <Grid>
+                {snfts.data.map((snft) => (
+                  <NftCard
+                    key={snft.id}
+                    snft={snft}
+                    action={isConnectedAddress.data && (
+                      <Button label="Fractionalize" mode="primary" wide />
+                    )}
+                  />
+                ))}
+              </Grid>
+            )}
+          </div>
+        </>
+      )}
     </AppScreen>
   )
 }

@@ -28,7 +28,10 @@ export function AccountWindow({ onClose, visible }: AccountWindowProps) {
   const address = accountData?.address
   const ensName = accountData?.ens?.name
 
-  const account = useMemo(() => ({ address, ensName }), [address, ensName])
+  const account = useMemo(() => ({
+    address,
+    ensName,
+  }), [address, ensName])
 
   const visibility = useTransition(visible && account, {
     config: springs.swift,

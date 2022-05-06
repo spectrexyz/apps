@@ -8,7 +8,7 @@ import { PanelSection } from "./PanelSection"
 export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
   const snfts = useSnftsByCreator(snftFrom.creator.address, {
     exclude: [snftFrom.id],
-    limit: 4,
+    first: 4,
   })
 
   const layout = useLayout()
@@ -81,6 +81,9 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
               fontSize: "18px",
               color: colors.accent,
               background: colors.layer2,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             },
           })}
         >
