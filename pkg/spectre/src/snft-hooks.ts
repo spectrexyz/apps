@@ -1,14 +1,16 @@
 import type { Snft } from "./types"
 
-import { groupBy } from "kit"
 import uniqBy from "lodash.uniqby"
 import { useQuery } from "react-query"
 import { SNFTS } from "./demo-data"
 
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+async function fakeDelay() {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 500 + Math.random() * 2000)
+  })
 }
 
+// TODO: make async
 export function useSnft(_id: string): Snft | undefined {
   return SNFTS.find(({ id }) => id === _id)
 }
@@ -21,8 +23,20 @@ export function useSnfts({
   skip?: number
 } = {}) {
   return useQuery("snfts" + skip + first, async () => {
-    await wait(1000)
+    await fakeDelay()
     return SNFTS.slice(skip, skip + first)
+  })
+}
+
+export function useSnftCreator(address: string) {
+  return useQuery("snft-creator-" + address, async () => {
+    await fakeDelay()
+
+    return SNFTS.find((snft) => (
+      address.endsWith(".eth")
+        ? snft.creator.address === address
+        : snft.creator.resolvedAddress === address
+    ))?.creator
   })
 }
 
@@ -31,7 +45,8 @@ export function useSnftCreators({ first = 10, skip = 0 }: {
   skip?: number
 } = {}) {
   return useQuery("snft-creators-" + skip + first, async () => {
-    await wait(1000)
+    await fakeDelay()
+
     return uniqBy(
       SNFTS.map((snft) => snft.creator),
       (creator) => creator.resolvedAddress,
@@ -41,14 +56,16 @@ export function useSnftCreators({ first = 10, skip = 0 }: {
 
 export function useSnftsByCreator(
   creatorAddress: string,
-  { exclude = [], limit }: {
+  { exclude = [], first }: {
     exclude?: string[]
-    limit?: number
+    first?: number
   } = {},
 ) {
   return useQuery(
-    "snfts-by-creator" + creatorAddress + exclude.join("") + limit,
+    "snfts-by-creator" + creatorAddress + exclude.join("") + first,
     async () => {
+      await fakeDelay()
+
       const snfts = SNFTS.filter(
         ({ id, creator }) => {
           if (exclude.includes(id)) return false
@@ -56,14 +73,25 @@ export function useSnftsByCreator(
             || creator.resolvedAddress === creatorAddress
         },
       )
-      return limit === undefined ? snfts : snfts.slice(0, limit)
+      return first === undefined ? snfts : snfts.slice(0, first)
     },
   )
 }
 
 export function useSnftsAdjacent(
-  _id: string,
-): [Snft | undefined, Snft | undefined] {
-  const index = SNFTS.findIndex(({ id }) => id === _id)
-  return [SNFTS?.[index - 1], SNFTS?.[index + 1]]
+  snftId: string,
+) {
+  return useQuery(
+    "snfts-adjacent" + snftId,
+    async () => {
+      await fakeDelay()
+
+      const index = SNFTS.findIndex(({ id }) => id === snftId)
+      const result: [Snft | undefined, Snft | undefined] = [
+        SNFTS?.[index - 1],
+        SNFTS?.[index + 1],
+      ]
+      return result
+    },
+  )
 }

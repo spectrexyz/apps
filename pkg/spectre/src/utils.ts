@@ -1,6 +1,11 @@
+import type { Provider } from "ethers"
+import type { AddressOrEnsName } from "kit"
+
+import { utils } from "ethers"
 import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { useLocation } from "wouter"
+import { CREATORS_BY_ENS_NAME } from "./demo-data"
 import { springs } from "./styles"
 
 export function randomArbitrary(min: number, max: number) {
@@ -64,4 +69,37 @@ export function usePath() {
 
 export function isValidEmail(value: string) {
   return /(.+)@(.+){2,}\.(.+){2,}/.test(value)
+}
+
+export async function resolveAddress(
+  provider: Provider,
+  address: AddressOrEnsName,
+) {
+  // Fake resolve names from the demo data
+  if (CREATORS_BY_ENS_NAME.has(address)) {
+    address = CREATORS_BY_ENS_NAME.get(address)?.resolvedAddress
+  }
+
+  const resolvedAddress = address.endsWith(".eth")
+    ? await provider.resolveName(address)
+    : address
+
+  if (!resolvedAddress) {
+    throw new Error(`The address couldn’t get resolved: ${resolvedAddress}`)
+  }
+
+  return utils.getAddress(resolvedAddress)
+}
+
+export async function addressesEqual(
+  provider: Provider,
+  address1: AddressOrEnsName,
+  address2: AddressOrEnsName,
+) {
+  const resolved = await Promise.all(
+    [address1, address2].map((addr) => (
+      resolveAddress(provider, addr)
+    )),
+  )
+  return resolved[0] === resolved[1]
 }
