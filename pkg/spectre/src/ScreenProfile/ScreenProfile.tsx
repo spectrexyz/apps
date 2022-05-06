@@ -8,10 +8,12 @@ import {
   IconLinkSimple,
   IconPencil,
   IconTwitterLogo,
+  isAddressOrEnsName,
   noop,
   Tabs,
 } from "kit"
-import { useState } from "react"
+import { useCallback, useMemo } from "react"
+import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { NftCard } from "../NftCard"
@@ -29,17 +31,44 @@ const tabs = [
   { label: "Proposals", panelId: "proposals", tabId: "proposals-tab" },
 ]
 
+const panels = [
+  ["nfts", ""],
+  ["fractions", "/fractions"],
+  ["pools", "/pools"],
+  ["rewards", "/rewards"],
+  ["proposals", "/proposals"],
+]
+
 export function ScreenProfile({
   address,
+  panel,
 }: {
   address: string
+  panel: "nfts" | "fractions" | "pools" | "rewards" | "proposals"
 }) {
+  const [, setLocation] = useLocation()
   const layout = useLayout()
-  const [activeTab, setActiveTab] = useState(0)
   const snfts = useSnftsByCreator(address)
   const creator = useSnftCreator(address)
 
+  if (!isAddressOrEnsName(address)) {
+    throw new Error(`Wrong address: ${address}`)
+  }
+
   const isConnectedAddress = useIsConnectedAddress(address)
+
+  const tabIndex = useMemo(() => (
+    panels.findIndex(([_panel]) => _panel === panel)
+  ), [panel])
+
+  const handleSelectPanel = useCallback(
+    (index: number) => {
+      if (panels[index]) {
+        setLocation(`/${address}${panels[index][1]}`)
+      }
+    },
+    [address, setLocation],
+  )
 
   const maxWidth = layout.value({
     small: "100%",
@@ -166,8 +195,8 @@ export function ScreenProfile({
               compact={layout.below("xlarge")}
               fullWidth={layout.below("xlarge")}
               items={tabs}
-              onSelect={setActiveTab}
-              selected={activeTab}
+              onSelect={handleSelectPanel}
+              selected={tabIndex}
             />
           </div>
           <div
@@ -177,7 +206,7 @@ export function ScreenProfile({
               paddingTop: spaceBelowTabs,
             }}
           >
-            {activeTab === 0 && snfts.data && (
+            {panel === "nfts" && snfts.data && (
               <Grid>
                 {snfts.data.map((snft) => (
                   <NftCard

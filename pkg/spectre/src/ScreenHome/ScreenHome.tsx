@@ -12,17 +12,25 @@ export function ScreenHome() {
 
   const randomId = () => Math.floor(Math.random() * SNFTS.length) + 1
 
-  const actions: [string, () => void][] = [
-    ["/:account", () => {
+  const randomAddressCb = (path: string = "") =>
+    () => {
       if (creators.data) {
-        setLocation(`/${shuffle(creators.data.slice(1))[0]?.address}`)
+        setLocation(`/${shuffle(creators.data.slice(1))[0]?.address}${path}`)
       }
-    }],
-    ["/:account (connected)", () => {
+    }
+
+  const actions: [string, () => void][] = [
+    ["/:address", randomAddressCb()],
+    ["/:address/fractions", randomAddressCb("/fractions")],
+    ["/:address/pools", randomAddressCb("/pools")],
+    ["/:address/rewards", randomAddressCb("/rewards")],
+    ["/:address/proposals", randomAddressCb("/proposals")],
+    ["/:address (connected)", () => {
       if (creators.data) {
         setLocation(`/${creators.data[0]?.address}`)
       }
     }],
+
     ["/nfts/:id", () => {
       setLocation(`/nfts/${randomId()}`)
     }],

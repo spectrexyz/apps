@@ -58,7 +58,25 @@ export function App() {
 
           {/* Profile */}
           <Route path="/:address">
-            {({ address }) => <ScreenProfile address={address} />}
+            {({ address }) => <ScreenProfile address={address} panel="nfts" />}
+          </Route>
+          <Route path="/:address/fractions">
+            {({ address }) => (
+              <ScreenProfile address={address} panel="fractions" />
+            )}
+          </Route>
+          <Route path="/:address/pools">
+            {({ address }) => <ScreenProfile address={address} panel="pools" />}
+          </Route>
+          <Route path="/:address/rewards">
+            {({ address }) => (
+              <ScreenProfile address={address} panel="rewards" />
+            )}
+          </Route>
+          <Route path="/:address/proposals">
+            {({ address }) => (
+              <ScreenProfile address={address} panel="proposals" />
+            )}
           </Route>
 
           <Route>
