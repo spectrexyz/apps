@@ -2,7 +2,7 @@ import type { ComponentProps } from "react"
 import type { TimeScale } from "../types"
 
 import {
-  ButtonIconLabel as KitButtonIconLabel,
+  ButtonIconLabel,
   formatAmount,
   IconArrowLeft,
   IconArrowRight,
@@ -159,13 +159,13 @@ export function ScreenNft({
             labelDisplay="FRACTIONALIZED"
             actionButtons={
               <>
-                <ButtonIconLabel
+                <LayoutAwareButtonIconLabel
                   icon={<IconShare />}
                   label="Share"
                   labelPosition="left"
                   onClick={noop}
                 />
-                <ButtonIconLabel
+                <LayoutAwareButtonIconLabel
                   href={snft.image.url}
                   icon={<IconMagnifyingGlassPlus />}
                   label="Zoom"
@@ -175,19 +175,19 @@ export function ScreenNft({
             }
             navigationButtons={snftsAdjacent.data && (
               <>
-                <ButtonIconLabel
+                <LayoutAwareButtonIconLabel
                   icon={<IconArrowLeft />}
                   label="Prev"
                   labelFull="Previous"
                   onClick={handlePrevNft}
                   disabled={!nftPrev}
                 />
-                <ButtonIconLabel
+                <LayoutAwareButtonIconLabel
                   icon={<IconSquaresFour />}
                   label="All"
                   onClick={noop}
                 />
-                <ButtonIconLabel
+                <LayoutAwareButtonIconLabel
                   icon={<IconArrowRight />}
                   label="Next"
                   onClick={handleNextNft}
@@ -350,11 +350,12 @@ export function ScreenNft({
   )
 }
 
-interface ButtonIconLabelProps extends ComponentProps<typeof ButtonIconLabel> {}
-function ButtonIconLabel(props: ButtonIconLabelProps) {
+function LayoutAwareButtonIconLabel(
+  props: ComponentProps<typeof ButtonIconLabel>,
+) {
   const layout = useLayout()
   return (
-    <KitButtonIconLabel
+    <ButtonIconLabel
       {...props}
       compact={layout.below("xlarge")}
     />
