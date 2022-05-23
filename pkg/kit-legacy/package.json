@@ -35,14 +35,14 @@
     "preset": "rollpkg"
   },
   "devDependencies": {
-    "@types/react": "^18.0.8",
-    "@types/react-dom": "^18.0.3",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
-    "eslint": "^8.14.0",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.16.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "prettier": "^2.6.2",
     "react": "^18.1.0",
@@ -53,6 +53,6 @@
   "dependencies": {
     "colord": "^2.9.2",
     "react-use-measure": "^2.1.1",
-    "twgl.js": "^4.22.0"
+    "twgl.js": "^4.22.1"
   }
 }
