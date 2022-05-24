@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query"
 import { prefixer } from "stylis"
 import { BaseUrl } from "../BaseUrl"
 import { cssUnitPlugin } from "../emotion-plugin-css-unit"
+import { FlashMessage } from "../FlashMessage"
 import { FocusVisible } from "../FocusVisible"
 import { Main } from "../Main"
 import { MoireBase } from "../Moire"
@@ -32,9 +33,11 @@ export function Kit({ baseUrl, children }: KitProps): JSX.Element {
           <Theme>
             <FocusVisible>
               <RootEntryPoint>
-                <MoireBase>
-                  <Main>{children}</Main>
-                </MoireBase>
+                <FlashMessage>
+                  <MoireBase>
+                    <Main>{children}</Main>
+                  </MoireBase>
+                </FlashMessage>
               </RootEntryPoint>
             </FocusVisible>
           </Theme>

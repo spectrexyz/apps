@@ -11,6 +11,7 @@ import { Button } from "./Button"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
 import { Distribution } from "./Distribution"
+import { FlashMessageDemo } from "./FlashMessageDemo"
 import { Icon } from "./Icon"
 import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
@@ -35,6 +36,7 @@ const demos = [
   ["chart", Chart],
   ["diagram", Diagram],
   ["distribution", Distribution],
+  ["flash-message", FlashMessageDemo],
   ["icon", Icon],
   ["moire", Moire],
   ["pool-weight", PoolWeightDemo],
