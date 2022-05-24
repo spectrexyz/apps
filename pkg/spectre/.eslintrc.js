@@ -10,6 +10,9 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
+  plugins: [
+    "@typescript-eslint",
+  ],
   extends: [
     "eslint:recommended",
     "plugin:import/errors",
@@ -23,7 +26,6 @@ module.exports = {
     "plugin:jest-dom/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "prettier",
   ],
   rules: {
     // see for rational https://basarat.gitbook.io/typescript/main-1/defaultisbad
@@ -37,6 +39,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-this-alias": "warn",
     "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
 
     // doesn’t detect inputs nested in a component so disabling it is easier
     "jsx-a11y/label-has-associated-control": "off",
