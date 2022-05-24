@@ -63,6 +63,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.25.0
       '@typescript-eslint/parser': ^5.25.0
       colord: ^2.9.2
+      dnum: ^1.4.2
       eslint: ^8.16.0
       eslint-plugin-import: ^2.26.0
       eslint-plugin-jsx-a11y: ^6.5.1
@@ -90,6 +91,7 @@ importers:
       '@elchininet/isometric': 3.2.1
       '@popperjs/core': 2.11.5
       colord: 2.9.2
+      dnum: 1.4.2
       ethereum-blockies-base64: 1.0.2
       focus-trap-react: 8.11.1_ef5jwxihqo6n7gxfmzogljlgcm
       just-throttle: 4.0.1
@@ -10895,7 +10897,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.10
     dev: true
 
   /jsonfile/6.1.0:
@@ -10903,7 +10905,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.10
     dev: true
 
   /jsonify/0.0.0:
