@@ -1,15 +1,24 @@
+import type { Dnum } from "dnum"
+import type { Address } from "kit"
+import type { Snft } from "../types"
+
 import {
   rand,
   randCatchPhrase,
   randNumber,
   random,
+  randSentence,
   randUser,
   seed,
 } from "@ngneat/falso"
-import { Address, list } from "kit"
-import { Snft } from "../types"
+import * as dnum from "dnum"
+import { divideRoundBigInt, list } from "kit"
+import { minted } from "./minted"
+import { tokenPrices } from "./token-prices"
 
 seed("123")
+
+export const buyoutMultiplier = 1.1
 
 function toSvg(source: string) {
   return "data:image/svg+xml," + encodeURIComponent(`
@@ -91,8 +100,9 @@ function nftImage(style: ReturnType<typeof nftStyle>) {
   ].join(""))
 }
 
-const NFT_DESCRIPTION_1 = `
-Artworks have always been powerful vectors of collectives structuration and we now see that the internet of money could make us pass from the status of consumer of artworks to a world where artworks are, in their inner form, the organizational layer of tomorrow’s collectives.
+function randomDescription() {
+  return `
+${randSentence()}
 
 Artwork specs:
 
@@ -100,6 +110,7 @@ Artwork specs:
 - 15 sec loop MP4
 - Created Aug 2021
 `
+}
 
 const event1Address = randomAddress()
 const EVENT_1 = {
@@ -119,36 +130,100 @@ const EVENT_3 = {
   description: `NFT minted & fractionalized by ${event3Address}`,
 }
 
-function randomAddress() {
+function randomAddress(): Address {
   const chars = "abcdefabcdef1234567890"
-  return "0x" + list(40, () => rand([...chars])).join("")
+  return `0x${list(40, () => rand([...chars])).join("")}`
 }
 
-function randomDistribution(minted: bigint) {
-  const distribution: Array<{ address: Address | null; quantity: bigint }> = []
+function randomDistribution(minted: Dnum) {
+  const distribution: Array<{
+    address: Address | null
+    quantity: Dnum
+  }> = []
 
-  let qtyToAssign = minted
-  while (qtyToAssign > 0) {
+  let qtyToAssign: bigint = minted[0]
+  while (qtyToAssign > 0n) {
     const quantity = 10_000n + BigInt(Math.round(
       random() * random() * random() * Number(qtyToAssign),
     ))
-    distribution.push({ address: randomAddress(), quantity })
+    distribution.push({
+      address: randomAddress(),
+      quantity: [quantity, 18],
+    })
     qtyToAssign -= quantity
   }
 
-  distribution.sort((a, b) => Number(b.quantity - a.quantity))
+  distribution.sort((a, b) => Number(dnum.subtract(b.quantity, a.quantity)))
 
   distribution[0].address = null
 
   return distribution
 }
 
-function randomCreator(style: ReturnType<typeof nftStyle>) {
+const tokenIndexes = list(999).sort(() => -0.5 + random())
+function randomToken(nftName: string): Snft["token"] {
+  const index = tokenIndexes.pop()
+  if (!index) {
+    throw new Error("All tokenIndexes have been used")
+  }
+  const supplyNumber = randNumber({ min: 100, max: 100_000 })
+  const supply = dnum.from(supplyNumber, 18)
+  const minted = dnum.from(
+    randNumber({
+      min: Math.ceil(supplyNumber / 4),
+      max: supplyNumber,
+    }),
+    18,
+  )
+
+  const distribution = randomDistribution(minted)
+
+  let symbol = nftName.split(/[- ]/).map((word) => word[0]).join("")
+  if (symbol.length < 3) {
+    symbol += nftName.slice(1, 4 - symbol.length)
+  }
+  symbol = symbol.toUpperCase()
+
+  const holdersCount = randNumber({ min: 2, max: 20_000 })
+
+  const topHolders = list(9, () => {
+    const style = nftStyle()
+    const { name } = randomCreator(style)
+    const picture = authorPicture(style, name[0])
+    return [name, picture] as const
+  })
+
+  const priceEth = dnum.from(0.001 + random() * 0.0001, 18)
+
+  return {
+    contractAddress: randomAddress(),
+    decimals: 18,
+    distribution,
+    topHolders,
+    holdersCount,
+    marketCapEth: dnum.multiply(priceEth, supply),
+    minted,
+    name: nftName,
+    priceEth,
+    supply,
+    symbol,
+    tokenId: "1",
+  }
+}
+
+function randomTitle() {
+  return randCatchPhrase()
+    .split(" ")
+    .slice(0, randNumber({ min: -2, max: -1 }))
+    .join(" ")
+}
+
+function randomCreator(style: ReturnType<typeof nftStyle>): Snft["creator"] {
   const user = randUser()
   const avatar = authorPicture(style, user.firstName[0])
   const bio = authorBio()
   const nickname = user.email.split("@")[0]
-    .replace(/[-\+\.]/g, "_")
+    .replace(/[-+.]/g, "_")
     .replace(/[0-9]+/g, "")
   return {
     address: `${nickname}.eth`,
@@ -166,33 +241,22 @@ function randomNft(
   creator: ReturnType<typeof randomCreator>,
   style: ReturnType<typeof nftStyle>,
 ) {
-  const supply = 1_000_000n
-  const minted = 500_000n + BigInt(Math.round(random() * 500_000))
-  const title = randCatchPhrase().split(" ").slice(
-    0,
-    randNumber({ min: -2, max: -1 }),
-  ).join(" ")
-  const distribution = randomDistribution(minted)
-  const image = nftImage(style)
   nftIndex++
+
+  const title = randomTitle()
+  const token = randomToken(title)
 
   return ({
     id: `${nftIndex}`,
+    buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
     image: {
-      url: image,
+      url: nftImage(style),
       width: 500,
       height: 500,
     },
     title,
-    description: NFT_DESCRIPTION_1,
-    token: {
-      distribution,
-      minted,
-      name: `TOKEN${nftIndex}`,
-      priceEth: 0.001 + random() * 0.01,
-      supply: BigInt(supply),
-      symbol: `TKN${nftIndex}`,
-    },
+    description: randomDescription(),
+    token,
     creator: { ...creator },
     guardian: nftIndex % 2
       ? "0xfabe062eb33af3e68eb3329818d0507949c14142"
@@ -248,83 +312,60 @@ export const SNFTS: Snft[] = list(16).flatMap(() => {
   )
 })
 
+export const CREATORS_BY_ADDRESS = new Map(
+  SNFTS.map((snft) => [snft.creator.resolvedAddress, snft.creator]),
+)
+
 export const CREATORS_BY_ENS_NAME = new Map(
   SNFTS.map((snft) => [snft.creator.address, snft.creator]),
 )
+
+export const FRACTIONS_BY_ACCOUNT = new Map(
+  Array.from(CREATORS_BY_ADDRESS.keys()).map(
+    (address) => {
+      return [
+        address,
+        list(
+          randNumber({ min: 2, max: 8 }),
+          () => {
+            const snft = rand(SNFTS)
+            const min = randNumber({ min: 10, max: 40 })
+            const max = Number(
+              dnum.divide(
+                snft.token.supply,
+                snft.token.holdersCount,
+              )[0] / 10n ** BigInt(snft.token.supply[1]),
+            )
+            const quantity = dnum.multiply(
+              randNumber({ min, max: max < min ? min + max : max }),
+              randNumber({ min: 4, max: snft.token.holdersCount / 3 }), // max owned: 33%
+              18,
+            )
+
+            return {
+              quantity,
+              snftId: snft.id,
+              token: [snft.token.contractAddress, snft.token.tokenId] as const,
+            }
+          },
+        ),
+      ]
+    },
+  ),
+)
+
+export const TOKENS = SNFTS.map((snft) => snft.token)
 
 export const poolEthWeights: Record<
   "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
   [ethWeightStart: number, ethWeightEnd: number]
 > = {
-  "DAY": [0.7, 0.8],
+  "DAY": [0.7, 0.79],
   "WEEK": [0.5, 0.8],
   "MONTH": [0.4, 0.8],
   "YEAR": [0.3, 0.8],
   "ALL": [0.2, 0.8],
 }
 
-export const minted: Record<
-  "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
-  number[]
-> = {
-  "DAY": [
-    0.49,
-    0.49,
-    0.49,
-    0.66,
-  ],
-  "WEEK": [
-    0.47,
-    0.47,
-    0.49,
-    0.49,
-    0.49,
-    0.66,
-  ],
-  "MONTH": [
-    0.45,
-    0.45,
-    0.45,
-    0.45,
-    0.47,
-    0.47,
-    0.49,
-    0.49,
-    0.49,
-    0.66,
-  ],
-  "YEAR": [
-    0.2,
-    0.3,
-    0.3,
-    0.4,
-    0.45,
-    0.45,
-    0.45,
-    0.45,
-    0.47,
-    0.47,
-    0.49,
-    0.49,
-    0.49,
-    0.66,
-  ],
-  "ALL": [
-    0.2,
-    0.3,
-    0.3,
-    0.4,
-    0.45,
-    0.45,
-    0.45,
-    0.45,
-    0.47,
-    0.47,
-    0.49,
-    0.49,
-    0.49,
-    0.66,
-  ],
-}
-
-export const buyoutMultiplier = 1.1
+export { minted }
+export { tokenPrices }

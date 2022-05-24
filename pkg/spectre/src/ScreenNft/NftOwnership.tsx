@@ -1,3 +1,8 @@
+import type { Dnum } from "dnum"
+import type { ReactNode } from "react"
+import type { Snft } from "../types"
+
+import dnum from "dnum"
 import {
   AddressBadge,
   Button,
@@ -5,15 +10,13 @@ import {
   Distribution,
   divideRoundBigInt,
   formatAmount,
-  formatNumber,
   Percentage,
   RadioBox,
   RadioGroup,
 } from "kit"
-import { ReactNode, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useInView } from "react-cool-inview"
 import { useLabelStyle, useLayout } from "../styles"
-import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
 type DisplayMode = "distribution" | "minted-supply"
@@ -47,15 +50,18 @@ export function NftOwnership({ snft }: { snft: Snft }) {
     }
   }, [inView])
 
-  const { distribution, minted, supply } = snft.token
+  const { decimals, distribution, minted, supply } = snft.token
 
   const shares = useMemo(
-    () => calculateShares(distribution.map((s) => s.quantity)),
-    [distribution],
+    () =>
+      calculateShares(
+        distribution.map((s) => s.quantity),
+      ),
+    [decimals, distribution],
   )
 
   const mintedValue = useMemo(() => [
-    Number(divideRoundBigInt(minted * 100n, supply)),
+    Number(divideRoundBigInt(minted[0] * 100n, supply[0])),
   ], [minted, supply])
 
   return (
@@ -108,7 +114,7 @@ export function NftOwnership({ snft }: { snft: Snft }) {
 
 function DistributionList({ shares, token }: {
   shares: Array<{
-    amount: bigint | null
+    amount: Dnum | null
     index: number
     percentage: number
     type: "amount" | "rest"
@@ -165,14 +171,20 @@ function DistributionList({ shares, token }: {
             )}
           </tr>
         </thead>
-        <tbody>
+        <tbody css={{ "td": { whiteSpace: "nowrap" } }}>
           {(more ? shares : shares.slice(0, 5)).map((share, index) => {
-            const { address } = distribution[share.index]
+            const address = share.index === -1
+              ? null
+              : distribution[share.index].address
             return (
               <tr key={index}>
                 <td>
                   <div
-                    css={{ display: "flex", alignItems: "center", gap: "2gu" }}
+                    css={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "2gu",
+                    }}
                   >
                     <Bullet color={distributionColor(index)} />
                     <div css={{ width: "20gu" }}>
@@ -190,7 +202,7 @@ function DistributionList({ shares, token }: {
                     <td>
                       {share.amount === null
                         ? "−"
-                        : formatAmount(share.amount, 0)}{" "}
+                        : dnum.format(share.amount, 2)}{" "}
                       <span
                         css={({ colors }) => ({ color: colors.contentDimmed })}
                       >
@@ -198,7 +210,10 @@ function DistributionList({ shares, token }: {
                       </span>
                     </td>
                     <td>
-                      {formatNumber(Number(share.amount) * priceEth)}{" "}
+                      {share.amount === null
+                        ? "−"
+                        : dnum.format(dnum.multiply(share.amount, priceEth), 2)}
+                      {" "}
                       <span
                         css={({ colors }) => ({ color: colors.contentDimmed })}
                       >

@@ -1,4 +1,7 @@
-import { AddressBadge, Button, IconEye } from "kit"
+import type { Snft } from "../types"
+
+import dnum from "dnum"
+import { Button, IconEye, useEthToUsdFormat } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
@@ -21,11 +24,11 @@ export function PoolPanel({ id }: { id: string }) {
         <>
           <NftTitle snft={snft} spaceAfter />
           <NftDetails snft={snft} />
-          <PoolMetrics />
+          <PoolMetrics snft={snft} />
           <LatestTransactions />
         </>,
         <>
-          <PoolLiquidity />
+          <PoolLiquidity snft={snft} />
         </>,
       ]
     }
@@ -34,11 +37,11 @@ export function PoolPanel({ id }: { id: string }) {
       return [
         <>
           <NftDetails snft={snft} />
-          <PoolMetrics />
+          <PoolMetrics snft={snft} />
           <LatestTransactions />
         </>,
         <>
-          <PoolLiquidity />
+          <PoolLiquidity snft={snft} />
         </>,
       ]
     }
@@ -49,8 +52,8 @@ export function PoolPanel({ id }: { id: string }) {
         <NftDetails snft={snft} />
       </>,
       <>
-        <PoolMetrics />
-        <PoolLiquidity />
+        <PoolMetrics snft={snft} />
+        <PoolLiquidity snft={snft} />
         <LatestTransactions />
       </>,
     ]
@@ -64,7 +67,7 @@ export function PoolPanel({ id }: { id: string }) {
   )
 }
 
-function PoolMetrics() {
+function PoolMetrics({ snft }: { snft: Snft }) {
   return (
     <Metrics
       compress
@@ -92,7 +95,7 @@ function PoolMetrics() {
             type: "poolWeight",
             value: {
               secondary: "Last 24h",
-              tokens: [["ABC", 68], ["ETH", 32]],
+              tokens: [[snft.token.symbol, 21], ["ETH", 79]],
             },
           },
         },
@@ -101,7 +104,12 @@ function PoolMetrics() {
   )
 }
 
-function PoolLiquidity() {
+function PoolLiquidity({ snft }: { snft: Snft }) {
+  const ethToUsd = useEthToUsdFormat()
+  const poolShare = 5.6
+  const pooledMoi = dnum.divide(snft.token.minted, 100 / poolShare)
+  const pooledMoiInEth = dnum.multiply(pooledMoi, snft.token.priceEth)
+  const pooledEth = dnum.multiply(pooledMoiInEth, 1.1)
   return (
     <Metrics
       compress
@@ -111,29 +119,42 @@ function PoolLiquidity() {
           heading: "Pooled ETH",
           content: {
             type: "tokenAmount",
-            value: { converted: "$67,258", symbol: "ETH", value: "35.65" },
+            value: {
+              converted: ethToUsd(pooledEth),
+              symbol: "ETH",
+              value: dnum.format(pooledEth, 2),
+            },
           },
         },
         {
           heading: "Pooled MOI",
           content: {
             type: "tokenAmount",
-            value: { converted: "$20,293", symbol: "MOI", value: "832,560.18" },
+            value: {
+              converted: ethToUsd(pooledMoiInEth),
+              symbol: "MOI",
+              value: dnum.format(pooledMoi, 2),
+            },
           },
         },
         {
           heading: "Your pool share",
-          content: { type: "percentage", value: [21, 18] },
+          content: {
+            type: "percentage",
+            value: String(poolShare).split(".") as [string, string],
+          },
         },
       ]}
       footer={({ compact }) => [
         <Button
+          key="add"
           label="Add liquidity"
           mode="primary"
           size={compact ? "compact" : undefined}
           wide
         />,
         <Button
+          key="remove"
           label="Remove liquidity"
           mode="secondary"
           size={compact ? "compact" : undefined}

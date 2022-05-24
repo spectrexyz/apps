@@ -18,8 +18,13 @@ import { useCallback, useMemo } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
+import { FractionsCard } from "../FractionsCard"
 import { NftCard } from "../NftCard"
-import { useSnftCreator, useSnftsByCreator } from "../snft-hooks"
+import {
+  useFractionsByAddress,
+  useSnftCreator,
+  useSnftsByCreator,
+} from "../snft-hooks"
 import { useLayout } from "../styles"
 import { useIsConnectedAddress } from "../web3-hooks"
 
@@ -45,12 +50,13 @@ export function ScreenProfile({
   address,
   panel,
 }: {
-  address: string
+  address: AddressOrEnsName
   panel: "nfts" | "fractions" | "pools" | "rewards" | "proposals"
 }) {
   const [, setLocation] = useLocation()
   const layout = useLayout()
   const snfts = useSnftsByCreator(address)
+  const fractions = useFractionsByAddress(address)
   const creator = useSnftCreator(address)
 
   if (!isAddressOrEnsName(address)) {
@@ -217,6 +223,18 @@ export function ScreenProfile({
                     action={isConnectedAddress.data && (
                       <Button label="Fractionalize" mode="primary" wide />
                     )}
+                  />
+                ))}
+              </Grid>
+            )}
+            {panel === "fractions" && fractions.data && (
+              <Grid>
+                {fractions.data.map((fraction) => (
+                  <FractionsCard
+                    key={fraction.token.join("")}
+                    quantity={fraction.quantity}
+                    snftId={fraction.snftId}
+                    token={fraction.token}
                   />
                 ))}
               </Grid>

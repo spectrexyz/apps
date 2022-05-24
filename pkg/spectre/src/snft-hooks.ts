@@ -1,10 +1,14 @@
+import type { AddressOrEnsName } from "kit"
+import type { UseQueryResult } from "react-query"
 import type { Snft } from "./types"
 
 import uniqBy from "lodash.uniqby"
 import { useQuery } from "react-query"
-import { SNFTS } from "./demo-data"
+import { useProvider } from "wagmi"
+import { FRACTIONS_BY_ACCOUNT, SNFTS } from "./demo-data"
+import { resolveAddress } from "./utils"
 
-async function fakeDelay() {
+function fakeDelay() {
   return new Promise((resolve) => {
     setTimeout(resolve, 500 + Math.random() * 2000)
   })
@@ -22,14 +26,14 @@ export function useSnfts({
   first?: number
   skip?: number
 } = {}) {
-  return useQuery("snfts" + skip + first, async () => {
+  return useQuery(["snfts", skip, first], async () => {
     await fakeDelay()
     return SNFTS.slice(skip, skip + first)
   })
 }
 
 export function useSnftCreator(address: string) {
-  return useQuery("snft-creator-" + address, async () => {
+  return useQuery(["snft-creator", address], async () => {
     await fakeDelay()
 
     return SNFTS.find((snft) => (
@@ -44,7 +48,7 @@ export function useSnftCreators({ first = 10, skip = 0 }: {
   first?: number
   skip?: number
 } = {}) {
-  return useQuery("snft-creators-" + skip + first, async () => {
+  return useQuery(["snft-creators", skip, first], async () => {
     await fakeDelay()
 
     return uniqBy(
@@ -62,7 +66,7 @@ export function useSnftsByCreator(
   } = {},
 ) {
   return useQuery(
-    "snfts-by-creator" + creatorAddress + exclude.join("") + first,
+    ["snfts-by-creator", creatorAddress, exclude.join(""), first],
     async () => {
       await fakeDelay()
 
@@ -82,7 +86,7 @@ export function useSnftsAdjacent(
   snftId: string,
 ) {
   return useQuery(
-    "snfts-adjacent" + snftId,
+    ["snfts-adjacent", snftId],
     async () => {
       await fakeDelay()
 
@@ -93,5 +97,44 @@ export function useSnftsAdjacent(
       ]
       return result
     },
+  )
+}
+
+export function useToken(
+  contractAddress: AddressOrEnsName,
+  tokenId: string,
+): UseQueryResult<Snft["token"]> {
+  return useQuery(
+    ["token", contractAddress, tokenId],
+    async () => {
+      await fakeDelay()
+      const token = SNFTS.find(({ token }) => (
+        token.contractAddress === contractAddress && token.tokenId === tokenId
+      ))?.token
+
+      if (!token) {
+        throw new Error("Token not found")
+      }
+
+      return token
+    },
+  )
+}
+
+export function useFractionsByAddress(account: AddressOrEnsName) {
+  const provider = useProvider()
+  const address = useQuery(
+    ["resolve-address", account],
+    () => resolveAddress(provider, account),
+    { enabled: Boolean(provider) },
+  )
+  return useQuery(
+    ["fractions-by-account", account],
+    async () => {
+      await fakeDelay()
+      return address.data
+        && FRACTIONS_BY_ACCOUNT.get(`0x${address.data.slice(2).toLowerCase()}`)
+    },
+    { enabled: Boolean(address.data) },
   )
 }

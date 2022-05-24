@@ -1,4 +1,7 @@
-import { IconHeartbeat, Tip } from "kit"
+import type { Snft } from "../types"
+
+import dnum from "dnum"
+import { IconHeartbeat, Tip, useEthToUsdFormat } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
@@ -30,7 +33,7 @@ export function FractionsPanel({ id }: { id: string }) {
             contractAddress={tokenContract}
             repoUrl={tokenRepoUrl}
           />
-          <FractionsMetrics />
+          <FractionsMetrics snft={snft} />
         </>,
         <>
           <NftActions highlight="fractions" snft={snft} />
@@ -53,7 +56,7 @@ export function FractionsPanel({ id }: { id: string }) {
             contractAddress={tokenContract}
             repoUrl={tokenRepoUrl}
           />
-          <FractionsMetrics />
+          <FractionsMetrics snft={snft} />
         </>,
       ]
     }
@@ -69,7 +72,7 @@ export function FractionsPanel({ id }: { id: string }) {
           contractAddress={tokenContract}
           repoUrl={tokenRepoUrl}
         />
-        <FractionsMetrics />
+        <FractionsMetrics snft={snft} />
         <TokenHealthTip />
         <NftHistory snft={snft} />
       </>,
@@ -98,7 +101,12 @@ function TokenHealthTip() {
   )
 }
 
-function FractionsMetrics() {
+function FractionsMetrics({ snft }: { snft: Snft }) {
+  const ethToUsd = useEthToUsdFormat()
+
+  const mintingFees = dnum.from(12.17, 18)
+  const tradingFees = dnum.from(31.06, 18)
+
   return (
     <Metrics
       heading="Metrics"
@@ -108,9 +116,9 @@ function FractionsMetrics() {
           content: {
             type: "tokenAmount",
             value: {
-              converted: "$1,367,258",
+              converted: ethToUsd(snft.token.marketCapEth),
               symbol: "ETH",
-              value: "435.18",
+              value: dnum.format(snft.token.marketCapEth, 2),
             },
           },
         },
@@ -119,9 +127,17 @@ function FractionsMetrics() {
           content: {
             type: "tokenAmount",
             value: {
-              converted: "680,925 MOI",
+              converted: `${dnum.format(snft.token.minted, 0)} of ${
+                dnum.format(snft.token.supply, 0)
+              } MOI`,
               symbol: "%",
-              value: "65",
+              value: dnum.format(
+                dnum.multiply(
+                  dnum.divide(snft.token.minted, snft.token.supply),
+                  100,
+                ),
+                1,
+              ),
             },
           },
         },
@@ -130,9 +146,9 @@ function FractionsMetrics() {
           content: {
             type: "tokenAmount",
             value: {
-              converted: "$67,258",
+              converted: ethToUsd(mintingFees),
               symbol: "ETH",
-              value: "12.17",
+              value: dnum.format(mintingFees, 2),
             },
           },
         },
@@ -141,9 +157,9 @@ function FractionsMetrics() {
           content: {
             type: "tokenAmount",
             value: {
-              converted: "$208,423",
+              converted: ethToUsd(tradingFees),
               symbol: "ETH",
-              value: "31.06",
+              value: dnum.format(tradingFees, 2),
             },
           },
         },

@@ -1,6 +1,7 @@
 import type { Snft } from "../types"
 
-import { Button, TokenAmount } from "kit"
+import dnum from "dnum"
+import { Button, TokenAmount, useEthToUsdFormat } from "kit"
 import { useLocation } from "wouter"
 import { useLayout } from "../styles"
 import { InfoGrid } from "./InfoGrid"
@@ -17,6 +18,8 @@ export function NftActions(
   const [, setLocation] = useLocation()
   const layout = useLayout()
   const xlarge = !layout.below("xlarge")
+  const ethToUsd = useEthToUsdFormat()
+
   return (
     <InfoGrid
       heading="Actions"
@@ -26,9 +29,9 @@ export function NftActions(
           content: (
             <TokenAmount
               compact={!xlarge}
-              converted="$1,367,258"
+              converted={ethToUsd(snft.buyoutPrice)}
               symbol="ETH"
-              value="435.18"
+              value={dnum.format(snft.buyoutPrice, 4)}
             />
           ),
         },
@@ -37,21 +40,23 @@ export function NftActions(
           content: (
             <TokenAmount
               compact={!xlarge}
-              converted="$20.23"
+              converted={ethToUsd(snft.token.priceEth)}
               symbol="ETH"
-              value="0.0018"
+              value={dnum.format(snft.token.priceEth, 6)}
             />
           ),
         },
       ]}
       footer={[
         <Button
+          key="nft-buyout"
           label="NFT buyout"
           mode={highlight === "buyout" ? "primary" : "secondary"}
           size={xlarge ? undefined : "compact"}
           wide
         />,
         <Button
+          key="buy-fractions"
           label="Buy fractions"
           mode={highlight === "fractions" ? "primary" : "secondary"}
           size={xlarge ? undefined : "compact"}

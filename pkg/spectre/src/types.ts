@@ -11,30 +11,41 @@ export type SnftEvent = {
 
 export type Distribution = Array<{
   address: Address | null
-  quantity: bigint
+  quantity: Dnum
 }>
 
-export type Snft = {
+export type Snft = Readonly<{
   id: string
-  image: { url: string; width: number; height: number }
-  title: string
-  description: string
-  token: {
-    distribution: Distribution
-    minted: bigint
-    name: string
-    priceEth: number
-    supply: bigint
-    symbol: string
-  }
-  creator: {
+  buyoutPrice: Dnum
+  creator: Readonly<{
+    address: EnsName
     avatar: string
-    address: string
     bio: string
     name: string
     resolvedAddress: Address
     url: string
-  }
-  history: SnftEvent[]
+  }>
+  description: string
   guardian: string
-}
+  history: SnftEvent[]
+  image: Readonly<{
+    height: number
+    url: string
+    width: number
+  }>
+  title: string
+  token: Readonly<{
+    contractAddress: Address
+    decimals: number
+    distribution: Distribution
+    holdersCount: number
+    marketCapEth: Dnum
+    minted: Dnum
+    name: string
+    priceEth: Dnum
+    supply: Dnum
+    symbol: string
+    tokenId: string
+    topHolders: Array<readonly [name: string, picture: string]>
+  }>
+}>
