@@ -25,12 +25,16 @@ export function TokenAmount(
         <TokenIcon tokenType={symbol === "ETH" ? "eth" : "serc20"} />
         <div
           css={{
-            fontSize: compact ? "24px" : "32px",
+            display: "flex",
+            alignItems: "baseline",
             transform: "translateY(-1px)",
+            fontSize: compact ? "24px" : "32px",
           }}
         >
-          <span>{whole}</span>
-          <span css={{ fontSize: "18px" }}>{fraction && `.${fraction}`}</span>
+          <span>
+            <span>{whole}</span>
+            <span css={{ fontSize: "18px" }}>{fraction && `.${fraction}`}</span>
+          </span>{" "}
           <span css={{ fontSize: "18px", marginLeft: "1gu" }}>{symbol}</span>
         </div>
       </div>
