@@ -37,6 +37,7 @@ export function TokenIcon({
       <img
         src={`${assetsUrl}/${fileName(tokenType)}`}
         alt={alt}
+        title={alt}
         width={size}
         height={size}
       />

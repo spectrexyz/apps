@@ -12,8 +12,15 @@ type BadgeProps = {
 }
 
 export function Badge(
-  { alt, background, color, icon, label, uppercase = true, fontSize = "18px" }:
-    BadgeProps,
+  {
+    alt,
+    background,
+    color,
+    icon,
+    label,
+    uppercase = true,
+    fontSize = "18px",
+  }: BadgeProps,
 ): JSX.Element {
   if (typeof icon === "string") {
     icon = <img alt="" src={icon} width={3 * gu} height={3 * gu} />

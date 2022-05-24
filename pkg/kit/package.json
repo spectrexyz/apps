@@ -57,6 +57,7 @@
     "@elchininet/isometric": "^3.2.1",
     "@popperjs/core": "^2.11.5",
     "colord": "^2.9.2",
+    "dnum": "^1.4.2",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^8.11.1",
     "just-throttle": "^4.0.1",

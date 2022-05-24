@@ -1,3 +1,6 @@
+import type { Dnum } from "dnum"
+
+import dnum from "dnum"
 import { useCallback } from "react"
 import { useQuery } from "react-query"
 
@@ -31,6 +34,7 @@ function priceUrl(from: PriceToken, to: PriceToken) {
     + `ids=${coinGeckoTokenId(from)}&vs_currencies=${coinGeckoTokenId(to)}`
   )
 }
+
 export function usePrice(from: "eth", to: "usd") {
   const queryFn = useCallback(async () => {
     const response = await fetch(priceUrl(from, to))
@@ -38,4 +42,17 @@ export function usePrice(from: "eth", to: "usd") {
     return parseCoinGeckoPriceResult(result as CoinGeckoPriceResult, from, to)
   }, [from, to])
   return useQuery(`price${from}${to}`, queryFn)
+}
+
+export function useEthToUsdFormat() {
+  const ethUsdPrice = usePrice("eth", "usd")
+  return (amountEth: Dnum) => (
+    ethUsdPrice.data
+      ? "$"
+        + dnum.format(dnum.multiply(amountEth, ethUsdPrice.data), {
+          digits: 2,
+          trailingZeros: true,
+        })
+      : "−"
+  )
 }

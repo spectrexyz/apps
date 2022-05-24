@@ -1,5 +1,7 @@
+import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName, EnsName } from "./types"
 
+import dnum from "dnum"
 import ms from "ms"
 import prettyBytes from "pretty-bytes"
 
@@ -32,8 +34,8 @@ export function shuffle<T = unknown>(arr: T[]): T[] {
   return _arr
 }
 
-export function lerp(progress: number, value1: number, value2: number): number {
-  return (value2 - value1) * progress + value1
+export function lerp(value: number, low: number, high: number): number {
+  return (high - low) * value + low
 }
 
 export function norm(value: number, low: number, high: number) {
@@ -283,11 +285,11 @@ export function fromDecimals(value: bigint, decimals: number) {
     : wholeWithoutBase
 }
 
-// Convert a decimal number, represented as a string to prevent any precision
-// issue, into a bigint padded with a given number of decimals.
+// Convert a decimal number into a bigint
+// padded with a given number of decimals.
 // From https://github.com/aragon/aragon-apps
-export function toDecimals(value: string, decimals: number): bigint {
-  const [whole, dec] = splitDecimalNumber(value)
+export function toDecimals(value: string | number, decimals: number): bigint {
+  const [whole, dec] = splitDecimalNumber(String(value))
   if (!whole && (!dec || !decimals)) return 0n
   return BigInt(
     (whole + dec)
@@ -331,36 +333,29 @@ export function pick<T extends object, U extends keyof T>(
 }
 
 export type Share = {
-  amount: bigint | null
+  amount: Dnum | null
   index: number
   percentage: number
   type: "amount" | "rest"
 }
 
-export function calculateShares(
-  balances: bigint[],
-  {
-    total: _total,
-    limit = balances.length,
-  }: {
-    total?: bigint
-    limit?: number
-  } = {},
-): Share[] {
-  const total = _total === undefined
-    ? balances.reduce((t, v) => t + v, 0n)
-    : _total
+export function calculateShares(balances: Dnum[]): Share[] {
+  const total = balances.reduce((total, balance) =>
+    dnum.add(total || 0, balance)
+  )
+
+  const limit = balances.length
 
   // percentage + two digits (only used to sort by closest to the next integer)
   const pctPrecision = 10000
 
   // Calculate the percentages of all the shares
   const shares: Share[] = balances
-    .filter((amount) => amount > 0n)
+    .filter((amount) => amount[0] > 0n)
     .map((amount, index) => ({
       amount,
       index,
-      percentage: Number(amount * BigInt(pctPrecision) / total),
+      percentage: Number(amount[0] * BigInt(pctPrecision) / total[0]),
       type: "amount" as "amount",
     }))
     .sort((a, b) => Number(b.percentage - a.percentage))
@@ -467,4 +462,75 @@ export function calculateShares(
 
 export function clamp(value: number, min: number = 0, max: number = 1) {
   return Math.min(Math.max(value, min), max)
+}
+
+// decomposeFloat() and multiplyFloat() from
+// https://gist.github.com/wchargin/93062064e1ec0e3383b91b921da86048
+//
+// Tests and discussion at:
+// <https://github.com/sourcecred/sourcecred/pull/1715#issuecomment-603354146>
+
+/**
+ * For a finite normal 64-bit float `f`, extracts integers `sgn`,
+ * `exponent`, and `mantissa` such that:
+ *
+ *   - `sgn` is -1 or +1
+ *   - `exponent` is between -1023 and 1024, inclusive
+ *   - `mantissa` is between 0 and 2^51 - 1, inclusive
+ *   - the number given by `f` equals `sgn * 2^exponent * (1 + mantissa / 2^52)`
+ *
+ * The results are all bigints within the range of safe integers for
+ * 64-bit floats (i.e., converting them to `Number` is lossless).
+ *
+ * Throws an error if `f` is subnormal (biased exponent is 0).
+ */
+function decomposeFloat(f: number) {
+  if (!isFinite(f)) {
+    throw new Error("Input must be finite: " + f)
+  }
+  const union = new DataView(new ArrayBuffer(8))
+  const littleEndian = true // arbitrary, but faster when matches native arch
+  union.setFloat64(0, f, littleEndian)
+  const bytes = union.getBigUint64(0, littleEndian)
+  const sgn = (-1n) ** (bytes >> 63n)
+  const biasedExponent = (bytes & ~(1n << 63n)) >> 52n
+  if (biasedExponent === 0n) {
+    throw new Error("Subnormal floats not supported: " + f)
+  }
+  const exponent = biasedExponent - 1023n
+  const mantissa = bytes & ((1n << 52n) - 1n)
+  return { sgn, exponent, mantissa }
+}
+
+/**
+ * Multiply an exact bigint by a floating point number.
+ *
+ * This function is exact in the first argument and subject to the usual
+ * floating point considerations in the second. Thus, it is the case
+ * that
+ *
+ *      multiplyFloat(g, 1) === g
+ *      multiplyFloat(g, x) + multiplyFloat(h, f) === multiplyFloat(g + h, x)
+ *      multiplyFloat(k * g, x) === k * multiplyFloat(g, x)
+ *
+ * for all `BigInt`s `k`, `g`, and `h` and all floats `x`. But it is not
+ * necessarily the case that
+ *
+ *      multiplyFloat(g, x) + multiplyFloat(g, y) === multiplyFloat(g, x + y)
+ *
+ * for all `BigInt`s `g` and floats `x` and `y`: e.g., when `x === 1`
+ * and `y === 1e-16`, we have `x + y === x` even though `y !== 0`.
+ */
+export function multiplyFloat(g: bigint, fac: number): bigint {
+  if (fac === 0) {
+    // Special case, as 0 is subnormal.
+    return 0n
+  }
+  const { sgn, exponent, mantissa } = decomposeFloat(fac)
+  // from `decomposeFloat` contract, `fac = numerator / denominator`
+  // exactly (in arbitrary-precision arithmetic)
+  const numerator = sgn * 2n ** (exponent + 1023n) * (2n ** 52n + mantissa)
+  const denominator = 2n ** (1023n + 52n)
+  // round to nearest, biasing toward zero on exact tie
+  return (2n * numerator * g + sgn * denominator) / (2n * denominator)
 }

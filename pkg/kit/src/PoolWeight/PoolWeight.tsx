@@ -31,6 +31,7 @@ export function PoolWeight(
               }}
             >
               <TokenIcon
+                alt={symbol}
                 tokenType={symbol === "ETH"
                   ? "eth"
                   : "serc20"}
