@@ -14,14 +14,7 @@ import {
   useTheme,
   useUid,
 } from "kit"
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useChain, useSpring, useSpringRef } from "react-spring"
 import { useAppReady } from "../App/AppReady"
@@ -518,7 +511,14 @@ function usePeekHistory(
     attr(dotRefMarketCap, "opacity", 1)
 
     updateLabels(index)
-  }, [dotRefBuyoutPrice, dotRefMarketCap, graphPoint, multiplier, updateLabels])
+  }, [
+    dotRefBuyoutPrice,
+    dotRefMarketCap,
+    graphPoint,
+    multiplier,
+    positionFromIndex,
+    updateLabels,
+  ])
 
   const hide = useCallback(() => {
     visible.current = false

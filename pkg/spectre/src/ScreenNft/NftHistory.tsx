@@ -1,3 +1,5 @@
+import type { Snft } from "../types"
+
 import {
   Anchor,
   Button,
@@ -7,7 +9,6 @@ import {
   shortenAddress,
 } from "kit"
 import { useState } from "react"
-import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
 export function NftHistory({ snft }: { snft: Snft }) {

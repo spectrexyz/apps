@@ -1,4 +1,6 @@
-import { Address, Direction, isEmail, pick, WEEK_MS } from "kit"
+import type { Address, Direction } from "kit"
+
+import { isEmail, pick, WEEK_MS } from "kit"
 import { useCallback } from "react"
 import zustand from "zustand"
 import shallow from "zustand/shallow"

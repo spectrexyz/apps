@@ -1,5 +1,6 @@
+import type { ReactNode } from "react"
+
 import { providers } from "ethers"
-import { ReactNode } from "react"
 import { defaultChains, Provider as WagmiProvider } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"

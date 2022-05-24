@@ -1,5 +1,6 @@
 import type { FormEvent } from "react"
 import type { StepProps } from "./types"
+import type { FileType } from "./use-spectralize"
 
 import {
   Button,
@@ -20,7 +21,7 @@ import { useCallback } from "react"
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"
 import { ErrorSummary } from "./ErrorSummary"
-import { FileType, useSpectralize } from "./use-spectralize"
+import { useSpectralize } from "./use-spectralize"
 
 export function Step1({ onNext, onPrev, title }: StepProps) {
   const data = useSpectralize()

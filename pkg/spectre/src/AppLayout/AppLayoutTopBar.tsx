@@ -1,3 +1,6 @@
+import type { ReactNode } from "react"
+import type { SpringValue } from "react-spring"
+
 import {
   AddressBadge,
   Button,
@@ -8,8 +11,8 @@ import {
   IconX,
   springs,
 } from "kit"
-import { ReactNode, useEffect, useRef, useState } from "react"
-import { a, SpringValue, useSpring, useTransition } from "react-spring"
+import { useEffect, useRef, useState } from "react"
+import { a, useSpring, useTransition } from "react-spring"
 import { useAccount } from "wagmi"
 import { Link, useLocation } from "wouter"
 import { AccountWindow } from "../Account"

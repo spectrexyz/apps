@@ -17,8 +17,12 @@ import {
 import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
-import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
-import { tokenPrices } from "../demo-data/token-prices"
+import {
+  buyoutMultiplier,
+  minted,
+  poolEthWeights,
+  tokenPrices,
+} from "../demo-data"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"

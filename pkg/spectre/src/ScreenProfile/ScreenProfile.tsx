@@ -1,3 +1,5 @@
+import type { AddressOrEnsName } from "kit"
+
 import {
   AddressBadge,
   Button,

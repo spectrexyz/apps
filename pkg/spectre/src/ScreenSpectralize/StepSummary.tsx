@@ -1,3 +1,5 @@
+import type { StepProps } from "./types"
+
 import {
   AddressBadge,
   Button,
@@ -14,7 +16,6 @@ import {
 } from "../ContentLayout"
 import { useLayout } from "../styles"
 import { AdvancedParameters } from "./AdvancedParameters"
-import { StepProps } from "./types"
 import { useSpectralize } from "./use-spectralize"
 
 export function StepSummary({ title, onNext, onPrev }: StepProps) {

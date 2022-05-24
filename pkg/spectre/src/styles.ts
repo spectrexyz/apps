@@ -155,11 +155,11 @@ export function useViewportValue<Value>(
       }
     }
 
-    window.addEventListener("resize", onResize)
+    globalThis.addEventListener("resize", onResize)
     return () => {
       cancelled = true
       cbRef.current?.cancel()
-      window.removeEventListener("resize", onResize)
+      globalThis.removeEventListener("resize", onResize)
     }
   }, [])
 

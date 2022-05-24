@@ -1,8 +1,9 @@
+import type { Snft } from "../types"
+
 import { gu } from "kit"
 import { Link } from "wouter"
 import { useSnftsByCreator } from "../snft-hooks"
 import { useLayout, useViewportValue } from "../styles"
-import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
 export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {

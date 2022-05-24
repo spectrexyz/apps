@@ -1,9 +1,10 @@
-import type { FormEvent, StepProps } from "./types"
+import type { Direction } from "kit"
+import type { FormEvent } from "react"
+import type { StepProps } from "./types"
 
 import {
   Button,
   closestIndexFromSortedNumbers,
-  Direction,
   Fieldset,
   formatAmount,
   formatNumber,

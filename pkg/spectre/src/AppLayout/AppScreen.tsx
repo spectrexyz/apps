@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
 import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"

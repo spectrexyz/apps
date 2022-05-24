@@ -1,5 +1,6 @@
+import type { Snft } from "../types"
+
 import { useLayout } from "../styles"
-import { Snft } from "../types"
 
 export function NftTitle(
   { snft, spaceAfter }: { snft: Snft; spaceAfter?: boolean },

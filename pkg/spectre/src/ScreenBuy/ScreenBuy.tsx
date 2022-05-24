@@ -327,12 +327,7 @@ function Group({
         fontSize: "14px",
       })}
     >
-      <h1
-        css={({ colors }) => ({
-          ...labelStyle,
-          paddingBottom: "1gu",
-        })}
-      >
+      <h1 css={{ ...labelStyle, paddingBottom: "1gu" }}>
         {heading}
       </h1>
       <div>{children}</div>

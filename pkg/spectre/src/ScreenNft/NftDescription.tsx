@@ -1,5 +1,6 @@
+import type { Snft } from "../types"
+
 import Markdown from "markdown-to-jsx"
-import { Snft } from "../types"
 import { PanelSection } from "./PanelSection"
 
 export function NftDescription({ snft }: { snft: Snft }) {

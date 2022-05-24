@@ -1,5 +1,6 @@
+import type { RefObject } from "react"
+
 import { ButtonArea, gu, Modal, Popup } from "kit"
-import { RefObject } from "react"
 import { useConnect } from "wagmi"
 
 import metaMask from "./assets/web3-providers/metamask.svg"

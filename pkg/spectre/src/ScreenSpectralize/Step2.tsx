@@ -1,8 +1,8 @@
+import type { Address } from "kit"
 import type { FormEvent, MutableRefObject } from "react"
 import type { StepProps } from "./types"
 
 import {
-  Address,
   Button,
   ButtonText,
   Fieldset,

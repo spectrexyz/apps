@@ -1,5 +1,6 @@
+import type { ReactNode, UIEvent } from "react"
+
 import { Global } from "@emotion/react"
-import { ReactNode, UIEvent } from "react"
 import { useAppScrollUpdater } from "../App/AppScroll"
 import { useLayout } from "../styles"
 import { AppLayoutBottomBar } from "./AppLayoutBottomBar"

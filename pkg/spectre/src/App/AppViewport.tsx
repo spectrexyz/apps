@@ -1,5 +1,6 @@
+import type { ReactNode } from "react"
+
 import { ViewportProvider } from "@bpierre/use-viewport"
-import { ReactNode } from "react"
 import { breakpoints } from "../styles"
 
 const viewportBreakpoints = Object.entries(breakpoints).reduce(

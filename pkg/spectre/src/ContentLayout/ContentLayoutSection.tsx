@@ -1,4 +1,6 @@
-import { Children, ReactNode } from "react"
+import type { ReactNode } from "react"
+
+import { Children } from "react"
 import { useLayout } from "../styles"
 
 type ContentLayoutSectionProps = {

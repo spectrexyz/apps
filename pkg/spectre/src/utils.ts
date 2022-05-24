@@ -1,7 +1,8 @@
-import type { Provider } from "ethers"
-import type { AddressOrEnsName } from "kit"
+import type { BaseProvider } from "@ethersproject/providers"
+import type { Address, AddressOrEnsName } from "kit"
 
 import { utils } from "ethers"
+import { isAddress, isEnsName } from "kit"
 import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { useLocation } from "wouter"
@@ -68,27 +69,33 @@ export function usePath() {
 }
 
 export async function resolveAddress(
-  provider: Provider,
+  provider: BaseProvider,
   address: AddressOrEnsName,
-) {
-  // Fake resolve names from the demo data
-  if (CREATORS_BY_ENS_NAME.has(address)) {
-    address = CREATORS_BY_ENS_NAME.get(address)?.resolvedAddress
+): Promise<Address> {
+  // Fake resolve names from the demo data (to be removed)
+  if (isEnsName(address) && CREATORS_BY_ENS_NAME.has(address)) {
+    address = CREATORS_BY_ENS_NAME.get(address)?.resolvedAddress as Address
   }
 
-  const resolvedAddress = address.endsWith(".eth")
+  const resolvedAddress = isEnsName(address)
     ? await provider.resolveName(address)
     : address
 
   if (!resolvedAddress) {
-    throw new Error(`The address couldn’t get resolved: ${resolvedAddress}`)
+    throw new Error(`Couldn’t resolve to an address: ${address}`)
   }
 
-  return utils.getAddress(resolvedAddress)
+  const normalizedAddress = utils.getAddress(resolvedAddress)
+
+  if (!isAddress(normalizedAddress)) {
+    throw new Error(`Couldn’t normalize the address: ${resolvedAddress}`)
+  }
+
+  return normalizedAddress
 }
 
 export async function addressesEqual(
-  provider: Provider,
+  provider: BaseProvider,
   address1: AddressOrEnsName,
   address2: AddressOrEnsName,
 ) {

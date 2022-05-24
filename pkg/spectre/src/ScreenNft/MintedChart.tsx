@@ -1,16 +1,10 @@
+import type { Interpolation, SpringValue } from "react-spring"
 import type { TimeScale } from "../types"
 
 import { gu, lerp, useTheme } from "kit"
 import { useCallback, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
-import {
-  a,
-  Interpolation,
-  SpringValue,
-  useChain,
-  useSpring,
-  useSpringRef,
-} from "react-spring"
+import { a, useChain, useSpring, useSpringRef } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { TimeScaleButtons } from "./TimeScaleButtons"
 

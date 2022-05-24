@@ -1,14 +1,16 @@
+import type { ReactNode } from "react"
+import type { TransitionFn } from "react-spring"
+
 import { springs } from "kit"
 import {
   createContext,
-  ReactNode,
   useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react"
-import { a, TransitionFn, useTransition } from "react-spring"
+import { a, useTransition } from "react-spring"
 
 import logo from "./splash-logo.png"
 

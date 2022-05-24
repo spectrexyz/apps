@@ -12,7 +12,7 @@ export function ScreenHome() {
 
   const randomId = () => Math.floor(Math.random() * SNFTS.length) + 1
 
-  const randomAddressCb = (path: string = "") =>
+  const randomAddressCb = (path = "") =>
     () => {
       if (creators.data) {
         setLocation(`/${shuffle(creators.data.slice(1))[0]?.address}${path}`)

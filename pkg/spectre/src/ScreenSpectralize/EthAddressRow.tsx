@@ -1,5 +1,7 @@
-import { Address, Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
-import { ReactNode } from "react"
+import type { Address } from "kit"
+import type { ReactNode } from "react"
+
+import { Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
 import { useEnsLookup } from "wagmi"
 
 type EthAddressRowProps = {

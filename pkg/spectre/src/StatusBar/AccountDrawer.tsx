@@ -1,3 +1,6 @@
+import type { ReactNode } from "react"
+import type { TransitionFn } from "react-spring"
+
 import { useViewport } from "@bpierre/use-viewport"
 import {
   ButtonArea,
@@ -11,8 +14,7 @@ import {
   IconX,
   Root,
 } from "kit"
-import { ReactNode } from "react"
-import { a, TransitionFn } from "react-spring"
+import { a } from "react-spring"
 import { SyncStatus } from "../SyncStatus"
 
 type Status = "error" | "success"
