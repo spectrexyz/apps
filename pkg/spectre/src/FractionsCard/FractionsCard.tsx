@@ -6,6 +6,7 @@ import { Button, co, formatNumber, gu } from "kit"
 import { useMemo } from "react"
 import { useLocation } from "wouter"
 import { useSnft, useToken } from "../snft-hooks"
+import { useLayout } from "../styles"
 
 export function FractionsCard({
   quantity,
@@ -19,6 +20,7 @@ export function FractionsCard({
   const [, setLocation] = useLocation()
   const snft = useSnft(snftId)
   const token = useToken(tokenContract, tokenId)
+  const layout = useLayout()
 
   const tokenData = token.data
   const supply = tokenData?.supply
@@ -26,9 +28,20 @@ export function FractionsCard({
   const percentageOwned = useMemo(
     () =>
       supply
-        ? dnum.format(dnum.divide(quantity, supply), 6) + "%"
+        ? dnum.format(dnum.divide(quantity, supply), 3) + "%"
         : "−",
     [quantity, supply],
+  )
+
+  const tokensOwned = useMemo(
+    () =>
+      `${
+        dnum.format(
+          quantity,
+          { digits: 2, compact: true },
+        )
+      } ${tokenData?.symbol}`,
+    [quantity, tokenData],
   )
 
   if (!snft || !token.data) {
@@ -58,6 +71,7 @@ export function FractionsCard({
           >
             <div
               css={{
+                flexShrink: "0",
                 overflow: "hidden",
                 width: "3gu",
                 height: "3gu",
@@ -76,28 +90,35 @@ export function FractionsCard({
               />
             </div>
             <div
+              title={`Owns ${percentageOwned}`}
               css={{
                 display: "flex",
                 gap: "0.5gu",
-                alignItems: "center",
+                alignItems: "baseline",
                 padding: "0 1gu 0 1gu",
                 textTransform: "uppercase",
+                cursor: "default",
               }}
             >
-              <span css={{ fontSize: "16px" }}>Owns</span>{" "}
+              {(layout.below("large") || layout.above("xlarge")) && (
+                <span css={{ fontSize: "16px" }}>Owns{" "}</span>
+              )}
               <span
                 css={{ fontSize: "18px", fontWeight: "bold" }}
               >
                 {percentageOwned}
               </span>{" "}
-              <span
-                css={({ colors }) => ({
-                  fontSize: "14px",
-                  color: colors.accent2,
-                })}
-              >
-                {`(${dnum.format(quantity, 2)} ${token.data?.symbol})`}
-              </span>
+              {layout.above("large") && (
+                <span
+                  css={({ colors }) => ({
+                    fontSize: "14px",
+                    whiteSpace: "nowrap",
+                    color: colors.accent2,
+                  })}
+                >
+                  {`(${tokensOwned})`}
+                </span>
+              )}
             </div>
           </div>
           <img
@@ -134,10 +155,25 @@ export function FractionsCard({
           }}
         >
           <div>
-            <DiscsChain images={snft.token.topHolders} />
+            <DiscsChain
+              images={snft.token.topHolders.slice(
+                0,
+                layout.value({
+                  small: 3,
+                  large: 6,
+                  xlarge: 9,
+                }),
+              )}
+            />
           </div>
-          <div css={{ textTransform: "uppercase" }}>
-            {formatNumber(snft.token.holdersCount)} owners
+          <div
+            css={{
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
+              userSelect: "none",
+            }}
+          >
+            {formatNumber(snft.token.holdersCount, 0, { compact: true })} owners
           </div>
         </div>
         <div
@@ -150,27 +186,34 @@ export function FractionsCard({
         >
           {[
             [
-              "1 ETH gets you ~",
+              layout.above("large")
+                ? "1 ETH gets you ~"
+                : "1 ETH ~",
               `${
                 dnum.format(
                   dnum.divide(dnum.from(1, 18), token.data.priceEth),
-                  { digits: 4, compact: true },
+                  { digits: 2, compact: true },
                 )
               } ${token.data.symbol}`,
               "left",
             ] as const,
             [
               "Market cap",
-              dnum.format(token.data.marketCapEth, 4) + " ETH",
+              dnum.format(
+                token.data.marketCapEth,
+                { digits: 2, compact: true },
+              )
+              + " ETH",
               "right",
             ] as const,
           ].map(([title, value, textAlign]) => (
-            <div key={title} css={{ textAlign }}>
+            <div key={title} css={{ textAlign, whiteSpace: "nowrap" }}>
               <div
                 css={{
                   paddingBottom: "1gu",
                   textTransform: "uppercase",
                   fontSize: "14px",
+                  userSelect: "none",
                 }}
               >
                 {title}
@@ -190,7 +233,8 @@ export function FractionsCard({
           <Button
             label="Swap fractions"
             mode="primary"
-            onClick={() => setLocation(`/nfts/${snftId}/buy`)}
+            onClick={() =>
+              setLocation(`/nfts/${snftId}/buy`)}
             wide
           />
           <Button
@@ -204,14 +248,18 @@ export function FractionsCard({
   )
 }
 
-function DiscsChain(
-  { images }: { images: Array<readonly [alt: string, url: string]> },
-) {
+function DiscsChain({
+  images,
+}: {
+  images: Array<readonly [alt: string, url: string]>
+}) {
   return (
     <div
       css={{
+        display: "flex",
+        marginLeft: "1.5gu",
         "img": {
-          marginLeft: "-12px",
+          marginLeft: "-1.5gu",
           borderRadius: "50%",
         },
       }}

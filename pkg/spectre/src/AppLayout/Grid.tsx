@@ -9,7 +9,6 @@ export function Grid({ children }: { children: ReactNode[] }) {
     ? "1fr"
     : layout.value({
       small: "repeat(2, 1fr)",
-      medium: "repeat(2, 1fr)",
       large: "repeat(3, 1fr)",
       xlarge: "repeat(3, 1fr)",
     })
