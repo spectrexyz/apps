@@ -1,3 +1,4 @@
+import type { AddressOrEnsName } from "kit"
 import type { ReactNode } from "react"
 
 import { FlatTree, Kit } from "kit"
@@ -58,23 +59,27 @@ export function App() {
 
           {/* Profile */}
           <Route path="/:address">
-            {({ address }) => <ScreenProfile address={address} panel="nfts" />}
+            {({ address }: { address: AddressOrEnsName }) => (
+              <ScreenProfile address={address} panel="nfts" />
+            )}
           </Route>
           <Route path="/:address/fractions">
-            {({ address }) => (
+            {({ address }: { address: AddressOrEnsName }) => (
               <ScreenProfile address={address} panel="fractions" />
             )}
           </Route>
           <Route path="/:address/pools">
-            {({ address }) => <ScreenProfile address={address} panel="pools" />}
+            {({ address }: { address: AddressOrEnsName }) => (
+              <ScreenProfile address={address} panel="pools" />
+            )}
           </Route>
           <Route path="/:address/rewards">
-            {({ address }) => (
+            {({ address }: { address: AddressOrEnsName }) => (
               <ScreenProfile address={address} panel="rewards" />
             )}
           </Route>
           <Route path="/:address/proposals">
-            {({ address }) => (
+            {({ address }: { address: AddressOrEnsName }) => (
               <ScreenProfile address={address} panel="proposals" />
             )}
           </Route>
