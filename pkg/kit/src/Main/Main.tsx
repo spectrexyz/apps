@@ -68,6 +68,9 @@ export function Main({ children }: MainProps): JSX.Element {
       />
       <Global
         styles={({ colors, fonts }) => ({
+          ":root": {
+            colorScheme: "dark",
+          },
           "*, *:before, *:after": {
             boxSizing: "border-box",
           },
