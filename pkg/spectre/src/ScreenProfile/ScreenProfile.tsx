@@ -227,21 +227,40 @@ export function ScreenProfile({
                 ))}
               </Grid>
             )}
-            {panel === "fractions" && fractions.data && (
-              <Grid>
-                {fractions.data.map((fraction) => (
-                  <FractionsCard
-                    key={fraction.token.join("")}
-                    quantity={fraction.quantity}
-                    snftId={fraction.snftId}
-                    token={fraction.token}
-                  />
-                ))}
-              </Grid>
+            {panel === "fractions" && (
+              fractions.data
+                ? (
+                  <Grid>
+                    {fractions.data.map((fraction) => (
+                      <FractionsCard
+                        key={fraction.token.join("")}
+                        quantity={fraction.quantity}
+                        snftId={fraction.snftId}
+                        token={fraction.token}
+                      />
+                    ))}
+                  </Grid>
+                )
+                : <PanelLoading />
             )}
           </div>
         </>
       )}
     </AppScreen>
+  )
+}
+
+function PanelLoading() {
+  return (
+    <div
+      css={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "40gu",
+      }}
+    >
+      Loading…
+    </div>
   )
 }

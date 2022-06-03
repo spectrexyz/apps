@@ -33,6 +33,10 @@ export type Snft = Readonly<{
     url: string
     width: number
   }>
+  pool: {
+    eth: Dnum
+    token: Dnum
+  }
   title: string
   token: Readonly<{
     contractAddress: Address

@@ -11,8 +11,8 @@ import {
   randUser,
   seed,
 } from "@ngneat/falso"
-import * as dnum from "dnum"
-import { divideRoundBigInt, list } from "kit"
+import dnum from "dnum"
+import { list } from "kit"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -246,18 +246,17 @@ function randomNft(
   const title = randomTitle()
   const token = randomToken(title)
 
+  const pooledToken = dnum.divide(token.minted, 3)
+  const pooledEth = dnum.multiply(
+    dnum.multiply(pooledToken, token.priceEth),
+    random() * 3,
+  )
+
   return ({
     id: `${nftIndex}`,
     buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
-    image: {
-      url: nftImage(style),
-      width: 500,
-      height: 500,
-    },
-    title,
-    description: randomDescription(),
-    token,
     creator: { ...creator },
+    description: randomDescription(),
     guardian: nftIndex % 2
       ? "0xfabe062eb33af3e68eb3329818d0507949c14142"
       : "0x32dd41219f6a74f739466e6c86091500e81beaa8",
@@ -269,6 +268,17 @@ function randomNft(
       { ...EVENT_2, date: "2021-04-14T11:38" },
       { ...EVENT_3, date: "2021-04-11T14:47" },
     ],
+    image: {
+      url: nftImage(style),
+      width: 500,
+      height: 500,
+    },
+    pool: {
+      eth: pooledEth,
+      token: pooledToken,
+    },
+    title,
+    token,
   })
 }
 
@@ -346,6 +356,27 @@ export const FRACTIONS_BY_ACCOUNT = new Map(
               quantity,
               snftId: snft.id,
               token: [snft.token.contractAddress, snft.token.tokenId] as const,
+            }
+          },
+        ),
+      ]
+    },
+  ),
+)
+
+export const POOLS_BY_ACCOUNT = new Map(
+  Array.from(CREATORS_BY_ADDRESS.keys()).map(
+    (address) => {
+      return [
+        address,
+        list(
+          randNumber({ min: 2, max: 8 }),
+          () => {
+            const { pool, token } = rand(SNFTS)
+            const poolShare = []
+            return {
+              pool,
+              token: [token.contractAddress, token.tokenId] as const,
             }
           },
         ),

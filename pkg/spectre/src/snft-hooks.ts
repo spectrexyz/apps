@@ -100,10 +100,61 @@ export function useSnftsAdjacent(
   )
 }
 
+export function usePoolShare(
+  token: [
+    contractAddress: AddressOrEnsName,
+    tokenId: string,
+  ],
+): UseQueryResult<Snft["pool"]> {
+  const [contractAddress, tokenId] = token
+  return useQuery(
+    ["pool", contractAddress, tokenId],
+    async () => {
+      await fakeDelay()
+      const pool = SNFTS.find(({ token }) => (
+        token.contractAddress === contractAddress && token.tokenId === tokenId
+      ))?.pool
+
+      if (!pool) {
+        throw new Error("Pool not found")
+      }
+
+      return pool
+    },
+  )
+}
+
+export function usePool(
+  token: [
+    contractAddress: AddressOrEnsName,
+    tokenId: string,
+  ],
+): UseQueryResult<Snft["pool"]> {
+  const [contractAddress, tokenId] = token
+  return useQuery(
+    ["pool", contractAddress, tokenId],
+    async () => {
+      await fakeDelay()
+      const pool = SNFTS.find(({ token }) => (
+        token.contractAddress === contractAddress && token.tokenId === tokenId
+      ))?.pool
+
+      if (!pool) {
+        throw new Error("Pool not found")
+      }
+
+      return pool
+    },
+  )
+}
+
 export function useToken(
-  contractAddress: AddressOrEnsName,
-  tokenId: string,
+  token: [
+    contractAddress: AddressOrEnsName,
+    tokenId: string,
+  ],
 ): UseQueryResult<Snft["token"]> {
+  const [contractAddress, tokenId] = token
   return useQuery(
     ["token", contractAddress, tokenId],
     async () => {
