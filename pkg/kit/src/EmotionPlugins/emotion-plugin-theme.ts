@@ -40,7 +40,7 @@ export function themePlugin(
   const fontsRe = /fonts\.(mono|sans)/
 
   return (element: { type: string; value: string }) => {
-    if (element.type === "decl") {
+    if (element.type !== "decl") {
       return
     }
 
