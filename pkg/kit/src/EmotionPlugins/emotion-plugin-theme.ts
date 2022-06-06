@@ -1,30 +1,54 @@
 import type { ThemeContext } from "../Theme"
 
-export function themePlugin(
-  _theme: ThemeContext,
-): (element: { type: string; value: string }) => void {
-  let match: string[] | null = null
-  let index: number
+type FontsKeys = "mono" | "sans"
+type ColorsKeys = keyof ThemeContext["colors"]
 
-  const colorsMatchRe = /colors\.([a-zA-Z0-9]+)/
+export function themePlugin(
+  theme: ThemeContext,
+): (element: { type: string; value: string }) => void {
+  const replaceThemeValue = (
+    matchRe: RegExp,
+    property: "colors" | "fonts",
+    value: string,
+  ) => {
+    const index = value.indexOf(`${property}.`)
+    if (index === -1) {
+      return undefined
+    }
+
+    const match = value.match(matchRe)
+    if (!match) {
+      return undefined
+    }
+
+    const groupProperty: ColorsKeys | FontsKeys = match[1]
+
+    const themeGroup =
+      theme[property] as (typeof groupProperty extends ColorsKeys
+        ? ThemeContext["colors"]
+        : ThemeContext["fonts"])
+
+    const themeValue = themeGroup[groupProperty]
+
+    return ""
+      + value.slice(0, index)
+      + themeValue
+      + value.slice(index + match[0].length)
+  }
+
+  const colorsRe = /colors\.([a-zA-Z0-9]+)/
+  const fontsRe = /fonts\.(mono|sans)/
 
   return (element: { type: string; value: string }) => {
-    if (element.type !== "decl") {
+    if (element.type === "decl") {
       return
     }
 
-    index = element.value.indexOf("colors.")
-    if (index === -1) {
-      return
-    }
+    const newValue = replaceThemeValue(colorsRe, "colors", element.value)
+      ?? replaceThemeValue(fontsRe, "fonts", element.value)
 
-    match = element.value.match(colorsMatchRe)
-    if (!match) {
-      return
+    if (newValue) {
+      element.value = newValue
     }
-
-    element.value = element.value.slice(0, index)
-      + _theme.colors[match[1]]
-      + element.value.slice(index + match[0].length)
   }
 }

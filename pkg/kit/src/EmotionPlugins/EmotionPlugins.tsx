@@ -22,7 +22,6 @@ export function EmotionPlugins({ children }: { children: ReactNode }) {
         prefixer as StylisPlugin,
       ],
     })
-    console.log("????", emotionCache.current)
   }
 
   return (
