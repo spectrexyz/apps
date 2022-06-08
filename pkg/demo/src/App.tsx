@@ -8,10 +8,12 @@ import { FetcherDeclarationEthers, NftProvider } from "use-nft"
 import { Link, Route, Router } from "wouter"
 import { BadgeDemo } from "./BadgeDemo"
 import { Button } from "./Button"
+import { Card } from "./Card"
 import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
 import { Distribution } from "./Distribution"
 import { Icon } from "./Icon"
+import { Loading } from "./Loading"
 import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
 import { PoolWeightDemo } from "./PoolWeightDemo"
@@ -28,29 +30,63 @@ import { TokenIcon } from "./TokenIcon"
 import { TokenInput } from "./TokenInput"
 import { Video } from "./Video"
 
-const demos = [
-  ["badge", BadgeDemo],
-  ["button", Button],
-  ["cards", NftCollection, false],
-  ["chart", Chart],
-  ["diagram", Diagram],
-  ["distribution", Distribution],
-  ["icon", Icon],
-  ["moire", Moire],
-  ["pool-weight", PoolWeightDemo],
-  ["radio", Radio],
-  ["radiobox", RadioBox],
-  ["slider", Slider],
-  ["spectre", Spectre],
-  ["steps", Steps],
-  ["tabs", TabsDemo],
-  ["toggle", Toggle],
-  ["token-amount", TokenAmountDemo],
-  ["token-badge", TokenBadge],
-  ["token-icon", TokenIcon],
-  ["token-input", TokenInput],
-  ["video", Video],
-] as [name: string, component: FC, centered: boolean][]
+interface Demo {
+  centered?: boolean
+  [key: string]: FC | Demo["centered"]
+}
+
+const demos: Demo[] = [
+  { BadgeDemo },
+  { Button },
+  { Card },
+  { Chart },
+  { Diagram },
+  { Distribution },
+  { Icon },
+  { Loading },
+  { Moire },
+  { NftCollection, centered: false },
+  { PoolWeightDemo },
+  { Radio },
+  { RadioBox },
+  { Slider },
+  { Spectre },
+  { Steps },
+  { TabsDemo },
+  { Toggle },
+  { TokenAmountDemo },
+  { TokenBadge },
+  { TokenIcon },
+  { TokenInput },
+  { Video },
+]
+
+function nameFromDemo(demo: Demo) {
+  const name = Object.keys(demo).filter((n) => n !== "centered")[0]
+  return name
+    .replace(/Demo$/, "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+}
+
+function Demo({ demo }: { demo: Demo }) {
+  const DemoComponent =
+    Object.values(demo).filter((d) => typeof d === "function")[0]
+
+  if (typeof DemoComponent !== "function") {
+    throw new Error("Demo error")
+  }
+
+  const { centered = true } = demo
+
+  return centered
+    ? (
+      <VCenter>
+        <DemoComponent />
+      </VCenter>
+    )
+    : <DemoComponent />
+}
 
 function currentLocation() {
   return window.location.hash.replace(/^#/, "") || "/"
@@ -100,11 +136,14 @@ export function App() {
             <Route path="/">
               <VCenter>
                 <ul>
-                  {demos.map(([name]) => (
-                    <li key={name}>
-                      <Link href={`#/${name}`}>{name}</Link>
-                    </li>
-                  ))}
+                  {demos.map((demo) => {
+                    const name = nameFromDemo(demo)
+                    return (
+                      <li key={name}>
+                        <Link href={`#/${name}`}>{name}</Link>
+                      </li>
+                    )
+                  })}
                 </ul>
               </VCenter>
             </Route>
@@ -121,17 +160,14 @@ export function App() {
               </div>
             </Route>
             <>
-              {demos.map(([name, Element, centered = true]) => (
-                <Route key={name} path={`/${name}`}>
-                  {centered
-                    ? (
-                      <VCenter>
-                        <Element />
-                      </VCenter>
-                    )
-                    : <Element />}
-                </Route>
-              ))}
+              {demos.map((demo) => {
+                const name = nameFromDemo(demo)
+                return (
+                  <Route key={name} path={`/${name}`}>
+                    <Demo demo={demo} />
+                  </Route>
+                )
+              })}
             </>
           </div>
         </NftProvider>
