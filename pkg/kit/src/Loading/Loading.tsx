@@ -6,13 +6,13 @@ import { list } from "../utils"
 
 export const Loading = memo(
   function Loading({ background }: { background: string }) {
-    console.log("render loading" + Math.random())
     return (
       <div
         css={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          background,
         }}
       >
         <div>Loading</div>
