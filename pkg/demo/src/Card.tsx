@@ -45,12 +45,7 @@ function CardDemo() {
 function SingleCard({ loading }: { loading: boolean }) {
   return (
     <div>
-      <Card
-        height={CARD_HEIGHT}
-        loading={loading}
-        radius={6}
-        width={CARD_WIDTH}
-      >
+      <Card height={CARD_HEIGHT} loading={loading} radius={6}>
         <div
           css={{
             display: "flex",

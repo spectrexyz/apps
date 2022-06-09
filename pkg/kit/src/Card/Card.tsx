@@ -10,19 +10,17 @@ export function Card({
   height,
   loading = false,
   radius = 0,
-  width,
 }: {
   children: ReactNode
   height: number
   loading?: boolean
   radius?: number
-  width: number
 }) {
   const theme = useTheme()
   const loadingTransition = useTransition(loading, {
     config: springs.snappy,
     from: {
-      loaderTransform: "scale(1)",
+      loaderTransform: "scale(0.95)",
       childrenTransform: "scale(0.95)",
       progress: 0,
     },
@@ -38,13 +36,12 @@ export function Card({
     },
   })
   return (
-    <div css={{ width, height }}>
+    <div css={{ height }}>
       <div
         css={{
           position: "relative",
           overflow: "hidden",
           display: "flex",
-          width,
           height,
         }}
       >
@@ -83,6 +80,7 @@ export function Card({
                 css={{
                   position: "relative",
                   overflow: "hidden",
+                  width: "100%",
                   borderRadius: radius,
                 }}
               >
