@@ -2,7 +2,7 @@ import type { Dnum } from "dnum"
 import type { Address } from "kit"
 
 import dnum from "dnum"
-import { Button, co, formatNumber, gu } from "kit"
+import { Button, Card, co, formatNumber, gu } from "kit"
 import { useMemo } from "react"
 import { useLocation } from "wouter"
 import { useSnft, useToken } from "../snft-hooks"
@@ -44,162 +44,167 @@ export function FractionsCard({
     [quantity, tokenData],
   )
 
-  if (!snft || !token.data) {
-    return null
-  }
-
   return (
-    <section
-      css={({ colors }) => ({
-        overflow: "hidden",
-        background: co(colors.accent2).alpha(0.16).toHex(),
-      })}
+    <Card
+      height={90 * gu}
+      loading={!(snft && token.data)}
     >
       {snft && token.data && (
-        <div>
-          <div css={{ padding: "3gu 3gu 0" }}>
-            <div css={{ position: "relative" }}>
-              <OwnsBadge
-                image={snft.image.url}
-                tokens={tokensOwned}
-                percentage={percentageOwned}
-              />
-              <img
-                src={snft.image.url}
-                alt=""
-                css={{
-                  display: "block",
-                  width: "100%",
-                  aspectRatio: "1",
-                  objectFit: "cover",
-                }}
-              />
-            </div>
-          </div>
-          <div css={{ padding: "2gu 3gu 3gu" }}>
-            <h1
-              title={snft.title}
-              css={({ colors }) => ({
-                fontSize: "18px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                color: colors.contentHeading2,
-              })}
-            >
-              {snft.title}
-            </h1>
-            <div
-              css={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingTop: "3gu",
-              }}
-            >
-              <div>
-                <DiscsChain
-                  images={snft.token.topHolders.slice(
-                    0,
-                    layout.value({
-                      small: 3,
-                      large: 6,
-                      xlarge: 9,
-                    }),
-                  )}
-                />
+        <section
+          css={({ colors }) => ({
+            overflow: "hidden",
+            background: co(colors.accent2).alpha(0.16).toHex(),
+          })}
+        >
+          {snft && token.data && (
+            <div>
+              <div css={{ padding: "3gu 3gu 0" }}>
+                <div css={{ position: "relative" }}>
+                  <OwnsBadge
+                    image={snft.image.url}
+                    tokens={tokensOwned}
+                    percentage={percentageOwned}
+                  />
+                  <img
+                    src={snft.image.url}
+                    alt=""
+                    css={{
+                      display: "block",
+                      width: "100%",
+                      aspectRatio: "1",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
               </div>
-              <div
-                css={{
-                  textTransform: "uppercase",
-                  whiteSpace: "nowrap",
-                  userSelect: "none",
-                }}
-              >
-                {formatNumber(snft.token.holdersCount, 0, { compact: true })}
-                {" "}
-                owners
-              </div>
-            </div>
-            <div
-              css={{
-                display: layout.below("medium") ? "block" : "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "3gu 0",
-              }}
-            >
-              {[
-                [
-                  layout.above("large")
-                    ? "1 ETH gets you ~"
-                    : "1 ETH ~",
-                  `${
-                    dnum.format(
-                      dnum.divide(dnum.from(1, 18), token.data.priceEth),
-                      { digits: 2, compact: true },
-                    )
-                  } ${token.data.symbol}`,
-                ] as const,
-                [
-                  "Market cap",
-                  dnum.format(
-                    token.data.marketCapEth,
-                    { digits: 2, compact: true },
-                  )
-                  + " ETH",
-                ] as const,
-              ].map(([title, value], index) => (
-                <div
-                  key={title}
-                  css={{
-                    textAlign: layout.below("medium") || index === 0
-                      ? "left"
-                      : "right",
+              <div css={{ padding: "2gu 3gu 3gu" }}>
+                <h1
+                  title={snft.title}
+                  css={({ colors }) => ({
+                    fontSize: "18px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
-                    paddingTop: layout.below("medium") && index > 0
-                      ? "2gu"
-                      : 0,
+                    color: colors.contentHeading2,
+                  })}
+                >
+                  {snft.title}
+                </h1>
+                <div
+                  css={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingTop: "3gu",
                   }}
                 >
+                  <div>
+                    <DiscsChain
+                      images={snft.token.topHolders.slice(
+                        0,
+                        layout.value({
+                          small: 3,
+                          large: 6,
+                          xlarge: 9,
+                        }),
+                      )}
+                    />
+                  </div>
                   <div
                     css={{
-                      paddingBottom: "1gu",
                       textTransform: "uppercase",
-                      fontSize: "14px",
+                      whiteSpace: "nowrap",
                       userSelect: "none",
                     }}
                   >
-                    {title}
-                  </div>
-                  <div
-                    css={({ colors }) => ({
-                      fontSize: "16px",
-                      color: colors.accent2,
-                    })}
-                  >
-                    {value}
+                    {formatNumber(snft.token.holdersCount, 0, {
+                      compact: true,
+                    })} owners
                   </div>
                 </div>
-              ))}
+                <div
+                  css={{
+                    display: layout.below("medium") ? "block" : "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "3gu 0",
+                  }}
+                >
+                  {[
+                    [
+                      layout.above("large")
+                        ? "1 ETH gets you ~"
+                        : "1 ETH ~",
+                      `${
+                        dnum.format(
+                          dnum.divide(dnum.from(1, 18), token.data.priceEth),
+                          { digits: 2, compact: true },
+                        )
+                      } ${token.data.symbol}`,
+                    ] as const,
+                    [
+                      "Market cap",
+                      dnum.format(
+                        token.data.marketCapEth,
+                        { digits: 2, compact: true },
+                      )
+                      + " ETH",
+                    ] as const,
+                  ].map(([title, value], index) => (
+                    <div
+                      key={title}
+                      css={{
+                        textAlign: layout.below("medium") || index === 0
+                          ? "left"
+                          : "right",
+                        whiteSpace: "nowrap",
+                        paddingTop: layout.below("medium") && index > 0
+                          ? "2gu"
+                          : 0,
+                      }}
+                    >
+                      <div
+                        css={{
+                          paddingBottom: "1gu",
+                          textTransform: "uppercase",
+                          fontSize: "14px",
+                          userSelect: "none",
+                        }}
+                      >
+                        {title}
+                      </div>
+                      <div
+                        css={({ colors }) => ({
+                          fontSize: "16px",
+                          color: colors.accent2,
+                        })}
+                      >
+                        {value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  css={{ display: "flex", flexDirection: "column", gap: "2gu" }}
+                >
+                  <Button
+                    label={layout.below("medium") ? "Swap" : "Swap fractions"}
+                    mode="primary"
+                    onClick={() => setLocation(`/nfts/${snftId}/buy`)}
+                    wide
+                  />
+                  <Button
+                    label={layout.below("medium") ? "Buyout" : "NFT buyout"}
+                    mode="secondary"
+                    wide
+                  />
+                </div>
+              </div>
             </div>
-            <div css={{ display: "flex", flexDirection: "column", gap: "2gu" }}>
-              <Button
-                label={layout.below("medium") ? "Swap" : "Swap fractions"}
-                mode="primary"
-                onClick={() => setLocation(`/nfts/${snftId}/buy`)}
-                wide
-              />
-              <Button
-                label={layout.below("medium") ? "Buyout" : "NFT buyout"}
-                mode="secondary"
-                wide
-              />
-            </div>
-          </div>
-        </div>
+          )}
+        </section>
       )}
-    </section>
+    </Card>
   )
 }
 
