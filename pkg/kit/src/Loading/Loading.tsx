@@ -2,10 +2,17 @@ import { memo } from "react"
 import { Moire } from "../Moire"
 import { useUid } from "../react-utils"
 import { gu } from "../styles"
+import { useTheme } from "../Theme"
 import { list } from "../utils"
 
 export const Loading = memo(
-  function Loading({ background }: { background: string }) {
+  function Loading({
+    background,
+  }: {
+    background: string
+  }) {
+    const theme = useTheme()
+    background ??= theme.colors.layer2
     return (
       <div
         css={{
@@ -13,6 +20,8 @@ export const Loading = memo(
           flexDirection: "column",
           alignItems: "center",
           background,
+          color: "colors.contentDimmed",
+          textTransform: "uppercase",
         }}
       >
         <div>Loading</div>
