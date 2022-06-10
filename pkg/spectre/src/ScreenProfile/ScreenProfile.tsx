@@ -11,6 +11,7 @@ import {
   IconPencil,
   IconTwitterLogo,
   isAddressOrEnsName,
+  Loading,
   noop,
   Tabs,
 } from "kit"
@@ -20,6 +21,7 @@ import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { FractionsCard } from "../FractionsCard"
 import { NftCard } from "../NftCard"
+// import { PoolCard } from "../PoolCard"
 import {
   useFractionsByAddress,
   useSnftCreator,
@@ -243,6 +245,22 @@ export function ScreenProfile({
                 )
                 : <PanelLoading />
             )}
+            {panel === "pools" && (
+              fractions.data
+                ? (
+                  <Grid>
+                    {fractions.data.map((fraction) => (
+                      <FractionsCard
+                        key={fraction.token.join("")}
+                        quantity={fraction.quantity}
+                        snftId={fraction.snftId}
+                        token={fraction.token}
+                      />
+                    ))}
+                  </Grid>
+                )
+                : <PanelLoading />
+            )}
           </div>
         </>
       )}
@@ -258,9 +276,10 @@ function PanelLoading() {
         alignItems: "center",
         justifyContent: "center",
         height: "40gu",
+        background: "colors.layer2",
       }}
     >
-      Loading…
+      <Loading />
     </div>
   )
 }

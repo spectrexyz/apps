@@ -1,5 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "kit"
+import type { ReactNode } from "react"
 
 import dnum from "dnum"
 import { Button, Card, co, formatNumber, gu } from "kit"
@@ -9,10 +10,12 @@ import { useSnft, useToken } from "../snft-hooks"
 import { useLayout } from "../styles"
 
 export function FractionsCard({
+  className,
   quantity,
   snftId,
   token: [tokenContract, tokenId],
 }: {
+  className?: string
   quantity: Dnum
   snftId: string
   token: readonly [Address, string]
@@ -46,18 +49,21 @@ export function FractionsCard({
 
   return (
     <Card
-      height={90 * gu}
+      className={className}
       loading={!(snft && token.data)}
+      css={{ height: "100%", minHeight: "90gu" }}
     >
       {snft && token.data && (
-        <section
+        <div
           css={({ colors }) => ({
             overflow: "hidden",
+            width: "100%",
+            height: "100%",
             background: co(colors.accent2).alpha(0.16).toHex(),
           })}
         >
           {snft && token.data && (
-            <div>
+            <section css={{ display: "flex", flexDirection: "column" }}>
               <div css={{ padding: "3gu 3gu 0" }}>
                 <div css={{ position: "relative" }}>
                   <OwnsBadge
@@ -124,7 +130,9 @@ export function FractionsCard({
                 </div>
                 <div
                   css={{
-                    display: layout.below("medium") ? "block" : "flex",
+                    display: layout.below("medium")
+                      ? "block"
+                      : "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "3gu 0",
@@ -185,12 +193,19 @@ export function FractionsCard({
                   ))}
                 </div>
                 <div
-                  css={{ display: "flex", flexDirection: "column", gap: "2gu" }}
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2gu",
+                  }}
                 >
                   <Button
-                    label={layout.below("medium") ? "Swap" : "Swap fractions"}
+                    label={layout.below("medium")
+                      ? "Swap"
+                      : "Swap fractions"}
                     mode="primary"
-                    onClick={() => setLocation(`/nfts/${snftId}/buy`)}
+                    onClick={() =>
+                      setLocation(`/nfts/${snftId}/buy`)}
                     wide
                   />
                   <Button
@@ -200,9 +215,9 @@ export function FractionsCard({
                   />
                 </div>
               </div>
-            </div>
+            </section>
           )}
-        </section>
+        </div>
       )}
     </Card>
   )
