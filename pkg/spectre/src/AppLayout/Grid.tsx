@@ -1,6 +1,9 @@
 import type { ReactNode } from "react"
 
+import { createContext, useContext } from "react"
 import { useLayout } from "../styles"
+
+const GridContext = createContext<null | true>(null)
 
 export function Grid({ children }: { children: ReactNode[] }) {
   const layout = useLayout()
@@ -19,21 +22,27 @@ export function Grid({ children }: { children: ReactNode[] }) {
   })
 
   return (
-    <div
-      css={{
-        display: "grid",
-        gridTemplateColumns,
-        gap: "2.5gu",
-        width: "100%",
-        margin: "0 auto",
-        padding,
-      }}
-    >
-      {children.map((node, index) => (
-        <div key={index} css={{ overflow: "hidden" }}>
-          {node}
-        </div>
-      ))}
-    </div>
+    <GridContext.Provider value={true}>
+      <div
+        css={{
+          display: "grid",
+          gridTemplateColumns,
+          gap: "2.5gu",
+          width: "100%",
+          margin: "0 auto",
+          padding,
+        }}
+      >
+        {children.map((node, index) => (
+          <div key={index} css={{ overflow: "hidden" }}>
+            {node}
+          </div>
+        ))}
+      </div>
+    </GridContext.Provider>
   )
+}
+
+export function useGrid() {
+  return useContext(GridContext)
 }
