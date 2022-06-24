@@ -72,7 +72,7 @@ export async function resolveAddress(
   provider: BaseProvider,
   address: AddressOrEnsName,
 ): Promise<Address> {
-  // Fake resolve names from the demo data (to be removed)
+  // Fake resolve names used in the demo data (to be removed)
   if (isEnsName(address) && CREATORS_BY_ENS_NAME.has(address)) {
     address = CREATORS_BY_ENS_NAME.get(address)?.resolvedAddress as Address
   }
