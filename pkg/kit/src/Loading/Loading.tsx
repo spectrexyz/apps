@@ -9,7 +9,7 @@ export const Loading = memo(
   function Loading({
     background,
   }: {
-    background: string
+    background?: string
   }) {
     const theme = useTheme()
     background ??= theme.colors.layer2
