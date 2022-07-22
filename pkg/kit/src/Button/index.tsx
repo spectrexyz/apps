@@ -1,3 +1,5 @@
+export type { ButtonMode, ButtonProps, ButtonSize, ShadowInBox } from "./Button"
+
 export {
   Button,
   ICON_SIZE_DEFAULT,

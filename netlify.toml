@@ -2,6 +2,3 @@
   NODE_VERSION = "16"
   PYTHON_VERSION = "3.8"
   NPM_FLAGS = "--version"
-[build]
-  publish = "pkg/website/dist/"
-  command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm website:build"

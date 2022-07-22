@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/react"
-import useInView from "react-cool-inview"
+import { useInView } from "react-cool-inview"
 import { Button, Moire, TextInput, gu, theme, fonts } from "kit-legacy"
 import { subscribeSection } from "./content.jsx"
 import { useLayout } from "./styles.js"

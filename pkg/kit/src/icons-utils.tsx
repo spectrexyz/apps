@@ -1,57 +1,63 @@
 import {
-  useInsideButton,
   ICON_SIZE_DEFAULT as BUTTON_ICON_SIZE_DEFAULT,
-  ICON_SIZE_DEFAULT_SMALL as BUTTON_ICON_SIZE_DEFAULT_SMALL,
   ICON_SIZE_DEFAULT_COMPACT as BUTTON_ICON_SIZE_DEFAULT_COMPACT,
+  ICON_SIZE_DEFAULT_SMALL as BUTTON_ICON_SIZE_DEFAULT_SMALL,
+  useInsideButton,
 } from "./Button"
+import { useButtonIconIconSize } from "./ButtonIcon"
 import {
-  useInsideButtonText,
   ICON_SIZE_DEFAULT as BUTTON_TEXT_ICON_SIZE_DEFAULT,
+  useInsideButtonText,
 } from "./ButtonText"
-import {
-  useInsideButtonIcon,
-  ICON_SIZE_DEFAULT as BUTTON_ICON_ICON_SIZE_DEFAULT,
-} from "./ButtonIcon"
-import {
-  useInfoTitleIconColor,
-  useInfoTitleIconSize,
-  useInsideInfoTitle,
-} from "./Info"
+import { useInfoTitleIconColor, useInfoTitleIconSize } from "./Info"
 import { gu } from "./styles"
+import { useTipIconSize } from "./Tip"
 
 export function useIconSize(size?: number): number {
   const isInsideButton = useInsideButton()
 
   const isInsideButtonText = useInsideButtonText()
-  const isInsideButtonIcon = useInsideButtonIcon()
+  const buttonIconIconSize = useButtonIconIconSize()
 
-  const isInsideInfoTitle = useInsideInfoTitle()
   const infoTitleIconSize = useInfoTitleIconSize()
+
+  const tipIconSize = useTipIconSize()
 
   if (size !== undefined) return size
 
   if (isInsideButton) {
     if (isInsideButton.size === "small") return BUTTON_ICON_SIZE_DEFAULT_SMALL
-    if (isInsideButton.size === "compact")
+    if (isInsideButton.size === "compact") {
       return BUTTON_ICON_SIZE_DEFAULT_COMPACT
+    }
     return BUTTON_ICON_SIZE_DEFAULT
   }
 
-  if (isInsideButtonText) return BUTTON_TEXT_ICON_SIZE_DEFAULT
-  if (isInsideButtonIcon) return BUTTON_ICON_ICON_SIZE_DEFAULT
+  if (isInsideButtonText) {
+    return BUTTON_TEXT_ICON_SIZE_DEFAULT
+  }
 
-  if (isInsideInfoTitle) return infoTitleIconSize
+  if (buttonIconIconSize !== null) {
+    return buttonIconIconSize
+  }
+
+  if (tipIconSize !== null) {
+    return tipIconSize
+  }
+
+  if (infoTitleIconSize !== null) {
+    return infoTitleIconSize
+  }
 
   return 4 * gu
 }
 
 export function useIconColor(color?: string): string {
-  const isInsideInfoTitle = useInsideInfoTitle()
   const infoTitleIconColor = useInfoTitleIconColor()
 
   if (color !== undefined) return color
 
-  if (isInsideInfoTitle) return infoTitleIconColor
+  if (infoTitleIconColor !== null) return infoTitleIconColor
 
   return "currentColor"
 }

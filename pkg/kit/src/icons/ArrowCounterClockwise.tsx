@@ -1,10 +1,9 @@
 /* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
-import React from "react"
-import { useIconSize, useIconColor } from "../icons-utils"
+import { useIconColor, useIconSize } from "../icons-utils"
 type IconArrowCounterClockwiseProps = SVGProps<SVGSVGElement> & {
-  color?: string,
-  size?: number,
+  color?: string
+  size?: number
 }
 export default function IconArrowCounterClockwise({
   color,
@@ -23,7 +22,7 @@ export default function IconArrowCounterClockwise({
         strokeLinejoin="round"
       />
       <path
-        d="M8.222 23.778a11 11 0 100-15.556l-4.243 4.242"
+        d="M8.222 23.778a11 11 0 1 0 0-15.556l-4.243 4.242"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"

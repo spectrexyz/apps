@@ -1,2 +1,2 @@
-export { Moire } from "./Moire"
+export { Moire, MoireBase } from "./Moire"
 export { MoireLabel } from "./MoireLabel"

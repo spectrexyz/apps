@@ -5,10 +5,17 @@ DIR_OUT=src/icons
 TEMPLATE=icons/svgr-template.js
 SVGO_CONF=$(cat <<EOF
 {
-  "plugins": {
-    "removeXMLNS": true,
-    "removeViewBox": false
-  }
+  "plugins": [
+    "removeXMLNS",
+    {
+      "name": "preset-default",
+      "params": {
+        "overrides": {
+          "removeViewBox": false
+        }
+      }
+    }
+  ]
 }
 EOF
 )
@@ -47,5 +54,8 @@ for icon in $icons; do
   path="${DIR_OUT}/${name}.tsx"
   printf '%s\n%s\n' "/* eslint-disable import/no-default-export */" "$(cat "$path")" >"${path}"
 done
+
+echo "Format component files…"
+pnpm dprint fmt -- "${DIR_OUT}/*.{ts,tsx}"
 
 echo "Done."

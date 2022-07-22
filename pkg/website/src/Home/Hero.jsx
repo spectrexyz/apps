@@ -1,12 +1,12 @@
-import React, { useMemo } from "react"
 import { css } from "@emotion/react"
-import useInView from "react-cool-inview"
 import { Button, gu } from "kit-legacy"
-import { Spectre } from "./Spectre.jsx"
-import { useLayout } from "../styles.js"
-import { tagline, readLitepaper } from "../content.jsx"
-import { usePath } from "../utils.js"
+import React, { useMemo } from "react"
+import { useInView } from "react-cool-inview"
 import { Actions } from "../Actions.jsx"
+import { readLitepaper, tagline } from "../content.jsx"
+import { useLayout } from "../styles.js"
+import { usePath } from "../utils.js"
+import { Spectre } from "./Spectre.jsx"
 
 function useStyles() {
   const { name } = useLayout()
@@ -53,9 +53,11 @@ export const Hero = React.memo(function Hero() {
         flex-direction: column;
         align-items: center;
         width: 100%;
-        max-width: ${layout.contentLarge
+        max-width: ${
+        layout.contentLarge
           ? `${layout.contentLarge}px`
-          : "unset"};
+          : "unset"
+      };
         padding: ${styles.padding[0]}px ${layout.padding}px
           ${styles.padding[1]}px;
       `}

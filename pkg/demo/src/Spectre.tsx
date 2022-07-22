@@ -1,7 +1,7 @@
 import type { SpringValue } from "react-spring"
 
-import { useContext, createContext } from "react"
-import { useSpring, animated, to } from "react-spring"
+import { createContext, useContext } from "react"
+import { animated, to, useSpring } from "react-spring"
 
 type GradientProgress = { progress: SpringValue<number> }
 
@@ -14,8 +14,7 @@ export function Spectre() {
     to: { progress: 1 },
     config: {
       duration: 10000,
-      easing: (x) =>
-        x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+      easing: (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
     },
   })
   return (

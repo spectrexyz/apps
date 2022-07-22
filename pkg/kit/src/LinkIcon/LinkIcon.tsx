@@ -1,8 +1,4 @@
-/** @jsx jsx */
-import type { ComponentPropsWithRef, ReactNode } from "react"
-
-import { forwardRef } from "react"
-import { jsx, css } from "@emotion/react"
+import { ComponentPropsWithRef, forwardRef, ReactNode } from "react"
 
 type LinkIconProps = ComponentPropsWithRef<"a"> & {
   icon: ReactNode
@@ -15,19 +11,19 @@ export const LinkIcon = forwardRef<HTMLAnchorElement, LinkIconProps>(
       <a
         ref={ref}
         {...props}
-        css={({ colors }) => css`
-          display: flex;
-          align-items: center;
-          text-transform: uppercase;
-          color: ${colors.content};
-          &:active {
-            transform: translate(1px, 1px);
-          }
-        `}
+        css={({ colors }) => ({
+          display: "flex",
+          alignItems: "center",
+          textTransform: "uppercase",
+          color: colors.content,
+          "&:active": {
+            transform: "translate(1px, 1px)",
+          },
+        })}
       >
         {icon}
         <span>{label}</span>
       </a>
     )
-  }
+  },
 )

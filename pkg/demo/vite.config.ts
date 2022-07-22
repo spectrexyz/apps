@@ -7,9 +7,14 @@ export default defineConfig({
   resolve: { dedupe: ["react", "react-dom"] },
   build: {
     target: "es2020",
+    sourcemap: "inline",
   },
   esbuild: {
     jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
+    jsxInject: `
+      import { Fragment } from 'react'
+      import { jsx } from '@emotion/react'
+    `,
+    jsxFragment: "Fragment",
   },
 })

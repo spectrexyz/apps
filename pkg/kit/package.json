@@ -1,23 +1,26 @@
 {
   "name": "kit",
   "private": true,
+  "type": "module",
   "main": "dist/kit.cjs.js",
-  "module": "dist/kit.esm.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/kit.es.js",
+  "types": "dist/kit.es.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "bin": {
-    "kit-copy-assets": "./bin/copy-assets"
+    "kit-copy-assets": "./bin/copy-assets.cjs"
   },
   "scripts": {
-    "build": "rollpkg build --noStats",
+    "build": "vite build --mode production",
     "build:all": "pnpm export:assets && pnpm build:icons && pnpm build",
     "build:icons": "./scripts/build-icons.sh",
     "export:assets": "./scripts/export-assets.sh",
-    "dev": "rollpkg watch",
+    "dev": "vite build --watch",
     "lint": "eslint src",
+    "test": "vitest",
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
@@ -28,40 +31,42 @@
     "react-spring": "9.x",
     "stylis": "4.x"
   },
-  "eslintConfig": {
-    "extends": [
-      "../../node_modules/rollpkg/configs/eslint"
-    ]
-  },
-  "jest": {
-    "preset": "rollpkg"
-  },
   "devDependencies": {
-    "@svgr/cli": "^5.5.0",
-    "@types/react": "^17.0.24",
+    "@svgr/cli": "^6.3.1",
+    "@types/react": "^18.0.15",
     "@types/react-blockies": "^1.4.1",
-    "@types/react-dom": "^17.0.9",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.26.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.4.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "rollpkg": "^0.5.7",
-    "typescript": "^4.4.3"
+    "@types/react-dom": "^18.0.6",
+    "@types/stylis": "^4.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recursive-copy": "^2.0.14",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.2",
+    "vite-plugin-dts": "^1.4.0",
+    "vitest": "^0.18.1"
   },
   "dependencies": {
-    "@elchininet/isometric": "^2.5.3",
-    "@popperjs/core": "^2.10.1",
-    "colord": "^2.8.0",
+    "@elchininet/isometric": "^3.4.0",
+    "@popperjs/core": "^2.11.5",
+    "colord": "^2.9.2",
+    "dnum": "^1.4.2",
     "ethereum-blockies-base64": "^1.0.2",
-    "focus-trap-react": "^8.7.1",
+    "focus-trap-react": "^9.0.2",
+    "just-throttle": "^4.0.1",
+    "ms": "^3.0.0-canary.1",
+    "ogl": "^0.0.97",
+    "pretty-bytes": "^6.0.0",
     "react-cool-dimensions": "^2.0.7",
-    "react-popper": "^2.2.5",
-    "twgl.js": "^4.19.5"
+    "react-dropzone": "^14.2.2",
+    "react-popper": "^2.3.0",
+    "react-query": "^3.39.1"
   }
 }

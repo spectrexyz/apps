@@ -1,12 +1,22 @@
 {
-  "extends": "./node_modules/rollpkg/configs/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2018",
-    "lib": ["DOM", "ESNext"],
-    "importHelpers": true,
+    "allowJs": true,
     "declaration": true,
-    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2020",
   }
 }

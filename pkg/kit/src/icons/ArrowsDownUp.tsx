@@ -1,10 +1,9 @@
 /* eslint-disable import/no-default-export */
 import type { SVGProps } from "react"
-import React from "react"
-import { useIconSize, useIconColor } from "../icons-utils"
+import { useIconColor, useIconSize } from "../icons-utils"
 type IconArrowsDownUpProps = SVGProps<SVGSVGElement> & {
-  color?: string,
-  size?: number,
+  color?: string
+  size?: number
 }
 export default function IconArrowsDownUp({
   color,
@@ -16,7 +15,7 @@ export default function IconArrowsDownUp({
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" {...props}>
       <path
-        d="M14 24l-4 4-4-4M10 4v24M18 8l4-4 4 4M22 28V4"
+        d="m14 24-4 4-4-4M10 4v24M18 8l4-4 4 4M22 28V4"
         stroke={color}
         strokeWidth={1.5}
         strokeLinecap="round"

@@ -1,7 +1,5 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { jsx } from "@emotion/react"
 import { createContext, useContext } from "react"
 import { addSlash } from "../utils"
 

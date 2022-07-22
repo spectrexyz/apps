@@ -1,36 +1,37 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { CacheProvider, jsx } from "@emotion/react"
-import createCache from "@emotion/cache"
-import { prefixer } from "stylis"
-import { cssUnitPlugin } from "../emotion-plugin-css-unit"
-import { gu } from "../styles"
-import { Main } from "../Main"
+import { QueryClient, QueryClientProvider } from "react-query"
 import { BaseUrl } from "../BaseUrl"
-import { Theme } from "../Theme"
+import { EmotionPlugins } from "../EmotionPlugins"
+import { FocusVisible } from "../FocusVisible"
+import { Main } from "../Main"
+import { MoireBase } from "../Moire"
 import { RootEntryPoint } from "../Root"
+import { Theme } from "../Theme"
 
 type KitProps = {
   baseUrl: string
   children: ReactNode
 }
 
-const emotionCache = createCache({
-  key: "k",
-  stylisPlugins: [cssUnitPlugin(gu, "gu"), prefixer],
-})
+const queryClient = new QueryClient()
 
 export function Kit({ baseUrl, children }: KitProps): JSX.Element {
   return (
-    <BaseUrl baseUrl={baseUrl}>
-      <CacheProvider value={emotionCache}>
+    <QueryClientProvider client={queryClient}>
+      <BaseUrl baseUrl={baseUrl}>
         <Theme>
-          <RootEntryPoint>
-            <Main>{children}</Main>
-          </RootEntryPoint>
+          <EmotionPlugins>
+            <FocusVisible>
+              <RootEntryPoint>
+                <MoireBase>
+                  <Main>{children}</Main>
+                </MoireBase>
+              </RootEntryPoint>
+            </FocusVisible>
+          </EmotionPlugins>
         </Theme>
-      </CacheProvider>
-    </BaseUrl>
+      </BaseUrl>
+    </QueryClientProvider>
   )
 }

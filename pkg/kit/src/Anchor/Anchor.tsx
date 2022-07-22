@@ -1,11 +1,9 @@
-/** @jsx jsx */
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import { ComponentPropsWithoutRef, forwardRef, ReactNode, useMemo } from "react"
 
-import { forwardRef, useMemo } from "react"
-import { jsx, css } from "@emotion/react"
-
-export type AnchorProps = ComponentPropsWithoutRef<"button"> &
-  ComponentPropsWithoutRef<"a"> & {
+export type AnchorProps =
+  & ComponentPropsWithoutRef<"button">
+  & ComponentPropsWithoutRef<"a">
+  & {
     children: ReactNode
     disabled?: boolean
     external?: boolean
@@ -18,11 +16,11 @@ export const Anchor = forwardRef<
   AnchorProps
 >(function Anchor(
   { disabled = false, href, external, onClick, children, ...props },
-  ref
+  ref,
 ) {
   if (onClick !== undefined && (href !== undefined || external !== undefined)) {
     throw new Error(
-      "Anchor: the href and external props can’t be set when onClick is set."
+      "Anchor: the href and external props can’t be set when onClick is set.",
     )
   }
 
@@ -38,48 +36,50 @@ export const Anchor = forwardRef<
     return external ? { ...props, target: "_blank" } : props
   }, [href, disabled, external, onClick])
 
-  return href ? (
-    <a
-      ref={ref}
-      {...anchorProps}
-      {...props}
-      css={({ colors }) => css`
-        outline: 0;
-        text-decoration: underline;
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
-    >
-      {children}
-    </a>
-  ) : (
-    <button
-      ref={ref}
-      onClick={onClick}
-      {...props}
-      css={({ colors }) => css`
-        padding: 0;
-        border: 0;
-        outline: 0;
-        text-decoration: underline;
-        background: none;
-        cursor: pointer;
-        &::-moz-focus-inner {
-          border: 0;
-        }
-        &:focus:not(:focus-visible) {
-          outline: 0;
-        }
-        &:focus-visible {
-          outline: 2px solid ${colors.focus};
-        }
-      `}
-    >
-      {children}
-    </button>
-  )
+  return href
+    ? (
+      <a
+        ref={ref}
+        {...anchorProps}
+        {...props}
+        css={({ colors }) => ({
+          outline: "0",
+          textDecoration: "underline",
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
+      >
+        {children}
+      </a>
+    )
+    : (
+      <button
+        ref={ref}
+        onClick={onClick}
+        {...props}
+        css={({ colors }) => ({
+          padding: "0",
+          border: "0",
+          outline: "0",
+          textDecoration: "underline",
+          background: "none",
+          cursor: "pointer",
+          "&::-moz-focus-inner": {
+            border: "0",
+          },
+          "&:focus:not(:focus-visible)": {
+            outline: "0",
+          },
+          "&:focus-visible": {
+            outline: `2px solid ${colors.focus}`,
+          },
+        })}
+      >
+        {children}
+      </button>
+    )
 })
