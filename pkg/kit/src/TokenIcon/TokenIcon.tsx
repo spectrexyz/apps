@@ -3,9 +3,9 @@ import { gu } from "../styles"
 
 type TokenIconProps = {
   alt?: string
-  name?: string
   size?: number
-  tokenType: "eth" | "serc20"
+  src?: string
+  tokenType?: "eth" | "serc20"
 }
 
 function fileName(tokenType: TokenIconProps["tokenType"]): string {
@@ -16,11 +16,14 @@ function fileName(tokenType: TokenIconProps["tokenType"]): string {
 
 export function TokenIcon({
   alt = "",
-  tokenType,
   size = 3 * gu,
+  src,
+  tokenType,
   ...props
 }: TokenIconProps): JSX.Element {
   const assetsUrl = useBaseUrl("TokenIcon")
+
+  const src_ = src ?? `${assetsUrl}/${fileName(tokenType)}`
 
   // The extra div is to avoid issues when images
   // are used as flexbox children items.
@@ -31,11 +34,12 @@ export function TokenIcon({
         display: "inline-flex",
         "img": {
           display: "block",
+          borderRadius: "50%",
         },
       }}
     >
       <img
-        src={`${assetsUrl}/${fileName(tokenType)}`}
+        src={src_}
         alt={alt}
         title={alt}
         width={size}
