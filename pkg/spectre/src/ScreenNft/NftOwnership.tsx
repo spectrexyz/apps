@@ -294,11 +294,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
     >
       <div>
         <div css={labelStyle}>Minted supply</div>
-        <Percentage
-          percentage={String(Math.round(
-            Number(token.minted * 100n * 10n / token.supply) / 10,
-          ))}
-        />
+        <Percentage percentage={dnum.divide(token.minted, token.supply)} />
         <div
           css={({ colors }) => ({
             fontSize: "16px",
@@ -310,9 +306,8 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
             },
           })}
         >
-          <strong>{formatAmount(token.minted, 0)}</strong> out of{" "}
-          <strong>{formatAmount(token.supply, 0)}</strong> {token.symbol}{" "}
-          fractions
+          <strong>{dnum.format(token.minted)}</strong> out of{" "}
+          <strong>{dnum.format(token.supply)}</strong> {token.symbol} fractions
         </div>
       </div>
       <div
