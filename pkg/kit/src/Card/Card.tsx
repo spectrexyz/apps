@@ -10,11 +10,13 @@ export function Card({
   children,
   className,
   loading = false,
+  loadingBackground,
   radius = 0,
 }: {
   children: ReactNode
   className?: string
   loading?: boolean
+  loadingBackground?: string
   radius?: number
 }) {
   const loadingTransition = useTransition(loading, {
@@ -36,6 +38,9 @@ export function Card({
     },
   })
 
+  const { colors } = useTheme()
+  loadingBackground ??= colors.layer1
+
   return (
     <div className={className}>
       <div
@@ -50,9 +55,10 @@ export function Card({
           loading
             ? (
               <LoadingContent
+                loadingBackground={loadingBackground as string}
                 opacity={styles.progress}
-                transform={styles.loaderTransform}
                 radius={radius}
+                transform={styles.loaderTransform}
               />
             )
             : (
@@ -82,13 +88,14 @@ function LoadingContent(
     opacity,
     radius,
     transform,
+    loadingBackground,
   }: {
     opacity: SpringValue<number>
     radius: number
     transform: SpringValue<string>
+    loadingBackground: string
   },
 ) {
-  const theme = useTheme()
   return (
     <a.div
       style={{ opacity, transform }}
@@ -100,12 +107,12 @@ function LoadingContent(
         justifyContent: "center",
         width: "100%",
         height: "100%",
-        background: "colors.layer1",
+        background: loadingBackground,
         userSelect: "none",
         borderRadius: radius,
       }}
     >
-      <Loading background={theme.colors.layer1} />
+      <Loading background={loadingBackground} />
     </a.div>
   )
 }
