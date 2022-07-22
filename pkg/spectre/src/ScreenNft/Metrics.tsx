@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react"
 
-import { formatAmount, PoolWeight, TokenAmount } from "kit"
+import { formatAmount, Percentage, PoolWeight, TokenAmount } from "kit"
 import { useLayout } from "../styles"
 import { InfoGrid } from "./InfoGrid"
 
@@ -28,7 +28,7 @@ export function Metrics(
           value: { secondary?: string; tokens: Array<[string, number]> }
         }
     }[]
-    heading: string
+    heading?: string
   },
 ) {
   const layout = useLayout()
@@ -43,19 +43,7 @@ export function Metrics(
         if (type === "percentage") {
           return {
             ...section,
-            content: (
-              <div
-                css={({ fonts }) => ({
-                  fontFamily: fonts.mono,
-                  fontSize: "32px",
-                })}
-              >
-                {value[0]}
-                <span css={{ fontSize: "18px" }}>
-                  .{value[1] || "00"} %
-                </span>
-              </div>
-            ),
+            content: <Percentage percentage={value.join(".")} />,
           }
         }
         if (type === "usdAmount") {

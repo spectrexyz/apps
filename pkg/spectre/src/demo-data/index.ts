@@ -246,9 +246,14 @@ function randomNft(
   const title = randomTitle()
   const token = randomToken(title)
 
-  // assuming a 50/50 pool weight
   const pooledToken = dnum.divide(token.minted, 2 + random() * 2)
-  const pooledEth = dnum.multiply(pooledToken, token.priceEth)
+  const pooledEth = dnum.multiply(
+    dnum.multiply(
+      pooledToken,
+      token.priceEth,
+    ),
+    0.9 + random() * 0.2, // deviate between -10% and +10%
+  )
 
   return ({
     id: `${nftIndex}`,
@@ -367,10 +372,11 @@ export const POOLS_BY_ACCOUNT = new Map(
         list(
           randNumber({ min: 1, max: 8 }), // between 1 and 8 pools
           () => {
-            const { pool, token } = rand(SNFTS)
+            const { pool, token, id } = rand(SNFTS)
             return {
               pool,
               share: dnum.from(random() * 0.1, 18), // 0% to 10%
+              snftId: id,
               token: [token.contractAddress, token.tokenId] as const,
             }
           },

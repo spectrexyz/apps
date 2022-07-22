@@ -17,7 +17,7 @@ export function InfoGrid(
   }: {
     compress?: boolean
     footer?: FooterType
-    heading: ReactNode
+    heading?: ReactNode
     sections: Array<{ heading: ReactNode; content: ReactNode }>
   },
 ) {

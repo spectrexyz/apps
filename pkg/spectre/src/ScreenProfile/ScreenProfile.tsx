@@ -1,5 +1,6 @@
 import type { AddressOrEnsName } from "kit"
 
+import dnum from "dnum"
 import {
   AddressBadge,
   Button,
@@ -21,9 +22,10 @@ import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { FractionsCard } from "../FractionsCard"
 import { NftCard } from "../NftCard"
-// import { PoolCard } from "../PoolCard"
+import { PoolCard } from "../PoolCard"
 import {
   useFractionsByAddress,
+  usePoolsByAddress,
   useSnftCreator,
   useSnftsByCreator,
 } from "../snft-hooks"
@@ -59,6 +61,7 @@ export function ScreenProfile({
   const layout = useLayout()
   const snfts = useSnftsByCreator(address)
   const fractions = useFractionsByAddress(address)
+  const pools = usePoolsByAddress(address)
   const creator = useSnftCreator(address)
 
   if (!isAddressOrEnsName(address)) {
@@ -246,15 +249,18 @@ export function ScreenProfile({
                 : <PanelLoading />
             )}
             {panel === "pools" && (
-              fractions.data
+              pools.data
                 ? (
                   <Grid>
-                    {fractions.data.map((fraction) => (
-                      <FractionsCard
-                        key={fraction.token.join("")}
-                        quantity={fraction.quantity}
-                        snftId={fraction.snftId}
-                        token={fraction.token}
+                    {pools.data.map(({ snftId, pool, token, share }) => (
+                      <PoolCard
+                        key={pool.token.join("")}
+                        account={address}
+                        poolShare={share}
+                        pooledEth={pool.eth}
+                        pooledToken={pool.token}
+                        snftId={snftId}
+                        token={token}
                       />
                     ))}
                   </Grid>
