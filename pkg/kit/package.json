@@ -11,7 +11,7 @@
     "src"
   ],
   "bin": {
-    "kit-copy-assets": "./bin/copy-assets"
+    "kit-copy-assets": "./bin/copy-assets.cjs"
   },
   "scripts": {
     "build": "vite build --mode production",
