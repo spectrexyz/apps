@@ -5,7 +5,12 @@ import type { Snft } from "./types"
 import uniqBy from "lodash.uniqby"
 import { useQuery } from "react-query"
 import { useProvider } from "wagmi"
-import { FRACTIONS_BY_ACCOUNT, POOLS_BY_ACCOUNT, SNFTS } from "./demo-data"
+import {
+  FRACTIONS_BY_ACCOUNT,
+  POOLS_BY_ACCOUNT,
+  REWARDS_BY_ACCOUNT,
+  SNFTS,
+} from "./demo-data"
 import { resolveAddress } from "./utils"
 
 function fakeDelay() {
@@ -212,6 +217,21 @@ export function usePoolsByAddress(
       await fakeDelay()
       return address.data
         && POOLS_BY_ACCOUNT.get(`0x${address.data.slice(2).toLowerCase()}`)
+    },
+    { enabled: Boolean(address.data) },
+  )
+}
+
+export function useRewardsByAddress(
+  account: AddressOrEnsName,
+): UseQueryResult<ReturnType<typeof REWARDS_BY_ACCOUNT.get>> {
+  const address = useResolveAddress(account)
+  return useQuery(
+    ["rewards-by-account", account],
+    async () => {
+      await fakeDelay()
+      return address.data
+        && REWARDS_BY_ACCOUNT.get(`0x${address.data.slice(2).toLowerCase()}`)
     },
     { enabled: Boolean(address.data) },
   )

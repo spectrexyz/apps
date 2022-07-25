@@ -23,9 +23,11 @@ import { Grid } from "../AppLayout/Grid"
 import { FractionsCard } from "../FractionsCard"
 import { NftCard } from "../NftCard"
 import { PoolCard } from "../PoolCard"
+import { RewardsCard } from "../RewardsCard"
 import {
   useFractionsByAddress,
   usePoolsByAddress,
+  useRewardsByAddress,
   useSnftCreator,
   useSnftsByCreator,
 } from "../snft-hooks"
@@ -62,6 +64,7 @@ export function ScreenProfile({
   const snfts = useSnftsByCreator(address)
   const fractions = useFractionsByAddress(address)
   const pools = usePoolsByAddress(address)
+  const rewards = useRewardsByAddress(address)
   const creator = useSnftCreator(address)
 
   if (!isAddressOrEnsName(address)) {
@@ -263,6 +266,26 @@ export function ScreenProfile({
                         token={token}
                       />
                     ))}
+                  </Grid>
+                )
+                : <PanelLoading />
+            )}
+            {panel === "rewards" && (
+              rewards.data
+                ? (
+                  <Grid>
+                    <RewardsCard
+                      rewards={rewards.data.creators}
+                      rewardsType="creators"
+                    />
+                    <RewardsCard
+                      rewards={rewards.data.community}
+                      rewardsType="community"
+                    />
+                    <RewardsCard
+                      rewards={rewards.data.buyout}
+                      rewardsType="buyout"
+                    />
                   </Grid>
                 )
                 : <PanelLoading />

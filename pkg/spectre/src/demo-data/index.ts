@@ -386,6 +386,31 @@ export const POOLS_BY_ACCOUNT = new Map(
   ),
 )
 
+function rewards() {
+  const { token } = rand(SNFTS)
+  const reward = dnum.divide(
+    token.supply,
+    randNumber({ min: 1000, max: 2000 }),
+  )
+  return {
+    reward,
+    token: [token.contractAddress, token.tokenId] as const,
+  }
+}
+
+export const REWARDS_BY_ACCOUNT = new Map(
+  Array.from(CREATORS_BY_ADDRESS.keys()).map(
+    (address) => [
+      address,
+      {
+        "creators": list(randNumber({ min: 1, max: 2 }), rewards),
+        "community": list(randNumber({ min: 1, max: 2 }), rewards),
+        "buyout": list(randNumber({ min: 1, max: 2 }), rewards),
+      },
+    ],
+  ),
+)
+
 export const TOKENS = SNFTS.map((snft) => snft.token)
 
 export const poolEthWeights: Record<
