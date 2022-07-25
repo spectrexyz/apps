@@ -37,8 +37,8 @@
     "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^18.0.6",
     "@types/stylis": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "eslint": "^8.20.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
@@ -49,13 +49,14 @@
     "recursive-copy": "^2.0.14",
     "ts-jest": "^28.0.7",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2",
+    "vite": "^3.0.3",
     "vite-plugin-dts": "^1.4.0",
-    "vitest": "^0.18.1"
+    "vitest": "^0.19.1"
   },
   "dependencies": {
-    "@elchininet/isometric": "^3.4.0",
+    "@elchininet/isometric": "^3.6.0",
     "@popperjs/core": "^2.11.5",
+    "@tanstack/react-query": "^4.0.0",
     "colord": "^2.9.2",
     "dnum": "^1.4.2",
     "ethereum-blockies-base64": "^1.0.2",
@@ -66,7 +67,6 @@
     "pretty-bytes": "^6.0.0",
     "react-cool-dimensions": "^2.0.7",
     "react-dropzone": "^14.2.2",
-    "react-popper": "^2.3.0",
-    "react-query": "^3.39.1"
+    "react-popper": "^2.3.0"
   }
 }

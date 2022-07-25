@@ -41,7 +41,7 @@ export function usePrice(from: "eth", to: "usd") {
     const result = await response.json()
     return parseCoinGeckoPriceResult(result as CoinGeckoPriceResult, from, to)
   }, [from, to])
-  return useQuery(`price${from}${to}`, queryFn)
+  return useQuery(["price", from, to], queryFn)
 }
 
 export function useEthToUsdFormat() {
