@@ -15,37 +15,24 @@ import {
   useEthToUsdFormat,
   useTheme,
 } from "kit"
-// import { useMemo } from "react"
-// import { useLocation } from "wouter"
 import { usePool, useSnft2, useToken } from "../snft-hooks"
-import { useLabelStyle, useLayout } from "../styles"
+import { useLabelStyle } from "../styles"
 
 export function PoolCard({
-  account,
   poolShare,
-  pooledEth,
-  pooledToken,
   snftId,
   token: [tokenContract, tokenId],
 }: {
-  account: AddressOrEnsName
-  pooledEth: Dnum
-  token: readonly [Address, string]
-  pooledToken: Dnum
-  snftId: string
   poolShare: Dnum
+  snftId: string
+  token: readonly [Address, string]
 }) {
   const { colors } = useTheme()
-  // const layout = useLayout()
-  // const [, setLocation] = useLocation()
   const snft = useSnft2(snftId)
   const token = useToken([tokenContract, tokenId])
   const labelStyle = useLabelStyle({ size: "small" })
   const pool = usePool([tokenContract, tokenId])
   const ethToUsd = useEthToUsdFormat()
-
-  // const tokenData = token.data
-  // const supply = tokenData?.supply
 
   return (
     <Card
@@ -178,17 +165,15 @@ export function PoolCard({
   )
 }
 
-function Definition(
-  {
-    children,
-    spacing = 1 * gu,
-    title,
-  }: {
-    children: ReactNode
-    spacing?: Number
-    title: ReactNode
-  },
-) {
+function Definition({
+  children,
+  spacing = 1 * gu,
+  title,
+}: {
+  children: ReactNode
+  spacing?: Number
+  title: ReactNode
+}) {
   const labelStyle = useLabelStyle({ size: "small" })
   return (
     <div>
