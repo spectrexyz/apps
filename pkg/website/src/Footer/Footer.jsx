@@ -1,8 +1,8 @@
-import React, { useMemo } from "react"
 import { css } from "@emotion/react"
 import { gu, theme } from "kit-legacy"
-import { useLayout } from "../styles.js"
+import React, { useMemo } from "react"
 import { footerLinks } from "../content.jsx"
+import { useLayout } from "../styles.js"
 import { Subscribe } from "../Subscribe.jsx"
 
 import logo from "./footer-logo.png"
@@ -41,9 +41,11 @@ export function Footer() {
         flex-direction: column;
         align-items: center;
         width: 100%;
-        max-width: ${layout.contentLarge
+        max-width: ${
+        layout.contentLarge
           ? `${layout.contentLarge}px`
-          : "unset"};
+          : "unset"
+      };
         margin: 0 auto;
         padding: 0 ${layout.padding}px;
       `}
@@ -80,9 +82,11 @@ export function Footer() {
               position: ${layout.name === "small" ? "static" : "absolute"};
               top: 50%;
               left: 50%;
-              transform: ${layout.name === "small"
+              transform: ${
+              layout.name === "small"
                 ? "none"
-                : "translate(-50%, -50%)"};
+                : "translate(-50%, -50%)"
+            };
               &:before {
                 content: "${"/".repeat(styles.slashes)}";
                 color: ${theme.secondary};
@@ -93,8 +97,8 @@ export function Footer() {
             css={css`
               display: grid;
               grid-auto-flow: column;
-              gap: ${layout.name === "small" ? css`6gu` : css`3.5gu`};
-              padding-top: ${layout.name === "small" ? css`1gu` : "0"};
+              gap: ${layout.name === "small" ? 6 * gu : 3.5 * gu}px;
+              padding-top: ${layout.name === "small" ? 1 * gu : 0}px;
               a {
                 color: ${theme.content};
               }
