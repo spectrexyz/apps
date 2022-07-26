@@ -30,8 +30,7 @@ const REWARDS_MAX = 50
 export function Step2({ title, onPrev, onNext }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
-  const [{ data: accountData }] = useAccount({ fetchEns: false })
-  const address = accountData && accountData?.address
+  const { address } = useAccount()
 
   const { rewardsSplit, addRewardsSplitAddress, removeRewardsSplitAddress } =
     data
@@ -130,11 +129,7 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
               label="Split creator & community rewards"
               error={data.fieldError("rewardsSplit")}
             >
-              <div
-                css={{
-                  paddingBottom: "2gu",
-                }}
-              >
+              <div css={{ paddingBottom: "2gu" }}>
                 {data.rewardsSplit.map((account) => (
                   <EthAddressRow
                     key={account}
@@ -168,11 +163,7 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
         <ContentLayoutSection>
           {layout.below("medium")
             ? (
-              <div
-                css={{
-                  padding: "3gu 0",
-                }}
-              >
+              <div css={{ padding: "3gu 0" }}>
                 <Button
                   type="submit"
                   label="Next"
@@ -276,11 +267,7 @@ function AddAccountModule({ submitRef }: AddAccountModuleProps) {
           gap: "2gu",
         }}
       >
-        <div
-          css={{
-            flexGrow: "1",
-          }}
-        >
+        <div css={{ flexGrow: "1" }}>
           <TextInput
             error={invalid}
             autofocus={true}

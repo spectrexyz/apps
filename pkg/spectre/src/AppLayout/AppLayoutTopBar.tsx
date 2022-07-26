@@ -13,7 +13,7 @@ import {
 } from "kit"
 import { useEffect, useRef, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
-import { useAccount } from "wagmi"
+import { useAccount, useEnsName } from "wagmi"
 import { Link, useLocation } from "wouter"
 import { AccountWindow } from "../Account"
 import { useAppReady } from "../App/AppReady"
@@ -41,11 +41,9 @@ export function TopBar() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
   const connectButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null)
-  const [account] = useAccount({ fetchEns: true })
+  const { address } = useAccount()
+  const { data: ensName } = useEnsName({ address })
   const layout = useLayout()
-
-  const address = account.data?.address
-  const ensName = account.data?.ens?.name
 
   useEffect(() => {
     if (address) {

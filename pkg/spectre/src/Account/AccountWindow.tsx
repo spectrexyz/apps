@@ -15,7 +15,7 @@ import {
 } from "kit"
 import { useMemo } from "react"
 import { a, useTransition } from "react-spring"
-import { useAccount } from "wagmi"
+import { useAccount, useDisconnect, useEnsName } from "wagmi"
 
 type AccountWindowProps = {
   onClose: () => void
@@ -23,15 +23,11 @@ type AccountWindowProps = {
 }
 
 export function AccountWindow({ onClose, visible }: AccountWindowProps) {
-  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: false })
+  const { address } = useAccount()
+  const { data: ensName } = useEnsName({ address })
+  const { disconnect } = useDisconnect()
 
-  const address = accountData?.address
-  const ensName = accountData?.ens?.name
-
-  const account = useMemo(() => ({
-    address,
-    ensName,
-  }), [address, ensName])
+  const account = useMemo(() => ({ address, ensName }), [address, ensName])
 
   const visibility = useTransition(visible && account, {
     config: springs.swift,

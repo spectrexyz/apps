@@ -1,9 +1,7 @@
 import { useBlockNumber } from "wagmi"
 
 export function SyncStatus({ full = false }: { full?: boolean }) {
-  const [{ data: blockNumber, error, loading }] = useBlockNumber({
-    watch: true,
-  })
+  const { data: blockNumber, isError, isLoading } = useBlockNumber()
   return (
     <div
       css={({ colors }) => ({
@@ -21,8 +19,8 @@ export function SyncStatus({ full = false }: { full?: boolean }) {
           height: "1gu",
           marginRight: "1gu",
           borderRadius: "50%",
-          opacity: loading ? 0.5 : 1,
-          background: error ? colors.negative : colors.positive,
+          opacity: isLoading ? 0.5 : 1,
+          background: isError ? colors.negative : colors.positive,
         },
       })}
     >
@@ -36,8 +34,8 @@ export function SyncStatus({ full = false }: { full?: boolean }) {
         </span>
       )}
       {(() => {
-        if (error) return "error."
-        if (loading) return "syncing…"
+        if (isError) return "error."
+        if (isLoading) return "syncing…"
         return blockNumber
       })()}
     </div>

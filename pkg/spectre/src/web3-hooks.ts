@@ -9,8 +9,7 @@ export function useIsConnectedAddress(address: AddressOrEnsName) {
   const provider = useProvider()
 
   const connectedAddress = Array.from(CREATORS_BY_ADDRESS.values())[0].address
-  // const [{ data }] = useAccount({ fetchEns: false })
-  // const connectedAddress = data?.address
+  // const { address: connectedAddress } = useAccount()
 
   return useQuery(
     ["is-connected-address", address, connectedAddress],

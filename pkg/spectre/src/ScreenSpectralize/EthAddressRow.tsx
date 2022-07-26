@@ -2,7 +2,7 @@ import type { Address } from "kit"
 import type { ReactNode } from "react"
 
 import { Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
-import { useEnsLookup } from "wagmi"
+import { useEnsName } from "wagmi"
 
 type EthAddressRowProps = {
   address: Address
@@ -15,7 +15,7 @@ export function EthAddressRow({
   onRemove,
   reward,
 }: EthAddressRowProps) {
-  const [{ data: ensName }] = useEnsLookup({ address })
+  const { data: ensName } = useEnsName({ address })
   return (
     <div
       css={{

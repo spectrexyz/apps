@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { AddressBadge, Button, ButtonArea, noop, springs } from "kit"
 import { useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
-import { useAccount } from "wagmi"
+import { useAccount, useDisconnect, useEnsName } from "wagmi"
 import { Actions } from "../Actions/Actions"
 import { useAppReady } from "../App/AppReady"
 import { ConnectAccount } from "../ConnectAccount/ConnectAccount"
@@ -69,11 +69,10 @@ function BottomBar() {
 function BottomBarCompact() {
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [drawerOpened, setDrawerOpened] = useState(false)
-  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: true })
+  const { address } = useAccount()
+  const { data: ensName } = useEnsName({ address })
+  const { disconnect } = useDisconnect()
   const { appReadyTransition } = useAppReady()
-
-  const address = accountData?.address
-  const ensName = accountData?.ens?.name
 
   useEffect(() => {
     if (address) {
@@ -164,7 +163,7 @@ function BarArea({
 }: {
   address?: string
   drawerOpened: boolean
-  ensName?: string
+  ensName?: string | null
   onConnect: () => void
   onDisconnect: () => void
   onOpenDrawer: () => void

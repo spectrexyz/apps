@@ -112,30 +112,30 @@ function ProviderButton({
   id: string
   name: string
 }) {
-  const [{ data }, connect] = useConnect()
-  const connector = data.connectors.find((connector) => connector.id === id)
+  const { connectors, connect } = useConnect()
+  const connector = connectors.find((connector) => connector.id === id)
 
   return connector
     ? (
       <ButtonArea
         onClick={() => {
-          void connect(connector)
+          connect({ connector })
         }}
-        css={({ colors }) => ({
+        css={{
           display: "flex",
           alignItems: "center",
           width: "100%",
           height: "6gu",
           paddingLeft: "2.5gu",
           paddingRight: "1.5gu",
-          background: colors.layer2,
-          color: colors.contentHeading,
+          background: "colors.layer2",
+          color: "colors.contentHeading",
           "&:active": {
             position: "relative",
             top: "1px",
             left: "1px",
           },
-        })}
+        }}
       >
         <div
           css={{
