@@ -198,7 +198,7 @@ importers:
       vite: ^3.0.3
       vite-plugin-checker: ^0.4.9
       vite-plugin-rewrite-all: ^0.1.2
-      wagmi: ^0.5.12
+      wagmi: ^0.6.0
       zustand: 4.0.0
     dependencies:
       '@bpierre/use-viewport': 0.3.0_react@18.2.0
@@ -224,7 +224,7 @@ importers:
       react-spring: 9.5.2_biqbaboplfbrettd7655fr4n2y
       stylis: 4.1.1
       use-nft: 0.12.0_ethers@5.6.9+react@18.2.0
-      wagmi: 0.5.12_um4cugg2i3ywhvigsmvsir7hgy
+      wagmi: 0.6.0_um4cugg2i3ywhvigsmvsir7hgy
       zustand: 4.0.0_react@18.2.0
     devDependencies:
       '@ethersproject/providers': 5.6.8
@@ -3200,8 +3200,8 @@ packages:
       - whiskers
     dev: true
 
-  /@wagmi/core/0.4.9_mrjqywl7zbaqq6hcega5ku3yee:
-    resolution: {integrity: sha512-V/1PgetbA0PcIT6FJxDnCwRU/MZhecHVu1/7+QMncdxUQykyDd8MGlx0b8EjitMLLqzuD9kcx7sQpfS0gk5rZg==}
+  /@wagmi/core/0.5.0_mrjqywl7zbaqq6hcega5ku3yee:
+    resolution: {integrity: sha512-bh4cI7WaBDtEM8E7KPCLnK5PfmBPg5iIUydTw5DTX2yo6BiRhcFIflRn/Bg9IJCFq3SGhW6Zmpu+jHHeH9ZELQ==}
     peerDependencies:
       '@coinbase/wallet-sdk': '>=3.3.0'
       '@walletconnect/ethereum-provider': '>=1.7.5'
@@ -9677,7 +9677,7 @@ packages:
     dev: false
 
   /is-typedarray/1.0.0:
-    resolution: {integrity: sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=}
+    resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
 
   /is-unicode-supported/0.1.0:
     resolution: {integrity: sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==}
@@ -16840,14 +16840,14 @@ packages:
       xml-name-validator: 3.0.0
     dev: true
 
-  /wagmi/0.5.12_um4cugg2i3ywhvigsmvsir7hgy:
-    resolution: {integrity: sha512-Y7eGKYhgNw6fohiXBE4uak/lotfgB+KaANqok16ORqwBFV+zaByMYWCrOIYlk1/6ngSyW1dcSVCU8djjh+RNtg==}
+  /wagmi/0.6.0_um4cugg2i3ywhvigsmvsir7hgy:
+    resolution: {integrity: sha512-Jyj22eQNoNcs9DoLDhD+foF5skEc7XPAZjqZ7GK+rVzxWVlA6Vx+qrcAALNGnxayE6H+CYVKWGtTK8PPN/WHOw==}
     peerDependencies:
       ethers: '>=5.5.1'
       react: '>=17.0.0'
     dependencies:
       '@coinbase/wallet-sdk': 3.4.0
-      '@wagmi/core': 0.4.9_mrjqywl7zbaqq6hcega5ku3yee
+      '@wagmi/core': 0.5.0_mrjqywl7zbaqq6hcega5ku3yee
       '@walletconnect/ethereum-provider': 1.7.8
       ethers: 5.6.9
       react: 18.2.0
