@@ -53,3 +53,10 @@ export type Snft = Readonly<{
     topHolders: Array<readonly [name: string, picture: string]>
   }>
 }>
+
+export type PoolShare = {
+  pool: Snft["pool"]
+  share: Dnum
+  snftId: string
+  token: readonly [Address, string]
+}

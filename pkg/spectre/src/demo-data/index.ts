@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "kit"
-import type { Snft } from "../types"
+import type { PoolShare, Snft } from "../types"
 
 import {
   rand,
@@ -369,7 +369,7 @@ export const POOLS_BY_ACCOUNT = new Map(
     (address) => {
       return [
         address,
-        list(
+        list<PoolShare>(
           randNumber({ min: 1, max: 8 }), // between 1 and 8 pools
           () => {
             const { pool, token, id } = rand(SNFTS)

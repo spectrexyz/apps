@@ -1,6 +1,6 @@
 import type { AddressOrEnsName } from "kit"
+import type { PoolShare } from "../types"
 
-import dnum from "dnum"
 import {
   AddressBadge,
   Button,
@@ -31,7 +31,7 @@ import {
   useSnftCreator,
   useSnftsByCreator,
 } from "../snft-hooks"
-import { useLayout } from "../styles"
+import { useLayout, useViewportValue } from "../styles"
 import { useIsConnectedAddress } from "../web3-hooks"
 
 const resolvedAddress = "0xfabe062eb33af3e68eb3329818d0507949c14142"
@@ -253,21 +253,7 @@ export function ScreenProfile({
             )}
             {panel === "pools" && (
               pools.data
-                ? (
-                  <Grid>
-                    {pools.data.map(({ snftId, pool, token, share }) => (
-                      <PoolCard
-                        key={pool.token.join("")}
-                        account={address}
-                        poolShare={share}
-                        pooledEth={pool.eth}
-                        pooledToken={pool.token}
-                        snftId={snftId}
-                        token={token}
-                      />
-                    ))}
-                  </Grid>
-                )
+                ? <PanelPools pools={pools.data} />
                 : <PanelLoading />
             )}
             {panel === "rewards" && (
@@ -310,5 +296,30 @@ function PanelLoading() {
     >
       <Loading />
     </div>
+  )
+}
+
+function PanelPools({ pools }: { pools: PoolShare[] }) {
+  const compact = useViewportValue(({ width }) => [
+    [width >= 1150, false],
+    [width >= 960, true],
+    [width >= 800, false],
+    [width >= 500, true],
+    [width >= 400, false],
+    [true, true],
+  ])
+
+  return (
+    <Grid>
+      {pools.map(({ snftId, pool, token, share }) => (
+        <PoolCard
+          key={pool.token.join("")}
+          compact={compact}
+          poolShare={share}
+          snftId={snftId}
+          token={token}
+        />
+      ))}
+    </Grid>
   )
 }

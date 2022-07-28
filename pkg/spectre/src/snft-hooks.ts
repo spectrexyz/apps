@@ -1,6 +1,6 @@
 import type { Address, AddressOrEnsName } from "kit"
 import type { UseQueryResult } from "react-query"
-import type { Snft } from "./types"
+import type { PoolShare, Snft } from "./types"
 
 import uniqBy from "lodash.uniqby"
 import { useQuery } from "react-query"
@@ -209,7 +209,7 @@ export function useFractionsByAddress(account: AddressOrEnsName) {
 
 export function usePoolsByAddress(
   account: AddressOrEnsName,
-): UseQueryResult<ReturnType<typeof POOLS_BY_ACCOUNT.get>> {
+): UseQueryResult<PoolShare[]> {
   const address = useResolveAddress(account)
   return useQuery(
     ["pools-by-account", account],

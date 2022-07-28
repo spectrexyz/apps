@@ -1,5 +1,5 @@
 import type { Dnum } from "dnum"
-import type { Address, AddressOrEnsName } from "kit"
+import type { Address } from "kit"
 import type { ReactNode } from "react"
 
 import dnum from "dnum"
@@ -19,10 +19,12 @@ import { usePool, useSnft2, useToken } from "../snft-hooks"
 import { useLabelStyle } from "../styles"
 
 export function PoolCard({
+  compact,
   poolShare,
   snftId,
   token: [tokenContract, tokenId],
 }: {
+  compact: boolean
   poolShare: Dnum
   snftId: string
   token: readonly [Address, string]
@@ -30,13 +32,14 @@ export function PoolCard({
   const { colors } = useTheme()
   const snft = useSnft2(snftId)
   const token = useToken([tokenContract, tokenId])
-  const labelStyle = useLabelStyle({ size: "small" })
   const pool = usePool([tokenContract, tokenId])
   const ethToUsd = useEthToUsdFormat()
 
+  const isLoading = !(token.data && pool.data)
+
   return (
     <Card
-      loading={!token.data}
+      loading={isLoading}
       loadingBackground={colors.background}
       css={{ height: "100%", minHeight: "70gu" }}
     >
@@ -66,10 +69,14 @@ export function PoolCard({
             >
               <DiscsChain
                 images={[
-                  <TokenIcon alt="" tokenType="eth" size={8 * gu} />,
                   <TokenIcon
                     alt=""
-                    size={8 * gu}
+                    size={compact ? 4 * gu : 8 * gu}
+                    tokenType="eth"
+                  />,
+                  <TokenIcon
+                    alt=""
+                    size={compact ? 4 * gu : 8 * gu}
                     src={snft.data?.image.url}
                     tokenType="serc20"
                   />,
@@ -78,7 +85,7 @@ export function PoolCard({
 
               <Button
                 icon={<IconEye />}
-                label="View Balancer"
+                label={compact ? "Balancer" : "View Balancer"}
                 mode="flat"
                 size="small"
                 uppercase={true}
@@ -90,7 +97,7 @@ export function PoolCard({
             <div
               css={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: compact ? "1fr" : "1fr 1fr",
                 gap: "3gu",
                 paddingTop: "4gu",
               }}
