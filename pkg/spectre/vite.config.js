@@ -1,7 +1,6 @@
+import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import pluginRewriteAll from "vite-plugin-rewrite-all"
-// import checker from "vite-plugin-checker"
-// import react from "@vitejs/plugin-react"
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => ({
@@ -26,8 +25,7 @@ export default defineConfig(async ({ mode }) => ({
   },
   plugins: [
     pluginRewriteAll(),
-    // react(),
-    // checker({ typescript: true }),
+    react(),
   ],
   resolve: {
     dedupe: [

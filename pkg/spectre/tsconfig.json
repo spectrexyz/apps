@@ -15,7 +15,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
-    "types": ["vite/client"]
+    "types": ["vite/client", "@emotion/react/types/css-prop"]
   },
   "include": ["src", "types"]
 }
