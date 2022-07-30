@@ -58,7 +58,7 @@
     "@popperjs/core": "^2.11.5",
     "@tanstack/react-query": "^4.0.0",
     "colord": "^2.9.2",
-    "dnum": "^1.4.2",
+    "dnum": "^1.5.1",
     "ethereum-blockies-base64": "^1.0.2",
     "focus-trap-react": "^9.0.2",
     "just-throttle": "^4.0.1",

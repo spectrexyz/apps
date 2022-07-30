@@ -18,7 +18,7 @@
     "@types/lodash.uniqby": "^4.7.7",
     "buffer": "^6.0.3",
     "csstype": "^3.1.0",
-    "dnum": "^1.4.2",
+    "dnum": "^1.5.1",
     "ethers": "^5.6.9",
     "events": "^3.3.0",
     "kit": "workspace:*",

@@ -66,7 +66,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.31.0
       '@typescript-eslint/parser': ^5.31.0
       colord: ^2.9.2
-      dnum: ^1.4.2
+      dnum: ^1.5.1
       eslint: ^8.20.0
       eslint-plugin-import: ^2.26.0
       eslint-plugin-jsx-a11y: ^6.6.1
@@ -94,7 +94,7 @@ importers:
       '@popperjs/core': 2.11.5
       '@tanstack/react-query': 4.0.10_biqbaboplfbrettd7655fr4n2y
       colord: 2.9.2
-      dnum: 1.4.2
+      dnum: 1.5.1
       ethereum-blockies-base64: 1.0.2
       focus-trap-react: 9.0.2_biqbaboplfbrettd7655fr4n2y
       just-throttle: 4.0.1
@@ -178,7 +178,7 @@ importers:
       '@vitejs/plugin-react': ^2.0.0
       buffer: ^6.0.3
       csstype: ^3.1.0
-      dnum: ^1.4.2
+      dnum: ^1.5.1
       eslint: ^8.20.0
       eslint-plugin-import: ^2.26.0
       eslint-plugin-react: ^7.30.1
@@ -212,7 +212,7 @@ importers:
       '@types/lodash.uniqby': 4.7.7
       buffer: 6.0.3
       csstype: 3.1.0
-      dnum: 1.4.2
+      dnum: 1.5.1
       ethers: 5.6.9
       events: 3.3.0
       kit: link:../kit
@@ -6313,8 +6313,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /dnum/1.4.2:
-    resolution: {integrity: sha512-HukAn2S/7PJ22rO6i0dIG6bJXnz9QBWl+1DqulOo/m+KDpD2aKEzpmqB/aZEJq9T8W3/i5J2EnWS6hi56zJTYQ==}
+  /dnum/1.5.1:
+    resolution: {integrity: sha512-TfUcLQ+QNfQm4W9dtedllKiGlLhUEnIELYEWcdmnZ3N+yfaUbYS3XyXmDNyIynnqRpGr7EhGxYUYuRxbt2E/rA==}
     dev: false
 
   /doctrine/2.1.0:

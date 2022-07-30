@@ -1,17 +1,33 @@
+import type { Dnum } from "dnum"
+
+import dnum from "dnum"
 import { ReactNode } from "react"
 import { TokenIcon } from "../TokenIcon"
 
-type TokenAmountProps = {
-  compact?: boolean
-  converted?: ReactNode
-  symbol: string
-  value: string
-}
-
 export function TokenAmount(
-  { compact = false, converted, symbol, value }: TokenAmountProps,
+  {
+    compact = false,
+    converted,
+    digits,
+    symbol,
+    value,
+  }: {
+    compact?: boolean
+    converted?: ReactNode
+    digits?: number
+    symbol: string
+    value: Dnum | string
+  },
 ) {
-  const [whole, fraction] = value.split(".")
+  if (dnum.isDnum(value)) {
+    value = dnum.format(value)
+  }
+
+  let [whole, fraction] = value.split(".")
+  if (digits !== undefined && fraction) {
+    fraction = fraction.slice(0, digits)
+  }
+
   return (
     <div css={{ display: "flex", flexDirection: "column" }}>
       <div
@@ -33,7 +49,7 @@ export function TokenAmount(
         >
           <span>
             <span>{whole}</span>
-            <span css={{ fontSize: "18px" }}>{fraction && `.${fraction}`}</span>
+            {fraction && <span css={{ fontSize: "18px" }}>.{fraction}</span>}
           </span>{" "}
           <span css={{ fontSize: "18px", marginLeft: "1gu" }}>{symbol}</span>
         </div>
