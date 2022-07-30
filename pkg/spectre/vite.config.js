@@ -3,7 +3,7 @@ import { defineConfig } from "vite"
 import pluginRewriteAll from "vite-plugin-rewrite-all"
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ mode }) => ({
+export default defineConfig(({ mode }) => ({
   define: {
     global: "globalThis",
   },
@@ -12,20 +12,17 @@ export default defineConfig(async ({ mode }) => ({
     outDir: "dist",
     sourcemap: mode === "production" || "inline",
   },
-  esbuild: {
-    jsxFactory: "jsx",
-    jsxInject: `
-      import { Fragment } from 'react'
-      import { jsx } from '@emotion/react'
-    `,
-    jsxFragment: "Fragment",
-  },
   optimizeDeps: {
     entries: ["./src/index.tsx"],
   },
   plugins: [
     pluginRewriteAll(),
-    react(),
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
   ],
   resolve: {
     dedupe: [
