@@ -46,13 +46,15 @@ export function usePrice(from: "eth", to: "usd") {
 
 export function useEthToUsdFormat() {
   const ethUsdPrice = usePrice("eth", "usd")
-  return (amountEth: Dnum) => (
-    ethUsdPrice.data
-      ? "$"
-        + dnum.format(dnum.multiply(amountEth, ethUsdPrice.data), {
-          digits: 2,
-          trailingZeros: true,
-        })
-      : "−"
-  )
+  return (amountEth: Dnum) => {
+    return (
+      ethUsdPrice.data
+        ? "$"
+          + dnum.format(
+            dnum.multiply(amountEth, ethUsdPrice.data),
+            { digits: 2, trailingZeros: true },
+          )
+        : "−"
+    )
+  }
 }
