@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
-import type { Address } from "kit"
 import type { ReactNode } from "react"
+import type { TokenLocator } from "../types"
 
 import dnum from "dnum"
 import {
@@ -27,7 +27,7 @@ export function PoolCard({
   compact: boolean
   poolShare: Dnum
   snftId: string
-  token: readonly [Address, string]
+  token: TokenLocator
 }) {
   const { colors } = useTheme()
   const snft = useSnft2(snftId)

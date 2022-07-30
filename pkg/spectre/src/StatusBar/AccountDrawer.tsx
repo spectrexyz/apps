@@ -372,12 +372,7 @@ function Transaction({
               fontSize: "14px",
             })}
           >
-            <a
-              href={url}
-              css={{
-                textDecoration: "underline",
-              }}
-            >
+            <a href={url} css={{ textDecoration: "underline" }}>
               {details}
             </a>
           </div>

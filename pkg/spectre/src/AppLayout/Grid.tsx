@@ -5,7 +5,7 @@ import { useLayout } from "../styles"
 
 const GridContext = createContext<null | true>(null)
 
-export function Grid({ children }: { children: ReactNode[] }) {
+export function Grid({ children }: { children: ReactNode }) {
   const layout = useLayout()
 
   const gridTemplateColumns = layout.below(500)

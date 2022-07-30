@@ -1,5 +1,5 @@
 import type { Dnum } from "dnum"
-import type { Address } from "kit"
+import type { TokenLocator } from "../types"
 
 import dnum from "dnum"
 import { Button, Card, co, DiscsChain, formatNumber } from "kit"
@@ -17,7 +17,7 @@ export function FractionsCard({
   className?: string
   quantity: Dnum
   snftId: string
-  token: readonly [Address, string]
+  token: TokenLocator
 }) {
   const [, setLocation] = useLocation()
   const snft = useSnft(snftId)

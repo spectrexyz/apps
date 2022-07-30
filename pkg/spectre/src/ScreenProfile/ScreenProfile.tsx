@@ -23,7 +23,7 @@ import { Grid } from "../AppLayout/Grid"
 import { FractionsCard } from "../FractionsCard"
 import { NftCard } from "../NftCard"
 import { PoolCard } from "../PoolCard"
-import { RewardsCard } from "../RewardsCard"
+import { RewardCard } from "../RewardCard"
 import {
   useFractionsByAddress,
   usePoolsByAddress,
@@ -260,18 +260,9 @@ export function ScreenProfile({
               rewards.data
                 ? (
                   <Grid>
-                    <RewardsCard
-                      rewards={rewards.data.creators}
-                      rewardsType="creators"
-                    />
-                    <RewardsCard
-                      rewards={rewards.data.community}
-                      rewardsType="community"
-                    />
-                    <RewardsCard
-                      rewards={rewards.data.buyout}
-                      rewardsType="buyout"
-                    />
+                    {rewards.data.map((reward, rewardIndex) => (
+                      <RewardCard key={rewardIndex} reward={reward} />
+                    ))}
                   </Grid>
                 )
                 : <PanelLoading />

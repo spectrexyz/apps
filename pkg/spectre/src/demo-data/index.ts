@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "kit"
-import type { PoolShare, Snft } from "../types"
+import type { PoolShare, Reward, Snft } from "../types"
 
 import {
   rand,
@@ -17,6 +17,10 @@ import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
 seed("123")
+
+function shuffle<T>(arr: T[]): T[] {
+  return [...arr].sort(() => -0.5 + random())
+}
 
 export const buyoutMultiplier = 1.1
 
@@ -160,7 +164,7 @@ function randomDistribution(minted: Dnum) {
   return distribution
 }
 
-const tokenIndexes = list(999).sort(() => -0.5 + random())
+const tokenIndexes = shuffle(list(999))
 function randomToken(nftName: string): Snft["token"] {
   const index = tokenIndexes.pop()
   if (!index) {
@@ -366,47 +370,62 @@ export const FRACTIONS_BY_ACCOUNT = new Map(
 
 export const POOLS_BY_ACCOUNT = new Map(
   Array.from(CREATORS_BY_ADDRESS.keys()).map(
-    (address) => {
-      return [
-        address,
-        list<PoolShare>(
-          randNumber({ min: 1, max: 8 }), // between 1 and 8 pools
-          () => {
-            const { pool, token, id } = rand(SNFTS)
-            return {
-              pool,
-              share: dnum.from(random() * 0.1, 18), // 0% to 10%
-              snftId: id,
-              token: [token.contractAddress, token.tokenId] as const,
-            }
-          },
-        ),
-      ]
-    },
+    (address) => [
+      address,
+      list<PoolShare>(
+        randNumber({ min: 1, max: 8 }), // between 1 and 8 pools
+        () => {
+          const { pool, token, id } = rand(SNFTS)
+          return {
+            pool,
+            share: dnum.from(random() * 0.1, 18), // 0% to 10%
+            snftId: id,
+            token: [token.contractAddress, token.tokenId] as const,
+          }
+        },
+      ),
+    ],
   ),
 )
 
-function rewards() {
-  const { token } = rand(SNFTS)
-  const reward = dnum.divide(
-    token.supply,
-    randNumber({ min: 1000, max: 2000 }),
-  )
+function randomReward(rewardType: Reward["rewardType"]): Reward {
+  const snft = rand(SNFTS)
+
+  const amount = rewardType === "buyout"
+    ? dnum.from(random() * 4, true) // 0 to 4 ETH
+    : dnum.divide(snft.token.supply, randNumber({ min: 1000, max: 2000 }))
+
+  const token: Reward["token"] = rewardType === "buyout"
+    ? "ETH"
+    : [snft.token.contractAddress, snft.token.tokenId]
+
+  const share = rewardType === "buyout"
+    ? undefined
+    : dnum.from(0.01 + random() * 0.05, 18) // 1% to 5%
+
   return {
-    reward,
-    token: [token.contractAddress, token.tokenId] as const,
+    amount,
+    rewardType,
+    share,
+    snftId: snft.id,
+    token,
   }
 }
 
-export const REWARDS_BY_ACCOUNT = new Map(
+export const REWARDS_BY_ACCOUNT = new Map<Address, Reward[]>(
   Array.from(CREATORS_BY_ADDRESS.keys()).map(
     (address) => [
       address,
-      {
-        "creators": list(randNumber({ min: 1, max: 2 }), rewards),
-        "community": list(randNumber({ min: 1, max: 2 }), rewards),
-        "buyout": list(randNumber({ min: 1, max: 2 }), rewards),
-      },
+      shuffle(
+        (["creators", "community", "buyout"] as Reward["rewardType"][]).flatMap(
+          (type) => (
+            list(
+              randNumber({ min: 1, max: 2 }),
+              () => randomReward(type),
+            )
+          ),
+        ),
+      ),
     ],
   ),
 )

@@ -14,6 +14,24 @@ export type Distribution = Array<{
   quantity: Dnum
 }>
 
+export type Token = {
+  contractAddress: Address
+  decimals: number
+  distribution: Distribution
+  holdersCount: number
+  marketCapEth: Dnum
+  minted: Dnum
+  name: string
+  priceEth: Dnum
+  supply: Dnum
+  symbol: string
+  tokenId: string
+  topHolders: Array<readonly [name: string, picture: string]>
+}
+
+export type TokenId = string
+export type TokenLocator = readonly [Address, TokenId]
+
 export type Snft = Readonly<{
   id: string
   buyoutPrice: Dnum
@@ -38,25 +56,20 @@ export type Snft = Readonly<{
     token: Dnum
   }
   title: string
-  token: Readonly<{
-    contractAddress: Address
-    decimals: number
-    distribution: Distribution
-    holdersCount: number
-    marketCapEth: Dnum
-    minted: Dnum
-    name: string
-    priceEth: Dnum
-    supply: Dnum
-    symbol: string
-    tokenId: string
-    topHolders: Array<readonly [name: string, picture: string]>
-  }>
+  token: Readonly<Token>
 }>
 
 export type PoolShare = {
   pool: Snft["pool"]
   share: Dnum
   snftId: string
-  token: readonly [Address, string]
+  token: TokenLocator
+}
+
+export type Reward = {
+  amount: Dnum
+  rewardType: "creators" | "community" | "buyout"
+  share?: Dnum
+  snftId: string
+  token: TokenLocator | "ETH"
 }

@@ -1,6 +1,6 @@
 import type { Address, AddressOrEnsName } from "kit"
 import type { UseQueryResult } from "react-query"
-import type { PoolShare, Snft } from "./types"
+import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
 
 import uniqBy from "lodash.uniqby"
 import { useQuery } from "react-query"
@@ -159,13 +159,8 @@ export function usePool(
   )
 }
 
-export function useToken(
-  token: [
-    contractAddress: AddressOrEnsName,
-    tokenId: string,
-  ],
-): UseQueryResult<Snft["token"]> {
-  const [contractAddress, tokenId] = token
+export function useToken(token?: TokenLocator): UseQueryResult<Snft["token"]> {
+  const [contractAddress, tokenId] = token ?? ["", ""]
   return useQuery(
     ["token", contractAddress, tokenId],
     async () => {
@@ -194,7 +189,9 @@ export function useResolveAddress(
   )
 }
 
-export function useFractionsByAddress(account: AddressOrEnsName) {
+export function useFractionsByAddress(
+  account: AddressOrEnsName,
+): UseQueryResult<ReturnType<typeof FRACTIONS_BY_ACCOUNT.get>> {
   const address = useResolveAddress(account)
   return useQuery(
     ["fractions-by-account", account],
@@ -224,7 +221,7 @@ export function usePoolsByAddress(
 
 export function useRewardsByAddress(
   account: AddressOrEnsName,
-): UseQueryResult<ReturnType<typeof REWARDS_BY_ACCOUNT.get>> {
+): UseQueryResult<Reward[]> {
   const address = useResolveAddress(account)
   return useQuery(
     ["rewards-by-account", account],
