@@ -28,6 +28,8 @@ export type ButtonMode =
   | "outline" // green
   | "outline-2" // purple
   | "outline-3" // orange
+  | "positive" // green
+  | "negative" // red
 export type ButtonSize =
   | "medium"
   | "compact" // "compact" is a small button with large text
@@ -109,7 +111,11 @@ export const Button = forwardRef<
       return selected ? colors.accent2Content : colors.accent2
     }
     if (mode === "outline-3") return colors.warning
-    return colors.accent // secondary
+
+    if (mode === "positive") return colors.positive
+    if (mode === "negative") return colors.negative
+
+    return colors.accent // outline or secondary
   }, [mode, selected])
 
   return (
@@ -215,16 +221,33 @@ function ButtonIn({
     if (mode === "primary-2") return colors.accent2
     if (mode === "outline-2") return selected ? colors.accent2 : colors.layer2
     if (mode === "outline-3") return colors.background
+    if (mode === "positive" || mode === "negative") return colors.layer3
     return colors.background // secondary, secondary-2
-  }, [mode, selected])
+  }, [colors, mode, selected])
 
   const borderColor = useMemo(() => {
     if (mode === "primary-2") return colors.accent2
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") return colors.accent2
     if (mode === "outline-3") return colors.warning
+    if (mode === "positive") return colors.positive
+    if (mode === "negative") return colors.negative
     return colors.accent
-  }, [mode])
+  }, [colors, mode])
+
+  const moireLinesColor = useMemo(() => {
+    if (mode === "primary-2" || mode === "secondary-2") return colors.accent2
+    if (mode === "positive") return colors.positive
+    if (mode === "negative") return colors.negative
+    return undefined
+  }, [colors, mode])
+
+  const activeShadowColor = useMemo(() => {
+    if (mode === "primary-2" || mode === "secondary-2") return colors.accent2
+    if (mode === "positive") return colors.positive
+    if (mode === "negative") return colors.negative
+    return colors.accent
+  }, [colors, mode])
 
   return (
     <div
@@ -297,14 +320,12 @@ function ButtonIn({
           >
             <div
               className="active-shadow"
-              css={({ colors }) => ({
+              css={{
                 position: "absolute",
                 inset: "0",
-                background: mode === "primary-2" || mode === "secondary-2"
-                  ? colors.accent2
-                  : colors.accent,
+                background: activeShadowColor,
                 opacity: "0",
-              })}
+              }}
             />
             <div
               ref={shadowBounds.observe}
@@ -318,9 +339,7 @@ function ButtonIn({
               <Moire
                 width={Math.ceil(shadowBounds.width)}
                 height={Math.ceil(shadowBounds.height)}
-                linesColor={mode === "primary-2" || mode === "secondary-2"
-                  ? colors.accent2
-                  : undefined}
+                linesColor={moireLinesColor}
               />
             </div>
           </div>

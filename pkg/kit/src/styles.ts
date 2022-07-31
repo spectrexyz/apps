@@ -49,6 +49,7 @@ export const colors = {
   background: "#050E1F",
   layer1: "#242D40",
   layer2: "#141D2F",
+  layer3: "#1F244D",
   translucid: "#2B2C61",
   outline: "#525B70",
   outline2: "#242D40",
