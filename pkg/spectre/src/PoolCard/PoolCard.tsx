@@ -1,11 +1,11 @@
 import type { Dnum } from "dnum"
-import type { ReactNode } from "react"
 import type { TokenLocator } from "../types"
 
 import dnum from "dnum"
 import {
   Button,
   Card,
+  Definition,
   DiscsChain,
   gu,
   IconEye,
@@ -16,7 +16,6 @@ import {
   useTheme,
 } from "kit"
 import { usePool, useSnft2, useToken } from "../snft-hooks"
-import { useLabelStyle } from "../styles"
 
 export function PoolCard({
   compact,
@@ -102,8 +101,9 @@ export function PoolCard({
                 paddingTop: "4gu",
               }}
             >
-              <Definition title="Pooled ETH" spacing={0.5 * gu}>
-                {pool.data && (
+              <Definition
+                title="Pooled ETH"
+                content={pool.data && (
                   <TokenAmount
                     compact={true}
                     converted={ethToUsd(pool.data.eth)}
@@ -114,12 +114,11 @@ export function PoolCard({
                     })}
                   />
                 )}
-              </Definition>
+                spacing={0.5 * gu}
+              />
               <Definition
                 title={`Pooled ${token.data.symbol}`}
-                spacing={0.5 * gu}
-              >
-                {pool.data && (
+                content={pool.data && (
                   <TokenAmount
                     compact={true}
                     converted={ethToUsd(dnum.multiply(
@@ -133,7 +132,8 @@ export function PoolCard({
                     })}
                   />
                 )}
-              </Definition>
+                spacing={0.5 * gu}
+              />
             </div>
 
             <div css={{ padding: "4gu 0" }}>
@@ -145,15 +145,20 @@ export function PoolCard({
               />
             </div>
             <div css={{ paddingBottom: "3gu" }}>
-              <Definition title="Pool share owned" spacing={0}>
-                <Percentage percentage={poolShare} />
-              </Definition>
+              <Definition
+                title="Pool share owned"
+                spacing={0}
+                content={<Percentage percentage={poolShare} />}
+              />
             </div>
-            <Definition title="Pool value owned">
-              <div css={{ fontSize: "16px" }}>
-                $108,028,579
-              </div>
-            </Definition>
+            <Definition
+              title="Pool value owned"
+              content={
+                <div css={{ fontSize: "16px" }}>
+                  $108,028,579
+                </div>
+              }
+            />
           </section>
           <div
             css={{
@@ -169,23 +174,5 @@ export function PoolCard({
         </div>
       )}
     </Card>
-  )
-}
-
-function Definition({
-  children,
-  spacing = 1 * gu,
-  title,
-}: {
-  children: ReactNode
-  spacing?: Number
-  title: ReactNode
-}) {
-  const labelStyle = useLabelStyle({ size: "small" })
-  return (
-    <div>
-      <h2 css={labelStyle}>{title}</h2>
-      <div css={{ paddingTop: `${spacing}px` }}>{children}</div>
-    </div>
   )
 }

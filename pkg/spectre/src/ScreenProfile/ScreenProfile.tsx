@@ -27,12 +27,14 @@ import { RewardCard } from "../RewardCard"
 import {
   useFractionsByAddress,
   usePoolsByAddress,
+  useProposalsByAddress,
   useRewardsByAddress,
   useSnftCreator,
   useSnftsByCreator,
 } from "../snft-hooks"
 import { useLayout, useViewportValue } from "../styles"
 import { useIsConnectedAddress } from "../web3-hooks"
+import { PanelProposals } from "./PanelProposals"
 
 const resolvedAddress = "0xfabe062eb33af3e68eb3329818d0507949c14142"
 
@@ -61,11 +63,13 @@ export function ScreenProfile({
 }) {
   const [, setLocation] = useLocation()
   const layout = useLayout()
-  const snfts = useSnftsByCreator(address)
+
+  const creator = useSnftCreator(address)
   const fractions = useFractionsByAddress(address)
   const pools = usePoolsByAddress(address)
+  const proposals = useProposalsByAddress(address)
   const rewards = useRewardsByAddress(address)
-  const creator = useSnftCreator(address)
+  const snfts = useSnftsByCreator(address)
 
   if (!isAddressOrEnsName(address)) {
     throw new Error(`Wrong address: ${address}`)
@@ -265,6 +269,11 @@ export function ScreenProfile({
                     ))}
                   </Grid>
                 )
+                : <PanelLoading />
+            )}
+            {panel === "proposals" && (
+              proposals.data
+                ? <PanelProposals proposals={proposals.data} />
                 : <PanelLoading />
             )}
           </div>

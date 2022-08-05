@@ -37,9 +37,9 @@
     "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^18.0.6",
     "@types/stylis": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
-    "eslint": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "^8.21.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.30.1",
@@ -50,8 +50,8 @@
     "ts-jest": "^28.0.7",
     "typescript": "^4.7.4",
     "vite": "^3.0.4",
-    "vite-plugin-dts": "^1.4.0",
-    "vitest": "^0.19.1"
+    "vite-plugin-dts": "^1.4.1",
+    "vitest": "^0.20.2"
   },
   "dependencies": {
     "@elchininet/isometric": "^3.6.0",

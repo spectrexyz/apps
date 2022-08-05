@@ -73,3 +73,16 @@ export type Reward = {
   snftId: string
   token: TokenLocator | "ETH"
 }
+
+export type Proposal = {
+  id: string
+  action:
+    | { type: "mint"; quantity: Dnum }
+    | { type: "buyout"; amount: Dnum }
+  duration: number
+  endsOn: string
+  snftId: string
+  status: "approved" | "rejected" | "submitted"
+  submitter: Address
+  buyerOwnership: Dnum
+}

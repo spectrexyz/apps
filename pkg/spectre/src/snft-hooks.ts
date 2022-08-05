@@ -8,6 +8,7 @@ import { useProvider } from "wagmi"
 import {
   FRACTIONS_BY_ACCOUNT,
   POOLS_BY_ACCOUNT,
+  PROPOSALS_BY_ACCOUNT,
   REWARDS_BY_ACCOUNT,
   SNFTS,
 } from "./demo-data"
@@ -229,6 +230,21 @@ export function useRewardsByAddress(
       await fakeDelay()
       return address.data
         && REWARDS_BY_ACCOUNT.get(`0x${address.data.slice(2).toLowerCase()}`)
+    },
+    { enabled: Boolean(address.data) },
+  )
+}
+
+export function useProposalsByAddress(
+  account: AddressOrEnsName,
+): UseQueryResult<Reward[]> {
+  const address = useResolveAddress(account)
+  return useQuery(
+    ["proposals-by-account", account],
+    async () => {
+      await fakeDelay()
+      return address.data
+        && PROPOSALS_BY_ACCOUNT.get(`0x${address.data.slice(2).toLowerCase()}`)
     },
     { enabled: Boolean(address.data) },
   )

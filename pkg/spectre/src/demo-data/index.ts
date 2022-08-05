@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "kit"
-import type { PoolShare, Reward, Snft } from "../types"
+import type { PoolShare, Proposal, Reward, Snft } from "../types"
 
 import {
   rand,
@@ -12,7 +12,7 @@ import {
   seed,
 } from "@ngneat/falso"
 import dnum from "dnum"
-import { list } from "kit"
+import { DAY_MS, list } from "kit"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -425,6 +425,52 @@ export const REWARDS_BY_ACCOUNT = new Map<Address, Reward[]>(
             )
           ),
         ),
+      ),
+    ],
+  ),
+)
+
+let proposalIndex = 0
+
+function randomProposal(): Proposal {
+  proposalIndex++
+
+  const snft = rand(SNFTS)
+  const endsOn = new Date(
+    Date.now() + DAY_MS + Math.floor(DAY_MS * random() * 6),
+  )
+
+  return {
+    id: `${proposalIndex}`,
+    action: rand([
+      {
+        type: "mint",
+        quantity: dnum.multiply(
+          dnum.subtract(snft.token.supply, snft.token.minted),
+          0.1 + random() * 0.9, // mint between 10% and 90% of the remaining
+        ),
+      },
+      {
+        type: "buyout",
+        amount: snft.buyoutPrice,
+      },
+    ]),
+    duration: DAY_MS * 7,
+    endsOn: endsOn.toISOString(),
+    snftId: snft.id,
+    status: rand(["approved", "rejected", "submitted"]),
+    submitter: rand(Array.from(CREATORS_BY_ADDRESS.values())).resolvedAddress,
+    buyerOwnership: dnum.from(random() * 0.25, 18),
+  }
+}
+
+export const PROPOSALS_BY_ACCOUNT = new Map<Address, Proposal[]>(
+  Array.from(CREATORS_BY_ADDRESS.keys()).map(
+    (address) => [
+      address,
+      list(
+        randNumber({ min: 1, max: 5 }),
+        () => randomProposal(),
       ),
     ],
   ),
