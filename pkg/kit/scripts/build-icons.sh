@@ -2,7 +2,7 @@
 
 DIR_IN=icons
 DIR_OUT=src/icons
-TEMPLATE=icons/svgr-template.js
+TEMPLATE=icons/svgr-template.cjs
 SVGO_CONF=$(cat <<EOF
 {
   "plugins": [
