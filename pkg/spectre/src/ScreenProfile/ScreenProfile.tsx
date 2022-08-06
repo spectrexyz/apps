@@ -16,7 +16,7 @@ import {
   noop,
   Tabs,
 } from "kit"
-import { useCallback, useMemo } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
@@ -34,6 +34,7 @@ import {
 } from "../snft-hooks"
 import { useLayout, useViewportValue } from "../styles"
 import { useIsConnectedAddress } from "../web3-hooks"
+import { EditProfileModal } from "./EditProfileModal"
 import { PanelProposals } from "./PanelProposals"
 
 const resolvedAddress = "0xfabe062eb33af3e68eb3329818d0507949c14142"
@@ -99,6 +100,8 @@ export function ScreenProfile({
     small: "3gu",
     xlarge: "8gu",
   })
+
+  const [editProfile, setEditProfile] = useState(false)
 
   return (
     <AppScreen compactBar={null} loading={!creator.data}>
@@ -204,7 +207,11 @@ export function ScreenProfile({
                         icon={<IconPencil />}
                         label="Edit profile"
                         labelPosition="left"
-                        onClick={noop}
+                        onClick={() => setEditProfile(true)}
+                      />
+                      <EditProfileModal
+                        visible={editProfile}
+                        onClose={() => setEditProfile(false)}
                       />
                     </div>
                   )}
