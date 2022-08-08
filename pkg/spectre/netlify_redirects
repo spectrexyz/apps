@@ -1,2 +1,4 @@
 /fractionalize    /    200
 /nfts/*           /    200
+/0x*              /    200
+/*.eth*           /    200
