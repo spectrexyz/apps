@@ -10,7 +10,7 @@ export function SwapModule({ id }: { id: string }) {
   return (
     <div>
       <div css={{ padding: "0 2gu" }}>
-        <FromTo label="From" />
+        <Label label="From" />
         <div>
           <TokenInput
             onChange={setEthValue}
@@ -42,7 +42,7 @@ export function SwapModule({ id }: { id: string }) {
           background: colors.layer1,
         })}
       >
-        <FromTo label="To (estimated)" />
+        <Label label="To (estimated)" />
         {snft && (
           <TokenInput
             onChange={setEthValue}
@@ -55,14 +55,14 @@ export function SwapModule({ id }: { id: string }) {
   )
 }
 
-function FromTo({ label }: { label: string }) {
+function Label({ label }: { label: string }) {
   return (
     <div
-      css={({ colors, fonts }) => ({
-        fontFamily: fonts.sans,
+      css={{
+        fontFamily: "fonts.sans",
         fontSize: "14px",
-        color: colors.contentDimmed,
-      })}
+        color: "colors.contentDimmed",
+      }}
     >
       {label}
     </div>
