@@ -2,7 +2,7 @@ import type { Dnum } from "dnum"
 import type { ReactNode } from "react"
 import type { Snft } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import {
   AddressBadge,
   Button,
@@ -50,14 +50,11 @@ export function NftOwnership({ snft }: { snft: Snft }) {
     }
   }, [inView])
 
-  const { decimals, distribution, minted, supply } = snft.token
+  const { distribution, minted, supply } = snft.token
 
   const shares = useMemo(
-    () =>
-      calculateShares(
-        distribution.map((s) => s.quantity),
-      ),
-    [decimals, distribution],
+    () => calculateShares(distribution.map((s) => s.quantity)),
+    [distribution],
   )
 
   const mintedValue = useMemo(() => [

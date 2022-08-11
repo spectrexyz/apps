@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { createContext, useContext } from "react"
+import { Children, createContext, useContext } from "react"
 import { useLayout } from "../styles"
 
 const GridContext = createContext<null | true>(null)
@@ -33,11 +33,14 @@ export function Grid({ children }: { children: ReactNode }) {
           padding,
         }}
       >
-        {children.map((node, index) => (
-          <div key={index} css={{ overflow: "hidden" }}>
-            {node}
-          </div>
-        ))}
+        {Children.map(
+          children,
+          (node, index) => (
+            <div key={index} css={{ overflow: "hidden" }}>
+              {node}
+            </div>
+          ),
+        )}
       </div>
     </GridContext.Provider>
   )

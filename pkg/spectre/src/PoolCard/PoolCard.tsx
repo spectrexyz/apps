@@ -1,7 +1,7 @@
 import type { Dnum } from "dnum"
 import type { TokenLocator } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import {
   Button,
   Card,
@@ -69,10 +69,12 @@ export function PoolCard({
               <DiscsChain
                 images={[
                   <TokenIcon
+                    key="eth"
                     size={compact ? 4 * gu : 8 * gu}
                     tokenType="eth"
                   />,
                   <TokenIcon
+                    key="serc20"
                     size={compact ? 4 * gu : 8 * gu}
                     src={snft.data?.image.url}
                     tokenType="serc20"

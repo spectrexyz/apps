@@ -1,3 +1,4 @@
+import type { FormEventHandler } from "react"
 import type { StepProps } from "./types"
 
 import {
@@ -22,8 +23,8 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
   const data = useSpectralize()
   const layout = useLayout()
 
-  const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+    (event) => {
       event.preventDefault()
       onNext()
     },
@@ -40,12 +41,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      css={{
-        width: "100%",
-      }}
-    >
+    <form onSubmit={handleSubmit} css={{ width: "100%" }}>
       <ContentLayout>
         <ContentLayoutHeading
           title={

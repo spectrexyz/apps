@@ -1,7 +1,7 @@
 import type { Dnum } from "dnum"
 import type { TokenLocator } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { Button, Card, co, DiscsChain, formatNumber } from "kit"
 import { useMemo } from "react"
 import { useLocation } from "wouter"

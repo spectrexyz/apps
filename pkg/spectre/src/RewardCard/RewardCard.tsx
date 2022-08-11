@@ -2,7 +2,7 @@ import type { Dnum } from "dnum"
 import type { ReactNode } from "react"
 import type { Reward, TokenLocator } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import {
   Button,
   ButtonText,
@@ -64,7 +64,7 @@ function RewardCardBase(
     if (rewardType === "creators") return ["Creators reward", iconCreators]
     if (rewardType === "community") return ["Community reward", iconCommunity]
     if (rewardType === "buyout") return ["Buyout reward", iconBuyout]
-    throw new Error("Wrong reward type used on RewardCard: " + rewardType)
+    throw new Error(`Wrong reward type used on RewardCard: ${rewardType}`)
   }, [rewardType])
 
   return (
@@ -105,9 +105,9 @@ function RewardCardBase(
             >
               <div>
                 <ButtonText
+                  onClick={onRewardTitleClick}
                   label={
                     <span
-                      onClick={onRewardTitleClick}
                       css={{
                         color: "colors.link",
                         textDecoration: "underline",

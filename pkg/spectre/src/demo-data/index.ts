@@ -11,7 +11,7 @@ import {
   randUser,
   seed,
 } from "@ngneat/falso"
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { DAY_MS, list } from "kit"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"

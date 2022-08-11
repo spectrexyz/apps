@@ -1,6 +1,6 @@
 import type { Snft } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { Button, IconEye, useEthToUsdFormat } from "kit"
 import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"

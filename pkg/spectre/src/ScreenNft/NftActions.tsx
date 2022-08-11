@@ -1,6 +1,6 @@
 import type { Snft } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { Button, TokenAmount, useEthToUsdFormat } from "kit"
 import { useLocation } from "wouter"
 import { useLayout } from "../styles"

@@ -1,6 +1,6 @@
 import type { Proposal } from "../types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import {
   AddressBadge,
   Button,
@@ -21,6 +21,7 @@ import { useSnft2 } from "../snft-hooks"
 function Status({ status }: { status: Proposal["status"] }) {
   const { colors } = useTheme()
 
+  /* eslint-disable react/jsx-key */
   const [label, icon] = useMemo(() => {
     const iconSize = 3 * gu
     if (status === "approved") {
@@ -41,8 +42,9 @@ function Status({ status }: { status: Proposal["status"] }) {
         <IconCheck size={iconSize} color={colors.positive} />,
       ]
     }
-    throw new Error("Wrong status:" + status)
+    throw new Error(`Wrong status: ${status}`)
   }, [colors, status])
+  /* eslint-enable react/jsx-key */
 
   return (
     <div css={{ display: "flex", alignItems: "center", gap: "1gu" }}>
@@ -147,9 +149,9 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
                   <div css={{ fontSize: "16px" }}>
                     Buyout{" "}
                     <ButtonText
+                      onClick={() => setLocation(`/nfts/${snft.data?.id}`)}
                       label={
                         <span
-                          onClick={() => setLocation(`/nfts/${snft.data?.id}`)}
                           css={{
                             color: "colors.link",
                             textDecoration: "underline",

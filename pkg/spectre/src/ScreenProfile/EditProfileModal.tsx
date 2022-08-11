@@ -1,6 +1,6 @@
 import type { FormEvent } from "react"
 
-import { Button, Fieldset, Modal, TextInput, Toggle } from "kit"
+import { Button, Fieldset, Modal, noop, TextInput, Toggle } from "kit"
 import { useCallback, useState } from "react"
 import { useLayout } from "../styles"
 
@@ -51,7 +51,7 @@ export function EditProfileModalForm({
 }: {
   onSave(): void
 }) {
-  const save = useCallback(() => {}, [])
+  const save = useCallback(noop, [])
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
