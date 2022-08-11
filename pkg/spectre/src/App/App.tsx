@@ -9,6 +9,8 @@ import makeMatcher from "wouter/matcher"
 import { AppLayout } from "../AppLayout/AppLayout"
 import { ScreenBuy } from "../ScreenBuy/ScreenBuy"
 import { ScreenHome } from "../ScreenHome/ScreenHome"
+import { ScreenLiquidityAdd } from "../ScreenLiquidity/ScreenLiquidityAdd"
+import { ScreenLiquidityRemove } from "../ScreenLiquidity/ScreenLiquidityRemove"
 import { ScreenNft } from "../ScreenNft/ScreenNft"
 import { ScreenProfile } from "../ScreenProfile/ScreenProfile"
 import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize"
@@ -55,6 +57,14 @@ export function App() {
           {/* Swap */}
           <Route path="/nfts/:id/buy">
             {({ id }) => <ScreenBuy id={id} />}
+          </Route>
+
+          {/* Liquidity */}
+          <Route path="/nfts/:id/add-liquidity">
+            {({ id }) => <ScreenLiquidityAdd id={id} />}
+          </Route>
+          <Route path="/nfts/:id/remove-liquidity">
+            {({ id }) => <ScreenLiquidityRemove id={id} />}
           </Route>
 
           {/* Profile */}

@@ -69,12 +69,10 @@ export function PoolCard({
               <DiscsChain
                 images={[
                   <TokenIcon
-                    alt=""
                     size={compact ? 4 * gu : 8 * gu}
                     tokenType="eth"
                   />,
                   <TokenIcon
-                    alt=""
                     size={compact ? 4 * gu : 8 * gu}
                     src={snft.data?.image.url}
                     tokenType="serc20"

@@ -1,8 +1,11 @@
 import { ChangeEvent, ReactNode, useCallback } from "react"
 import { Button } from "../Button"
 import { ButtonText } from "../ButtonText"
+import { DiscsChain } from "../DiscsChain"
 import { gu } from "../styles"
 import { TokenIcon } from "../TokenIcon"
+
+type SymbolAndImageUrl = [symbol: string, imageUrl: string]
 
 type TokenInputProps = {
   balance?: string // TODO: deprecate
@@ -11,9 +14,10 @@ type TokenInputProps = {
 
   maxButton?: boolean
   onChange: (value: string) => void
+  pair?: [string | SymbolAndImageUrl, string | SymbolAndImageUrl]
   secondaryEnd?: ReactNode
   secondaryStart?: ReactNode
-  symbol: string
+  symbol?: string
   value: string
 }
 
@@ -23,6 +27,7 @@ export function TokenInput({
   maxButton = false,
   onBalanceClick,
   onChange,
+  pair,
   secondaryEnd,
   secondaryStart,
   symbol,
@@ -35,6 +40,12 @@ export function TokenInput({
   if (hasBalanceRow && hasSecondaryRow) {
     throw new Error(
       "TokenInput: please only use balance / balanceConverted or secondary, not both.",
+    )
+  }
+
+  if ((pair && symbol) || (!pair && !symbol)) {
+    throw new Error(
+      "TokenInput: please use either pair or symbol.",
     )
   }
 
@@ -65,13 +76,27 @@ export function TokenInput({
             paddingRight: maxButton ? "2gu" : "0.5gu",
           }}
         >
-          <TokenIcon tokenType={symbol === "ETH" ? "eth" : "serc20"} />
-          <span
-            css={{
-              padding: "0 1gu",
-            }}
-          >
-            {symbol}
+          {pair
+            ? (
+              <DiscsChain
+                images={pair.map((symbol) => (
+                  <TokenIcon
+                    tokenType={symbol === "ETH" ? "eth" : "serc20"}
+                    src={Array.isArray(symbol) ? symbol[1] : undefined}
+                  />
+                ))}
+              />
+            )
+            : (
+              <TokenIcon
+                tokenType={symbol === "ETH" ? "eth" : "serc20"}
+              />
+            )}
+
+          <span css={{ padding: "0 1gu", whiteSpace: "nowrap" }}>
+            {pair
+              ? pair.map((v) => Array.isArray(v) ? v[0] : v).join("-")
+              : symbol}
           </span>
           {maxButton && (
             <Button
@@ -91,21 +116,21 @@ export function TokenInput({
           type="text"
           onChange={handleChange}
           value={value}
-          css={({ colors }) => ({
+          css={{
             display: "block",
             width: "100%",
             marginRight: "-1gu",
             paddingRight: "1gu",
             textAlign: "right",
             fontSize: "24px",
-            color: colors.accent,
+            color: "colors.accent",
             background: "none",
             border: "0",
             outline: "0",
             "&:focus": {
-              outline: `2px solid ${colors.focus}`,
+              outline: "2px solid colors.focus",
             },
-          })}
+          }}
         />
       </div>
       {hasSecondaryRow && (
@@ -117,14 +142,12 @@ export function TokenInput({
           onStartClick={onBalanceClick}
           start={
             <>
-              <span
-                css={({ colors }) => ({
-                  color: colors.contentDimmed,
-                })}
-              >
+              <span css={{ color: "colors.contentDimmed" }}>
                 Balance:
               </span>{" "}
-              {balance} {symbol}
+              {balance} {pair
+                ? pair.map((v) => v[0]).join("-")
+                : symbol}
             </>
           }
         />

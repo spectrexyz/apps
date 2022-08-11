@@ -19,38 +19,61 @@ export function ScreenHome() {
       }
     }
 
-  const actions: [string, () => void][] = [
-    ["/:address", randomAddressCb()],
-    ["/:address/fractions", randomAddressCb("/fractions")],
-    ["/:address/pools", randomAddressCb("/pools")],
-    ["/:address/rewards", randomAddressCb("/rewards")],
-    ["/:address/proposals", randomAddressCb("/proposals")],
-    ["/:address (connected)", () => {
-      if (creators.data) {
-        setLocation(`/${creators.data[0]?.address}`)
-      }
-    }],
-
-    ["/nfts/:id", () => {
-      setLocation(`/nfts/${randomId()}`)
-    }],
-    ["/nfts/:id/fractions", () => {
-      setLocation(`/nfts/${randomId()}/fractions`)
-    }],
-    ["/nfts/:id/pool", () => {
-      setLocation(`/nfts/${randomId()}/pool`)
-    }],
-    ["/nfts/:id/buy", () => {
-      setLocation(`/nfts/${randomId()}/buy`)
-    }],
-    ["/fractionalize", () => {
-      spectralize.reset()
-      setLocation("/fractionalize")
-    }],
-    ["/fractionalize (filled)", () => {
-      spectralize.fillDemoData()
-      setLocation("/fractionalize")
-    }],
+  const actions: [
+    group: string,
+    actions: [label: string, action: () => void][],
+  ][] = [
+    [
+      "Profile",
+      [
+        ["/:address", randomAddressCb()],
+        ["/:address/fractions", randomAddressCb("/fractions")],
+        ["/:address/pools", randomAddressCb("/pools")],
+        ["/:address/rewards", randomAddressCb("/rewards")],
+        ["/:address/proposals", randomAddressCb("/proposals")],
+        ["/:address (connected)", () => {
+          if (creators.data) {
+            setLocation(`/${creators.data[0]?.address}`)
+          }
+        }],
+      ],
+    ],
+    [
+      "NFT",
+      [
+        ["/nfts/:id", () => {
+          setLocation(`/nfts/${randomId()}`)
+        }],
+        ["/nfts/:id/fractions", () => {
+          setLocation(`/nfts/${randomId()}/fractions`)
+        }],
+        ["/nfts/:id/pool", () => {
+          setLocation(`/nfts/${randomId()}/pool`)
+        }],
+        ["/nfts/:id/buy", () => {
+          setLocation(`/nfts/${randomId()}/buy`)
+        }],
+        ["/nfts/:id/add-liquidity", () => {
+          setLocation(`/nfts/${randomId()}/add-liquidity`)
+        }],
+        ["/nfts/:id/remove-liquidity", () => {
+          setLocation(`/nfts/${randomId()}/remove-liquidity`)
+        }],
+      ],
+    ],
+    [
+      "Fractionalize",
+      [
+        ["/fractionalize", () => {
+          spectralize.reset()
+          setLocation("/fractionalize")
+        }],
+        ["/fractionalize (filled)", () => {
+          spectralize.fillDemoData()
+          setLocation("/fractionalize")
+        }],
+      ],
+    ],
   ]
 
   return (
@@ -61,22 +84,40 @@ export function ScreenHome() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          width: "100%",
           height: "100%",
-          paddingTop: "8gu",
+          padding: "8gu 4gu 0",
         }}
       >
-        <div>
-          <div css={{ paddingBottom: "2gu" }}>APP PATHS</div>
-          <div css={{ display: "grid", gap: "2gu" }}>
-            {actions.map(([label, onClick], index) => (
-              <div key={index}>
-                <Button
-                  label={label}
-                  onClick={onClick}
-                />
+        <div
+          css={{
+            display: "flex",
+            flexFlow: "row wrap",
+            gap: "4gu",
+          }}
+        >
+          {actions.map(([group, actions], index) => (
+            <div key={index}>
+              <div
+                css={{
+                  paddingBottom: "2gu",
+                  textTransform: "uppercase",
+                }}
+              >
+                {group}
               </div>
-            ))}
-          </div>
+              <div css={{ display: "grid", gap: "2gu" }}>
+                {actions.map(([label, onClick], index) => (
+                  <div key={index}>
+                    <Button
+                      label={label}
+                      onClick={onClick}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
         {false && creators.data?.map((creator) => {
           return (
