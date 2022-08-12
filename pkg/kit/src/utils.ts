@@ -1,7 +1,7 @@
 import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName, EnsName } from "./types"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import ms from "ms"
 import prettyBytes from "pretty-bytes"
 
@@ -20,12 +20,12 @@ function list(length: number): number[]
 function list<T>(length: number, callback: ListCb<T>): T[]
 
 function list(length: number, callback?: ListCb<unknown>) {
-  const cb = callback || ((index, _) => index)
+  const cb = callback || ((index) => index)
   return Array.from({ length }, (_, index) => cb(index, length))
 }
 export { list }
 
-export function shuffle<T = unknown>(arr: T[]): T[] {
+export function shuffle<T>(arr: T[]): T[] {
   const _arr = [...arr]
   for (let i = _arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -42,7 +42,7 @@ export function norm(value: number, low: number, high: number) {
   return (value - low) / (high - low)
 }
 
-export function progressToItem<T extends unknown>(
+export function progressToItem<T>(
   progress: number,
   itemArray: T[],
 ): T | null {
@@ -236,8 +236,9 @@ export function formatAmount(
     Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
   )
 
-  fraction = zeros
-    + divideRoundBigInt(BigInt(fraction), 10n ** (decimals - _digits))
+  fraction = zeros + String(
+    divideRoundBigInt(BigInt(fraction), 10n ** (decimals - _digits)),
+  )
 
   if (!trailingZeros) {
     fraction = fraction.replace(/0+$/, "")
@@ -323,12 +324,17 @@ export const HOUR_MS = MINUTE_MS * 60
 export const DAY_MS = HOUR_MS * 24
 export const WEEK_MS = DAY_MS * 7
 
-export function pick<T extends object, U extends keyof T>(
-  obj: T,
-  paths: U[],
-): Pick<T, U> {
-  const values = Object.create(null)
-  for (const k of paths) values[k] = obj[k]
+export function pick<
+  ObjFrom extends Record<string, unknown>,
+  Key extends keyof ObjFrom,
+>(
+  obj: ObjFrom,
+  paths: Key[],
+): Pick<ObjFrom, Key> {
+  const values = Object.create(null) as Pick<ObjFrom, Key>
+  for (const k of paths) {
+    values[k] = obj[k]
+  }
   return values
 }
 
@@ -356,7 +362,7 @@ export function calculateShares(balances: Dnum[]): Share[] {
       amount,
       index,
       percentage: Number(amount[0] * BigInt(pctPrecision) / total[0]),
-      type: "amount" as "amount",
+      type: "amount" as const,
     }))
     .sort((a, b) => Number(b.percentage - a.percentage))
 
@@ -460,7 +466,7 @@ export function calculateShares(balances: Dnum[]): Share[] {
   )
 }
 
-export function clamp(value: number, min: number = 0, max: number = 1) {
+export function clamp(value: number, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max)
 }
 
@@ -486,7 +492,7 @@ export function clamp(value: number, min: number = 0, max: number = 1) {
  */
 function decomposeFloat(f: number) {
   if (!isFinite(f)) {
-    throw new Error("Input must be finite: " + f)
+    throw new Error(`Input must be finite: ${f}`)
   }
   const union = new DataView(new ArrayBuffer(8))
   const littleEndian = true // arbitrary, but faster when matches native arch
@@ -495,7 +501,7 @@ function decomposeFloat(f: number) {
   const sgn = (-1n) ** (bytes >> 63n)
   const biasedExponent = (bytes & ~(1n << 63n)) >> 52n
   if (biasedExponent === 0n) {
-    throw new Error("Subnormal floats not supported: " + f)
+    throw new Error(`Subnormal floats not supported: ${f}`)
   }
   const exponent = biasedExponent - 1023n
   const mantissa = bytes & ((1n << 52n) - 1n)

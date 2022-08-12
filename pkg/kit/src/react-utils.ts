@@ -12,7 +12,7 @@ import { fromDecimals, toDecimals, uid } from "./utils"
 export function useKey(
   key: string,
   callback: () => void,
-  condition: boolean = true,
+  condition = true,
 ) {
   useEffect(() => {
     if (!condition) return
@@ -83,7 +83,7 @@ export function useEvery(cb: () => void, delay: number) {
 export function useAmountInput(
   initialValue: bigint,
   save: (value: bigint) => void,
-  decimals: number = 18,
+  decimals = 18,
 ) {
   const [inputValue, setInputValue] = useState(
     fromDecimals(initialValue, decimals),
@@ -94,14 +94,16 @@ export function useAmountInput(
       if (BigInt(toDecimals(inputValue, decimals)) !== initialValue) {
         setInputValue(fromDecimals(initialValue, decimals))
       }
-    } catch (_) {}
+    } catch (_) {
+      // todo
+    }
   }, [decimals, initialValue, inputValue])
 
   const _save = useRef(save)
 
   const onChange = useCallback(
-    (value) => {
-      const re = new RegExp(`^[0-9]*(?:\.[0-9]{0,${decimals}})?$`)
+    (value: string) => {
+      const re = new RegExp(`^[0-9]*(?:\\.[0-9]{0,${decimals}})?$`)
       if (re.test(value)) {
         setInputValue(value)
         _save.current(toDecimals(value, decimals))

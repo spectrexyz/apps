@@ -123,12 +123,12 @@ function useSpringProgress(): [
   const progress = useRef({ value: 0, running: true })
   const springRef = useSpringRef()
 
-  useSpring({
+  useSpring<{ progress: number }>({
     ref: springRef,
     config: springs.sluggish,
     from: { progress: 0 },
     to: { progress: 1 },
-    onChange({ value }) {
+    onChange({ value }: { value: { progress: number } }) {
       progress.current.value = value.progress
     },
     onRest() {
@@ -143,8 +143,8 @@ function useSpringProgress(): [
     springRef.current[0].stop(true)
     progress.current.value = 0
     springRef.current[0].set({ progress: 0 })
-    springRef.current[0].start()
-  }, [])
+    void springRef.current[0].start()
+  }, [springRef])
 
   return [progress, restart]
 }
@@ -249,11 +249,14 @@ export function Distribution({
       colorEmpty,
     ))
 
-    const progressSlice = (arr) =>
-      arr.slice(0, Math.round(reveal.current.value * arr.length))
+    const progressSlice = (arr: ReturnType<typeof surfaceEntries>) => {
+      return reveal.current?.value === undefined
+        ? arr
+        : arr.slice(0, Math.round(reveal.current.value * arr.length))
+    }
 
     const stopAnimation = raf(() => {
-      if (!reveal.current.running) {
+      if (!reveal.current?.running) {
         stopAnimation()
         return
       }

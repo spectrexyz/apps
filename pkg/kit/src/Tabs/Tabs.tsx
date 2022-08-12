@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
 
 import { useEffect, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"

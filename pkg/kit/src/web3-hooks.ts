@@ -1,31 +1,20 @@
 import type { Dnum } from "dnum"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { useCallback } from "react"
 import { useQuery } from "react-query"
+import { z } from "zod"
 
 type PriceToken = "eth" | "usd"
-type CoinGeckoTokens = "ethereum" | "usd"
-type CoinGeckoPriceResult = Record<
-  CoinGeckoTokens,
-  Record<CoinGeckoTokens, number>
->
+
+const coingeckoPriceResultSchema = z.object({
+  "ethereum": z.object({ "usd": z.number() }),
+}).or(z.object({
+  "usd": z.object({ "ethereum": z.number() }),
+}))
 
 function coinGeckoTokenId(tokenId: PriceToken) {
-  if (tokenId === "eth") return "ethereum"
-  return tokenId
-}
-
-function parseCoinGeckoPriceResult(
-  result: CoinGeckoPriceResult,
-  from: PriceToken,
-  to: PriceToken,
-) {
-  const price = result?.[coinGeckoTokenId(from)]?.[coinGeckoTokenId(to)] ?? null
-  if (price === null) {
-    throw new Error("Cannot parse the price result")
-  }
-  return price
+  return tokenId === "eth" ? "ethereum" : tokenId
 }
 
 function priceUrl(from: PriceToken, to: PriceToken) {
@@ -38,8 +27,14 @@ function priceUrl(from: PriceToken, to: PriceToken) {
 export function usePrice(from: "eth", to: "usd") {
   const queryFn = useCallback(async () => {
     const response = await fetch(priceUrl(from, to))
-    const result = await response.json()
-    return parseCoinGeckoPriceResult(result as CoinGeckoPriceResult, from, to)
+    const result = coingeckoPriceResultSchema.parse(await response.json())
+    if (!result) {
+      throw new Error("Wrong result")
+    }
+    if (from === "eth" && "ethereum" in result && "usd" in result.ethereum) {
+      return result.ethereum.usd
+    }
+    throw new Error("Cannot obtain the price")
   }, [from, to])
   return useQuery(["price", from, to], queryFn)
 }

@@ -1,16 +1,18 @@
-import {
+/* eslint jsx-a11y/no-noninteractive-tabindex: "off" */
+/* eslint jsx-a11y/click-events-have-key-events: "off" */
+/* eslint jsx-a11y/no-static-element-interactions: "off" */
+
+import type {
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
 } from "react"
+import type { Direction } from "../types"
+
+import { useCallback, useEffect, useRef, useState } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useSpring } from "react-spring"
 import { Moire } from "../Moire"
 import { springs } from "../styles"
-import { Direction } from "../types"
 
 const BAR_HEIGHT = 4
 const HANDLE_OUTLINE = 5
@@ -109,7 +111,7 @@ export function Slider({
       doc.removeEventListener("mousemove", dragMove)
       doc.removeEventListener("touchmove", dragMove)
     }
-  }, [pressed])
+  }, [pressed, updateValueFromClientX])
 
   const moveSpring = useSpring({
     config: springs.snappy,
@@ -140,7 +142,7 @@ export function Slider({
     return () => {
       doc.removeEventListener("keydown", onKeyDown)
     }
-  }, [focused, value, onChange])
+  }, [focused, keyboardStep, onChange, value])
 
   return (
     <div

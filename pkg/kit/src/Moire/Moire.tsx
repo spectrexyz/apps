@@ -1,10 +1,11 @@
+import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react"
+
+/* eslint-disable import/no-unresolved */
 import { Box, Mesh, Program, Renderer } from "ogl"
+/* eslint-enable import/no-unresolved */
 import {
-  ComponentPropsWithoutRef,
   createContext,
   memo,
-  ReactNode,
-  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -30,10 +31,15 @@ type RenderMoireFn = (params: {
 
 type Dimensions = [width: number, height: number]
 
-const MoireContext = createContext<{
+type MoireContext = {
   addMoire: (canvas: HTMLCanvasElement, render: RenderMoireFn) => void
   removeMoire: (canvas: HTMLCanvasElement) => void
-}>({ addMoire: noop, removeMoire: noop })
+}
+
+const MoireContext = createContext<MoireContext>({
+  addMoire: noop,
+  removeMoire: noop,
+})
 
 function useOglProgram({
   dimensions: [width, height],
@@ -196,6 +202,14 @@ export function MoireBase({
     { animate },
   )
 
+  const removeMoire = useCallback((canvas: HTMLCanvasElement) => {
+    setActiveMoires((activeMoires) => {
+      activeMoires = new Map(activeMoires)
+      activeMoires.delete(canvas)
+      return activeMoires
+    })
+  }, [])
+
   const addMoire = useCallback(
     (canvas: HTMLCanvasElement, render: RenderMoireFn) => {
       removeMoire(canvas)
@@ -208,16 +222,8 @@ export function MoireBase({
         })
       }
     },
-    [],
+    [removeMoire],
   )
-
-  const removeMoire = useCallback((canvas: HTMLCanvasElement) => {
-    setActiveMoires((activeMoires) => {
-      activeMoires = new Map(activeMoires)
-      activeMoires.delete(canvas)
-      return activeMoires
-    })
-  }, [])
 
   return (
     <MoireContext.Provider
@@ -263,7 +269,15 @@ export const Moire = memo(function Moire({
   const yShift = useRef(-Math.round(Math.random() * Y_SHIFT))
 
   const render = useCallback(
-    ({ baseCanvas, canvas, context }) => {
+    ({
+      baseCanvas,
+      canvas,
+      context,
+    }: {
+      baseCanvas: HTMLCanvasElement
+      canvas: HTMLCanvasElement
+      context: CanvasRenderingContext2D
+    }) => {
       if (!canvas || !context || !animate) {
         return
       }

@@ -40,7 +40,7 @@ export function Tip(
     }
     // info
     return [colors.accent2, "#1F244D"]
-  }, [type])
+  }, [colors, type])
 
   return (
     <TipContext.Provider value={ICON_SIZE_DEFAULT}>

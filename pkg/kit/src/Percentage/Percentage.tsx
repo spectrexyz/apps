@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { memo } from "react"
 
 export const Percentage = memo(
@@ -13,7 +13,8 @@ export const Percentage = memo(
       percentage = dnum.format(dnum.multiply(percentage, 100))
     }
 
-    let [whole, fraction = null] = String(percentage).split(".")
+    const [whole, fraction_ = null] = String(percentage).split(".")
+    let fraction = fraction_
     if (fraction !== null) {
       fraction = String(
         Math.round(

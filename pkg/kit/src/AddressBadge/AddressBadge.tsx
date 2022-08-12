@@ -126,13 +126,12 @@ function ButtonCopy({ value }: { value: string }) {
     },
   })
 
-  const copy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(value)
+  const copy = useCallback(() => {
+    navigator.clipboard.writeText(value).then(() => {
       setShowIndicator(true)
-    } catch (err) {
-      // TODO
-    }
+    }, () => {
+      setShowIndicator(false)
+    })
   }, [value])
 
   return (

@@ -89,6 +89,7 @@ importers:
       vite: ^3.0.4
       vite-plugin-dts: ^1.4.1
       vitest: ^0.20.2
+      zod: ^3.18.0
     dependencies:
       '@elchininet/isometric': 3.6.0
       '@popperjs/core': 2.11.5
@@ -104,6 +105,7 @@ importers:
       react-cool-dimensions: 2.0.7_react@18.2.0
       react-dropzone: 14.2.2_react@18.2.0
       react-popper: 2.3.0_ili5ylfne7i3hkfpsanzgkfu6m
+      zod: 3.18.0
     devDependencies:
       '@svgr/cli': 6.3.1
       '@types/react': 18.0.15
@@ -17306,6 +17308,10 @@ packages:
     optionalDependencies:
       commander: 2.20.3
     dev: true
+
+  /zod/3.18.0:
+    resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
+    dev: false
 
   /zustand/4.0.0_react@18.2.0:
     resolution: {integrity: sha512-OrsfQTnRXF1LZ9/vR/IqN9ws5EXUhb149xmPjErZnUrkgxS/gAHGy2dPNIVkVvoxrVe1sIydn4JjF0dYHmGeeQ==}

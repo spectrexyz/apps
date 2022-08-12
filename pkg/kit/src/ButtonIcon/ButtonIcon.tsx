@@ -1,15 +1,10 @@
-import {
-  ComponentPropsWithoutRef,
-  createContext,
-  forwardRef,
-  ReactNode,
-  useCallback,
-  useContext,
-} from "react"
-import { ButtonAreaProps } from "../ButtonArea"
+import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import type { ButtonAreaProps } from "../ButtonArea"
+import type { ThemeContext } from "../Theme/Theme"
+
+import { createContext, forwardRef, useCallback, useContext } from "react"
 import { ButtonArea } from "../ButtonArea"
 import { gu } from "../styles"
-import { ThemeContext } from "../Theme/Theme"
 
 type ButtonIconMode = "normal" | "outline"
 type ButtonIconSize = "large" | "medium" | "small"

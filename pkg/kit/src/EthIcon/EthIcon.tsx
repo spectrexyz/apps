@@ -1,4 +1,3 @@
-import { css } from "@emotion/react"
 import blockie from "ethereum-blockies-base64"
 import { useMemo } from "react"
 import { gu } from "../styles"

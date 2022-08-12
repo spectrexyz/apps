@@ -81,6 +81,7 @@ export function TokenInput({
               <DiscsChain
                 images={pair.map((symbol) => (
                   <TokenIcon
+                    key={0}
                     tokenType={symbol === "ETH" ? "eth" : "serc20"}
                     src={Array.isArray(symbol) ? symbol[1] : undefined}
                   />

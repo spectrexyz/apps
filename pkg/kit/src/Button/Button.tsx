@@ -116,7 +116,7 @@ export const Button = forwardRef<
     if (mode === "negative") return colors.negative
 
     return colors.accent // outline or secondary
-  }, [mode, selected])
+  }, [colors, mode, selected])
 
   return (
     <ButtonContext.Provider value={{ size }}>

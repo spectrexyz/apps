@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 
-import dnum from "dnum"
+import * as dnum from "dnum"
 import { ReactNode } from "react"
 import { TokenIcon } from "../TokenIcon"
 
@@ -23,7 +23,8 @@ export function TokenAmount(
     value = dnum.format(value)
   }
 
-  let [whole, fraction] = value.split(".")
+  const [whole, fraction_] = value.split(".")
+  let fraction = fraction_
   if (digits !== undefined && fraction) {
     fraction = fraction.slice(0, digits)
   }

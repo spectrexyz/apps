@@ -1,3 +1,5 @@
+/* eslint jsx-a11y/media-has-caption: "off" */
+
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react"
 import { ButtonArea } from "../ButtonArea"
 
@@ -26,7 +28,7 @@ export const Video = function Video({
       video.pause()
       video.currentTime = 0
     } else {
-      video.play()
+      void video.play()
     }
   }
 

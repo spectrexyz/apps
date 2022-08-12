@@ -2,10 +2,19 @@ import type { ReactNode } from "react"
 
 import { gu } from "../styles"
 
+type RemoteImage = readonly [alt: string, url: string]
+
+function isRemoteImage(
+  image: RemoteImage | ReactNode,
+): image is RemoteImage {
+  return Array.isArray(image) && image.length === 2
+    && image.every((v) => typeof v === "string")
+}
+
 export function DiscsChain({
   images,
 }: {
-  images: Array<readonly [alt: string, url: string] | ReactNode>
+  images: Array<RemoteImage | ReactNode>
 }) {
   return (
     <div
@@ -23,7 +32,7 @@ export function DiscsChain({
       }}
     >
       {images.map((image, index) =>
-        Array.isArray(image)
+        isRemoteImage(image)
           ? (
             <img
               key={`${index}${image[1]}`}

@@ -1,4 +1,5 @@
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
+
 import { useEffect, useRef } from "react"
 import { useFocusVisible } from "../FocusVisible"
 import { Radio } from "./Radio"
