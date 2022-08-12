@@ -35,10 +35,10 @@
     "preset": "rollpkg"
   },
   "devDependencies": {
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
@@ -50,7 +50,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "colord": "^2.9.2",
+    "colord": "^2.9.3",
     "react-use-measure": "^2.1.1",
     "twgl.js": "^4.24.0"
   }
