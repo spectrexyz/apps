@@ -8,6 +8,7 @@ import {
   formatAmount,
   formatBytes,
   formatNumber,
+  Truncate,
 } from "kit"
 import { useCallback } from "react"
 import {
@@ -232,23 +233,6 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
         </div>
       </ContentLayout>
     </form>
-  )
-}
-
-function Truncate({ text }: { text: string }) {
-  return (
-    <div
-      title={text}
-      css={{
-        maxWidth: "100%",
-        whiteSpace: "nowrap",
-        textAlign: "left",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }}
-    >
-      {text}
-    </div>
   )
 }
 
