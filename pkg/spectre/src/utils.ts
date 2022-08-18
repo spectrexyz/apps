@@ -1,8 +1,8 @@
 import type { BaseProvider } from "@ethersproject/providers"
-import type { Address, AddressOrEnsName } from "kit"
+import type { Address, AddressOrEnsName } from "moire"
 
 import { utils } from "ethers"
-import { isAddress, isEnsName } from "kit"
+import { isAddress, isEnsName } from "moire"
 import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { useLocation } from "wouter"

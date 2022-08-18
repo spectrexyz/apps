@@ -5,7 +5,7 @@
     "dev": "vite dev --port 3000",
     "build": "vite build --mode production && cp netlify_redirects dist/_redirects",
     "serve": "vite preview",
-    "import:kit-assets": "pnpm kit-copy-assets ./public/kit",
+    "import:moire-assets": "pnpm moire-copy-assets ./public/moire",
     "lint": "eslint --ext .tsx,.ts src/"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
     "dnum": "^1.5.1",
     "ethers": "^5.6.9",
     "events": "^3.3.0",
-    "kit": "workspace:*",
+    "moire": "workspace:*",
     "lodash.uniqby": "^4.7.0",
     "markdown-to-jsx": "^7.1.7",
     "ms": "^3.0.0-canary.1",

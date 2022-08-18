@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { Toggle as KitToggle } from "kit"
+import { Toggle as KitToggle } from "moire"
 import { useState } from "react"
 
 export function Toggle() {

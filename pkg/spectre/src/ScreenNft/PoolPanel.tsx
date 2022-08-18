@@ -1,7 +1,7 @@
 import type { Snft } from "../types"
 
 import * as dnum from "dnum"
-import { Button, IconEye, useEthToUsdFormat } from "kit"
+import { Button, IconEye, useEthToUsdFormat } from "moire"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
 import { NftDetails } from "./NftDetails"

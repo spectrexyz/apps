@@ -6,7 +6,7 @@ import {
   gu,
   IconPencil,
   IconWarningOctagon,
-} from "kit"
+} from "moire"
 import { memo } from "react"
 import { useSpectralize } from "./use-spectralize"
 

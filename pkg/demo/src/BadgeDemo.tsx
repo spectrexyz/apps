@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { Badge, gu } from "kit"
+import { Badge, gu } from "moire"
 
 export function BadgeDemo() {
   // <img alt="" src={tokenImage} width={3 * gu} height={3 * gu} />

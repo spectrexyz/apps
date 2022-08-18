@@ -1,4 +1,4 @@
-import type { Address, AddressOrEnsName } from "kit"
+import type { Address, AddressOrEnsName } from "moire"
 import type { UseQueryResult } from "react-query"
 import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
 

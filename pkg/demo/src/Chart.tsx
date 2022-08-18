@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { gu, lerp, list, Moire, smoothPath, useTheme, useUid } from "kit"
+import { gu, lerp, list, Moire, smoothPath, useTheme, useUid } from "moire"
 import { ReactNode, SVGProps, useCallback, useMemo } from "react"
 import {
   a,

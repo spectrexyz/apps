@@ -1,6 +1,6 @@
 import type { Snft } from "../types"
 
-import { Badge, TokenBadge } from "kit"
+import { Badge, TokenBadge } from "moire"
 import { useLabelStyle, useLayout } from "../styles"
 
 export function NftDetails({ snft }: { snft: Snft }) {

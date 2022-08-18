@@ -9,7 +9,7 @@ import {
   noop,
   Tip,
   TokenInput,
-} from "kit"
+} from "moire"
 import { useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"

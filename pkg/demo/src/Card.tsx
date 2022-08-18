@@ -1,4 +1,4 @@
-import { Button, Card, gu, list, Moire } from "kit"
+import { Button, Card, gu, list, Moire } from "moire"
 import { useEffect, useState } from "react"
 
 const CARDS_COUNT = 9

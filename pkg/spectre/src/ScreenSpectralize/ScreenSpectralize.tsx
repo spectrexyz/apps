@@ -1,4 +1,4 @@
-import { Steps } from "kit"
+import { Steps } from "moire"
 import { useCallback, useEffect } from "react"
 import { useAccount } from "wagmi"
 import { useLocation } from "wouter"

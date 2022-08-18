@@ -11,7 +11,7 @@ import {
   IconCheck,
   IconX,
   useTheme,
-} from "kit"
+} from "moire"
 import ms from "ms"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"

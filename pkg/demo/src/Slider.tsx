@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { Slider as KitSlider } from "kit"
+import { Slider as KitSlider } from "moire"
 import { useState } from "react"
 
 export function Slider() {

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { Video as KitVideo } from "kit"
+import { Video as KitVideo } from "moire"
 
 export function Video() {
   return (

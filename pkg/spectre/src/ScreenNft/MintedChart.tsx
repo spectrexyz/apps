@@ -1,7 +1,7 @@
 import type { Interpolation, SpringValue } from "react-spring"
 import type { TimeScale } from "../types"
 
-import { gu, lerp, useTheme } from "kit"
+import { gu, lerp, useTheme } from "moire"
 import { useCallback, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useChain, useSpring, useSpringRef } from "react-spring"

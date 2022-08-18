@@ -1,4 +1,4 @@
-// import { Button } from "kit"
+// import { Button } from "moire"
 import { ScreenDemo } from "../ScreenDemo/ScreenDemo"
 
 export function ScreenHome() {

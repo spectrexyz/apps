@@ -1,6 +1,6 @@
 import type { Snft } from "../types"
 
-import { gu, Truncate } from "kit"
+import { gu, Truncate } from "moire"
 import { Link } from "wouter"
 import { useSnftsByCreator } from "../snft-hooks"
 import { useLayout, useViewportValue } from "../styles"

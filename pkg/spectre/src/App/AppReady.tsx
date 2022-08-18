@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { TransitionFn } from "react-spring"
 
-import { springs } from "kit"
+import { springs } from "moire"
 import {
   createContext,
   useCallback,

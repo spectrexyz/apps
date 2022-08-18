@@ -13,7 +13,7 @@ import {
   Percentage,
   RadioBox,
   RadioGroup,
-} from "kit"
+} from "moire"
 import { useEffect, useMemo, useState } from "react"
 import { useInView } from "react-cool-inview"
 import { useLabelStyle, useLayout } from "../styles"

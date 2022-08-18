@@ -1,4 +1,4 @@
-import { Button, shuffle } from "kit"
+import { Button, shuffle } from "moire"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { SNFTS } from "../demo-data"

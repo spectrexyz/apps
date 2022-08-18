@@ -1,7 +1,7 @@
 import type { Property as CssP } from "csstype"
 import type { ReactNode } from "react"
 
-import { gu } from "kit"
+import { gu } from "moire"
 
 export function CenteredContainer(
   {

@@ -2,7 +2,7 @@ import type { Dnum } from "dnum"
 import type { TokenLocator } from "../types"
 
 import * as dnum from "dnum"
-import { Button, Card, co, DiscsChain, formatNumber } from "kit"
+import { Button, Card, co, DiscsChain, formatNumber } from "moire"
 import { useMemo } from "react"
 import { useLocation } from "wouter"
 import { useSnft, useToken } from "../snft-hooks"

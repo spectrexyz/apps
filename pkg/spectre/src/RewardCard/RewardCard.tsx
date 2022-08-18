@@ -10,7 +10,7 @@ import {
   TokenAmount,
   useEthToUsdFormat,
   useTheme,
-} from "kit"
+} from "moire"
 import { useMemo } from "react"
 import { useLocation } from "wouter"
 import { useSnft, useToken } from "../snft-hooks"

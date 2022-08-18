@@ -1,4 +1,4 @@
-import type { Direction } from "kit"
+import type { Direction } from "moire"
 import type { FormEvent } from "react"
 import type { StepProps } from "./types"
 
@@ -18,7 +18,7 @@ import {
   TokenInput,
   useAmountInput,
   usePrice,
-} from "kit"
+} from "moire"
 import { useCallback, useState } from "react"
 import {
   ContentLayout,

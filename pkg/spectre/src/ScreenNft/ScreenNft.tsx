@@ -13,7 +13,7 @@ import {
   Radio,
   RadioGroup,
   Tabs,
-} from "kit"
+} from "moire"
 import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"

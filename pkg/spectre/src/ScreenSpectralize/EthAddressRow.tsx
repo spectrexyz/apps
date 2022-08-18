@@ -1,7 +1,7 @@
-import type { Address } from "kit"
+import type { Address } from "moire"
 import type { ReactNode } from "react"
 
-import { Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "kit"
+import { Badge, ButtonIcon, gu, IconTrash, shortenAddress } from "moire"
 import { useEnsName } from "wagmi"
 
 type EthAddressRowProps = {

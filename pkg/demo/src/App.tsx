@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react"
 
 import { css } from "@emotion/react"
 import { Contract, providers } from "ethers"
-import { Kit } from "kit"
+import { Kit } from "moire"
 import { useEffect, useState } from "react"
 import { FetcherDeclarationEthers, NftProvider } from "use-nft"
 import { Link, Route, Router } from "wouter"
@@ -121,7 +121,7 @@ const fetcher = [
 
 export function App() {
   return (
-    <Kit baseUrl="/kit/">
+    <Kit baseUrl="/moire/">
       <Router hook={useHashLocation}>
         <NftProvider fetcher={fetcher as FetcherDeclarationEthers}>
           <div

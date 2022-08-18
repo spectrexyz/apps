@@ -1,5 +1,5 @@
 import { useViewport } from "@bpierre/use-viewport"
-import { gu, throttle, useTheme } from "kit"
+import { gu, throttle, useTheme } from "moire"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 export const springs = {

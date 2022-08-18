@@ -2,11 +2,11 @@
   "name": "spectre-apps",
   "private": true,
   "scripts": {
-    "kit:build": "cd pkg/kit && pnpm build:all",
-    "kit:dev": "cd pkg/kit && pnpm dev",
+    "moire:build": "cd pkg/moire && pnpm build:all",
+    "moire:dev": "cd pkg/moire && pnpm dev",
     "kit-legacy:build": "cd pkg/kit-legacy && pnpm build && pnpm export-assets",
-    "spectre:build": "cd pkg/spectre && pnpm import:kit-assets && pnpm build",
-    "spectre:dev": "cd pkg/spectre && pnpm import:kit-assets && pnpm dev",
+    "spectre:build": "cd pkg/spectre && pnpm import:moire-assets && pnpm build",
+    "spectre:dev": "cd pkg/spectre && pnpm import:moire-assets && pnpm dev",
     "website:build": "pnpm kit-legacy:build && cd pkg/website && pnpm copy-kit-assets && pnpm build"
   },
   "devDependencies": {

@@ -63,7 +63,7 @@ module.exports = {
       // https://github.com/yannickcr/eslint-plugin-react/blob/b8e91a571bc6b58cc3c78e9e62e8b60ecb45e233/lib/util/version.js#L48
       version: "999.999.999",
     },
-    "import/core-modules": ["kit"],
+    "import/core-modules": ["moire"],
     "import/order": {
       alphabetize: { order: "asc", caseInsensitive: true },
       groups: [

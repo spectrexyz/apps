@@ -1,4 +1,4 @@
-import { gu, TokenAmount } from "kit"
+import { gu, TokenAmount } from "moire"
 
 export function TokenAmountDemo() {
   return (

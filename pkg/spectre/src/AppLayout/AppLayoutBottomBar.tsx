@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { AddressBadge, Button, ButtonArea, noop, springs } from "kit"
+import { AddressBadge, Button, ButtonArea, noop, springs } from "moire"
 import { useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
 import { useAccount, useDisconnect, useEnsName } from "wagmi"

@@ -5,13 +5,13 @@
     "dev": "vite dev --port 3001",
     "build": "vite build",
     "serve": "vite preview",
-    "kit-assets": "pnpm kit-copy-assets ./public/kit"
+    "moire-assets": "pnpm moire-copy-assets ./public/moire"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.1",
     "@emotion/react": "^11.10.0",
     "ethers": "^5.6.9",
-    "kit": "workspace:*",
+    "moire": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spring": "^9.5.2",

@@ -12,7 +12,7 @@ import {
   IconX,
   Root,
   springs,
-} from "kit"
+} from "moire"
 import { useMemo } from "react"
 import { a, useTransition } from "react-spring"
 import { useAccount, useDisconnect, useEnsName } from "wagmi"

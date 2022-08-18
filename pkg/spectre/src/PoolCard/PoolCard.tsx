@@ -14,7 +14,7 @@ import {
   TokenIcon,
   useEthToUsdFormat,
   useTheme,
-} from "kit"
+} from "moire"
 import { usePool, useSnft, useToken } from "../snft-hooks"
 
 export function PoolCard({

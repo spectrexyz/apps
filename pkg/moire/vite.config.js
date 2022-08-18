@@ -8,7 +8,7 @@ export default defineConfig(async ({ mode }) => ({
     lib: {
       entry: "src/index.tsx",
       formats: ["es", "cjs"],
-      fileName: (format) => `kit.${format}.js`,
+      fileName: (format) => `moire.${format}.js`,
     },
     sourcemap: mode === "production" || "inline",
     rollupOptions: {

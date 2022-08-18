@@ -1,4 +1,4 @@
-import { ButtonIcon, noop, TokenInput } from "kit"
+import { ButtonIcon, noop, TokenInput } from "moire"
 import { useState } from "react"
 import { useSnft } from "../snft-hooks"
 

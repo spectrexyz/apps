@@ -1,4 +1,4 @@
-import { Button, IconDiscordLogo, IconEye } from "kit"
+import { Button, IconDiscordLogo, IconEye } from "moire"
 import { PanelSection } from "./PanelSection"
 
 export function NftProvenance() {

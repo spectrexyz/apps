@@ -17,7 +17,7 @@ import {
   Tip,
   useTheme,
   WEEK_MS,
-} from "kit"
+} from "moire"
 import { useMemo, useState } from "react"
 import { a, useSpring } from "react-spring"
 import { useLocation } from "wouter"

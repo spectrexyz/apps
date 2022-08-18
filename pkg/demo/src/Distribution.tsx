@@ -1,4 +1,4 @@
-import { Distribution } from "kit"
+import { Distribution } from "moire"
 import { useState } from "react"
 
 function randomDistribution(): number[] {

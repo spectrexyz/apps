@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { RadioBox as KitRadioBox, RadioGroup } from "kit"
+import { RadioBox as KitRadioBox, RadioGroup } from "moire"
 import { useState } from "react"
 
 export function RadioBox() {

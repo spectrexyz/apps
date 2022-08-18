@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { map, Moire as KitMoire, springs } from "kit"
+import { map, Moire as KitMoire, springs } from "moire"
 import { useEffect, useState } from "react"
 import { a, useTransition } from "react-spring"
 

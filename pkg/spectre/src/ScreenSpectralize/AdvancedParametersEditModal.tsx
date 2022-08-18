@@ -12,7 +12,7 @@ import {
   Slider,
   Toggle,
   WEEK_MS,
-} from "kit"
+} from "moire"
 import { useCallback, useMemo } from "react"
 import { useLayout } from "../styles"
 import { useAdvancedParametersForm, useSpectralize } from "./use-spectralize"

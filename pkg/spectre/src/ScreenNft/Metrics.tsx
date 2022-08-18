@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react"
 
-import { formatAmount, Percentage, PoolWeight, TokenAmount } from "kit"
+import { formatAmount, Percentage, PoolWeight, TokenAmount } from "moire"
 import { useLayout } from "../styles"
 import { InfoGrid } from "./InfoGrid"
 

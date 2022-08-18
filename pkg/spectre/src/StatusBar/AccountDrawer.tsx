@@ -13,7 +13,7 @@ import {
   IconCopy,
   IconX,
   Root,
-} from "kit"
+} from "moire"
 import { a } from "react-spring"
 import { SyncStatus } from "../SyncStatus"
 

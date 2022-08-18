@@ -12,7 +12,7 @@ import {
   TokenBadge,
   Truncate,
   usePrice,
-} from "kit"
+} from "moire"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { CenteredContainer } from "../AppLayout/CenteredContainer"

@@ -6,7 +6,7 @@ const destDir = process.argv[2]
 const assetsDir = path.join(__dirname, '../dist-assets')
 
 if (!destDir) {
-  console.error("kit-copy-assets: please specify a directory path to copy the assets into.")
+  console.error("moire-copy-assets: please specify a directory path to copy the assets into.")
   process.exit(1)
 }
 

@@ -1,5 +1,5 @@
 import type { Dnum } from "dnum"
-import type { Address } from "kit"
+import type { Address } from "moire"
 import type { PoolShare, Proposal, Reward, Snft } from "../types"
 
 import {
@@ -12,7 +12,7 @@ import {
   seed,
 } from "@ngneat/falso"
 import * as dnum from "dnum"
-import { DAY_MS, list, WEEK_MS } from "kit"
+import { DAY_MS, list, WEEK_MS } from "moire"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 

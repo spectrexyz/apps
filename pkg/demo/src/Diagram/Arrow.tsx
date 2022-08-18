@@ -1,4 +1,4 @@
-import { lerp } from "kit"
+import { lerp } from "moire"
 import type { SpringValue } from "react-spring"
 import { a } from "react-spring"
 

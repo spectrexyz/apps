@@ -1,7 +1,7 @@
 import type { Snft } from "../types"
 
 import * as dnum from "dnum"
-import { Button, TokenAmount, useEthToUsdFormat } from "kit"
+import { Button, TokenAmount, useEthToUsdFormat } from "moire"
 import { useLocation } from "wouter"
 import { useLayout } from "../styles"
 import { InfoGrid } from "./InfoGrid"

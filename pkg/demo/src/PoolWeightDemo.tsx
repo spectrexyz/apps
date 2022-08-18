@@ -1,4 +1,4 @@
-import { gu, PoolWeight } from "kit"
+import { gu, PoolWeight } from "moire"
 
 export function PoolWeightDemo() {
   return (

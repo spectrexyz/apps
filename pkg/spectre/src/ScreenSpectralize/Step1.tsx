@@ -16,7 +16,7 @@ import {
   RadioGroup,
   TextInput,
   Video,
-} from "kit"
+} from "moire"
 import { useCallback } from "react"
 import { NFT_FILE_TYPES } from "../constants"
 import { useLayout } from "../styles"

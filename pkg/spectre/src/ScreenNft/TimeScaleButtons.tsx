@@ -1,6 +1,6 @@
 import type { TimeScale } from "../types"
 
-import { Button } from "kit"
+import { Button } from "moire"
 
 export const TIME_SCALES = new Map<
   TimeScale,

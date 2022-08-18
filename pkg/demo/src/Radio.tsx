@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
 import { css } from "@emotion/react"
-import { Radio as KitRadio, RadioGroup } from "kit"
+import { Radio as KitRadio, RadioGroup } from "moire"
 import { useState } from "react"
 
 export function Radio() {

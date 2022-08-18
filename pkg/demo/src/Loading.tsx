@@ -1,4 +1,4 @@
-import { gu, Loading, useTheme } from "kit"
+import { gu, Loading, useTheme } from "moire"
 
 function LoadingDemo() {
   const theme = useTheme()

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { ButtonIcon, gu, IconArrowLeft, Loading, springs, useTheme } from "kit"
+import { ButtonIcon, gu, IconArrowLeft, Loading, springs, useTheme } from "moire"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { fonts, Moire, useDimensions, useTheme } from "kit"
+import { fonts, Moire, useDimensions, useTheme } from "moire"
 import { memo } from "react"
 import { useNft } from "use-nft"
 

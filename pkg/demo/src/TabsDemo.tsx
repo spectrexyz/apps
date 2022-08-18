@@ -1,4 +1,4 @@
-import { Tabs } from "kit"
+import { Tabs } from "moire"
 import { useState } from "react"
 
 const tabs = [

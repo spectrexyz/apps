@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { Snft } from "../types"
 
-import { co } from "kit"
+import { co } from "moire"
 
 export function NftCard({
   action,

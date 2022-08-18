@@ -1,4 +1,4 @@
-import { springs } from "kit"
+import { springs } from "moire"
 import { a, useTransition } from "react-spring"
 import { menuLinks } from "../content"
 

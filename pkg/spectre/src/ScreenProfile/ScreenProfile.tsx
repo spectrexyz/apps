@@ -1,4 +1,4 @@
-import type { AddressOrEnsName } from "kit"
+import type { AddressOrEnsName } from "moire"
 import type { PoolShare } from "../types"
 
 import {
@@ -15,7 +15,7 @@ import {
   Loading,
   noop,
   Tabs,
-} from "kit"
+} from "moire"
 import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"

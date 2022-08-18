@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { Button, gu, IconArrowLeft, Tip, TokenInput } from "kit"
+import { Button, gu, IconArrowLeft, Tip, TokenInput } from "moire"
 import { useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"

@@ -1,4 +1,4 @@
-import type { Address } from "kit"
+import type { Address } from "moire"
 import type { FormEvent, MutableRefObject } from "react"
 import type { StepProps } from "./types"
 
@@ -12,7 +12,7 @@ import {
   Slider,
   TextInput,
   useKey,
-} from "kit"
+} from "moire"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useAccount } from "wagmi"
 import {

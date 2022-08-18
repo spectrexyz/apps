@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { Button, Steps } from "kit"
+import { Button, Steps } from "moire"
 import { useState } from "react"
 
 function StepsDemo() {

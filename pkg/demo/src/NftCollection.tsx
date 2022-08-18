@@ -8,7 +8,7 @@ import {
   shuffle,
   useDimensions,
   useTheme,
-} from "kit"
+} from "moire"
 import { useEffect, useRef, useState } from "react"
 import { animated, to, useSpring, useTransition } from "react-spring"
 import { NftCard } from "./NftCard"

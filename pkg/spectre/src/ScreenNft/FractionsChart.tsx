@@ -13,7 +13,7 @@ import {
   useKey,
   useTheme,
   useUid,
-} from "kit"
+} from "moire"
 import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react"
 import useDimensions from "react-cool-dimensions"
 import { a, useChain, useSpring, useSpringRef } from "react-spring"

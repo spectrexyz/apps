@@ -33,7 +33,7 @@ import {
   IconUploadSimple,
   IconWarningOctagon,
   IconX,
-} from "kit"
+} from "moire"
 
 const icons = Object.entries({
   IconFlameFilled,

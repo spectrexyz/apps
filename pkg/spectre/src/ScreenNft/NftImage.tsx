@@ -1,7 +1,7 @@
 import type { Property as CssP } from "csstype"
 import type { ReactNode } from "react"
 
-import { MoireLabel, useTheme } from "kit"
+import { MoireLabel, useTheme } from "moire"
 import { useLayout } from "../styles"
 
 type NftImageProps = {

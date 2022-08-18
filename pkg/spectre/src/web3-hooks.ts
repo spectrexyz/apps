@@ -1,4 +1,4 @@
-import type { AddressOrEnsName } from "kit"
+import type { AddressOrEnsName } from "moire"
 
 import { useQuery } from "react-query"
 import { useProvider } from "wagmi"

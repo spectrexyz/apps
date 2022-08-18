@@ -1,5 +1,5 @@
 import type { Dnum } from "dnum"
-import type { Address, EnsName } from "kit"
+import type { Address, EnsName } from "moire"
 
 export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
 

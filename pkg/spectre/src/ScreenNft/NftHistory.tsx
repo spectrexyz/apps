@@ -7,7 +7,7 @@ import {
   formatDate,
   isAddress,
   shortenAddress,
-} from "kit"
+} from "moire"
 import { useState } from "react"
 import { PanelSection } from "./PanelSection"
 

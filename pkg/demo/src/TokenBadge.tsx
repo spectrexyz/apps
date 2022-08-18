@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import { TokenBadge as KitTokenBadge } from "kit"
+import { TokenBadge as KitTokenBadge } from "moire"
 
 export function TokenBadge() {
   return (

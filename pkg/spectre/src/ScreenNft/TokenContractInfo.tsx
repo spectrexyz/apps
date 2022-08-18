@@ -1,4 +1,4 @@
-import { AddressBadge, Button, IconEye } from "kit"
+import { AddressBadge, Button, IconEye } from "moire"
 import { useLayout } from "../styles"
 import { PanelSection } from "./PanelSection"
 

@@ -1,7 +1,7 @@
-import type { ButtonMode } from "kit"
+import type { ButtonMode } from "moire"
 
 import { css } from "@emotion/react"
-import { Button as KitButton } from "kit"
+import { Button as KitButton } from "moire"
 
 export function Button() {
   return (

@@ -10,7 +10,7 @@ import {
   IconList,
   IconX,
   springs,
-} from "kit"
+} from "moire"
 import { useEffect, useRef, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAccount, useEnsName } from "wagmi"

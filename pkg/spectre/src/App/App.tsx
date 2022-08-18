@@ -1,7 +1,7 @@
-import type { AddressOrEnsName } from "kit"
+import type { AddressOrEnsName } from "moire"
 import type { ReactNode } from "react"
 
-import { FlatTree, Kit } from "kit"
+import { FlatTree, Kit } from "moire"
 import { useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Route, Router, Switch } from "wouter"
@@ -121,7 +121,7 @@ function AppProviders({ children }: { children: ReactNode }) {
     <FlatTree
       items={[
         ({ children }: { children: ReactNode }) => (
-          <Kit baseUrl="/kit">{children}</Kit>
+          <Kit baseUrl="/moire">{children}</Kit>
         ),
         ({ children }: { children: ReactNode }) => (
           <QueryClientProvider client={queryClient}>

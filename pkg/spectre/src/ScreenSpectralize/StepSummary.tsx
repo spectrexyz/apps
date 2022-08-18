@@ -9,7 +9,7 @@ import {
   formatBytes,
   formatNumber,
   Truncate,
-} from "kit"
+} from "moire"
 import { useCallback } from "react"
 import {
   ContentLayout,

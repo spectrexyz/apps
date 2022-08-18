@@ -1,6 +1,6 @@
 import type { FormEvent } from "react"
 
-import { Button, Fieldset, Modal, noop, TextInput, Toggle } from "kit"
+import { Button, Fieldset, Modal, noop, TextInput, Toggle } from "moire"
 import { useCallback, useState } from "react"
 import { useLayout } from "../styles"
 
