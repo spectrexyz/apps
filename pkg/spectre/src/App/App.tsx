@@ -9,6 +9,7 @@ import makeMatcher from "wouter/matcher"
 import { AppLayout } from "../AppLayout/AppLayout"
 import { ScreenBuy } from "../ScreenBuy/ScreenBuy"
 import { ScreenBuyout } from "../ScreenBuyout/ScreenBuyout"
+import { ScreenDemo } from "../ScreenDemo/ScreenDemo"
 import { ScreenHome } from "../ScreenHome/ScreenHome"
 import { ScreenLiquidityAdd } from "../ScreenLiquidity/ScreenLiquidityAdd"
 import { ScreenLiquidityRemove } from "../ScreenLiquidity/ScreenLiquidityRemove"
@@ -37,6 +38,11 @@ export function App() {
           {/* Home */}
           <Route path="/">
             <ScreenHome />
+          </Route>
+
+          {/* Demo */}
+          <Route path="/demo">
+            <ScreenDemo />
           </Route>
 
           {/* Fractionalize */}
