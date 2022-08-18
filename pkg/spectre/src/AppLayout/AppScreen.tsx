@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
+import { ButtonIcon, gu, IconArrowLeft, Loading, springs, useTheme } from "kit"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"
@@ -199,7 +199,15 @@ export function AppScreen(
                           color: colors.content,
                         })}
                       >
-                        Loading…
+                        <div
+                          css={{
+                            padding: "8gu",
+                            background: colors.background,
+                            borderRadius: "6px",
+                          }}
+                        >
+                          <Loading background={colors.background} />
+                        </div>
                       </a.div>
                     )
                   )}
