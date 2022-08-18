@@ -68,5 +68,6 @@
     "react-dropzone": "^14.2.2",
     "react-popper": "^2.3.0",
     "zod": "^3.18.0"
-  }
+  },
+  "version": "0.1.0"
 }
