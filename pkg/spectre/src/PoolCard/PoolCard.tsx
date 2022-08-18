@@ -15,7 +15,7 @@ import {
   useEthToUsdFormat,
   useTheme,
 } from "kit"
-import { usePool, useSnft2, useToken } from "../snft-hooks"
+import { usePool, useSnft, useToken } from "../snft-hooks"
 
 export function PoolCard({
   compact,
@@ -29,7 +29,7 @@ export function PoolCard({
   token: TokenLocator
 }) {
   const { colors } = useTheme()
-  const snft = useSnft2(snftId)
+  const snft = useSnft(snftId)
   const token = useToken([tokenContract, tokenId])
   const pool = usePool([tokenContract, tokenId])
   const ethToUsd = useEthToUsdFormat()

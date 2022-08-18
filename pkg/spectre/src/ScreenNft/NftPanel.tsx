@@ -1,4 +1,5 @@
-import { useSnft } from "../snft-hooks"
+import type { Snft } from "../types"
+
 import { useLayout } from "../styles"
 import { MoreNfts } from "./MoreNfts"
 import { NftActions } from "./NftActions"
@@ -10,8 +11,7 @@ import { NftProvenance } from "./NftProvenance"
 import { NftTitle } from "./NftTitle"
 import { PanelDetails } from "./PanelDetails"
 
-export function NftPanel({ id }: { id: string }) {
-  const snft = useSnft(id)
+export function NftPanel({ snft }: { snft: Snft }) {
   const layout = useLayout()
 
   if (!snft) {
@@ -45,7 +45,7 @@ export function NftPanel({ id }: { id: string }) {
           <NftHistory snft={snft} />
         </>,
         <>
-          <NftActions />
+          <NftActions snft={snft} />
           <NftProvenance />
           <NftOwnership snft={snft} />
         </>,
@@ -63,7 +63,7 @@ export function NftPanel({ id }: { id: string }) {
         <NftDetails snft={snft} />
       </>,
       <>
-        <NftActions />
+        <NftActions snft={snft} />
         <NftProvenance />
         <NftOwnership snft={snft} />
         <NftHistory snft={snft} />

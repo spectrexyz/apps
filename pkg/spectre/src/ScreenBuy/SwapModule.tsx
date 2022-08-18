@@ -7,7 +7,7 @@ import arrowsSwap from "./arrows-swap.svg"
 export function SwapModule({ id }: { id: string }) {
   const snft = useSnft(id)
   const [ethValue, setEthValue] = useState("100")
-  return (
+  return snft.data && (
     <div>
       <div css={{ padding: "0 2gu" }}>
         <Label label="From" />
@@ -33,7 +33,7 @@ export function SwapModule({ id }: { id: string }) {
         <ButtonIcon
           onClick={noop}
           icon={<img src={arrowsSwap} alt="" />}
-          label={`Invert (sell ${snft?.token.symbol})`}
+          label={`Invert (sell ${snft.data?.token.symbol})`}
         />
       </div>
       <div
@@ -43,13 +43,11 @@ export function SwapModule({ id }: { id: string }) {
         })}
       >
         <Label label="To (estimated)" />
-        {snft && (
-          <TokenInput
-            onChange={setEthValue}
-            symbol={snft?.token.symbol}
-            value={ethValue}
-          />
-        )}
+        <TokenInput
+          onChange={setEthValue}
+          symbol={snft.data?.token.symbol}
+          value={ethValue}
+        />
       </div>
     </div>
   )

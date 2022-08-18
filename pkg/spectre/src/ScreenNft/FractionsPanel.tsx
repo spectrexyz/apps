@@ -2,7 +2,6 @@ import type { Snft } from "../types"
 
 import * as dnum from "dnum"
 import { IconHeartbeat, Tip, useEthToUsdFormat } from "kit"
-import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
 import { NftActions } from "./NftActions"
@@ -12,8 +11,7 @@ import { NftTitle } from "./NftTitle"
 import { PanelDetails } from "./PanelDetails"
 import { TokenContractInfo } from "./TokenContractInfo"
 
-export function FractionsPanel({ id }: { id: string }) {
-  const snft = useSnft(id)
+export function FractionsPanel({ snft }: { snft: Snft }) {
   const layout = useLayout()
 
   if (!snft) {

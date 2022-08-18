@@ -17,11 +17,11 @@ import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { CenteredContainer } from "../AppLayout/CenteredContainer"
 import { ContentLayout, ContentLayoutHeading } from "../ContentLayout"
-import { useSnft2 } from "../snft-hooks"
+import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 
 export function ScreenBuyout({ id }: { id: string }) {
-  const snft = useSnft2(id)
+  const snft = useSnft(id)
   const [, setLocation] = useLocation()
   const layout = useLayout()
   const ethUsdPrice = usePrice("eth", "usd")

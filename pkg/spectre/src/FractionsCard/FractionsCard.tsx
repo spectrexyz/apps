@@ -49,10 +49,10 @@ export function FractionsCard({
   return (
     <Card
       className={className}
-      loading={!(snft && token.data)}
+      loading={!(snft.data && token.data)}
       css={{ height: "100%", minHeight: "70gu" }}
     >
-      {snft && token.data && (
+      {snft.data && token.data && (
         <div
           css={({ colors }) => ({
             overflow: "hidden",
@@ -65,12 +65,12 @@ export function FractionsCard({
             <div css={{ padding: "3gu 3gu 0" }}>
               <div css={{ position: "relative" }}>
                 <OwnsBadge
-                  image={snft.image.url}
+                  image={snft.data?.image.url}
                   tokens={tokensOwned}
                   percentage={percentageOwned}
                 />
                 <img
-                  src={snft.image.url}
+                  src={snft.data.image.url}
                   alt=""
                   css={{
                     display: "block",
@@ -83,7 +83,7 @@ export function FractionsCard({
             </div>
             <div css={{ padding: "2gu 3gu 3gu" }}>
               <h1
-                title={snft.title}
+                title={snft.data.title}
                 css={({ colors }) => ({
                   fontSize: "18px",
                   overflow: "hidden",
@@ -92,7 +92,7 @@ export function FractionsCard({
                   color: colors.contentHeading2,
                 })}
               >
-                {snft.title}
+                {snft.data.title}
               </h1>
               <div
                 css={{
@@ -104,7 +104,7 @@ export function FractionsCard({
               >
                 <div>
                   <DiscsChain
-                    images={snft.token.topHolders.slice(
+                    images={snft.data.token.topHolders.slice(
                       0,
                       layout.value({
                         small: 3,
@@ -121,7 +121,7 @@ export function FractionsCard({
                     userSelect: "none",
                   }}
                 >
-                  {formatNumber(snft.token.holdersCount, 0, {
+                  {formatNumber(snft.data.token.holdersCount, 0, {
                     compact: true,
                   })} owners
                 </div>

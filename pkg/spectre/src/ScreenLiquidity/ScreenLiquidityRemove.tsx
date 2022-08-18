@@ -14,10 +14,12 @@ export function ScreenLiquidityRemove({ id }: { id: string }) {
   const layout = useLayout()
 
   const onBack = () => {
-    setLocation(snft ? `/nfts/${snft?.id}` : "/")
+    setLocation(snft.data ? `/nfts/${snft.data?.id}` : "/")
   }
 
   const title = "Remove liquidity"
+
+  const loading = snft.isLoading
 
   return (
     <AppScreen compactBar={layout.below("medium") && { onBack, title }}>
@@ -52,7 +54,7 @@ export function ScreenLiquidityRemove({ id }: { id: string }) {
               padding: "3gu 0 0",
             }}
           >
-            {snft && <SwapModule id={snft.id} />}
+            {snft.data && <SwapModule id={snft.data.id} />}
 
             <Important />
 
@@ -69,13 +71,13 @@ export function ScreenLiquidityRemove({ id }: { id: string }) {
                 },
               })}
             >
-              <Group heading={`ETH per ${snft?.token.symbol}`}>
+              <Group heading={`ETH per ${snft.data?.token.symbol}`}>
                 <p>~ 0.0643709</p>
               </Group>
               <Group heading="Pool share">
                 <p>12.56%</p>
               </Group>
-              <Group heading={`${snft?.token.symbol} per ETH`}>
+              <Group heading={`${snft.data?.token.symbol} per ETH`}>
                 <p>~ 0.0643709</p>
               </Group>
               <Group heading="Network fee">
@@ -180,7 +182,7 @@ function SwapModule({ id }: { id: string }) {
         <div css={{ paddingTop: "1gu" }}>
           <TokenInput
             onChange={setEthValue}
-            pair={["ETH", ["MOI", snft?.image.url ?? ""]]}
+            pair={["ETH", ["MOI", snft.data?.image.url ?? ""]]}
             value={ethValue}
             secondaryStart={
               <>

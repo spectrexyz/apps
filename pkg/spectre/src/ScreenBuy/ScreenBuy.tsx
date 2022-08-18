@@ -68,7 +68,7 @@ export function ScreenBuy({ id }: { id: string }) {
       setShowSettings(false)
       return
     }
-    setLocation(snft ? `/nfts/${snft?.id}` : "/")
+    setLocation(snft.data ? `/nfts/${snft.data.id}` : "/")
   }
 
   const settingsButton = (
@@ -99,9 +99,13 @@ export function ScreenBuy({ id }: { id: string }) {
     />
   )
 
+  const loading = snft.isLoading
+
   const title = showSettings
     ? "Transaction settings"
-    : `Buy ${snft?.token.symbol}`
+    : snft.data
+    ? `Buy ${snft.data?.token.symbol}`
+    : "−"
 
   return (
     <AppScreen
@@ -110,6 +114,7 @@ export function ScreenBuy({ id }: { id: string }) {
         onBack,
         title,
       }}
+      loading={loading}
     >
       {!layout.below("medium") && <BackButton onClick={onBack} />}
       <CenteredContainer maxWidth={layout.below("medium") ? null : 75 * gu}>
@@ -215,7 +220,7 @@ export function ScreenBuy({ id }: { id: string }) {
                   padding: layout.below("medium") ? "3gu 0 0" : "3gu 0",
                 }}
               >
-                {snft && <SwapModule id={snft.id} />}
+                {snft.data && <SwapModule id={snft.data.id} />}
                 <div
                   css={({ colors }) => ({
                     display: "grid",
@@ -279,7 +284,7 @@ export function ScreenBuy({ id }: { id: string }) {
                     </Group>
                   )}
                   <Group heading="Est. price">
-                    <p>~ 0.0643709 ETH per {snft?.token.symbol}</p>
+                    <p>~ 0.0643709 ETH per {snft.data?.token.symbol}</p>
                   </Group>
                   <Group heading="Network fee">
                     <p>~ $67.49</p>

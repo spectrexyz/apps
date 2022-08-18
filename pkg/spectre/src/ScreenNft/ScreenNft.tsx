@@ -137,12 +137,13 @@ export function ScreenNft({
     }
   }, [history])
 
+  const loading = snft.isLoading
+
   return (
     <AppScreen
-      compactBar={layout.below("medium") && {
-        title: snft?.title,
-        onBack,
-      }}
+      compactBar={layout.below("medium")
+        && { title: snft.data?.title, onBack }}
+      loading={loading}
     >
       <div
         css={({ colors }) => ({
@@ -156,9 +157,9 @@ export function ScreenNft({
           background: colors.layer2,
         })}
       >
-        {panel === "nft" && snft?.image && (
+        {panel === "nft" && snft.data?.image && (
           <NftImage
-            image={snft.image}
+            image={snft.data.image}
             label="Fractionalized"
             labelDisplay="FRACTIONALIZED"
             actionButtons={
@@ -170,7 +171,7 @@ export function ScreenNft({
                   onClick={noop}
                 />
                 <LayoutAwareButtonIconLabel
-                  href={snft.image.url}
+                  href={snft.data.image.url}
                   icon={<IconMagnifyingGlassPlus />}
                   label="Zoom"
                   labelPosition="left"
@@ -347,9 +348,13 @@ export function ScreenNft({
           />
         </div>
       </div>
-      {panel === "nft" && <NftPanel id={id} />}
-      {panel === "fractions" && <FractionsPanel id={id} />}
-      {panel === "pool" && <PoolPanel id={id} />}
+      {snft.data && (
+        <>
+          {panel === "nft" && <NftPanel snft={snft.data} />}
+          {panel === "fractions" && <FractionsPanel snft={snft.data} />}
+          {panel === "pool" && <PoolPanel snft={snft.data} />}
+        </>
+      )}
     </AppScreen>
   )
 }

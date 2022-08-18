@@ -2,7 +2,6 @@ import type { Snft } from "../types"
 
 import * as dnum from "dnum"
 import { Button, IconEye, useEthToUsdFormat } from "kit"
-import { useSnft } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { Metrics } from "./Metrics"
 import { NftDetails } from "./NftDetails"
@@ -10,8 +9,7 @@ import { NftTitle } from "./NftTitle"
 import { PanelDetails } from "./PanelDetails"
 import { PanelSection } from "./PanelSection"
 
-export function PoolPanel({ id }: { id: string }) {
-  const snft = useSnft(id)
+export function PoolPanel({ snft }: { snft: Snft }) {
   const layout = useLayout()
 
   if (!snft) {

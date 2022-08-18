@@ -16,7 +16,7 @@ import ms from "ms"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { Grid } from "../AppLayout/Grid"
-import { useSnft2 } from "../snft-hooks"
+import { useSnft } from "../snft-hooks"
 
 function Status({ status }: { status: Proposal["status"] }) {
   const { colors } = useTheme()
@@ -69,7 +69,7 @@ export function PanelProposals({ proposals }: { proposals: Proposal[] }) {
 
 function ProposalCard({ proposal }: { proposal: Proposal }) {
   const { colors } = useTheme()
-  const snft = useSnft2(proposal.snftId)
+  const snft = useSnft(proposal.snftId)
   const [, setLocation] = useLocation()
   const ownershipPct = dnum.format(
     dnum.multiply(proposal.buyerOwnership, 100),

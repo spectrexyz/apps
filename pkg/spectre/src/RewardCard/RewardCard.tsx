@@ -13,7 +13,7 @@ import {
 } from "kit"
 import { useMemo } from "react"
 import { useLocation } from "wouter"
-import { useSnft2, useToken } from "../snft-hooks"
+import { useSnft, useToken } from "../snft-hooks"
 import iconBuyout from "./rewards-buyout.svg"
 import iconCommunity from "./rewards-community.svg"
 import iconCreators from "./rewards-creators.svg"
@@ -149,7 +149,7 @@ function RewardCardBase(
 }
 
 function RewardCardEth({ reward }: { reward: RewardEth }) {
-  const snft = useSnft2(reward.snftId)
+  const snft = useSnft(reward.snftId)
   const ethToUsdFormat = useEthToUsdFormat()
   const [, setLocation] = useLocation()
   return (
@@ -171,7 +171,7 @@ function RewardCardEth({ reward }: { reward: RewardEth }) {
 }
 
 function RewardCardToken({ reward }: { reward: RewardToken }) {
-  const snft = useSnft2(reward.snftId)
+  const snft = useSnft(reward.snftId)
   const token = useToken(reward.token)
   const ethToUsdFormat = useEthToUsdFormat()
   const [, setLocation] = useLocation()

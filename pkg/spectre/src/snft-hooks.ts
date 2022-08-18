@@ -20,11 +20,7 @@ function fakeDelay() {
   })
 }
 
-// TODO: replace useSnft() by useSnft2() everywhere, then rename
-export function useSnft(_id: string): Snft | undefined {
-  return SNFTS.find(({ id }) => id === _id)
-}
-export function useSnft2(id_: string): UseQueryResult<Snft | undefined> {
+export function useSnft(id_: string): UseQueryResult<Snft | undefined> {
   return useQuery(["snft", id_], async () => {
     await fakeDelay()
     return SNFTS.find(({ id }) => id === id_)
