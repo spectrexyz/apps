@@ -1,28 +1,36 @@
 import type { ReactNode } from "react"
 
 import { ButtonIcon, gu, IconArrowLeft, springs, useTheme } from "kit"
-import { useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"
 import { useLayout } from "../styles"
 
-type AppScreenProps = {
-  children: ReactNode
-  compactBar:
-    | false
-    | null
-    | {
-      contextual?: ReactNode
-      onBack: () => void
-      title?: ReactNode
-      extraRow?: ReactNode
-    }
-  loading?: boolean | ReactNode
-}
+const AppScreenContext = createContext<{
+  compactBarHasExtraRow: boolean
+}>({
+  compactBarHasExtraRow: false,
+})
 
 export function AppScreen(
-  { children, compactBar, loading = false }: AppScreenProps,
+  {
+    children,
+    compactBar,
+    loading = false,
+  }: {
+    children: ReactNode
+    compactBar:
+      | false
+      | null
+      | {
+        contextual?: ReactNode
+        onBack: () => void
+        title?: ReactNode
+        extraRow?: ReactNode
+      }
+    loading?: boolean | ReactNode
+  },
 ) {
   const { colors } = useTheme()
   const { appReadyTransition } = useAppReady()
@@ -34,6 +42,13 @@ export function AppScreen(
   const snapHeader = shouldSnapHeader && hasCompactBar
 
   const { contextual, onBack, title, extraRow } = compactBar || {}
+
+  const contextValue = useMemo(
+    () => ({
+      compactBarHasExtraRow: Boolean(extraRow),
+    }),
+    [extraRow],
+  )
 
   const { headerTransform, headerBorderVisibility } = useSpring({
     config: springs.appear,
@@ -71,125 +86,129 @@ export function AppScreen(
   const layout = useLayout()
   const compactMenuActive = layout.below("large")
 
-  return appReadyTransition(
-    ({ progress, screenTransform }, ready) =>
-      ready && (
-        <div
-          css={{
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: "1",
-            paddingBottom: `${compactMenuActive ? 4 * gu : 8 * gu}px`,
-          }}
-        >
-          {title && compactMenuActive && (
-            <div css={{ height: "8gu" }}>
-              <a.div
-                style={{ transform: headerTransform }}
-                css={({ colors }) => ({
-                  position: snapHeader ? "absolute" : "static",
-                  inset: "8gu 0 auto",
-                  zIndex: "2",
-                  display: "flex",
-                  alignItems: "center",
-                  height: extraRow ? "14gu" : "8gu",
-                  background: colors.background,
-                })}
-              >
-                <a.div
-                  style={{ opacity: progress, transform: screenTransform }}
-                  css={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100%",
-                    height: "100%",
-                    transformOrigin: "50% 0",
-                    userSelect: "none",
-                  }}
-                >
-                  <CompactBarHeader
-                    title={title}
-                    start={onBack && (
-                      <ButtonIcon
-                        onClick={onBack}
-                        icon={<IconArrowLeft color={colors.accent} />}
-                        label="Back"
-                        css={{
-                          width: "7gu",
-                          height: "100%",
-                        }}
-                      />
-                    )}
-                    end={contextual}
-                  />
-                  {extraRow && (
-                    <div
-                      css={{
-                        width: "100%",
-                        height: "6gu",
-                      }}
-                    >
-                      {extraRow}
-                    </div>
-                  )}
-                  <a.div
-                    style={{ opacity: headerBorderVisibility }}
-                    css={({ colors }) => ({
-                      position: "absolute",
-                      inset: "auto 0 0",
-                      borderBottom: `1px solid ${colors.outline2}`,
-                    })}
-                  />
-                </a.div>
-              </a.div>
-            </div>
-          )}
-          <a.div
-            style={{ opacity: progress, transform: screenTransform }}
-            css={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: "1",
-              width: "100%",
-              margin: "0 auto",
-            }}
-          >
+  return (
+    <AppScreenContext.Provider value={contextValue}>
+      {appReadyTransition(
+        ({ progress, screenTransform }, ready) =>
+          ready && (
             <div
               css={{
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: "1",
+                paddingBottom: `${compactMenuActive ? 4 * gu : 8 * gu}px`,
               }}
             >
-              {childrenTransitions((styles, item) =>
-                item && (
-                  <a.div style={styles}>
-                    {children}
-                  </a.div>
-                )
-              )}
-              {loaderTransitions((styles, item) =>
-                item && (
+              {title && compactMenuActive && (
+                <div css={{ height: "8gu" }}>
                   <a.div
-                    style={styles}
+                    style={{ transform: headerTransform }}
                     css={({ colors }) => ({
-                      position: "absolute",
-                      inset: "0",
+                      position: snapHeader ? "absolute" : "static",
+                      inset: "8gu 0 auto",
+                      zIndex: "2",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "16px",
-                      color: colors.content,
+                      height: extraRow ? "14gu" : "8gu",
+                      background: colors.background,
                     })}
                   >
-                    Loading…
+                    <a.div
+                      style={{ opacity: progress, transform: screenTransform }}
+                      css={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "100%",
+                        height: "100%",
+                        transformOrigin: "50% 0",
+                        userSelect: "none",
+                      }}
+                    >
+                      <CompactBarHeader
+                        title={title}
+                        start={onBack && (
+                          <ButtonIcon
+                            onClick={onBack}
+                            icon={<IconArrowLeft color={colors.accent} />}
+                            label="Back"
+                            css={{
+                              width: "7gu",
+                              height: "100%",
+                            }}
+                          />
+                        )}
+                        end={contextual}
+                      />
+                      {extraRow && (
+                        <div
+                          css={{
+                            width: "100%",
+                            height: "6gu",
+                          }}
+                        >
+                          {extraRow}
+                        </div>
+                      )}
+                      <a.div
+                        style={{ opacity: headerBorderVisibility }}
+                        css={({ colors }) => ({
+                          position: "absolute",
+                          inset: "auto 0 0",
+                          borderBottom: `1px solid ${colors.outline2}`,
+                        })}
+                      />
+                    </a.div>
                   </a.div>
-                )
+                </div>
               )}
+              <a.div
+                style={{ opacity: progress, transform: screenTransform }}
+                css={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: "1",
+                  width: "100%",
+                  margin: "0 auto",
+                }}
+              >
+                <div
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    flexGrow: "1",
+                  }}
+                >
+                  {childrenTransitions((styles, item) =>
+                    item && (
+                      <a.div style={styles}>
+                        {children}
+                      </a.div>
+                    )
+                  )}
+                  {loaderTransitions((styles, item) =>
+                    item && (
+                      <a.div
+                        style={styles}
+                        css={({ colors }) => ({
+                          position: "absolute",
+                          inset: "0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "16px",
+                          color: colors.content,
+                        })}
+                      >
+                        Loading…
+                      </a.div>
+                    )
+                  )}
+                </div>
+              </a.div>
             </div>
-          </a.div>
-        </div>
-      ),
+          ),
+      )}
+    </AppScreenContext.Provider>
   )
 }
 
@@ -255,4 +274,8 @@ export function CompactBarHeader({
       )}
     </div>
   )
+}
+
+export function useAppScreen() {
+  return useContext(AppScreenContext)
 }

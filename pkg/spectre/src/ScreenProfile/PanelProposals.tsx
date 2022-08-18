@@ -218,7 +218,7 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
                     textTransform: "uppercase",
                   }}
                 >
-                  {ms(new Date(proposal.endsOn).getTime() - Date.now())}
+                  {ms(new Date(proposal.endsOn).getTime() - Date.now(),  { long: true })}
                 </time>
               }
             />

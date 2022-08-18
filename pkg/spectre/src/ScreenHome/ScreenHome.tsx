@@ -59,6 +59,9 @@ export function ScreenHome() {
         ["/nfts/:id/remove-liquidity", () => {
           setLocation(`/nfts/${randomId()}/remove-liquidity`)
         }],
+        ["/nfts/:id/buyout", () => {
+          setLocation(`/nfts/${randomId()}/buyout`)
+        }],
       ],
     ],
     [

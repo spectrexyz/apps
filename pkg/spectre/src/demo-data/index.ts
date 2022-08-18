@@ -12,7 +12,7 @@ import {
   seed,
 } from "@ngneat/falso"
 import * as dnum from "dnum"
-import { DAY_MS, list } from "kit"
+import { DAY_MS, list, WEEK_MS } from "kit"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -23,6 +23,19 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export const buyoutMultiplier = 1.1
+
+const TIMELOCK_OPTIONS = [
+  DAY_MS * 1,
+  DAY_MS * 2,
+  DAY_MS * 3,
+  DAY_MS * 4,
+  DAY_MS * 5,
+  DAY_MS * 6,
+  WEEK_MS * 1,
+  WEEK_MS * 2,
+  WEEK_MS * 3,
+  WEEK_MS * 4,
+]
 
 function toSvg(source: string) {
   return "data:image/svg+xml," + encodeURIComponent(`
@@ -261,6 +274,7 @@ function randomNft(
 
   return ({
     id: `${nftIndex}`,
+    buyoutMultiplier,
     buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
     creator: { ...creator },
     description: randomDescription(),
@@ -281,6 +295,7 @@ function randomNft(
       height: 500,
     },
     pool: { eth: pooledEth, token: pooledToken },
+    proposalTimeout: rand(TIMELOCK_OPTIONS),
     title,
     token,
   })

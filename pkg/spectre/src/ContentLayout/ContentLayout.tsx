@@ -2,11 +2,11 @@ import type { ReactNode } from "react"
 
 import { useLayout } from "../styles"
 
-type ContentLayoutProps = {
+export function ContentLayout({
+  children,
+}: {
   children: ReactNode
-}
-
-export function ContentLayout({ children }: ContentLayoutProps) {
+}) {
   const layout = useLayout()
   const flexGap = layout.value({
     small: "3.5gu",

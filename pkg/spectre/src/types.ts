@@ -34,6 +34,7 @@ export type TokenLocator = readonly [Address, TokenId]
 
 export type Snft = Readonly<{
   id: string
+  buyoutMultiplier: number
   buyoutPrice: Dnum
   creator: Readonly<{
     address: EnsName
@@ -55,6 +56,7 @@ export type Snft = Readonly<{
     eth: Dnum
     token: Dnum
   }
+  proposalTimeout: number
   title: string
   token: Readonly<Token>
 }>

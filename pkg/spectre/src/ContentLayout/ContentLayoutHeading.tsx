@@ -1,22 +1,22 @@
 import type { ReactNode } from "react"
 
+import { useAppScreen } from "../AppLayout/AppScreen"
 import { useLayout } from "../styles"
 
-type ContentLayoutHeadingProps = {
-  title: ReactNode
-  children: ReactNode
-}
-
 export function ContentLayoutHeading({
-  title,
   children,
-}: ContentLayoutHeadingProps) {
+  title,
+}: {
+  children: ReactNode
+  title: ReactNode
+}) {
   const layout = useLayout()
   const introPadding = layout.value({
     small: "2gu 0",
     medium: "2gu 0",
     large: "1.5gu 0 1gu",
   })
+  const { compactBarHasExtraRow } = useAppScreen()
   return (
     <header>
       {!layout.below("medium")
@@ -31,13 +31,7 @@ export function ContentLayoutHeading({
             {title}
           </h1>
         )
-        : (
-          <div
-            css={{
-              height: "6gu",
-            }}
-          />
-        )}
+        : compactBarHasExtraRow && <div css={{ height: "6gu" }} />}
       <p
         css={({ colors, fonts }) => ({
           padding: introPadding,

@@ -1,3 +1,4 @@
+import type { Property as CssP } from "csstype"
 import type { ReactNode } from "react"
 
 import { gu } from "kit"
@@ -8,7 +9,7 @@ export function CenteredContainer(
     maxWidth = 160 * gu,
   }: {
     children: ReactNode
-    maxWidth?: number | null
+    maxWidth?: CssP.MaxWidth | number | null
   },
 ) {
   return (

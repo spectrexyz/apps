@@ -8,6 +8,7 @@ import { Route, Router, Switch } from "wouter"
 import makeMatcher from "wouter/matcher"
 import { AppLayout } from "../AppLayout/AppLayout"
 import { ScreenBuy } from "../ScreenBuy/ScreenBuy"
+import { ScreenBuyout } from "../ScreenBuyout/ScreenBuyout"
 import { ScreenHome } from "../ScreenHome/ScreenHome"
 import { ScreenLiquidityAdd } from "../ScreenLiquidity/ScreenLiquidityAdd"
 import { ScreenLiquidityRemove } from "../ScreenLiquidity/ScreenLiquidityRemove"
@@ -44,6 +45,9 @@ export function App() {
           </Route>
 
           {/* NFTs */}
+          <Route path="/nfts/:id/buyout">
+            {({ id }) => <ScreenBuyout id={id} />}
+          </Route>
           <Route path="/nfts/:id/pool">
             {({ id }) => <ScreenNft id={id} panel="pool" />}
           </Route>
@@ -95,12 +99,7 @@ export function App() {
           </Route>
 
           <Route>
-            <div
-              css={{
-                padding: "3gu",
-                textAlign: "center",
-              }}
-            >
+            <div css={{ padding: "3gu", textAlign: "center" }}>
               Not found
             </div>
           </Route>

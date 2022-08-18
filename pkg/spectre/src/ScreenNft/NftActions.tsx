@@ -20,7 +20,7 @@ export function NftActions(
   const xlarge = !layout.below("xlarge")
   const ethToUsd = useEthToUsdFormat()
 
-  return (
+  return snft && (
     <InfoGrid
       heading="Actions"
       sections={[
@@ -52,6 +52,9 @@ export function NftActions(
           key="nft-buyout"
           label="NFT buyout"
           mode={highlight === "buyout" ? "primary" : "secondary"}
+          onClick={() => {
+            setLocation(`/nfts/${snft.id}/buyout`)
+          }}
           size={xlarge ? undefined : "compact"}
           wide
         />,
@@ -59,10 +62,10 @@ export function NftActions(
           key="buy-fractions"
           label="Buy fractions"
           mode={highlight === "fractions" ? "primary" : "secondary"}
-          size={xlarge ? undefined : "compact"}
           onClick={() => {
             setLocation(`/nfts/${snft.id}/buy`)
           }}
+          size={xlarge ? undefined : "compact"}
           wide
         />,
       ]}

@@ -23,9 +23,7 @@ export function Actions() {
               src={icon}
               width="32"
               height="32"
-              css={{
-                display: "block",
-              }}
+              css={{ display: "block" }}
             />
           </a>
         )
