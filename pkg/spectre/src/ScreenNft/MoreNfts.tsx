@@ -1,6 +1,6 @@
 import type { Snft } from "../types"
 
-import { gu } from "kit"
+import { gu, Truncate } from "kit"
 import { Link } from "wouter"
 import { useSnftsByCreator } from "../snft-hooks"
 import { useLayout, useViewportValue } from "../styles"
@@ -16,32 +16,32 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
 
   const viewportStyles = useViewportValue(({ width }) => [
     [width < 50 * gu, {
-      columns: "1fr",
+      columns: 1,
       maxWidth: "unset",
       padding: "0",
     }],
     [width < 72 * gu, {
-      columns: "1fr 1fr",
+      columns: 2,
       maxWidth: "unset",
       padding: "0",
     }],
     [width < 96 * gu, {
-      columns: "1fr 1fr 1fr",
+      columns: 3,
       maxWidth: "unset",
       padding: "0",
     }],
     [width < 120 * gu, {
-      columns: "1fr 1fr 1fr",
+      columns: 3,
       maxWidth: "unset",
       padding: "0 3gu",
     }],
     [width < 180 * gu, {
-      columns: "1fr 1fr 1fr 1fr",
+      columns: 4,
       maxWidth: "160gu",
       padding: "0 3gu",
     }],
     [true, {
-      columns: "1fr 1fr",
+      columns: 2,
       maxWidth: "unset",
       padding: "0",
     }],
@@ -64,10 +64,11 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
         <div
           css={({ colors }) => ({
             display: "grid",
-            gridTemplateColumns: viewportStyles.columns,
+            gridTemplateColumns:
+              `repeat(${viewportStyles.columns}, minmax(0, 1fr))`,
             gridAutoRows: "auto",
             gridAutoFlow: "row",
-            gap: layout.below("xlarge") ? "3gu" : "9gu 3gu",
+            gap: "3gu",
             "img": {
               display: "block",
               width: "100%",
@@ -91,7 +92,17 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
           {snfts.data?.map((snft) => (
             <Link key={snft.id} href={`/nfts/${snft.id}`}>
               <img src={snft.image.url} alt="" />
-              <div>{snft.title}</div>
+              <div
+                css={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "0 1gu",
+                  textTransform: "uppercase",
+                  fontSize: "16px",
+                }}
+              >
+                {<Truncate text={snft.title} />}
+              </div>
             </Link>
           ))}
         </div>
