@@ -104,7 +104,15 @@ export function ScreenProfile({
   const [editProfile, setEditProfile] = useState(false)
 
   return (
-    <AppScreen compactBar={null} loading={!creator.data}>
+    <AppScreen
+      compactBar={layout.below("medium") && {
+        title: creator.data?.name,
+        onBack: () => {
+          setLocation("/")
+        },
+      }}
+      loading={!creator.data}
+    >
       {creator.data && (
         <>
           <div
