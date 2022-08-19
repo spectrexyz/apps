@@ -10,6 +10,7 @@ import {
   POOLS_BY_ACCOUNT,
   PROPOSALS_BY_ACCOUNT,
   REWARDS_BY_ACCOUNT,
+  SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
 import { resolveAddress } from "./utils"
@@ -37,6 +38,13 @@ export function useSnfts({
   return useQuery(["snfts", skip, first], async () => {
     await fakeDelay()
     return SNFTS.slice(skip, skip + first)
+  })
+}
+
+export function useHighlightedSnfts() {
+  return useQuery(["highlighted-snfts"], async () => {
+    await fakeDelay()
+    return SELECTED_SNFTS
   })
 }
 

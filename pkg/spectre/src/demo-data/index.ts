@@ -341,6 +341,19 @@ export const SNFTS: Snft[] = list(16).flatMap(() => {
   )
 })
 
+export const SELECTED_SNFTS = shuffle(SNFTS).reduce<Snft[]>(
+  (selected, snft) =>
+    (
+        selected.length >= 8
+        || selected.find((snft_) => (
+          snft_.creator.address === snft.creator.address
+        ))
+      )
+      ? selected
+      : [...selected, snft],
+  [],
+)
+
 export const CREATORS_BY_ADDRESS = new Map(
   SNFTS.map((snft) => [snft.creator.resolvedAddress, snft.creator]),
 )
