@@ -1,7 +1,8 @@
 import type { ReactNode } from "react"
 import type { Snft } from "../types"
 
-import { co } from "moire"
+import { Anchor, co } from "moire"
+import { useLocation } from "wouter"
 
 export function NftCard({
   action,
@@ -10,6 +11,7 @@ export function NftCard({
   action?: ReactNode
   snft: Snft
 }) {
+  const [, setLocation] = useLocation()
   return (
     <section
       css={({ colors }) => ({
@@ -18,16 +20,26 @@ export function NftCard({
         borderRadius: "6px",
       })}
     >
-      <img
-        src={snft.image.url}
-        alt=""
-        css={{
-          display: "block",
-          width: "100%",
-          aspectRatio: "1",
-          objectFit: "cover",
+      <Anchor
+        key={snft.id}
+        href={`/nfts/${snft.id}`}
+        onClick={(event) => {
+          event.preventDefault()
+          setLocation(`/nfts/${snft.id}`)
         }}
-      />
+        css={{ width: "100%" }}
+      >
+        <img
+          src={snft.image.url}
+          alt=""
+          css={{
+            display: "block",
+            width: "100%",
+            aspectRatio: "1",
+            objectFit: "cover",
+          }}
+        />
+      </Anchor>
       <div css={{ padding: "3gu" }}>
         <h1
           title={snft.title}
