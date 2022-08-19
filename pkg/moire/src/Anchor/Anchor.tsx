@@ -8,22 +8,25 @@ export type AnchorProps =
     disabled?: boolean
     external?: boolean
     href?: string
-    onClick?: () => void
+    onClick?: (event: MouseEvent) => void
   }
 
 export const Anchor = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   AnchorProps
 >(function Anchor(
-  { disabled = false, href, external, onClick, children, ...props },
+  {
+    children,
+    disabled = false,
+    external,
+    href,
+    onClick,
+    ...props
+    // forwardRef<_, AnchorProps> only is not enough for TS to follow the
+    // params of functions when consuming, so we add the prop types here too:
+  }: AnchorProps,
   ref,
 ) {
-  if (onClick !== undefined && (href !== undefined || external !== undefined)) {
-    throw new Error(
-      "Anchor: the href and external props can’t be set when onClick is set.",
-    )
-  }
-
   const anchorProps = useMemo<ComponentPropsWithoutRef<"a">>(() => {
     if (!href || disabled) {
       return {}
@@ -40,6 +43,7 @@ export const Anchor = forwardRef<
     ? (
       <a
         ref={ref}
+        onClick={onClick}
         {...anchorProps}
         {...props}
         css={({ colors }) => ({
