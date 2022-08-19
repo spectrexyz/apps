@@ -71,7 +71,11 @@ export function ScreenNft({
   const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
+  const snft = useSnft(id)
+  const layout = useLayout()
+
   const [nftPrev, nftNext] = snftsAdjacent?.data ?? []
+  const creator = snft.data?.creator
 
   const tabIndex = useMemo(() => (
     panels.findIndex(([_panel]) => _panel === panel)
@@ -89,6 +93,12 @@ export function ScreenNft({
     }
   }, [nftNext, setLocation, tabIndex])
 
+  const handleCreatorNfts = useCallback(() => {
+    if (creator) {
+      setLocation(`/${creator.address}`)
+    }
+  }, [creator, setLocation])
+
   const handleSelectPanel = useCallback(
     (index: number) => {
       if (panels[index]) {
@@ -101,9 +111,6 @@ export function ScreenNft({
   const onBack = useCallback(() => {
     setLocation("/")
   }, [setLocation])
-
-  const snft = useSnft(id)
-  const layout = useLayout()
 
   const history = useMemo(() => {
     const history = Object.entries(tokenPrices).find(([scale]) => {
@@ -141,8 +148,10 @@ export function ScreenNft({
 
   return (
     <AppScreen
-      compactBar={layout.below("medium")
-        && { title: snft.data?.title, onBack }}
+      compactBar={layout.below("medium") && {
+        title: snft.data?.title,
+        onBack,
+      }}
       loading={loading}
     >
       <div
@@ -190,7 +199,7 @@ export function ScreenNft({
                 <LayoutAwareButtonIconLabel
                   icon={<IconSquaresFour />}
                   label="All"
-                  onClick={noop}
+                  onClick={handleCreatorNfts}
                 />
                 <LayoutAwareButtonIconLabel
                   icon={<IconArrowRight />}
