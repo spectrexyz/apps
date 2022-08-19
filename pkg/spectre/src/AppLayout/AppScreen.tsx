@@ -1,6 +1,13 @@
 import type { ReactNode } from "react"
 
-import { ButtonIcon, gu, IconArrowLeft, Loading, springs, useTheme } from "moire"
+import {
+  ButtonIcon,
+  gu,
+  IconArrowLeft,
+  Loading,
+  springs,
+  useTheme,
+} from "moire"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAppReady } from "../App/AppReady"
@@ -37,23 +44,30 @@ export function AppScreen(
 
   const hasCompactBar = Boolean(compactBar)
 
-  const [shouldSnapHeader, setShouldSnapHeader] = useState(false)
-  useAppScroll((scroll) => setShouldSnapHeader(scroll > 2 * gu))
-  const snapHeader = shouldSnapHeader && hasCompactBar
+  const [shouldSnapHeaderAt, setShouldSnapHeaderAt] = useState<null | number>(
+    null,
+  )
+  useAppScroll((scroll) => {
+    setShouldSnapHeaderAt((snapAt) => {
+      if (scroll > 2 * gu) {
+        return snapAt === null ? scroll : snapAt
+      }
+      return null
+    })
+  })
+  const snapHeader = shouldSnapHeaderAt !== null && hasCompactBar
 
   const { contextual, onBack, title, extraRow } = compactBar || {}
 
   const contextValue = useMemo(
-    () => ({
-      compactBarHasExtraRow: Boolean(extraRow),
-    }),
+    () => ({ compactBarHasExtraRow: Boolean(extraRow) }),
     [extraRow],
   )
 
   const { headerTransform, headerBorderVisibility } = useSpring({
     config: springs.appear,
     headerTransform: snapHeader
-      ? `translate3d(0, -${8 * gu}px, 0)`
+      ? `translate3d(0, -${Math.max(0, 8 * gu - shouldSnapHeaderAt)}px, 0)`
       : "translate3d(0, 0px, 0)",
     headerBorderVisibility: Number(snapHeader),
   })
@@ -105,7 +119,9 @@ export function AppScreen(
                     style={{ transform: headerTransform }}
                     css={({ colors }) => ({
                       position: snapHeader ? "absolute" : "static",
-                      inset: "8gu 0 auto",
+                      inset: snapHeader
+                        ? `${Math.max(0, 8 * gu - shouldSnapHeaderAt)}px 0 auto`
+                        : "8gu 0 auto",
                       zIndex: "2",
                       display: "flex",
                       alignItems: "center",
@@ -201,7 +217,7 @@ export function AppScreen(
                       >
                         <div
                           css={{
-                            padding: "8gu",
+                            padding: "2gu 8gu",
                             background: colors.background,
                             borderRadius: "6px",
                           }}

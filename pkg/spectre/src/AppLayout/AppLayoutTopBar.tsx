@@ -32,7 +32,9 @@ export function AppLayoutTopBar({
   compact: boolean
   autoHideCompact: boolean
 }) {
-  return compact ? <TopBarCompact autoHide={autoHideCompact} /> : <TopBar />
+  return compact
+    ? <TopBarCompact autoHide={autoHideCompact} />
+    : <TopBar />
 }
 
 export function TopBar() {
