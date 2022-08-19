@@ -27,7 +27,7 @@ export function Grid({ children }: { children: ReactNode }) {
         css={{
           display: "grid",
           gridTemplateColumns,
-          gap: "2.5gu",
+          gap: "3gu",
           width: "100%",
           margin: "0 auto",
           padding,
