@@ -1,0 +1,73 @@
+{
+  "name": "moire",
+  "type": "module",
+  "main": "dist/moire.cjs.js",
+  "module": "dist/moire.es.js",
+  "types": "dist/moire.es.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "bin": {
+    "moire-copy-assets": "./bin/copy-assets.cjs"
+  },
+  "scripts": {
+    "build": "vite build --mode production",
+    "build:all": "pnpm export:assets && pnpm build:icons && pnpm build",
+    "build:icons": "./scripts/build-icons.sh",
+    "export:assets": "./scripts/export-assets.sh",
+    "dev": "vite build --watch",
+    "lint": "eslint src",
+    "test": "vitest",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "@emotion/cache": "11.x",
+    "@emotion/react": "11.x",
+    "react": "17.x",
+    "react-dom": "17.x",
+    "react-spring": "9.x",
+    "stylis": "4.x"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^6.3.1",
+    "@types/react": "^18.0.17",
+    "@types/react-blockies": "^1.4.1",
+    "@types/react-dom": "^18.0.6",
+    "@types/stylis": "^4.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recursive-copy": "^2.0.14",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.7",
+    "vite-plugin-dts": "^1.4.1",
+    "vitest": "^0.21.1"
+  },
+  "dependencies": {
+    "@elchininet/isometric": "^3.6.0",
+    "@popperjs/core": "^2.11.6",
+    "@tanstack/react-query": "^4.1.0",
+    "colord": "^2.9.3",
+    "dnum": "^1.5.1",
+    "ethereum-blockies-base64": "^1.0.2",
+    "focus-trap-react": "^9.0.2",
+    "just-throttle": "^4.1.1",
+    "ms": "^3.0.0-canary.1",
+    "ogl": "^0.0.97",
+    "pretty-bytes": "^6.0.0",
+    "react-cool-dimensions": "^2.0.7",
+    "react-dropzone": "^14.2.2",
+    "react-popper": "^2.3.0",
+    "zod": "^3.18.0"
+  },
+  "version": "0.1.0"
+}

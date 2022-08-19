@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src", "test"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "target": "ES2020"
+  }
+}

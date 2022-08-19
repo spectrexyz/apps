@@ -1,6 +1,6 @@
+import { lerp } from "moire"
 import type { SpringValue } from "react-spring"
 import { a } from "react-spring"
-import { lerp } from "kit"
 
 function path(
   direction: "ltr" | "rtl",
@@ -8,7 +8,7 @@ function path(
   x1: number,
   y1: number,
   x2: number,
-  y2: number
+  y2: number,
 ) {
   const ip = (a: number, b: number) => lerp(progress, a, b)
   if (direction === "rtl") {

@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react"
 import { css } from "@emotion/react"
-import { animated, useSpring, useTransition, to } from "react-spring"
 import {
   ButtonIcon,
+  gu,
   IconArrowDown,
   IconArrowUp,
   IconSquaresFour,
-  gu,
   shuffle,
   useDimensions,
   useTheme,
-} from "kit"
+} from "moire"
+import { useEffect, useRef, useState } from "react"
+import { animated, to, useSpring, useTransition } from "react-spring"
 import { NftCard } from "./NftCard"
 import nfts from "./nfts"
 
@@ -74,20 +74,20 @@ function getGridBounds({
     4,
     Math.max(
       1,
-      Math.floor((containerWidth - GRID_GAP) / (cardWidth + GRID_GAP))
-    )
+      Math.floor((containerWidth - GRID_GAP) / (cardWidth + GRID_GAP)),
+    ),
   )
   const rows = Math.ceil(cardsCount / cols)
   const width = cardWidth * cols + GRID_GAP * cols - GRID_GAP
-  const height =
-    Math.floor(cardHeight * rows + GRID_GAP * rows - GRID_GAP) + GRID_GAP * 3
+  const height = Math.floor(cardHeight * rows + GRID_GAP * rows - GRID_GAP)
+    + GRID_GAP * 3
   const x = containerWidth / 2 - width / 2
   return { cols, rows, width, height, x, y: GRID_Y }
 }
 
 function cardWrapper(
   seed: number,
-  { angleMin = 2, angleMax = 12, xMin = 100, xMax = 220 } = {}
+  { angleMin = 2, angleMax = 12, xMin = 100, xMax = 220 } = {},
 ) {
   let cardUid = 0
   return function card(nft: Nft): Card {
@@ -101,14 +101,12 @@ function cardWrapper(
         (Math.random() - 0.5) * CARD_SHIFT_RAND[1],
       ],
       anim: {
-        angle:
-          angle > 1
-            ? angleMin + (angle - 1) * (angleMax - angleMin)
-            : -angleMin - angle * (angleMax - angleMin),
-        leaveX:
-          leaveX > 1
-            ? xMin + (leaveX - 1) * (xMax - xMin)
-            : -xMin - leaveX * (xMax - xMin),
+        angle: angle > 1
+          ? angleMin + (angle - 1) * (angleMax - angleMin)
+          : -angleMin - angle * (angleMax - angleMin),
+        leaveX: leaveX > 1
+          ? xMin + (leaveX - 1) * (xMax - xMin)
+          : -xMin - leaveX * (xMax - xMin),
       },
       position: [0, 0],
     }
@@ -346,8 +344,8 @@ function NftCards({
   const stackBounds = useRef<StackBounds>(STACK_BOUNDS_DEFAULT)
 
   const xShift = containerBounds.width / 2 - stackBounds.current.cardWidth / 2
-  const yShift =
-    containerBounds.height / 2 - stackBounds.current.cardHeight / 2 + 50
+  const yShift = containerBounds.height / 2 - stackBounds.current.cardHeight / 2
+    + 50
 
   const cards = cardsBeforePosition.map((card, stackIndex) => ({
     ...card,
@@ -470,7 +468,7 @@ function NftCards({
           { leaving, opacity, position, angle, scale },
           { id, nft },
           t,
-          index
+          index,
         ) => {
           return (
             <animated.div
@@ -491,12 +489,11 @@ function NftCards({
                       0
                     )
                     rotate3d(0, 0, 1, ${angle}deg)
-                  `
+                  `,
                 ),
-                opacity:
-                  direction === 1
-                    ? to(opacity, [0, 0.5, 1], [0, 1, 1])
-                    : to(opacity, [0, 0.7, 1], [0, 1, 1]),
+                opacity: direction === 1
+                  ? to(opacity, [0, 0.5, 1], [0, 1, 1])
+                  : to(opacity, [0, 0.7, 1], [0, 1, 1]),
                 zIndex: cards.length - index,
                 position: "absolute",
                 transformOrigin: "50% 100%",
@@ -508,7 +505,7 @@ function NftCards({
               <NftCard nft={nft} active={grid || cards[0].id === id} />
             </animated.div>
           )
-        }
+        },
       )}
     </div>
   )

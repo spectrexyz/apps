@@ -1,18 +1,20 @@
-import reactRefresh from "@vitejs/plugin-react-refresh"
+import react from "@vitejs/plugin-react"
 
 // https://vitejs.dev/config/
 export default {
-  plugins: [reactRefresh()],
   build: {
-    target: "es2019",
+    target: "es2020",
   },
   esbuild: {
-    jsxFactory: "jsx",
-    jsxInject: `import { jsx } from '@emotion/react'`,
+    // see https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803
+    logOverride: { "this-is-undefined-in-esm": "silent" },
   },
-  resolve: {
-    dedupe: [
-      "@emotion/react",
-    ],
-  },
+  plugins: [
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
+  ],
 }

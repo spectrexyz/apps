@@ -1,8 +1,8 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { Label } from "./Label"
-import { WIDTH, HEIGHT, spSlow } from "./shared"
 import { Serc20 } from "./Serc20"
+import { HEIGHT, spSlow, WIDTH } from "./shared"
 
 const X = WIDTH / 2 - 105 / 2
 const Y = HEIGHT - 250 + 40 + 12.5

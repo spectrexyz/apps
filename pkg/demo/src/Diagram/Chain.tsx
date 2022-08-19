@@ -1,7 +1,6 @@
-import React from "react"
 import { a, useSpring, useTransition } from "react-spring"
-import { spSlow } from "./shared"
 import { Label } from "./Label"
+import { spSlow } from "./shared"
 
 const links = Array.from({ length: 5 }).map((_, i) => i)
 

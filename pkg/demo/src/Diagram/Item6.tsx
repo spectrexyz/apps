@@ -1,10 +1,10 @@
 import type { SpringValue } from "react-spring"
 
-import React, { memo } from "react"
+import { memo } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { Label } from "./Label"
-import { HEIGHT, spSlow } from "./shared"
 import { Serc20 } from "./Serc20"
+import { HEIGHT, spSlow } from "./shared"
 
 type Props = { progress: SpringValue<number> }
 

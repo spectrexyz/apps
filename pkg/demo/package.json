@@ -2,29 +2,31 @@
   "name": "demo",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev --port 3001",
     "build": "vite build",
     "serve": "vite preview",
-    "kit-assets": "pnpm kit-copy-assets ./public/kit"
+    "moire-assets": "pnpm moire-copy-assets ./public/moire"
   },
   "dependencies": {
-    "@emotion/cache": "^11.4.0",
-    "@emotion/react": "^11.4.1",
-    "ethers": "^5.4.5",
-    "kit": "workspace:*",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-spring": "^9.2.4",
-    "stylis": "^4.0.10",
-    "twgl.js": "^4.19.2",
-    "use-nft": "^0.10.1",
+    "@emotion/cache": "^11.10.1",
+    "@emotion/react": "^11.10.0",
+    "ethers": "^5.6.9",
+    "moire": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-spring": "^9.5.2",
+    "stylis": "^4.1.1",
+    "token-amount": "^0.3.0",
+    "twgl.js": "^4.24.0",
+    "use-nft": "^0.12.0",
     "wouter": "^2.7.4"
   },
   "devDependencies": {
-    "@types/react": "^17.0.19",
-    "@types/react-dom": "^17.0.9",
-    "@vitejs/plugin-react-refresh": "^1.3.6",
-    "typescript": "^4.4.2",
-    "vite": "^2.5.1"
+    "@emotion/babel-plugin": "^11.10.0",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.1",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.7"
   }
 }

@@ -1,13 +1,3 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react"
-
 export const PADDING = 60
 export const WIDTH = 729
 export const HEIGHT = 589

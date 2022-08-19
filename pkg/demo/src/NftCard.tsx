@@ -1,7 +1,7 @@
-import React from "react"
 import { css } from "@emotion/react"
+import { fonts, Moire, useDimensions, useTheme } from "moire"
+import { memo } from "react"
 import { useNft } from "use-nft"
-import { fonts, Moire, useDimensions, useTheme } from "kit"
 
 type NftCardProps = {
   active: boolean
@@ -11,19 +11,20 @@ type NftCardProps = {
   }
 }
 
-export const NftCard = React.memo(function NftCard({
+export const NftCard = memo(function NftCard({
   active,
   nft: { contract, tokenId },
 }: NftCardProps) {
   const { nft = { image: "", name: "", description: "" } } = useNft(
     contract,
-    tokenId
+    tokenId,
   )
   const author = "@poppy"
   const bid = { current: "2.80 ETH", end: "25 MIN" }
   return (
     <div
-      css={({ colors }) => css`
+      css={({ colors }) =>
+        css`
         width: 35gu;
         color: ${colors.background};
         border: 3px solid ${colors.primary};
@@ -33,7 +34,8 @@ export const NftCard = React.memo(function NftCard({
       <img
         alt=""
         src={nft.image}
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           display: block;
           width: 100%;
           height: 27gu;
@@ -106,7 +108,8 @@ function Tag({ label }: { label: string }) {
       `}
     >
       <span
-        css={({ colors }) => css`
+        css={({ colors }) =>
+          css`
           position: relative;
           z-index: 2;
           display: flex;
