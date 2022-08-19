@@ -32,7 +32,7 @@ export function AppScreen(
       | null
       | {
         contextual?: ReactNode
-        onBack: () => void
+        onBack?: () => void
         title?: ReactNode
         extraRow?: ReactNode
       }
@@ -142,17 +142,19 @@ export function AppScreen(
                     >
                       <CompactBarHeader
                         title={title}
-                        start={onBack && (
-                          <ButtonIcon
-                            onClick={onBack}
-                            icon={<IconArrowLeft color={colors.accent} />}
-                            label="Back"
-                            css={{
-                              width: "7gu",
-                              height: "100%",
-                            }}
-                          />
-                        )}
+                        start={onBack
+                          ? (
+                            <ButtonIcon
+                              onClick={onBack}
+                              icon={<IconArrowLeft color={colors.accent} />}
+                              label="Back"
+                              css={{
+                                width: "7gu",
+                                height: "100%",
+                              }}
+                            />
+                          )
+                          : <div css={{ width: "2gu" }} />}
                         end={contextual}
                       />
                       {extraRow && (

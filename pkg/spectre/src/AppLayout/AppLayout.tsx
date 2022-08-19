@@ -59,11 +59,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             scrollBehavior: "smooth",
           }}
         >
-          <div
-            css={{
-              flex: "0 0",
-            }}
-          >
+          <div css={{ flex: "0 0" }}>
             <AppLayoutTopBar
               compact={compact}
               autoHideCompact={layout.name === "small"}
@@ -97,11 +93,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           >
             {children}
           </div>
-          <div
-            css={{
-              flex: "0 0",
-            }}
-          >
+          <div css={{ flex: "0 0" }}>
             <AppLayoutBottomBar compact={compact} />
           </div>
         </div>
