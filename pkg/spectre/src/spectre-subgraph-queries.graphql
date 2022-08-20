@@ -1,0 +1,15 @@
+query AllSpectres {
+  spectres {
+    sERC20 {
+      name
+      symbol
+      cap
+      sale {
+        id
+      }
+      issuance {
+        id
+      }
+    }
+  }
+}
