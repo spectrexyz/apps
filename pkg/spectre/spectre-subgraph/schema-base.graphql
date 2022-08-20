@@ -1,0 +1,11 @@
+scalar BigDecimal
+scalar BigInt
+scalar Bytes
+
+type Query {
+  spectres(
+    first: Int = 100
+    skip: Int = 0
+  ): [Spectre!]!
+}
+

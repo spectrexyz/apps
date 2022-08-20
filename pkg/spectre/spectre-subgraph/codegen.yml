@@ -1,0 +1,25 @@
+overwrite: true
+schema: "spectre-subgraph/schema.graphql"
+documents: './src/**/*.graphql'
+generates:
+  src/generated/spectre-subgraph.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-document-nodes"
+      - "typescript-react-query"
+      - "add":
+          "content": '/* eslint-disable @typescript-eslint/no-shadow */'
+    config:
+      fetcher: "fetch"
+      scalars:
+        BigInt: string
+        Bytes: string
+        BigDecimal: string
+      withHooks: true
+      immutableTypes: true
+
+
+  ./spectre-subgraph/graphql.schema.json:
+    plugins:
+      - "introspection"

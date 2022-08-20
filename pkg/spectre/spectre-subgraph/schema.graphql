@@ -1,0 +1,190 @@
+scalar BigDecimal
+scalar BigInt
+scalar Bytes
+
+type Query {
+  spectres(
+    first: Int = 100
+    skip: Int = 0
+  ): [Spectre!]!
+}
+
+enum ProposalState {
+  Null
+  Pending
+  Accepted
+  Rejected
+  Lapsed
+  Withdrawn
+}
+
+# vault-related entities
+
+enum SpectreState {
+  Null
+  Locked
+  Unlocked
+}
+
+type NFT @entity {
+  id: ID! # address#id
+  collection: Bytes!
+  tokenId: BigInt!
+}
+
+type Spectre @entity {
+  id: ID! # ERC1155 tokenType
+  NFT: NFT!
+  sERC20: sERC20!
+  state: SpectreState!
+  vault: Bytes!
+  broker: Bytes!
+}
+
+# sERC20-related entities
+
+type sERC20 @entity {
+  id: ID! # ERC20 address
+  spectre: Spectre!
+  name: String!
+  symbol: String!
+  cap: BigInt!
+  sale: Sale
+  issuance: Issuance
+  pool: Pool
+}
+
+# buyout-related entities
+
+enum SaleState {
+  Null
+  Pending
+  Opened
+  Closed
+}
+
+type Sale @entity {
+  id: ID! # ERC20 address
+  sERC20: sERC20!
+  state: SaleState!
+  guardian: Bytes!
+  reserve: BigInt!
+  multiplier: BigInt!
+  opening: BigInt!
+  stock: BigInt!
+  flash: Boolean!
+  escape: Boolean!
+  proposals: [BuyoutProposal!]! @derivedFrom(field: "sale")
+  buyout: Buyout
+}
+
+type BuyoutProposal @entity {
+  id: ID!
+  sale: Sale!
+  state: ProposalState!
+  timestamp: BigInt!
+  buyer: Bytes!
+  value: BigInt!
+  collateral: BigInt!
+  expiration: BigInt!
+}
+
+type Buyout @entity {
+  id: ID!
+  sale: Sale!
+  timestamp: BigInt!
+  buyer: Bytes!
+  value: BigInt!
+  collateral: BigInt!
+  stock: BigInt!
+  claims: [Claim!]! @derivedFrom(field: "buyout")
+}
+
+type Claim @entity {
+  id: ID!
+  buyout: Buyout!
+  timestamp: BigInt!
+  holder: Bytes!
+  value: BigInt!
+  collateral: BigInt!
+}
+
+# issuance-related entities
+
+enum IssuanceState {
+  Null
+  Opened
+  Closed
+}
+
+type Issuance @entity {
+  id: ID! # ERC20 address
+  sERC20: sERC20!
+  state: IssuanceState!
+  guardian: Bytes!
+  pool: Bytes!
+  poolId: Bytes!
+  reserve: BigInt!
+  allocation: BigInt!
+  fee: BigInt!
+  flash: Boolean
+  issues: [Issue!]! @derivedFrom(field: "issuance")
+  proposals: [IssuanceProposal!]! @derivedFrom(field: "issuance")
+}
+
+type Issue @entity {
+  id: ID!
+  issuance: Issuance!
+  timestamp: BigInt!
+  recipient: Bytes!
+  value: BigInt! # ETH
+  amount: BigInt! # sERC20!
+}
+
+type IssuanceProposal @entity {
+  id: ID!
+  issuance: Issuance!
+  state: ProposalState!
+  timestamp: BigInt!
+  buyer: Bytes!
+  value: BigInt!
+  price: BigInt!
+  expiration: BigInt!
+}
+
+# pool-related entities
+
+type Pool @entity {
+  id: ID! # poolId
+  address: Bytes!
+  sERC20: sERC20!
+  sERC20IsToken0: Boolean!
+  states: [PoolState!]! @derivedFrom(field: "pool")
+  swaps: [Swap!]! @derivedFrom(field: "pool")
+  joins: [Join!]! @derivedFrom(field: "pool")
+}
+
+type PoolState @entity {
+  id: ID!
+  pool: Pool!
+  timestamp: BigInt!
+  balances: [BigInt!]! # sERC20 is always first, ETH second
+  weights: [BigInt!]! # sERC20 is always first, ETH second
+  price: BigDecimal! # in ETH per sERC20
+}
+
+type Swap @entity {
+  id: ID!
+  pool: Pool!
+  timestamp: BigInt!
+  from: Bytes!
+  amounts: [BigInt!]! # sERC20 is always first, ETH second
+}
+
+type Join @entity {
+  id: ID!
+  pool: Pool!
+  timestamp: BigInt!
+  from: Bytes!
+  amounts: [BigInt!]! # sERC20 is always first, ETH second
+}
