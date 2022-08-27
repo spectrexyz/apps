@@ -37,20 +37,12 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
     large: "5.25gu",
   })
 
-  const fractionalize = () => {
-    alert("Soon")
-  }
-
   return (
     <form onSubmit={handleSubmit} css={{ width: "100%" }}>
       <ContentLayout>
         <ContentLayoutHeading
           title={
-            <span
-              css={({ colors }) => ({
-                color: colors.accent,
-              })}
-            >
+            <span css={{ color: "colors.accent" }}>
               {title}
             </span>
           }
@@ -58,17 +50,9 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
           Make sure all the information related to your NFT & fractions is
           correct before you confirm.
         </ContentLayoutHeading>
-        <div
-          css={{
-            height: headingBottomSpace,
-          }}
-        />
+        <div css={{ height: headingBottomSpace }} />
         <ContentLayoutSection type="two-parts">
-          <div
-            css={{
-              paddingBottom: "3gu",
-            }}
-          >
+          <div css={{ paddingBottom: "3gu" }}>
             {data.previewUrl && (
               <img
                 src={data.previewUrl}
@@ -157,18 +141,10 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
                   {data.rewardsSplit.map((account) => (
                     <div
                       key={account}
-                      css={{
-                        display: "flex",
-                        gap: "1.5gu",
-                      }}
+                      css={{ display: "flex", gap: "1.5gu" }}
                     >
-                      <AddressBadge address={account} />
-                      <div
-                        css={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                      <AddressBadge address={account} rounded />
+                      <div css={{ display: "flex", alignItems: "center" }}>
                         {formatNumber(
                           data.rewardsPct / data.rewardsSplit.length,
                         )}
@@ -179,11 +155,7 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
                 </div>
               }
             />
-            <div
-              css={{
-                paddingTop: "3gu",
-              }}
-            >
+            <div css={{ paddingTop: "3gu" }}>
               <AdvancedParameters headingFontSize="14px" />
             </div>
           </div>
@@ -191,15 +163,10 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
         <div>
           {layout.below("medium")
             ? (
-              <div
-                css={{
-                  padding: "3gu 0",
-                }}
-              >
+              <div css={{ padding: "3gu 0" }}>
                 <Button
                   label="Fractionalize NFT"
                   mode="primary-2"
-                  onClick={fractionalize}
                   shadowInBox
                   type="submit"
                   wide
@@ -224,7 +191,6 @@ export function StepSummary({ title, onNext, onPrev }: StepProps) {
                 <Button
                   label="Fractionalize NFT"
                   mode="primary-2"
-                  onClick={fractionalize}
                   shadowInBox
                   type="submit"
                 />

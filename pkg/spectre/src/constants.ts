@@ -1,6 +1,6 @@
 export const NFT_FILE_TYPES = {
   image: {
-    label: "JPG,PNG,SVG,WEBP",
+    label: "JPG,PNG,GIF,SVG",
     accept: {
       "image/*": [
         ".avif",
@@ -15,9 +15,8 @@ export const NFT_FILE_TYPES = {
     },
   },
   video: {
-    label: "MP4,WEBM,GIF",
+    label: "MP4,WEBM,OGV",
     accept: {
-      "image/gif": [".gif"],
       "video/*": [".mp4", ".ogv", ".webm"],
     },
   },

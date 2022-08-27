@@ -15,6 +15,7 @@ import {
   RadioBox,
   RadioGroup,
   TextInput,
+  Truncate,
   Video,
 } from "moire"
 import { useCallback } from "react"
@@ -225,8 +226,13 @@ function NftFileSelector({
   const gridTemplateAxis1 = direction === "vertical" ? "Rows" : "Columns"
   const gridTemplateAxis2 = direction === "vertical" ? "Columns" : "Rows"
 
-  const { fieldError, file, fileType, updateFile, updateFileType } =
-    useSpectralize()
+  const {
+    fieldError,
+    file,
+    fileType,
+    updateFile,
+    updateFileType,
+  } = useSpectralize()
 
   const hasError = Boolean(fieldError("file"))
 
@@ -243,7 +249,7 @@ function NftFileSelector({
   )
 
   return (
-    <div>
+    <div css={{ userSelect: "none" }}>
       {file ? <NftFilePreview /> : (
         <RadioGroup
           onChange={(fileType: FileType) => updateFileType(fileType)}
@@ -466,34 +472,42 @@ function FileEntry({ name, onReset }: { name: string; onReset: () => void }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: "1gu",
         width: "100%",
         paddingTop: "1.5gu",
       }}
     >
       <div
         css={({ colors }) => ({
+          overflow: "hidden",
           display: "flex",
           alignItems: "center",
           gap: "1.25gu",
           height: "4gu",
           padding: "0 1.5gu 0 1gu",
+          whiteSpace: "nowrap",
           color: colors.accent,
           background: colors.layer1,
         })}
       >
-        <IconCheckBold size={2.5 * gu} />
-        <span>{name}</span>
+        <div css={{ flex: "0", display: "flex", alignItems: "center" }}>
+          <IconCheckBold size={2.5 * gu} />
+        </div>
+        <Truncate text={name} />
       </div>
 
-      <ButtonIcon
-        icon={<IconTrash size={2.5 * gu} />}
-        label="reset"
-        onClick={onReset}
-        css={{
-          width: "3gu",
-          height: "3gu",
-        }}
-      />
+      <div css={{ flex: "0", display: "flex", alignItems: "center" }}>
+        <ButtonIcon
+          icon={<IconTrash size={2.5 * gu} />}
+          label="reset"
+          onClick={onReset}
+          css={{
+            flexShrink: "0",
+            width: "3gu",
+            height: "3gu",
+          }}
+        />
+      </div>
     </div>
   )
 }

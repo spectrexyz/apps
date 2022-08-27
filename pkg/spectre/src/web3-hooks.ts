@@ -1,6 +1,6 @@
 import type { AddressOrEnsName } from "moire"
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import { useProvider } from "wagmi"
 import { CREATORS_BY_ADDRESS } from "./demo-data"
 import { addressesEqual } from "./utils"

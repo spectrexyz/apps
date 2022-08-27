@@ -6,6 +6,8 @@ import {
   gu,
   IconArrowLeft,
   ms,
+  NO_BREAK_SPACE,
+  noop,
   Percentage,
   Tip,
   TokenAmount,
@@ -112,7 +114,7 @@ export function ScreenBuyout({ id }: { id: string }) {
                       title="Circulating supply"
                       content={`${
                         dnum.format(snft.data.token.minted, 2)
-                      } ${snft.data.token.symbol}`}
+                      }${NO_BREAK_SPACE}${snft.data.token.symbol}`}
                     />
                     <Definition
                       title="Fraction symbol"
@@ -170,7 +172,7 @@ export function ScreenBuyout({ id }: { id: string }) {
                         <Button
                           label="Submit proposal"
                           mode="primary"
-                          onClick={() => {}}
+                          onClick={noop}
                           shadowInBox
                           type="submit"
                           wide
@@ -195,7 +197,7 @@ export function ScreenBuyout({ id }: { id: string }) {
                         <Button
                           label="Submit proposal"
                           mode="primary"
-                          onClick={() => {}}
+                          onClick={noop}
                           shadowInBox
                           type="submit"
                           wide

@@ -19,10 +19,11 @@ export function ScreenLiquidityRemove({ id }: { id: string }) {
 
   const title = "Remove liquidity"
 
-  const loading = snft.isLoading
-
   return (
-    <AppScreen compactBar={layout.below("medium") && { onBack, title }}>
+    <AppScreen
+      compactBar={layout.below("medium") && { onBack, title }}
+      loading={snft.isLoading}
+    >
       {!layout.below("medium") && <BackButton onClick={onBack} />}
       <CenteredContainer maxWidth={layout.below("medium") ? null : 75 * gu}>
         <section
