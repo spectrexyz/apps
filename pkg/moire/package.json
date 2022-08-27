@@ -1,8 +1,8 @@
 {
   "name": "moire",
   "type": "module",
-  "main": "dist/moire.cjs.js",
-  "module": "dist/moire.es.js",
+  "main": "dist/pkg/moire/src/index.js",
+  "module": "dist/pkg/moire/src/index.js",
   "types": "dist/moire.es.d.ts",
   "sideEffects": false,
   "files": [

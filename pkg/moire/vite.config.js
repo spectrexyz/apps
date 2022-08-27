@@ -7,7 +7,7 @@ export default defineConfig(async ({ mode }) => ({
     outDir: "dist",
     lib: {
       entry: "src/index.tsx",
-      formats: ["es", "cjs"],
+      formats: ["es"],
       fileName: (format) => `moire.${format}.js`,
     },
     sourcemap: mode === "production" || "inline",
@@ -20,6 +20,11 @@ export default defineConfig(async ({ mode }) => ({
         "react-spring",
         "stylis",
       ],
+      output: {
+        preserveModules: true,
+        esModule: true,
+        entryFileNames: ({ name }) => `${name}.js`,
+      },
     },
   },
   esbuild: {
