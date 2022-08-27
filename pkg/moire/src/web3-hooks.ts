@@ -1,17 +1,16 @@
 import type { Dnum } from "dnum"
 
+import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import { useCallback } from "react"
-import { useQuery } from "react-query"
 import { z } from "zod"
 
 type PriceToken = "eth" | "usd"
 
-const coingeckoPriceResultSchema = z.object({
-  "ethereum": z.object({ "usd": z.number() }),
-}).or(z.object({
-  "usd": z.object({ "ethereum": z.number() }),
-}))
+const coingeckoPriceResultSchema = z.union([
+  z.object({ "ethereum": z.object({ "usd": z.number() }) }),
+  z.object({ "usd": z.object({ "ethereum": z.number() }) }),
+])
 
 function coinGeckoTokenId(tokenId: PriceToken) {
   return tokenId === "eth" ? "ethereum" : tokenId
