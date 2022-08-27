@@ -71,7 +71,7 @@ export const Video = function Video({
           css={{
             position: "absolute",
             inset: "0",
-            background: `url(${poster}) no-repeat 0 0 / cover`,
+            background: `url(${poster}) no-repeat 50% 50% / cover`,
           }}
         />
       )}
