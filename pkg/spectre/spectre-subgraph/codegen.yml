@@ -2,22 +2,25 @@ overwrite: true
 schema: "spectre-subgraph/schema.graphql"
 documents: './src/**/*.graphql'
 generates:
-  src/generated/spectre-subgraph.ts:
+  src/spectre-subgraph.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-document-nodes"
       - "typescript-react-query"
+      - "typescript-validation-schema"
       - "add":
-          "content": '/* eslint-disable @typescript-eslint/no-shadow */'
+          "content": "/* eslint-disable */\n// This file has been generated, do not edit.\n// See spectre-subgraph/codegen.yml"
     config:
-      fetcher: "fetch"
+      fetcher: './subgraph-fetcher#subgraphFetcher' 
       scalars:
         BigInt: string
         Bytes: string
         BigDecimal: string
       withHooks: true
       immutableTypes: true
+      strictScalars: true
+      schema: zod
 
 
   ./spectre-subgraph/graphql.schema.json:

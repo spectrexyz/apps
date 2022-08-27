@@ -1,9 +1,9 @@
+import type { UseQueryResult } from "@tanstack/react-query"
 import type { Address, AddressOrEnsName } from "moire"
-import type { UseQueryResult } from "react-query"
 import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
 
+import { useQuery } from "@tanstack/react-query"
 import uniqBy from "lodash.uniqby"
-import { useQuery } from "react-query"
 import { useProvider } from "wagmi"
 import {
   FRACTIONS_BY_ACCOUNT,
@@ -13,6 +13,7 @@ import {
   SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
+import { useAllSpectresQuery } from "./spectre-subgraph"
 import { resolveAddress } from "./utils"
 
 function fakeDelay() {
@@ -42,10 +43,13 @@ export function useSnfts({
 }
 
 export function useHighlightedSnfts() {
-  return useQuery(["highlighted-snfts"], async () => {
-    await fakeDelay()
-    return SELECTED_SNFTS
-  })
+  const allSpectres = useAllSpectresQuery()
+  console.log("?", allSpectres.data, SELECTED_SNFTS)
+
+  return useQuery(
+    ["highlighted-snfts"],
+    () => SELECTED_SNFTS,
+  )
 }
 
 export function useSnftCreator(address: string) {
