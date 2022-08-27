@@ -13,7 +13,7 @@ import {
   SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
-import { useAllSpectresQuery } from "./spectre-subgraph"
+// import { useAllSpectres } from "./subgraph-hooks"
 import { resolveAddress } from "./utils"
 
 function fakeDelay() {
@@ -43,9 +43,8 @@ export function useSnfts({
 }
 
 export function useHighlightedSnfts() {
-  const allSpectres = useAllSpectresQuery()
-  console.log("?", allSpectres.data, SELECTED_SNFTS)
-
+  // const allSpectres = useAllSpectres()
+  // console.log("?", allSpectres, SELECTED_SNFTS)
   return useQuery(
     ["highlighted-snfts"],
     () => SELECTED_SNFTS,

@@ -7,7 +7,7 @@
     "serve": "vite preview",
     "import:moire-assets": "pnpm moire-copy-assets ./public/moire",
     "lint": "eslint --ext .tsx,.ts src/",
-    "generate:subgraph-code": "cp spectre-subgraph/schema-base.graphql spectre-subgraph/schema.graphql && cat node_modules/spectre/schema.graphql >> spectre-subgraph/schema.graphql && graphql-codegen --config ./spectre-subgraph/codegen.yml && dprint fmt ./src/spectre-subgraph.ts"
+    "build:subgraph-code": "pnpm graphclient build"
   },
   "dependencies": {
     "@bpierre/use-viewport": "^0.3.0",
@@ -42,14 +42,7 @@
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.0",
-    "@graphql-codegen/add": "^3.2.1",
-    "@graphql-codegen/cli": "2.11.6",
-    "@graphql-codegen/introspection": "2.2.1",
-    "@graphql-codegen/typescript": "2.7.3",
-    "@graphql-codegen/typescript-document-nodes": "2.3.3",
-    "@graphql-codegen/typescript-graphql-files-modules": "2.2.1",
-    "@graphql-codegen/typescript-operations": "2.5.3",
-    "@graphql-codegen/typescript-react-query": "^4.0.1",
+    "@graphprotocol/client-cli": "^2.2.3",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "@vitejs/plugin-react": "^2.0.1",
@@ -57,7 +50,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "graphql-codegen-typescript-validation-schema": "^0.6.0",
+    "rollup-plugin-visualizer": "^5.8.0",
     "spectre": "github:spectrexyz/subgraph",
     "typescript": "^4.7.4",
     "vite": "^3.0.9",

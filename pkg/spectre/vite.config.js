@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react"
+import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig } from "vite"
 import pluginRewriteAll from "vite-plugin-rewrite-all"
 
@@ -22,6 +23,10 @@ export default defineConfig(({ mode }) => ({
       babel: {
         plugins: ["@emotion/babel-plugin"],
       },
+    }),
+    visualizer({
+      emitFile: true,
+      file: "stats.html",
     }),
   ],
   resolve: {
