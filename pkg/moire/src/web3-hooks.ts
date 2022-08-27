@@ -26,8 +26,10 @@ function priceUrl(from: PriceToken, to: PriceToken) {
 export function usePrice(from: "eth", to: "usd") {
   const queryFn = useCallback(async () => {
     const response = await fetch(priceUrl(from, to))
-    const result = coingeckoPriceResultSchema.parse(await response.json())
-    if (!result) {
+    let result
+    try {
+      result = coingeckoPriceResultSchema.parse(await response.json())
+    } catch (err) {
       throw new Error("Wrong result")
     }
     if (from === "eth" && "ethereum" in result && "usd" in result.ethereum) {
