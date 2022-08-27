@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { QueryClient, QueryClientProvider } from "react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BaseUrl } from "../BaseUrl"
 import { EmotionPlugins } from "../EmotionPlugins"
 import { FocusVisible } from "../FocusVisible"

@@ -28,6 +28,7 @@
     "react": "17.x",
     "react-dom": "17.x",
     "react-spring": "9.x",
+    "@tanstack/react-query": "^4.2.1",
     "stylis": "4.x"
   },
   "devDependencies": {
@@ -55,7 +56,6 @@
   "dependencies": {
     "@elchininet/isometric": "^3.6.0",
     "@popperjs/core": "^2.11.6",
-    "@tanstack/react-query": "^4.2.1",
     "colord": "^2.9.3",
     "dnum": "^1.5.1",
     "ethereum-blockies-base64": "^1.0.2",
