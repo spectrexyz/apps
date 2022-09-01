@@ -12,6 +12,11 @@ export type FieldName = string
 export type FieldErrorObject = { field: FieldName; error: FieldError }
 export type BuyoutMechanism = "manual" | "flash"
 
+export type SpectralizeStatus =
+  | "configure"
+  | "spectralize:nft-upload-data"
+  | "spectralize:nft-before-tx"
+
 export type AdvancedParametersData = {
   buyoutMechanism: BuyoutMechanism
   initialLpTokenWeight: number
@@ -37,6 +42,7 @@ export type SpectralizeData = {
   description: string
   fileType: FileType
   file: null | File
+  fileCid: null | string
   fileUrl: null | string
   previewFile: null | File
   previewUrl: null | string
@@ -55,6 +61,7 @@ export type SpectralizeData = {
   errors: FieldErrorObject[]
   currentStep: number
   suggestFromBuyout: boolean
+  status: SpectralizeStatus
 } & AdvancedParametersData
 
 export type SpectralizeMethods = {
@@ -62,6 +69,7 @@ export type SpectralizeMethods = {
   updateDescription(description: string): void
   updateFileType(fileType: FileType): void
   updateFile(file: null | File): void
+  updateFileCid: (fileCid: string) => void
   updatePreviewFile(previewFile: null | File): void
   updateAuthorName(authorName: string): void
   updateAuthorEns(authorEns: string): void
@@ -91,6 +99,7 @@ export type SpectralizeMethods = {
   prevStep(): boolean
   reset(): void
   fillDemoData(): void
+  updateStatus: (status: SpectralizeStatus) => void
 }
 
 export type SpectralizeState = SpectralizeData & SpectralizeMethods
@@ -109,6 +118,7 @@ const initialState: SpectralizeData = {
   description: "",
   fileType: "image",
   file: null,
+  fileCid: null,
   fileUrl: null,
   previewFile: null,
   previewUrl: null,
@@ -133,16 +143,20 @@ const initialState: SpectralizeData = {
   tradingFees: 1,
   initialLpTokenWeight: 0.2,
   targetLpTokenWeight: 0.5,
+  status: "configure",
 }
 
 export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
   ...initialState,
 
+  updateStatus(status) {
+    set({ status })
+  },
   updateTitle(title) {
     set({ title })
     get().clearError("title")
   },
-  updateDescription(description: string) {
+  updateDescription(description) {
     set({ description })
     get().clearError("description")
   },
@@ -172,6 +186,9 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     if (fileType === "image") {
       get().updatePreviewFile(newFile)
     }
+  },
+  updateFileCid(fileCid) {
+    set({ fileCid })
   },
   updatePreviewFile(newPreviewFile) {
     const { previewUrl } = get()
@@ -372,10 +389,12 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
       },
     },
   ],
+
   currentStepTitle() {
     const { currentStep, steps } = get()
     return steps[currentStep].title
   },
+
   updateSuggestFromBuyout(suggestFromBuyout) {
     set({ suggestFromBuyout })
   },
@@ -419,6 +438,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
 
     return !hasErrors
   },
+
   nextStep() {
     return get().moveStep(1)
   },
@@ -460,7 +480,7 @@ export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
     get().addRewardsSplitAddress("0x627306090abab3a6e1400e9345bc60c78a8bef57")
     get().addRewardsSplitAddress("0xf17f52151ebef6c7334fad080c5704d77216b732")
 
-    // set({ currentStep: 2 })
+    set({ currentStep: 3 })
   },
 }))
 

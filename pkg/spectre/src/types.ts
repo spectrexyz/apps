@@ -88,3 +88,16 @@ export type Proposal = {
   submitter: Address
   buyerOwnership: Dnum
 }
+
+export type NftMetadataToBeStored =
+  & {
+    name: string
+    description: string
+    image: File
+  }
+  & (
+    // image
+    | { properties: { type: "image" } }
+    // video / audio
+    | { animation_url: File; properties: { type: "video" | "audio" } }
+  )

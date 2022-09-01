@@ -1,9 +1,14 @@
+import type { NftMetadataToBeStored } from "../types"
+import type { SpectralizeStatus } from "./use-spectralize"
+
+import { useMutation } from "@tanstack/react-query"
 import { Steps } from "moire"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { useAccount } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen"
+import { NFT_STORAGE_KEY } from "../environment"
 import { useLayout } from "../styles"
 import { Step1 } from "./Step1"
 import { Step2 } from "./Step2"
@@ -17,11 +22,64 @@ export function ScreenSpectralize() {
   const [, setLocation] = useLocation()
   const { isConnected } = useAccount()
 
-  const layout = useLayout()
   const resetScroll = useResetScroll()
-  const { currentStep, currentStepTitle, nextStep, prevStep } = useSpectralize()
-  const title = currentStepTitle()
-  const Step = STEPS[currentStep]
+  const {
+    currentStep,
+    description,
+    file,
+    fileType,
+    // fillDemoData,
+    nextStep,
+    prevStep,
+    previewFile,
+    status,
+    title,
+    updateStatus,
+  } = useSpectralize()
+
+  // useEffect(() => {
+  //   fillDemoData()
+  // }, [fillDemoData])
+
+  const storeNft = useStoreNft()
+
+  const storeNftMetadata = () => {
+    const image = fileType === "image" || (fileType === "video" && !previewFile)
+      ? file
+      : previewFile
+
+    if (image === null || file === null) {
+      return
+    }
+
+    const metadataBase = {
+      description,
+      image,
+      name: title,
+    }
+
+    const metadata: NftMetadataToBeStored = fileType === "image"
+      ? {
+        ...metadataBase,
+        properties: { type: "image" },
+      }
+      : {
+        ...metadataBase,
+        animation_url: file,
+        properties: { type: fileType as "audio" | "video" },
+      }
+
+    storeNft.mutate(metadata)
+  }
+
+  const storeNftStatus = storeNft.status
+  useEffect(() => {
+    if (
+      status === "spectralize:nft-upload-data" && storeNftStatus === "success"
+    ) {
+      updateStatus("spectralize:nft-before-tx")
+    }
+  }, [status, storeNftStatus])
 
   const prev = useCallback(() => {
     if (currentStep === 0) {
@@ -32,12 +90,61 @@ export function ScreenSpectralize() {
   }, [currentStep, setLocation, prevStep])
 
   const next = useCallback(() => {
-    nextStep()
-  }, [nextStep])
+    if (currentStep === STEPS.length - 1) {
+      storeNftMetadata()
+      updateStatus("spectralize:nft-upload-data")
+    } else {
+      nextStep()
+    }
+  }, [currentStep, nextStep, updateStatus])
 
   useEffect(() => {
     resetScroll()
   }, [currentStep, resetScroll])
+
+  if (!isConnected) {
+    return <Disconnected onPrev={prev} />
+  }
+
+  if (status.startsWith("spectralize:")) {
+    return (
+      <Spectralize
+        onPrev={prev}
+        status={status}
+      />
+    )
+  }
+
+  // status === "configure"
+  return <Configure onNext={next} onPrev={prev} />
+}
+
+function Configure({
+  onNext,
+  onPrev,
+}: {
+  onNext: () => void
+  onPrev: () => void
+}) {
+  const layout = useLayout()
+
+  const { currentStep, currentStepTitle } = useSpectralize()
+  const title = currentStepTitle()
+  const Step = STEPS[currentStep]
+
+  const compactBar = layout.below("medium") && {
+    title,
+    onBack: onPrev,
+    extraRow: (
+      <div css={{ padding: "0 2gu" }}>
+        <Steps
+          steps={STEPS.length - 1}
+          current={currentStep}
+          direction="horizontal"
+        />
+      </div>
+    ),
+  }
 
   const contentMaxWidth = layout.value({
     small: "none",
@@ -55,53 +162,8 @@ export function ScreenSpectralize() {
     xlarge: "8gu",
   })
 
-  if (!isConnected) {
-    return (
-      <AppScreen
-        compactBar={{
-          title: "Fractionalize",
-          onBack: prev,
-        }}
-      >
-        <div
-          css={{
-            flexGrow: "1",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            maxWidth: contentMaxWidth,
-            margin: "0 auto",
-            padding: contentPadding,
-            paddingTop: "8gu",
-            textAlign: "center",
-          }}
-        >
-          Please connect your account to fractionalize your NFT.
-        </div>
-      </AppScreen>
-    )
-  }
-
   return (
-    <AppScreen
-      compactBar={layout.below("medium") && {
-        title,
-        onBack: prev,
-        extraRow: (
-          <div
-            css={{
-              padding: "0 2gu",
-            }}
-          >
-            <Steps
-              steps={STEPS.length - 1}
-              current={currentStep}
-              direction="horizontal"
-            />
-          </div>
-        ),
-      }}
-    >
+    <AppScreen compactBar={compactBar}>
       <div
         css={{
           display: "flex",
@@ -122,13 +184,115 @@ export function ScreenSpectralize() {
             }}
           >
             <Steps
-              steps={STEPS.length - 1}
               current={currentStep}
               direction="vertical"
+              steps={STEPS.length - 1}
             />
           </div>
         )}
-        <Step title={title} onPrev={prev} onNext={next} />
+        <Step title={title} onPrev={onPrev} onNext={onNext} />
+      </div>
+    </AppScreen>
+  )
+}
+
+function useStoreNft() {
+  return useMutation(
+    async (nftMetadata: NftMetadataToBeStored) => {
+      const { NFTStorage } = await import("nft.storage")
+      if (!NFTStorage) {
+        throw new Error("nft.storage module not loaded properly")
+      }
+      if (!NFT_STORAGE_KEY) {
+        throw new Error("NFT_STORAGE_KEY has not been defined")
+      }
+      const storage = new NFTStorage({ token: NFT_STORAGE_KEY })
+      return storage.store(nftMetadata)
+    },
+  )
+}
+
+function Spectralize(
+  {
+    onPrev,
+    status,
+  }: {
+    onPrev: () => void
+    status: SpectralizeStatus
+  },
+) {
+  const layout = useLayout()
+
+  const contentMaxWidth = layout.value({
+    small: "none",
+    large: "104gu",
+    xlarge: "128gu",
+  })
+  const contentPadding = layout.value({
+    small: "0 3gu",
+    medium: "0 3gu",
+    large: "0",
+  })
+
+  const stepLabel = useMemo(() => {
+    if (status === "spectralize:nft-upload-data") return "Uploading NFT data…"
+    if (status === "spectralize:nft-before-tx") {
+      return "Ready to sign the transaction."
+    }
+    return "Spectralizing…"
+  }, [status])
+
+  return (
+    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
+      <div
+        css={{
+          flexGrow: "1",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          maxWidth: contentMaxWidth,
+          margin: "0 auto",
+          padding: contentPadding,
+          paddingTop: "8gu",
+          textAlign: "center",
+        }}
+      >
+        {stepLabel}
+      </div>
+    </AppScreen>
+  )
+}
+
+function Disconnected({ onPrev }: { onPrev: () => void }) {
+  const layout = useLayout()
+
+  const contentMaxWidth = layout.value({
+    small: "none",
+    large: "104gu",
+    xlarge: "128gu",
+  })
+  const contentPadding = layout.value({
+    small: "0 3gu",
+    medium: "0 3gu",
+    large: "0",
+  })
+
+  return (
+    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
+      <div
+        css={{
+          flexGrow: "1",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          maxWidth: contentMaxWidth,
+          margin: "0 auto",
+          padding: contentPadding,
+          paddingTop: "8gu",
+          textAlign: "center",
+        }}
+      >
+        Please connect your account to fractionalize your NFT.
       </div>
     </AppScreen>
   )
