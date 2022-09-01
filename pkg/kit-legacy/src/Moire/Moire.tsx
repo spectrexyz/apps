@@ -1,7 +1,5 @@
-/** @jsx jsx */
-import React, { useEffect, useRef } from "react"
-import { jsx, css } from "@emotion/react"
 import { colord } from "colord"
+import React, { useEffect, useRef } from "react"
 import {
   createBufferInfoFromArrays,
   createProgramInfo,
@@ -97,9 +95,7 @@ export function Moire({
       width={width}
       height={height}
       {...props}
-      css={css`
-        display: block;
-      `}
+      css={{ display: "block" }}
     />
   )
 }

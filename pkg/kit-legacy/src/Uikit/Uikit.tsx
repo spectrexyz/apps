@@ -1,13 +1,12 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 
-import { CacheProvider, jsx } from "@emotion/react"
 import createCache from "@emotion/cache"
+import { CacheProvider } from "@emotion/react"
 import { prefixer } from "stylis"
-import { cssUnitPlugin } from "../emotion-plugin-css-unit"
-import { gu } from "../styles"
-import { Main } from "../Main"
 import { BaseUrl } from "../BaseUrl"
+import { cssUnitPlugin } from "../emotion-plugin-css-unit"
+import { Main } from "../Main"
+import { gu } from "../styles"
 
 type UikitProps = {
   baseUrl: string

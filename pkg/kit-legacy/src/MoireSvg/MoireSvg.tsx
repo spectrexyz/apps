@@ -1,7 +1,4 @@
-
-/** @jsx jsx */
-import { css, jsx } from "@emotion/react"
-import { useSpring, animated } from "react-spring"
+import { animated, useSpring } from "react-spring"
 import { useBaseUrl } from "../BaseUrl"
 
 export type MoireSvgMode = "dark" | "light" | "dark-alt" | "light-alt"
@@ -53,27 +50,27 @@ export function MoireSvg({
   return (
     <span
       {...props}
-      css={css`
-        display: block;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        position: relative;
-      `}
+      css={{
+        display: "block",
+        overflow: "hidden",
+        width: "100%",
+        height: "100%",
+        position: "relative",
+      }}
     >
       <animated.span
         style={{ transform }}
-        css={css`
-          position: absolute;
-          z-index: 1;
-          left: -50%;
-          top: 50%;
-          width: 200%;
-          height: 0;
-          padding-top: 200%;
-          background: url(${image}) 0 0 repeat;
-          transform-origin: 50% 50%;
-        `}
+        css={{
+          position: "absolute",
+          zIndex: "1",
+          left: "-50%",
+          top: "50%",
+          width: "200%",
+          height: "0",
+          paddingTop: "200%",
+          background: `url(${image}) 0 0 repeat`,
+          transformOrigin: "50% 50%",
+        }}
       />
     </span>
   )

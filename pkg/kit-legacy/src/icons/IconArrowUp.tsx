@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/react"
 import { gu } from "../styles"
 
 export function IconArrowUp({ size = 6 * gu, color = "currentColor" }) {
@@ -9,9 +7,7 @@ export function IconArrowUp({ size = 6 * gu, color = "currentColor" }) {
       height={size}
       viewBox="0 0 48 48"
       fill="none"
-      css={css`
-        display: block;
-      `}
+      css={{ display: "block" }}
     >
       <path
         d="M24.9712 35.0305L24.9712 12.9695C24.9712 12.4341 24.5371 12 24.0017 12C23.4663 12 23.0323 12.4341 23.0323 12.9695L23.0323 35.0305C23.0323 35.566 23.4663 36 24.0017 36C24.5371 36 24.9712 35.566 24.9712 35.0305Z"

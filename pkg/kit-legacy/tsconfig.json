@@ -3,5 +3,8 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "target": "ES2020"
   }
 }

@@ -17,4 +17,14 @@ export default {
       },
     }),
   ],
+  resolve: {
+    dedupe: [
+      "@emotion/cache",
+      "@emotion/react",
+      "react",
+      "react-dom",
+      "react-spring",
+      "stylis",
+    ],
+  },
 }

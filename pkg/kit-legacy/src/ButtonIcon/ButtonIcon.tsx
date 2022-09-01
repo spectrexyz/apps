@@ -1,10 +1,8 @@
-/** @jsx jsx */
 import type { ReactNode } from "react"
 import type { ButtonAreaProps } from "../ButtonArea"
 
-import { jsx, css } from "@emotion/react"
 import { ButtonArea } from "../ButtonArea"
-import { theme, gu } from "../styles"
+import { gu, theme } from "../styles"
 
 type ButtonIconProps = ButtonAreaProps & {
   icon: ReactNode
@@ -21,26 +19,26 @@ export function ButtonIcon({
   return (
     <ButtonArea
       {...props}
-      css={css`
-        position: relative;
-        width: ${(size === "small" ? 4 : 6) * gu}px;
-        height: ${(size === "small" ? 4 : 6) * gu}px;
-        color: ${mode === "outline" ? theme.primary : theme.background};
-        background: ${mode === "outline" ? theme.background : theme.primary};
-        &:active {
-          transform: translate(1px, 1px);
-        }
-        &:before {
-          display: ${mode === "outline" ? "block" : "none"};
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border: ${size === "small" ? 1 : 3}px solid ${theme.primary};
-        }
-      `}
+      css={{
+        position: "relative",
+        width: `${(size === "small" ? 4 : 6) * gu}px`,
+        height: `${(size === "small" ? 4 : 6) * gu}px`,
+        color: mode === "outline" ? theme.primary : theme.background,
+        background: mode === "outline" ? theme.background : theme.primary,
+        "&:active": {
+          transform: "translate(1px, 1px)",
+        },
+        "&:before": {
+          display: mode === "outline" ? "block" : "none",
+          content: "\"\"",
+          position: "absolute",
+          top: "0",
+          left: "0",
+          right: "0",
+          bottom: "0",
+          border: `${size === "small" ? 1 : 3}px solid ${theme.primary}`,
+        },
+      }}
     >
       {icon}
     </ButtonArea>

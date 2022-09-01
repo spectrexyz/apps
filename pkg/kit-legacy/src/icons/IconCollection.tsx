@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/react"
 import { gu } from "../styles"
 
 export function IconCollection({ size = 6 * gu, color = "currentColor" }) {
@@ -9,9 +7,7 @@ export function IconCollection({ size = 6 * gu, color = "currentColor" }) {
       height={size}
       viewBox="0 0 48 48"
       fill="none"
-      css={css`
-        display: block;
-      `}
+      css={{ display: "block" }}
     >
       <rect x="12" y="30" width="6" height="6" fill={color} />
       <rect x="12" y="21" width="6" height="6" fill={color} />
