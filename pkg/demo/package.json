@@ -8,8 +8,8 @@
     "moire-assets": "pnpm moire-copy-assets ./public/moire"
   },
   "dependencies": {
-    "@emotion/cache": "^11.10.1",
-    "@emotion/react": "^11.10.0",
+    "@emotion/cache": "^11.10.3",
+    "@emotion/react": "^11.10.4",
     "ethers": "^5.7.0",
     "moire": "workspace:*",
     "react": "^18.2.0",
@@ -22,11 +22,11 @@
     "wouter": "^2.7.4"
   },
   "devDependencies": {
-    "@emotion/babel-plugin": "^11.10.0",
-    "@types/react": "^18.0.17",
+    "@emotion/babel-plugin": "^11.10.2",
+    "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.1",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.2",
     "vite": "^3.0.9"
   }
 }
