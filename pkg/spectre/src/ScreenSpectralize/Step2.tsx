@@ -32,8 +32,11 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
   const layout = useLayout()
   const { address } = useAccount()
 
-  const { rewardsSplit, addRewardsSplitAddress, removeRewardsSplitAddress } =
-    data
+  const {
+    addRewardsSplitAddress,
+    removeRewardsSplitAddress,
+    rewardsSplit,
+  } = data
 
   const submitAddingAccount = useRef<
     (() => { invalid: boolean; account: Address | null }) | undefined

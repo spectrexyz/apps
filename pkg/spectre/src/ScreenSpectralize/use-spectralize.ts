@@ -1,9 +1,23 @@
+import type { MutationStatus } from "@tanstack/react-query"
 import type { Address, Direction } from "moire"
+import type { NftMetadataToBeStored } from "../types"
+import type { SignTxAndWaitStatus } from "../web3-hooks"
 
+import { useMutation } from "@tanstack/react-query"
+import * as ethers from "ethers"
 import { isEmail, pick, WEEK_MS } from "moire"
-import { useCallback } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { erc721ABI, useAccount, useContractRead } from "wagmi"
 import zustand from "zustand"
 import shallow from "zustand/shallow"
+import { CHANNELER_ABI_MINT_AND_FRACTIONALIZE } from "../abis"
+import {
+  CHANNELER_ADDRESS,
+  ERC1155_ADDRESS,
+  NFT_STORAGE_KEY,
+  SERC721_ADDRESS,
+} from "../environment"
+import { useSignTxAndWait } from "../web3-hooks"
 
 export type FileType = "image" | "video" | "audio"
 
@@ -14,8 +28,11 @@ export type BuyoutMechanism = "manual" | "flash"
 
 export type SpectralizeStatus =
   | "configure"
-  | "spectralize:nft-upload-data"
-  | "spectralize:nft-before-tx"
+  | "init-minting"
+  | "success"
+  | `approve:${SignTxAndWaitStatus}`
+  | `mint-and-fractionalize:${SignTxAndWaitStatus}`
+  | `store-nft:${MutationStatus}`
 
 export type AdvancedParametersData = {
   buyoutMechanism: BuyoutMechanism
@@ -61,7 +78,7 @@ export type SpectralizeData = {
   errors: FieldErrorObject[]
   currentStep: number
   suggestFromBuyout: boolean
-  status: SpectralizeStatus
+  spectralizeStatus: SpectralizeStatus
 } & AdvancedParametersData
 
 export type SpectralizeMethods = {
@@ -99,7 +116,7 @@ export type SpectralizeMethods = {
   prevStep(): boolean
   reset(): void
   fillDemoData(): void
-  updateStatus: (status: SpectralizeStatus) => void
+  updateSpectralizeStatus: (spectralizeStatus: SpectralizeStatus) => void
 }
 
 export type SpectralizeState = SpectralizeData & SpectralizeMethods
@@ -143,14 +160,14 @@ const initialState: SpectralizeData = {
   tradingFees: 1,
   initialLpTokenWeight: 0.2,
   targetLpTokenWeight: 0.5,
-  status: "configure",
+  spectralizeStatus: "configure",
 }
 
 export const useSpectralize = zustand<SpectralizeState>((set, get) => ({
   ...initialState,
 
-  updateStatus(status) {
-    set({ status })
+  updateSpectralizeStatus(spectralizeStatus) {
+    set({ spectralizeStatus })
   },
   updateTitle(title) {
     set({ title })
@@ -545,5 +562,209 @@ export function useAdvancedParametersForm(): AdvancedParametersForm & {
     ...formState,
     reset,
     save,
+  }
+}
+
+function useNftMetadata(): NftMetadataToBeStored | null {
+  const { description, file, fileType, previewFile, title } = useSpectralize()
+  return useMemo(() => {
+    const image = fileType === "image" || (fileType === "video" && !previewFile)
+      ? file
+      : previewFile
+
+    if (!image || !file) {
+      return null
+    }
+
+    const metadataBase = {
+      description,
+      image,
+      name: title,
+    }
+
+    const metadata: NftMetadataToBeStored = fileType === "image"
+      ? {
+        ...metadataBase,
+        properties: { type: "image" },
+      }
+      : {
+        ...metadataBase,
+        animation_url: file,
+        properties: { type: fileType as "audio" | "video" },
+      }
+
+    return metadata
+  }, [fileType, previewFile, description, title])
+}
+
+export function useStoreNft() {
+  const nftMetadata = useNftMetadata()
+  return useMutation(
+    async () => {
+      if (!NFT_STORAGE_KEY) {
+        throw new Error("NFT_STORAGE_KEY has not been defined")
+      }
+      if (!nftMetadata) {
+        throw new Error("nftMetadata not ready")
+      }
+      const { NFTStorage } = await import("nft.storage")
+      if (!NFTStorage) {
+        throw new Error("nft.storage module not loaded properly")
+      }
+      const storage = new NFTStorage({ token: NFT_STORAGE_KEY })
+      return storage.store(nftMetadata)
+    },
+  )
+}
+
+export function useApproveTransfers(enabled: boolean) {
+  const { address } = useAccount()
+  const [watch, setWatch] = useState(true)
+
+  const isApprovedForAll = useContractRead({
+    addressOrName: SERC721_ADDRESS,
+    args: [address, ERC1155_ADDRESS],
+    contractInterface: erc721ABI,
+    enabled: enabled && Boolean(address),
+    functionName: "isApprovedForAll",
+    watch: watch && enabled,
+  })
+
+  const approveTx = useSignTxAndWait({
+    addressOrName: SERC721_ADDRESS,
+    args: [ERC1155_ADDRESS, true],
+    contractInterface: erc721ABI,
+    enabled,
+    functionName: "setApprovalForAll",
+  })
+
+  const approved = approveTx.status === "tx:success" || Boolean(
+    isApprovedForAll.isSuccess && isApprovedForAll.data,
+  )
+
+  useEffect(() => {
+    setWatch(!approved)
+  }, [approved])
+
+  return {
+    approved,
+    signTxAndWaitStatus: approveTx.status,
+    write() {
+      if (!approved) {
+        approveTx.write()
+      }
+    },
+  }
+}
+
+function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
+  const {
+    buyoutMechanism,
+    buyoutMultiplier,
+    initialLpTokenWeight,
+    maxTokenSupplyCap,
+    mintingFees,
+    targetLpTokenWeight,
+    timelock,
+    tokenName,
+    tokenSymbol,
+    tradingFees,
+    rewardsSplit,
+    rewardsPct,
+  } = useSpectralize()
+
+  const account = useAccount()
+
+  const mintAndFractionalize = useSignTxAndWait({
+    addressOrName: CHANNELER_ADDRESS,
+    contractInterface: CHANNELER_ABI_MINT_AND_FRACTIONALIZE,
+    functionName: "mintAndFractionalize",
+    args: [
+      metadataUri,
+      {
+        guardian: account.address,
+        name: tokenName,
+        symbol: tokenSymbol,
+        cap: ethers.utils.parseEther(String(maxTokenSupplyCap)),
+        multiplier: ethers.utils.parseEther(
+          String(Math.round(buyoutMultiplier / 10)),
+        ),
+        timelock: ethers.BigNumber.from(Math.round(timelock / 1000)), // 10 days
+        sMaxNormalizedWeight: ethers.BigNumber.from(
+          String(Math.round(targetLpTokenWeight * 10 ** 18)),
+        ),
+        sMinNormalizedWeight: ethers.BigNumber.from(
+          String(Math.round(initialLpTokenWeight * 10 ** 18)),
+        ),
+        beneficiaries: rewardsSplit,
+        shares: Array(rewardsSplit.length).fill(
+          ethers.utils.parseEther(String(rewardsPct)),
+        ),
+        swapFeePercentage: ethers.BigNumber.from(
+          String(Math.round(tradingFees / 100 * 10 ** 18)),
+        ),
+        fee: ethers.BigNumber.from(
+          String(Math.round(mintingFees / 100 * 10 ** 18)),
+        ),
+        buyoutFlash: buyoutMechanism === "flash",
+        issuanceFlash: true,
+        buyoutReserve: ethers.utils.parseEther("100"),
+        issuanceReserve: ethers.utils.parseEther("100"),
+      },
+    ],
+    enabled: Boolean(enabled && account.address && metadataUri),
+  })
+
+  return {
+    signTxAndWaitStatus: mintAndFractionalize.status,
+    write() {
+      mintAndFractionalize.write()
+    },
+  }
+}
+
+export function useCompleteMintAndSpectralize() {
+  const { spectralizeStatus, updateSpectralizeStatus } = useSpectralize()
+  const storeNft = useStoreNft()
+  const approveTransfers = useApproveTransfers(storeNft.isSuccess)
+  const mintAndSpectralize = useMintAndSpectralize(
+    storeNft.isSuccess && approveTransfers.approved,
+    (approveTransfers.approved && storeNft.data?.url) || null,
+  )
+
+  const mintStatus = ((): SpectralizeStatus => {
+    if (spectralizeStatus === "configure") {
+      return "configure"
+    }
+    if (!storeNft.isSuccess) {
+      return `store-nft:${storeNft.status}`
+    }
+    if (!approveTransfers.approved) {
+      return `approve:${approveTransfers.signTxAndWaitStatus}`
+    }
+    if (mintAndSpectralize.signTxAndWaitStatus !== "tx:success") {
+      return `mint-and-fractionalize:${mintAndSpectralize.signTxAndWaitStatus}`
+    }
+    return "success"
+  })()
+
+  useEffect(() => {
+    updateSpectralizeStatus(mintStatus)
+  }, [mintStatus, updateSpectralizeStatus])
+
+  return {
+    approve() {
+      approveTransfers.write()
+    },
+    init() {
+      if (spectralizeStatus === "configure") {
+        storeNft.mutate()
+        updateSpectralizeStatus("init-minting")
+      }
+    },
+    mint() {
+      mintAndSpectralize.write()
+    },
+    status: spectralizeStatus,
   }
 }

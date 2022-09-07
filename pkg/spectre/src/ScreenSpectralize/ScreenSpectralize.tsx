@@ -1,20 +1,21 @@
-import type { NftMetadataToBeStored } from "../types"
 import type { SpectralizeStatus } from "./use-spectralize"
 
-import { useMutation } from "@tanstack/react-query"
-import { Steps } from "moire"
-import { useCallback, useEffect, useMemo } from "react"
+import { Button, Steps } from "moire"
+import { useCallback, useEffect } from "react"
+import { match } from "ts-pattern"
 import { useAccount } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen"
-import { NFT_STORAGE_KEY } from "../environment"
 import { useLayout } from "../styles"
 import { Step1 } from "./Step1"
 import { Step2 } from "./Step2"
 import { Step3 } from "./Step3"
 import { StepSummary } from "./StepSummary"
-import { useSpectralize } from "./use-spectralize"
+import {
+  useCompleteMintAndSpectralize,
+  useSpectralize,
+} from "./use-spectralize"
 
 const STEPS = [Step1, Step2, Step3, StepSummary]
 
@@ -25,61 +26,16 @@ export function ScreenSpectralize() {
   const resetScroll = useResetScroll()
   const {
     currentStep,
-    description,
-    file,
-    fileType,
-    // fillDemoData,
+    fillDemoData,
     nextStep,
     prevStep,
-    previewFile,
-    status,
-    title,
-    updateStatus,
   } = useSpectralize()
 
-  // useEffect(() => {
-  //   fillDemoData()
-  // }, [fillDemoData])
+  const mintAndSpectralize = useCompleteMintAndSpectralize()
 
-  const storeNft = useStoreNft()
-
-  const storeNftMetadata = () => {
-    const image = fileType === "image" || (fileType === "video" && !previewFile)
-      ? file
-      : previewFile
-
-    if (image === null || file === null) {
-      return
-    }
-
-    const metadataBase = {
-      description,
-      image,
-      name: title,
-    }
-
-    const metadata: NftMetadataToBeStored = fileType === "image"
-      ? {
-        ...metadataBase,
-        properties: { type: "image" },
-      }
-      : {
-        ...metadataBase,
-        animation_url: file,
-        properties: { type: fileType as "audio" | "video" },
-      }
-
-    storeNft.mutate(metadata)
-  }
-
-  const storeNftStatus = storeNft.status
   useEffect(() => {
-    if (
-      status === "spectralize:nft-upload-data" && storeNftStatus === "success"
-    ) {
-      updateStatus("spectralize:nft-before-tx")
-    }
-  }, [status, storeNftStatus])
+    fillDemoData()
+  }, [fillDemoData])
 
   const prev = useCallback(() => {
     if (currentStep === 0) {
@@ -91,12 +47,11 @@ export function ScreenSpectralize() {
 
   const next = useCallback(() => {
     if (currentStep === STEPS.length - 1) {
-      storeNftMetadata()
-      updateStatus("spectralize:nft-upload-data")
+      mintAndSpectralize.init()
     } else {
       nextStep()
     }
-  }, [currentStep, nextStep, updateStatus])
+  }, [currentStep, nextStep])
 
   useEffect(() => {
     resetScroll()
@@ -106,17 +61,16 @@ export function ScreenSpectralize() {
     return <Disconnected onPrev={prev} />
   }
 
-  if (status.startsWith("spectralize:")) {
-    return (
-      <Spectralize
-        onPrev={prev}
-        status={status}
-      />
-    )
+  if (mintAndSpectralize.status === "configure") {
+    return <Configure onNext={next} onPrev={prev} />
   }
 
-  // status === "configure"
-  return <Configure onNext={next} onPrev={prev} />
+  return (
+    <Spectralize
+      onPrev={prev}
+      mintAndSpectralize={mintAndSpectralize}
+    />
+  )
 }
 
 function Configure({
@@ -196,31 +150,13 @@ function Configure({
   )
 }
 
-function useStoreNft() {
-  return useMutation(
-    async (nftMetadata: NftMetadataToBeStored) => {
-      const { NFTStorage } = await import("nft.storage")
-      if (!NFTStorage) {
-        throw new Error("nft.storage module not loaded properly")
-      }
-      if (!NFT_STORAGE_KEY) {
-        throw new Error("NFT_STORAGE_KEY has not been defined")
-      }
-      const storage = new NFTStorage({ token: NFT_STORAGE_KEY })
-      return storage.store(nftMetadata)
-    },
-  )
-}
-
-function Spectralize(
-  {
-    onPrev,
-    status,
-  }: {
-    onPrev: () => void
-    status: SpectralizeStatus
-  },
-) {
+function Spectralize({
+  onPrev,
+  mintAndSpectralize,
+}: {
+  onPrev: () => void
+  mintAndSpectralize: ReturnType<typeof useCompleteMintAndSpectralize>
+}) {
   const layout = useLayout()
 
   const contentMaxWidth = layout.value({
@@ -233,14 +169,6 @@ function Spectralize(
     medium: "0 3gu",
     large: "0",
   })
-
-  const stepLabel = useMemo(() => {
-    if (status === "spectralize:nft-upload-data") return "Uploading NFT data…"
-    if (status === "spectralize:nft-before-tx") {
-      return "Ready to sign the transaction."
-    }
-    return "Spectralizing…"
-  }, [status])
 
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
@@ -257,7 +185,27 @@ function Spectralize(
           textAlign: "center",
         }}
       >
-        {stepLabel}
+        {match(mintAndSpectralize.status)
+          .with("store-nft:loading", () => "Uploading NFT metadata…")
+          .with("store-nft:error", () => "Error when uploading the NFT data.")
+          .when((s) => s.startsWith("approve:"), () => (
+            <TxBox
+              onSign={() => mintAndSpectralize.approve()}
+              prefix="approve"
+              reason="to approve transfers"
+              status={mintAndSpectralize.status}
+            />
+          ))
+          .when((s) => s.startsWith("mint-and-fractionalize:"), () => (
+            <TxBox
+              onSign={() => mintAndSpectralize.mint()}
+              prefix="mint-and-fractionalize"
+              reason="to mint and fractionalize your NFT"
+              status={mintAndSpectralize.status}
+            />
+          ))
+          .with("success", () => "Done!")
+          .otherwise(() => null)}
       </div>
     </AppScreen>
   )
@@ -295,5 +243,73 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
         Please connect your account to fractionalize your NFT.
       </div>
     </AppScreen>
+  )
+}
+
+function TxBox({
+  onSign,
+  prefix,
+  reason,
+  status,
+}: {
+  onSign: () => void
+  prefix: "approve" | "mint-and-fractionalize"
+  reason: string
+  status: SpectralizeStatus
+}) {
+  return (
+    <div>
+      {status}
+      <div>
+        {match(status)
+          .with(
+            `${prefix}:prepare:loading`,
+            () => "Preparing the transaction…",
+          )
+          .with(
+            `${prefix}:prepare:error`,
+            () => "Error while preparing the transaction.",
+          )
+          .with(
+            `${prefix}:sign:idle`,
+            () => `Please sign this transaction ${reason}.`,
+          )
+          .with(
+            `${prefix}:sign:loading`,
+            () => "Please open your wallet to sign the transaction.",
+          )
+          .with(
+            `${prefix}:sign:error`,
+            () =>
+              "An error occured while signing the transaction. Please try again.",
+          )
+          .with(
+            `${prefix}:tx:loading`,
+            () => "Waiting for the transaction to be confirmed…",
+          )
+          .with(
+            `${prefix}:tx:error`,
+            () =>
+              "An error occured and the transaction didn’t pass. Please try again.",
+          )
+          .with(
+            `${prefix}:tx:error`,
+            () =>
+              "An error occured and the transaction didn’t pass. Please try again.",
+          )
+          .otherwise(() => null)}
+      </div>
+      <div css={{ paddingTop: "1gu" }}>
+        <Button
+          disabled={!(
+            status === `${prefix}:sign:idle`
+            || status === `${prefix}:sign:error`
+            || status === `${prefix}:tx:error`
+          )}
+          label="Sign transaction"
+          onClick={onSign}
+        />
+      </div>
+    </div>
   )
 }
