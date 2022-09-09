@@ -67,6 +67,7 @@ export function Step2({ title, onPrev, onNext }: StepProps) {
       rewardsSplit.length === 0
       && !hasFilledCurrentAccountInRewards.current
       && address
+      && isAddress(address)
     ) {
       addRewardsSplitAddress(address)
 
