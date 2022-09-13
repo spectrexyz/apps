@@ -1,6 +1,6 @@
-import type { MutationStatus } from "@tanstack/react-query"
 import type { ContractInterface } from "ethers"
 import type { Address, AddressOrEnsName } from "moire"
+import type { SignTxAndWaitStatus } from "./types"
 
 import { useQuery } from "@tanstack/react-query"
 import { useCallback, useMemo } from "react"
@@ -33,11 +33,6 @@ export function useIsConnectedAddress(address: AddressOrEnsName) {
     { enabled: Boolean(connectedAddress) },
   )
 }
-
-export type SignTxAndWaitStatus =
-  | `prepare:${MutationStatus}`
-  | `sign:${MutationStatus}`
-  | `tx:${MutationStatus}`
 
 export function useSignTxAndWait({
   addressOrName,
@@ -74,8 +69,14 @@ export function useSignTxAndWait({
     if (contractWrite.status !== "success") {
       return `sign:${contractWrite.status}`
     }
+    if (transactionResult.status === "success") {
+      // reverted = error
+      return `tx:${transactionResult.data?.status === 1 ? "success" : "error"}`
+    }
     return `tx:${transactionResult.status}`
   }, [contractWrite, prepareContractWrite, transactionResult])
+
+  transactionResult.data?.logsBloom
 
   const write = useCallback(() => {
     contractWrite.write?.()

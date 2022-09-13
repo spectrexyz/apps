@@ -1,7 +1,6 @@
 import type { MutationStatus } from "@tanstack/react-query"
 import type { Address, Direction } from "moire"
-import type { NftMetadataToBeStored } from "../types"
-import type { SignTxAndWaitStatus } from "../web3-hooks"
+import type { NftMetadataToBeStored, SignTxAndWaitStatus } from "../types"
 
 import { useMutation } from "@tanstack/react-query"
 import * as ethers from "ethers"
@@ -723,6 +722,26 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   }
 }
 
+function usePauseOnSuccess(isSuccess: boolean, delay = 1000) {
+  const [pauseOnSuccess, setPauseOnSuccess] = useState(true)
+
+  useEffect(() => {
+    if (!isSuccess) return
+
+    const timer = setTimeout(() => {
+      setPauseOnSuccess(false)
+    }, delay)
+
+    setPauseOnSuccess(true)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [isSuccess])
+
+  return pauseOnSuccess
+}
+
 export function useCompleteMintAndSpectralize() {
   const { spectralizeStatus, updateSpectralizeStatus } = useSpectralize()
   const storeNft = useStoreNft()
@@ -732,17 +751,50 @@ export function useCompleteMintAndSpectralize() {
     (approveTransfers.approved && storeNft.data?.url) || null,
   )
 
+  // This is to keep track of the steps
+  const [approveNeeded, setApproveNeeded] = useState(false)
+  useEffect(() => {
+    if (spectralizeStatus.startsWith("approve:")) {
+      setApproveNeeded(true)
+    }
+  }, [spectralizeStatus])
+
+  const storeNftSuccessPause = usePauseOnSuccess(storeNft.isSuccess)
+  const approveSignSuccessPause = usePauseOnSuccess(
+    approveTransfers.signTxAndWaitStatus === "sign:success",
+  )
+  const approveTxSuccessPause = usePauseOnSuccess(
+    approveTransfers.signTxAndWaitStatus === "tx:success",
+  )
+  const mintSignSuccessPause = usePauseOnSuccess(
+    mintAndSpectralize.signTxAndWaitStatus === "sign:success",
+    1001,
+  )
+  const mintTxSuccessPause = usePauseOnSuccess(
+    mintAndSpectralize.signTxAndWaitStatus === "tx:success",
+  )
+
   const mintStatus = ((): SpectralizeStatus => {
     if (spectralizeStatus === "configure") {
       return "configure"
     }
-    if (!storeNft.isSuccess) {
+    if (!storeNft.isSuccess || storeNftSuccessPause) {
       return `store-nft:${storeNft.status}`
     }
-    if (!approveTransfers.approved) {
+    if (
+      approveNeeded && (
+        !approveTransfers.approved
+        || approveTxSuccessPause
+        || approveSignSuccessPause
+      )
+    ) {
       return `approve:${approveTransfers.signTxAndWaitStatus}`
     }
-    if (mintAndSpectralize.signTxAndWaitStatus !== "tx:success") {
+    if (
+      mintAndSpectralize.signTxAndWaitStatus !== "tx:success"
+      || mintSignSuccessPause
+      || mintTxSuccessPause
+    ) {
       return `mint-and-fractionalize:${mintAndSpectralize.signTxAndWaitStatus}`
     }
     return "success"
@@ -761,6 +813,10 @@ export function useCompleteMintAndSpectralize() {
         storeNft.mutate()
         updateSpectralizeStatus("init-minting")
       }
+    },
+    restart() {
+      storeNft.mutate()
+      updateSpectralizeStatus("init-minting")
     },
     mint() {
       mintAndSpectralize.write()
