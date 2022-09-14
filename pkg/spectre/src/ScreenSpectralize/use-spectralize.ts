@@ -1,6 +1,5 @@
-import type { MutationStatus } from "@tanstack/react-query"
 import type { Address, Direction } from "moire"
-import type { NftMetadataToBeStored, SignTxAndWaitStatus } from "../types"
+import type { NftMetadataToBeStored } from "../types"
 
 import { useMutation } from "@tanstack/react-query"
 import * as ethers from "ethers"
@@ -27,11 +26,10 @@ export type BuyoutMechanism = "manual" | "flash"
 
 export type SpectralizeStatus =
   | "configure"
-  | "init-minting"
-  | "success"
-  | `approve:${SignTxAndWaitStatus}`
-  | `mint-and-fractionalize:${SignTxAndWaitStatus}`
-  | `store-nft:${MutationStatus}`
+  | "approve"
+  | "mint-and-fractionalize"
+  | "store-nft"
+  | "done"
 
 export type AdvancedParametersData = {
   buyoutMechanism: BuyoutMechanism
@@ -596,9 +594,10 @@ function useNftMetadata(): NftMetadataToBeStored | null {
   }, [fileType, previewFile, description, title])
 }
 
-export function useStoreNft() {
+export function useStoreNft(enabled: boolean) {
   const nftMetadata = useNftMetadata()
-  return useMutation(
+
+  const storeNft = useMutation(
     async () => {
       if (!NFT_STORAGE_KEY) {
         throw new Error("NFT_STORAGE_KEY has not been defined")
@@ -614,6 +613,14 @@ export function useStoreNft() {
       return storage.store(nftMetadata)
     },
   )
+
+  useEffect(() => {
+    if (enabled && storeNft.isIdle) {
+      storeNft.mutate()
+    }
+  }, [enabled, storeNft])
+
+  return storeNft
 }
 
 export function useApproveTransfers(enabled: boolean) {
@@ -624,7 +631,7 @@ export function useApproveTransfers(enabled: boolean) {
     addressOrName: SERC721_ADDRESS,
     args: [address, ERC1155_ADDRESS],
     contractInterface: erc721ABI,
-    enabled: enabled && Boolean(address),
+    enabled: Boolean(address),
     functionName: "isApprovedForAll",
     watch: watch && enabled,
   })
@@ -637,6 +644,19 @@ export function useApproveTransfers(enabled: boolean) {
     functionName: "setApprovalForAll",
   })
 
+  // approvalNeeded remembers if an approval transaction
+  // was needed, even after the approval tx successfully executes.
+  const [approvalNeeded, setApprovalNeeded] = useState<boolean | null>(null)
+  const isApprovedForAllSuccess = isApprovedForAll.isSuccess
+  const isApprovedForAllData = isApprovedForAll.data
+  useEffect(() => {
+    if (isApprovedForAllSuccess && typeof isApprovedForAllData === "boolean") {
+      setApprovalNeeded((value) => (
+        value === null ? !isApprovedForAllData : value
+      ))
+    }
+  }, [isApprovedForAllSuccess, isApprovedForAllData])
+
   const approved = approveTx.status === "tx:success" || Boolean(
     isApprovedForAll.isSuccess && isApprovedForAll.data,
   )
@@ -645,14 +665,17 @@ export function useApproveTransfers(enabled: boolean) {
     setWatch(!approved)
   }, [approved])
 
+  const [reset, write] = useMemo(() => [
+    approveTx.reset,
+    approveTx.write,
+  ], [approveTx])
+
   return {
+    approvalNeeded,
     approved,
+    reset,
     signTxAndWaitStatus: approveTx.status,
-    write() {
-      if (!approved) {
-        approveTx.write()
-      }
-    },
+    write,
   }
 }
 
@@ -714,113 +737,53 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
     enabled: Boolean(enabled && account.address && metadataUri),
   })
 
+  const [reset, write] = useMemo(() => [
+    mintAndFractionalize.reset,
+    mintAndFractionalize.write,
+  ], [mintAndFractionalize])
+
   return {
+    reset,
     signTxAndWaitStatus: mintAndFractionalize.status,
-    write() {
-      mintAndFractionalize.write()
-    },
+    write,
   }
 }
 
-function usePauseOnSuccess(isSuccess: boolean, delay = 1000) {
-  const [pauseOnSuccess, setPauseOnSuccess] = useState(true)
-
-  useEffect(() => {
-    if (!isSuccess) return
-
-    const timer = setTimeout(() => {
-      setPauseOnSuccess(false)
-    }, delay)
-
-    setPauseOnSuccess(true)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [isSuccess])
-
-  return pauseOnSuccess
-}
-
 export function useCompleteMintAndSpectralize() {
-  const { spectralizeStatus, updateSpectralizeStatus } = useSpectralize()
-  const storeNft = useStoreNft()
-  const approveTransfers = useApproveTransfers(storeNft.isSuccess)
+  const { spectralizeStatus } = useSpectralize()
+
+  const storeNft = useStoreNft(spectralizeStatus === "store-nft")
+  const approveTransfers = useApproveTransfers(spectralizeStatus === "approve")
   const mintAndSpectralize = useMintAndSpectralize(
-    storeNft.isSuccess && approveTransfers.approved,
-    (approveTransfers.approved && storeNft.data?.url) || null,
+    spectralizeStatus === "mint-and-fractionalize",
+    storeNft.data?.url || null,
   )
 
-  // This is to keep track of the steps
-  const [approveNeeded, setApproveNeeded] = useState(false)
-  useEffect(() => {
-    if (spectralizeStatus.startsWith("approve:")) {
-      setApproveNeeded(true)
-    }
-  }, [spectralizeStatus])
+  const approve = () => {
+    approveTransfers.reset()
+    approveTransfers.write()
+  }
+  const mint = () => {
+    mintAndSpectralize.write()
+  }
 
-  const storeNftSuccessPause = usePauseOnSuccess(storeNft.isSuccess)
-  const approveSignSuccessPause = usePauseOnSuccess(
-    approveTransfers.signTxAndWaitStatus === "sign:success",
-  )
-  const approveTxSuccessPause = usePauseOnSuccess(
-    approveTransfers.signTxAndWaitStatus === "tx:success",
-  )
-  const mintSignSuccessPause = usePauseOnSuccess(
-    mintAndSpectralize.signTxAndWaitStatus === "sign:success",
-    1001,
-  )
-  const mintTxSuccessPause = usePauseOnSuccess(
-    mintAndSpectralize.signTxAndWaitStatus === "tx:success",
-  )
-
-  const mintStatus = ((): SpectralizeStatus => {
-    if (spectralizeStatus === "configure") {
-      return "configure"
-    }
-    if (!storeNft.isSuccess || storeNftSuccessPause) {
-      return `store-nft:${storeNft.status}`
-    }
-    if (
-      approveNeeded && (
-        !approveTransfers.approved
-        || approveTxSuccessPause
-        || approveSignSuccessPause
-      )
-    ) {
-      return `approve:${approveTransfers.signTxAndWaitStatus}`
-    }
-    if (
-      mintAndSpectralize.signTxAndWaitStatus !== "tx:success"
-      || mintSignSuccessPause
-      || mintTxSuccessPause
-    ) {
-      return `mint-and-fractionalize:${mintAndSpectralize.signTxAndWaitStatus}`
-    }
-    return "success"
-  })()
-
-  useEffect(() => {
-    updateSpectralizeStatus(mintStatus)
-  }, [mintStatus, updateSpectralizeStatus])
+  const storeNftRetry = () => {
+    storeNft.reset()
+    storeNft.mutate()
+  }
 
   return {
-    approve() {
-      approveTransfers.write()
-    },
-    init() {
-      if (spectralizeStatus === "configure") {
-        storeNft.mutate()
-        updateSpectralizeStatus("init-minting")
-      }
-    },
-    restart() {
-      storeNft.mutate()
-      updateSpectralizeStatus("init-minting")
-    },
-    mint() {
-      mintAndSpectralize.write()
-    },
-    status: spectralizeStatus,
+    approvalNeeded: approveTransfers.approvalNeeded,
+
+    approve,
+    approveReset: approveTransfers.reset,
+    approveStatus: approveTransfers.signTxAndWaitStatus,
+
+    mint,
+    mintReset: mintAndSpectralize.reset,
+    mintStatus: mintAndSpectralize.signTxAndWaitStatus,
+
+    storeNftStatus: storeNft.status,
+    storeNftRetry,
   }
 }

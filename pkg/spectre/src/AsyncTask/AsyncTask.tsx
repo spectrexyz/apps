@@ -12,8 +12,11 @@ import {
   IconShieldCheck,
   Moire,
   ProgressIndicator,
+  springs,
+  useDimensions,
   useTheme,
 } from "moire"
+import { a, useChain, useSpringRef, useTransition } from "react-spring"
 import { match, P } from "ts-pattern"
 
 type ModeAsyncTask = {
@@ -96,6 +99,50 @@ export function AsyncTask({
 
   const description = getDescription(mode)
 
+  const footerBounds = useDimensions()
+
+  const transitionRefs = [
+    useSpringRef(),
+    useSpringRef(),
+    useSpringRef(),
+  ]
+
+  const descriptionTransitions = useTransition(description, {
+    ref: transitionRefs[0],
+    from: { opacity: 0, transform: "scale(0.9)" },
+    enter: { opacity: 1, transform: "scale(1)" },
+    leave: { opacity: 0, transform: "scale(1.1)" },
+    config: springs.appear,
+  })
+
+  const contentTransitions = useTransition(mode, {
+    ref: transitionRefs[1],
+    keys: (mode) => {
+      return mode.type + (
+        mode.type === "transaction" && mode.status === "sign:idle"
+      )
+    },
+    from: { opacity: 0, transform: "scale(0.9)" },
+    enter: { opacity: 1, transform: "scale(1)" },
+    leave: { opacity: 0, transform: "scale(1.1)" },
+    config: springs.appear,
+  })
+
+  const footerTransitions = useTransition(mode, {
+    ref: transitionRefs[2],
+    keys: (mode) => {
+      return mode.type + (
+        mode.type === "transaction" && mode.status.endsWith(":error")
+      )
+    },
+    from: { opacity: 0, transform: "scale(0.9)" },
+    enter: { opacity: 1, transform: "scale(1)" },
+    leave: { opacity: 0, transform: "scale(1.1)" },
+    config: springs.appear,
+  })
+
+  useChain(transitionRefs, [0, 0.05, 0.1])
+
   return (
     <section
       css={{
@@ -168,220 +215,254 @@ export function AsyncTask({
           </h1>
           <div
             css={{
-              display: "flex",
-              alignItems: "center",
+              position: "relative",
               width: "100%",
-              minHeight: "66px", // 22px line height x 3
+              height: "66px", // 22px line height x 3
             }}
           >
-            <p
-              css={{
-                width: "100%",
-                padding: "0 5gu",
-                font: "300 16px/22px fonts.mono",
-                color: "colors.contentDimmed",
+            {descriptionTransitions((styles, description) => (
+              <a.div
+                style={styles}
+                css={{
+                  position: "absolute",
+                  inset: "0",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <p
+                  css={{
+                    width: "100%",
+                    padding: "0 5gu",
+                    font: "300 16px/22px fonts.mono",
+                    color: "colors.contentDimmed",
 
-                // truncate
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: "3",
-                overflow: "hidden",
-              }}
-            >
-              {description}
-            </p>
+                    // truncate
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: "3",
+                    overflow: "hidden",
+                  }}
+                >
+                  {description}
+                </p>
+              </a.div>
+            ))}
           </div>
         </div>
 
         <div
           css={{
             position: "relative",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             width: "100%",
             height: "6gu",
           }}
         >
-          {match(mode)
-            .with(
-              { type: "transaction", status: "sign:idle" },
-              (mode) => (
-                <Button
-                  label="Create transaction"
-                  mode="primary"
-                  onClick={mode.onSign}
-                />
-              ),
-            )
-            .with(
-              { type: "transaction" },
-              (mode) => (
-                <div
-                  css={{
-                    display: "grid",
-                    gap: "1.5gu",
-                    gridTemplateColumns: "6gu 1fr",
-                  }}
-                >
-                  <div>
-                    {match(mode)
-                      .with(
-                        { status: P.when((s) => s.endsWith(":error")) },
-                        () => <ProgressIndicator status="error" />,
-                      )
-                      .with(
-                        { status: P.when((s) => s.endsWith(":loading")) },
-                        () => <ProgressIndicator status="loading" />,
-                      )
-                      .with(
-                        { status: P.when((s) => s.endsWith(":success")) },
-                        () => <ProgressIndicator status="success" />,
-                      )
-                      .otherwise(() => null)}
-                  </div>
-                  <div
-                    css={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      padding: "0.25gu 0",
-                      font: "14px/1.5 fonts.sans",
-                    }}
-                  >
+          {contentTransitions((styles, mode) => (
+            <a.div
+              style={styles}
+              css={{
+                position: "absolute",
+                inset: "0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {match(mode)
+                .with(
+                  { type: "transaction", status: "sign:idle" },
+                  (mode) => (
+                    <Button
+                      label="Create transaction"
+                      mode="primary"
+                      onClick={mode.onSign}
+                    />
+                  ),
+                )
+                .with(
+                  { type: "transaction" },
+                  (mode) => (
                     <div
                       css={{
-                        fontSize: "12px",
-                        textTransform: "uppercase",
-                        color: "colors.contentDimmed",
+                        display: "grid",
+                        gap: "1.5gu",
+                        gridTemplateColumns: "6gu 1fr",
                       }}
                     >
-                      <span>
+                      <div>
                         {match(mode)
-                          .when(
-                            (mode) => mode.status.startsWith("sign:"),
-                            () => "Signing transaction",
+                          .with(
+                            { status: P.when((s) => s.endsWith(":error")) },
+                            () => <ProgressIndicator status="error" />,
                           )
-                          .when(
-                            (mode) => mode.status.startsWith("tx:"),
-                            () => "Confirming transaction",
+                          .with(
+                            { status: P.when((s) => s.endsWith(":loading")) },
+                            () => <ProgressIndicator status="loading" />,
                           )
-                          .otherwise(() => "Ethereum transaction")}
-                      </span>
-                      <span>
-                        {` (${mode.current}/${mode.total})`}
-                      </span>
+                          .with(
+                            { status: P.when((s) => s.endsWith(":success")) },
+                            () => <ProgressIndicator status="success" />,
+                          )
+                          .otherwise(() => null)}
+                      </div>
+                      <div
+                        css={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          padding: "0.25gu 0",
+                          font: "14px/1.5 fonts.sans",
+                        }}
+                      >
+                        <div
+                          css={{
+                            fontSize: "12px",
+                            textTransform: "uppercase",
+                            color: "colors.contentDimmed",
+                          }}
+                        >
+                          <span>
+                            {match(mode)
+                              .when(
+                                (mode) => mode.status.startsWith("sign:"),
+                                () => "Signing transaction",
+                              )
+                              .when(
+                                (mode) => mode.status.startsWith("tx:"),
+                                () => "Confirming transaction",
+                              )
+                              .otherwise(() => "Ethereum transaction")}
+                          </span>
+                          <span>
+                            {` (${mode.current}/${mode.total})`}
+                          </span>
+                        </div>
+                        <div css={{ color: "colors.content" }}>
+                          {mode.txLabel}
+                        </div>
+                      </div>
                     </div>
-                    <div css={{ color: "colors.content" }}>
-                      {mode.txLabel}
-                    </div>
-                  </div>
-                </div>
-              ),
-            )
-            .with(
-              { type: "async-task", status: "loading" },
-              () => <ProgressIndicator status="loading" />,
-            )
-            .with(
-              { type: "async-task", status: "success" },
-              () => <ProgressIndicator status="success" />,
-            )
-            .with(
-              { type: "success" },
-              (mode) => (
-                <Button
-                  label={mode.action[0]}
-                  onClick={mode.action[1]}
-                />
-              ),
-            )
-            .otherwise(() =>
-              mode.type + " · " + (mode.type !== "success" && mode.status)
-            )}
+                  ),
+                )
+                .with(
+                  { type: "async-task", status: "loading" },
+                  () => <ProgressIndicator status="loading" />,
+                )
+                .with(
+                  { type: "async-task", status: "success" },
+                  () => <ProgressIndicator status="success" />,
+                )
+                .with(
+                  { type: "success" },
+                  (mode) => (
+                    <Button
+                      label={mode.action[0]}
+                      onClick={mode.action[1]}
+                    />
+                  ),
+                )
+                .otherwise(() =>
+                  mode.type + " · " + (mode.type !== "success" && mode.status)
+                )}
+            </a.div>
+          ))}
         </div>
 
         <div
           css={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            position: "relative",
             width: "100%",
-            minHeight: "11gu",
+            height: "11gu",
           }}
         >
-          {match(mode)
-            .with(
-              { type: "transaction" },
-              (mode) =>
-                mode.status.endsWith(":error")
-                  ? (
-                    <div css={{ height: "11gu" }}>
-                      <Button
-                        icon={<IconArrowClockwise />}
-                        label="Retry"
-                        mode="flat"
-                        onClick={mode.onRetry}
-                        size="compact"
-                        uppercase={true}
-                      />
-                    </div>
-                  )
-                  : (
-                    <section css={{ width: "100%", paddingBottom: "5gu" }}>
-                      <Details
-                        background={colors.background}
-                        contextual={null}
-                        heading={
-                          <span
-                            css={{
-                              display: "flex",
-                              gap: "1.5gu",
-                              alignItems: "center",
-                            }}
-                          >
-                            <IconShieldCheck
-                              size={3 * gu}
-                              css={{ color: "colors.accent2" }}
-                            />
-                            <span>
-                              Contract information
-                            </span>
-                          </span>
-                        }
-                        headingCentered
-                        headingColor={colors.contentHeading}
-                      >
-                        <div
-                          css={{
-                            display: "flex",
-                            gap: "1.5gu",
-                            width: "100%",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
+          {footerTransitions((styles, mode) => (
+            <a.div
+              ref={footerBounds.observe}
+              style={styles}
+              css={{
+                position: "absolute",
+                inset: "0 0 auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "11gu",
+              }}
+            >
+              {match(mode)
+                .with(
+                  { type: "transaction" },
+                  (mode) =>
+                    mode.status.endsWith(":error")
+                      ? (
+                        <div css={{ height: "11gu" }}>
                           <Button
-                            external={true}
-                            href={mode.etherscanUrl}
-                            icon={<IconShare />}
-                            label="Etherscan"
+                            icon={<IconArrowClockwise />}
+                            label="Retry"
                             mode="flat"
-                          />
-                          <Button
-                            external={true}
-                            href={mode.githubUrl}
-                            icon={<IconGithubLogo />}
-                            label="GitHub"
-                            mode="flat"
+                            onClick={mode.onRetry}
+                            size="compact"
+                            uppercase={true}
                           />
                         </div>
-                      </Details>
-                    </section>
-                  ),
-            )
-            .otherwise(() => null)}
+                      )
+                      : (
+                        <section css={{ width: "100%", paddingBottom: "5gu" }}>
+                          <Details
+                            background={colors.background}
+                            contextual={null}
+                            heading={
+                              <span
+                                css={{
+                                  display: "flex",
+                                  gap: "1.5gu",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <IconShieldCheck
+                                  size={3 * gu}
+                                  css={{ color: "colors.accent2" }}
+                                />
+                                <span>
+                                  Contract information
+                                </span>
+                              </span>
+                            }
+                            headingCentered
+                            headingColor={colors.contentHeading}
+                          >
+                            <div
+                              css={{
+                                display: "flex",
+                                gap: "1.5gu",
+                                width: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button
+                                external={true}
+                                href={mode.etherscanUrl}
+                                icon={<IconShare />}
+                                label="Etherscan"
+                                mode="flat"
+                              />
+                              <Button
+                                external={true}
+                                href={mode.githubUrl}
+                                icon={<IconGithubLogo />}
+                                label="GitHub"
+                                mode="flat"
+                              />
+                            </div>
+                          </Details>
+                        </section>
+                      ),
+                )
+                .otherwise(() => null)}
+            </a.div>
+          ))}
         </div>
       </div>
     </section>

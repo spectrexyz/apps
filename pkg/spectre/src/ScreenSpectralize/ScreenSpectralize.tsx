@@ -32,9 +32,9 @@ export function ScreenSpectralize() {
     fillDemoData,
     nextStep,
     prevStep,
+    spectralizeStatus,
+    updateSpectralizeStatus,
   } = useSpectralize()
-
-  const mintAndSpectralize = useCompleteMintAndSpectralize()
 
   useEffect(() => {
     fillDemoData()
@@ -50,7 +50,7 @@ export function ScreenSpectralize() {
 
   const next = useCallback(() => {
     if (currentStep === STEPS.length - 1) {
-      mintAndSpectralize.init()
+      updateSpectralizeStatus("store-nft")
     } else {
       nextStep()
     }
@@ -68,16 +68,11 @@ export function ScreenSpectralize() {
     return <WrongNetwork onPrev={prev} />
   }
 
-  if (mintAndSpectralize.status === "configure") {
+  if (spectralizeStatus === "configure") {
     return <Configure onNext={next} onPrev={prev} />
   }
 
-  return (
-    <Spectralize
-      onPrev={prev}
-      mintAndSpectralize={mintAndSpectralize}
-    />
-  )
+  return <Spectralize onPrev={prev} />
 }
 
 function Configure({
@@ -157,24 +152,15 @@ function Configure({
   )
 }
 
-function Spectralize({
-  onPrev,
-  mintAndSpectralize,
-}: {
-  onPrev: () => void
-  mintAndSpectralize: ReturnType<typeof useCompleteMintAndSpectralize>
-}) {
+function Spectralize({ onPrev }: { onPrev: () => void }) {
   const layout = useLayout()
-  const [approveNeeded, setApproveNeeded] = useState(false)
-  const { tokenSymbol, previewUrl } = useSpectralize()
-
-  // Only to keep track of the number of transactions needed
-  const mintAndSpectralizeStatus = mintAndSpectralize.status
-  useEffect(() => {
-    if (mintAndSpectralizeStatus.startsWith("approve:")) {
-      setApproveNeeded(true)
-    }
-  }, [mintAndSpectralizeStatus])
+  const {
+    tokenSymbol,
+    previewUrl,
+    spectralizeStatus,
+    updateSpectralizeStatus,
+  } = useSpectralize()
+  const mintAndSpectralize = useCompleteMintAndSpectralize()
 
   const contentMaxWidth = layout.value({
     small: "none",
@@ -192,6 +178,37 @@ function Spectralize({
     preview: previewUrl ?? undefined,
   }
 
+  const {
+    approvalNeeded,
+    approveStatus,
+    mintStatus,
+    storeNftStatus,
+  } = mintAndSpectralize
+
+  useEffect(() => {
+    if (spectralizeStatus === "store-nft" && storeNftStatus === "success") {
+      updateSpectralizeStatus(
+        approvalNeeded ? "approve" : "mint-and-fractionalize",
+      )
+    }
+    if (spectralizeStatus === "approve" && approveStatus === "tx:success") {
+      updateSpectralizeStatus("mint-and-fractionalize")
+    }
+    if (
+      spectralizeStatus === "mint-and-fractionalize"
+      && mintStatus === "tx:success"
+    ) {
+      updateSpectralizeStatus("done")
+    }
+  }, [
+    approvalNeeded,
+    approveStatus,
+    mintStatus,
+    spectralizeStatus,
+    storeNftStatus,
+    updateSpectralizeStatus,
+  ])
+
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div
@@ -207,9 +224,9 @@ function Spectralize({
           textAlign: "center",
         }}
       >
-        {match(mintAndSpectralize.status)
-          .when((s) => s.startsWith("store-nft:"), () => {
-            const status = mintAndSpectralize.status.replace("store-nft:", "")
+        {match(spectralizeStatus)
+          .with("store-nft", () => {
+            const status = mintAndSpectralize.storeNftStatus
             if (!isMutationStatus(status)) {
               throw new Error("Wrong status:" + status)
             }
@@ -218,21 +235,21 @@ function Spectralize({
                 mode={{
                   type: "async-task",
                   description() {
-                    return match(mintAndSpectralize.status)
+                    return match(status)
                       .with(
-                        "store-nft:loading",
-                        "store-nft:success",
+                        "loading",
+                        "success",
                         () =>
                           "The NFT metadata is now being uploaded to IPFS. Please wait and do not close this tab before it completes.",
                       )
                       .with(
-                        "store-nft:error",
+                        "error",
                         () => "Error when uploading the NFT data.",
                       )
                       .otherwise(() => "")
                   },
                   onRetry() {
-                    mintAndSpectralize.restart()
+                    mintAndSpectralize.storeNftRetry()
                   },
                   status,
                 }}
@@ -240,8 +257,8 @@ function Spectralize({
               />
             )
           })
-          .when((s) => s.startsWith("approve:"), () => {
-            const status = mintAndSpectralize.status.replace("approve:", "")
+          .with("approve", () => {
+            const status = mintAndSpectralize.approveStatus
             if (!isSignTxAndWaitStatus(status)) {
               throw new Error("Wrong status:" + status)
             }
@@ -255,51 +272,45 @@ function Spectralize({
                   etherscanUrl: "https://etherscan.io/",
                   githubUrl: "https://github.com/",
                   onRetry() {
-                    mintAndSpectralize.approve()
+                    mintAndSpectralize.approveReset()
                   },
                   status,
                   current: 1,
-                  total: approveNeeded ? 2 : 1,
+                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
                   txLabel: `Approve transfers`,
                 }}
                 {...asyncTaskProps}
               />
             )
           })
-          .when(
-            (s) => s.startsWith("mint-and-fractionalize:"),
-            () => {
-              const status = mintAndSpectralize.status.replace(
-                "mint-and-fractionalize:",
-                "",
-              )
-              if (!isSignTxAndWaitStatus(status)) {
-                throw new Error("Wrong status:" + status)
-              }
-              return (
-                <AsyncTask
-                  mode={{
-                    type: "transaction",
-                    current: approveNeeded ? 2 : 1,
-                    etherscanUrl: "https://etherscan.io/",
-                    githubUrl:
-                      "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/channeler/Channeler.sol#L63-L66",
-                    onRetry() {
-                      mintAndSpectralize.mint()
-                    },
-                    onSign() {
-                      mintAndSpectralize.mint()
-                    },
-                    status,
-                    total: approveNeeded ? 2 : 1,
-                    txLabel: `Locking NFT & minting ${tokenSymbol}`,
-                  }}
-                  {...asyncTaskProps}
-                />
-              )
-            },
-          )
-          .with("success", () => (
+          .with("mint-and-fractionalize", () => {
+            const status = mintAndSpectralize.mintStatus
+            if (!isSignTxAndWaitStatus(status)) {
+              throw new Error("Wrong status:" + status)
+            }
+            return (
+              <AsyncTask
+                mode={{
+                  type: "transaction",
+                  current: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  etherscanUrl: "https://etherscan.io/",
+                  githubUrl:
+                    "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/channeler/Channeler.sol#L63-L66",
+                  onRetry() {
+                    mintAndSpectralize.mintReset()
+                  },
+                  onSign() {
+                    mintAndSpectralize.mint()
+                  },
+                  status,
+                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  txLabel: `Locking NFT & minting ${tokenSymbol}`,
+                }}
+                {...asyncTaskProps}
+              />
+            )
+          })
+          .with("done", () => (
             <AsyncTask
               mode={{
                 type: "success",
