@@ -1,5 +1,5 @@
 import { Button, Steps } from "moire"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import { match } from "ts-pattern"
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi"
 import { useLocation } from "wouter"
@@ -234,20 +234,21 @@ function Spectralize({ onPrev }: { onPrev: () => void }) {
               <AsyncTask
                 mode={{
                   type: "async-task",
-                  description() {
-                    return match(status)
+                  description: () => (
+                    match(status)
                       .with(
                         "loading",
                         "success",
                         () =>
-                          "The NFT metadata is now being uploaded to IPFS. Please wait and do not close this tab before it completes.",
+                          "The NFT metadata is now being uploaded to IPFS. "
+                          + "Please wait and do not close this tab before it completes.",
                       )
                       .with(
                         "error",
                         () => "Error when uploading the NFT data.",
                       )
                       .otherwise(() => "")
-                  },
+                  ),
                   onRetry() {
                     mintAndSpectralize.storeNftRetry()
                   },

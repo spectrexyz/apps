@@ -13,9 +13,9 @@ import {
   Moire,
   ProgressIndicator,
   springs,
-  useDimensions,
   useTheme,
 } from "moire"
+import { useRef } from "react"
 import { a, useChain, useSpringRef, useTransition } from "react-spring"
 import { match, P } from "ts-pattern"
 
@@ -99,8 +99,6 @@ export function AsyncTask({
 
   const description = getDescription(mode)
 
-  const footerBounds = useDimensions()
-
   const transitionRefs = [
     useSpringRef(),
     useSpringRef(),
@@ -109,36 +107,57 @@ export function AsyncTask({
 
   const descriptionTransitions = useTransition(description, {
     ref: transitionRefs[0],
+    config: springs.appear,
     from: { opacity: 0, transform: "scale(0.9)" },
     enter: { opacity: 1, transform: "scale(1)" },
     leave: { opacity: 0, transform: "scale(1.1)" },
-    config: springs.appear,
   })
 
   const contentTransitions = useTransition(mode, {
     ref: transitionRefs[1],
-    keys: (mode) => {
-      return mode.type + (
+    config: springs.appear,
+    keys: (mode) => (
+      mode.type + (
         mode.type === "transaction" && mode.status === "sign:idle"
       )
-    },
+    ),
     from: { opacity: 0, transform: "scale(0.9)" },
     enter: { opacity: 1, transform: "scale(1)" },
     leave: { opacity: 0, transform: "scale(1.1)" },
-    config: springs.appear,
   })
+
+  const footerRef = useRef<HTMLDivElement>(null)
 
   const footerTransitions = useTransition(mode, {
     ref: transitionRefs[2],
-    keys: (mode) => {
-      return mode.type + (
-        mode.type === "transaction" && mode.status.endsWith(":error")
-      )
-    },
-    from: { opacity: 0, transform: "scale(0.9)" },
-    enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(1.1)" },
     config: springs.appear,
+    keys: (mode) => (
+      mode.type
+      + String(mode.type === "transaction" && mode.status.endsWith(":error"))
+    ),
+    from: {
+      position: "absolute" as const,
+      opacity: 0,
+      transform: "scale(0.9)",
+      height: 11 * gu,
+    },
+    enter: () =>
+      async (next) => {
+        const ref = transitionRefs[2].current[1]
+        if (!ref) return
+
+        await next({ opacity: 1, transform: "scale(1)" })
+        ref.set({ position: "static", height: "auto" })
+      },
+    leave: () =>
+      async (next) => {
+        const ref = transitionRefs[2].current[0]
+        if (!ref) return
+
+        ref.set({ height: footerRef.current?.offsetHeight ?? 11 * gu })
+        await next({ height: 11 * gu, opacity: 0 })
+        ref.set({ position: "absolute" })
+      },
   })
 
   useChain(transitionRefs, [0, 0.05, 0.1])
@@ -370,100 +389,104 @@ export function AsyncTask({
           ))}
         </div>
 
-        <div
+        <a.div
+          ref={footerRef}
           css={{
             position: "relative",
             width: "100%",
-            height: "11gu",
+            minHeight: "11gu",
           }}
         >
-          {footerTransitions((styles, mode) => (
-            <a.div
-              ref={footerBounds.observe}
-              style={styles}
-              css={{
-                position: "absolute",
-                inset: "0 0 auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minHeight: "11gu",
-              }}
-            >
-              {match(mode)
-                .with(
-                  { type: "transaction" },
-                  (mode) =>
-                    mode.status.endsWith(":error")
-                      ? (
-                        <div css={{ height: "11gu" }}>
-                          <Button
-                            icon={<IconArrowClockwise />}
-                            label="Retry"
-                            mode="flat"
-                            onClick={mode.onRetry}
-                            size="compact"
-                            uppercase={true}
-                          />
-                        </div>
-                      )
-                      : (
-                        <section css={{ width: "100%", paddingBottom: "5gu" }}>
-                          <Details
-                            background={colors.background}
-                            contextual={null}
-                            heading={
-                              <span
+          {footerTransitions(
+            (styles, mode) => (
+              <a.div
+                style={styles}
+                css={{
+                  inset: "0 0 auto",
+                  overflow: "hidden",
+                  minHeight: "11gu",
+                }}
+              >
+                {match(mode)
+                  .with(
+                    { type: "transaction" },
+                    (mode) =>
+                      mode.status.endsWith(":error")
+                        ? (
+                          <div css={{ height: "11gu" }}>
+                            <Button
+                              icon={<IconArrowClockwise />}
+                              label="Retry"
+                              mode="flat"
+                              onClick={mode.onRetry}
+                              size="compact"
+                              uppercase={true}
+                            />
+                          </div>
+                        )
+                        : (
+                          <section
+                            css={{
+                              width: "100%",
+                              paddingBottom: "5gu",
+                            }}
+                          >
+                            <Details
+                              background={colors.background}
+                              contextual={null}
+                              heading={
+                                <span
+                                  css={{
+                                    display: "flex",
+                                    gap: "1.5gu",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <IconShieldCheck
+                                    size={3 * gu}
+                                    css={{ color: "colors.accent2" }}
+                                  />
+                                  <span>
+                                    Contract information
+                                  </span>
+                                </span>
+                              }
+                              headingCentered
+                              headingColor={colors.contentHeading}
+                            >
+                              <div
                                 css={{
                                   display: "flex",
                                   gap: "1.5gu",
+                                  width: "100%",
                                   alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
-                                <IconShieldCheck
-                                  size={3 * gu}
-                                  css={{ color: "colors.accent2" }}
+                                <Button
+                                  external={true}
+                                  href={mode.etherscanUrl}
+                                  icon={<IconShare />}
+                                  label="Etherscan"
+                                  mode="flat"
                                 />
-                                <span>
-                                  Contract information
-                                </span>
-                              </span>
-                            }
-                            headingCentered
-                            headingColor={colors.contentHeading}
-                          >
-                            <div
-                              css={{
-                                display: "flex",
-                                gap: "1.5gu",
-                                width: "100%",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button
-                                external={true}
-                                href={mode.etherscanUrl}
-                                icon={<IconShare />}
-                                label="Etherscan"
-                                mode="flat"
-                              />
-                              <Button
-                                external={true}
-                                href={mode.githubUrl}
-                                icon={<IconGithubLogo />}
-                                label="GitHub"
-                                mode="flat"
-                              />
-                            </div>
-                          </Details>
-                        </section>
-                      ),
-                )
-                .otherwise(() => null)}
-            </a.div>
-          ))}
-        </div>
+                                <Button
+                                  external={true}
+                                  href={mode.githubUrl}
+                                  icon={<IconGithubLogo />}
+                                  label="GitHub"
+                                  mode="flat"
+                                />
+                              </div>
+                            </Details>
+                          </section>
+                        ),
+                  )
+                  .otherwise(() => null)}
+              </a.div>
+            ),
+          )}
+        </a.div>
       </div>
     </section>
   )
