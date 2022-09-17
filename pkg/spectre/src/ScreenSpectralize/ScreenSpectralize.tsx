@@ -1,3 +1,5 @@
+import type { SpectralizeStatus } from "./use-spectralize"
+
 import { Button, Steps } from "moire"
 import { useCallback, useEffect } from "react"
 import { match } from "ts-pattern"
@@ -152,7 +154,15 @@ function Configure({
   )
 }
 
-function Spectralize({ onPrev }: { onPrev: () => void }) {
+function Spectralize(
+  {
+    onPrev,
+    pauseOnSuccess = 500,
+  }: {
+    onPrev: () => void
+    pauseOnSuccess: number
+  },
+) {
   const layout = useLayout()
   const {
     tokenSymbol,
@@ -186,24 +196,35 @@ function Spectralize({ onPrev }: { onPrev: () => void }) {
   } = mintAndSpectralize
 
   useEffect(() => {
+    let newStatus: null | SpectralizeStatus = null
     if (spectralizeStatus === "store-nft" && storeNftStatus === "success") {
-      updateSpectralizeStatus(
-        approvalNeeded ? "approve" : "mint-and-fractionalize",
-      )
+      newStatus = approvalNeeded ? "approve" : "mint-and-fractionalize"
     }
     if (spectralizeStatus === "approve" && approveStatus === "tx:success") {
-      updateSpectralizeStatus("mint-and-fractionalize")
+      newStatus = "mint-and-fractionalize"
     }
     if (
       spectralizeStatus === "mint-and-fractionalize"
       && mintStatus === "tx:success"
     ) {
-      updateSpectralizeStatus("done")
+      newStatus = "done"
+    }
+
+    let delayTimer: ReturnType<typeof setTimeout>
+    delayTimer = setTimeout(() => {
+      if (newStatus !== null) {
+        updateSpectralizeStatus(newStatus)
+      }
+    }, pauseOnSuccess)
+
+    return () => {
+      clearTimeout(delayTimer)
     }
   }, [
     approvalNeeded,
     approveStatus,
     mintStatus,
+    pauseOnSuccess,
     spectralizeStatus,
     storeNftStatus,
     updateSpectralizeStatus,
