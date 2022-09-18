@@ -2,19 +2,24 @@ import type { Address, Direction } from "moire"
 import type { NftMetadataToBeStored } from "../types"
 
 import { useMutation } from "@tanstack/react-query"
+import { Contract } from "ethers"
 import * as ethers from "ethers"
 import { isEmail, pick, WEEK_MS } from "moire"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { erc721ABI, useAccount, useContractRead } from "wagmi"
 import zustand from "zustand"
 import shallow from "zustand/shallow"
-import { CHANNELER_ABI_MINT_AND_FRACTIONALIZE } from "../abis"
 import {
-  CHANNELER_ADDRESS,
-  ERC1155_ADDRESS,
+  CHANNELER_ABI_MINT_AND_FRACTIONALIZE,
+  VAULT_ABI_EVENT_FRACTIONALIZE,
+} from "../abis"
+import {
+  ADDRESS_CHANNELER,
+  ADDRESS_SERC721,
+  ADDRESS_VAULT,
   NFT_STORAGE_KEY,
-  SERC721_ADDRESS,
 } from "../environment"
+import { toShortId } from "../utils"
 import { useSignTxAndWait } from "../web3-hooks"
 
 export type FileType = "image" | "video" | "audio"
@@ -628,8 +633,8 @@ export function useApproveTransfers(enabled: boolean) {
   const [watch, setWatch] = useState(true)
 
   const isApprovedForAll = useContractRead({
-    addressOrName: SERC721_ADDRESS,
-    args: [address, ERC1155_ADDRESS],
+    addressOrName: ADDRESS_SERC721,
+    args: [address, ADDRESS_VAULT],
     contractInterface: erc721ABI,
     enabled: Boolean(address),
     functionName: "isApprovedForAll",
@@ -637,8 +642,8 @@ export function useApproveTransfers(enabled: boolean) {
   })
 
   const approveTx = useSignTxAndWait({
-    addressOrName: SERC721_ADDRESS,
-    args: [ERC1155_ADDRESS, true],
+    addressOrName: ADDRESS_SERC721,
+    args: [ADDRESS_VAULT, true],
     contractInterface: erc721ABI,
     enabled,
     functionName: "setApprovalForAll",
@@ -698,7 +703,7 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   const account = useAccount()
 
   const mintAndFractionalize = useSignTxAndWait({
-    addressOrName: CHANNELER_ADDRESS,
+    addressOrName: ADDRESS_CHANNELER,
     contractInterface: CHANNELER_ABI_MINT_AND_FRACTIONALIZE,
     functionName: "mintAndFractionalize",
     args: [
@@ -737,12 +742,49 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
     enabled: Boolean(enabled && account.address && metadataUri),
   })
 
+  const status = mintAndFractionalize.status
+  const logs = mintAndFractionalize.transactionResult.data?.logs
+  const fractionalizeLog = useMemo(() => {
+    if (status !== "tx:success" || !logs) {
+      return null
+    }
+    const vault = new Contract(ADDRESS_VAULT, VAULT_ABI_EVENT_FRACTIONALIZE)
+    const [parsedLog] = logs
+      .map((log) => {
+        if (log.address.toLowerCase() !== ADDRESS_VAULT.toLowerCase()) {
+          return null
+        }
+        try {
+          return vault.interface.parseLog(log)
+        } catch (_) {
+          return null
+        }
+      })
+      .filter(Boolean)
+
+    const args = parsedLog?.args
+
+    return args
+      ? Object.fromEntries(
+        Object.entries(args)
+          .filter(([key]) => !/^\d+$/.test(key))
+          .map(([name, value]) => [
+            name,
+            value._isBigNumber ? BigInt(value.toString()) : value,
+            value,
+          ]),
+      )
+      : null
+  }, [status, logs])
+
   const [reset, write] = useMemo(() => [
     mintAndFractionalize.reset,
     mintAndFractionalize.write,
   ], [mintAndFractionalize])
 
   return {
+    snftId: fractionalizeLog?.id ? toShortId(fractionalizeLog?.id) : null,
+    fractionalizeLog,
     reset,
     signTxAndWaitStatus: mintAndFractionalize.status,
     write,
@@ -782,6 +824,7 @@ export function useCompleteMintAndSpectralize() {
     mint,
     mintReset: mintAndSpectralize.reset,
     mintStatus: mintAndSpectralize.signTxAndWaitStatus,
+    snftId: mintAndSpectralize.snftId,
 
     storeNftStatus: storeNft.status,
     storeNftRetry,

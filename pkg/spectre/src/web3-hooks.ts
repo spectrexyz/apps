@@ -76,8 +76,6 @@ export function useSignTxAndWait({
     return `tx:${transactionResult.status}`
   }, [contractWrite, prepareContractWrite, transactionResult])
 
-  transactionResult.data?.logsBloom
-
   const write = useCallback(() => {
     contractWrite.write?.()
   }, [contractWrite])

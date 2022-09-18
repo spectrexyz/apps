@@ -100,3 +100,43 @@ export const CHANNELER_ABI_MINT_AND_FRACTIONALIZE = [
     "type": "function",
   },
 ]
+
+export const VAULT_ABI_EVENT_FRACTIONALIZE = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "contract IERC721",
+        "name": "collection",
+        "type": "address",
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256",
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256",
+      },
+      {
+        "indexed": false,
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "broker",
+        "type": "address",
+      },
+    ],
+    "name": "Fractionalize",
+    "type": "event",
+  },
+]

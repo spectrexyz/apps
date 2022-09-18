@@ -164,6 +164,7 @@ function Spectralize(
   },
 ) {
   const layout = useLayout()
+  const [, setLocation] = useLocation()
   const {
     tokenSymbol,
     previewUrl,
@@ -191,6 +192,7 @@ function Spectralize(
   const {
     approvalNeeded,
     approveStatus,
+    snftId,
     mintStatus,
     storeNftStatus,
   } = mintAndSpectralize
@@ -339,7 +341,9 @@ function Spectralize(
                 description:
                   "Your transaction is confirmed and your NFT has been fractionalized. "
                   + "You can see all the information in the detail page.",
-                action: ["Go to the NFT page", () => {}],
+                action: ["Go to the NFT page", () => {
+                  setLocation(`/nfts/${snftId}`)
+                }],
               }}
               {...asyncTaskProps}
               title="One has become multitude"

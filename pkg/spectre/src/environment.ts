@@ -15,6 +15,11 @@ const addressTransform = (envName: string) =>
     return value
   }
 
+const zAddress = (name) =>
+  z.string().transform(
+    addressTransform(`VITE_ADDRESS_${name}`),
+  )
+
 const env = z.object({
   VITE_CHAIN_ID: z.string().min(1).transform((value, ctx) => {
     const chainId = parseInt(value, 10)
@@ -36,15 +41,15 @@ const env = z.object({
   VITE_INFURA_PROJECT_ID: z.string().min(1),
   VITE_SUBGRAPH_ENDPOINT: z.string().url(),
   VITE_NFT_STORAGE_KEY: z.string().min(1),
-  VITE_CHANNELER_ADDRESS: z.string().transform(
-    addressTransform("VITE_CHANNELER_ADDRESS"),
-  ),
-  VITE_SERC721_ADDRESS: z.string().transform(
-    addressTransform("VITE_SERC721_ADDRESS"),
-  ),
-  VITE_ERC1155_ADDRESS: z.string().transform(
-    addressTransform("VITE_ERC1155_ADDRESS"),
-  ),
+
+  VITE_ADDRESS_SERC20: zAddress("VITE_ADDRESS_SERC20"),
+  VITE_ADDRESS_SERC721: zAddress("VITE_ADDRESS_SERC721"),
+  VITE_ADDRESS_VAULT: zAddress("VITE_ADDRESS_VAULT"),
+  VITE_ADDRESS_BROKER: zAddress("VITE_ADDRESS_BROKER"),
+  VITE_ADDRESS_ISSUER: zAddress("VITE_ADDRESS_ISSUER"),
+  VITE_ADDRESS_SPLITTER: zAddress("VITE_ADDRESS_SPLITTER"),
+  VITE_ADDRESS_POOLFACTORY: zAddress("VITE_ADDRESS_POOLFACTORY"),
+  VITE_ADDRESS_CHANNELER: zAddress("VITE_ADDRESS_CHANNELER"),
 }).parse(import.meta.env)
 
 export const {
@@ -53,7 +58,13 @@ export const {
   VITE_INFURA_PROJECT_ID: INFURA_PROJECT_ID,
   VITE_SUBGRAPH_ENDPOINT: SUBGRAPH_ENDPOINT,
   VITE_NFT_STORAGE_KEY: NFT_STORAGE_KEY,
-  VITE_CHANNELER_ADDRESS: CHANNELER_ADDRESS,
-  VITE_SERC721_ADDRESS: SERC721_ADDRESS,
-  VITE_ERC1155_ADDRESS: ERC1155_ADDRESS,
+
+  VITE_ADDRESS_SERC20: ADDRESS_SERC20,
+  VITE_ADDRESS_SERC721: ADDRESS_SERC721,
+  VITE_ADDRESS_VAULT: ADDRESS_VAULT,
+  VITE_ADDRESS_BROKER: ADDRESS_BROKER,
+  VITE_ADDRESS_ISSUER: ADDRESS_ISSUER,
+  VITE_ADDRESS_SPLITTER: ADDRESS_SPLITTER,
+  VITE_ADDRESS_POOLFACTORY: ADDRESS_POOLFACTORY,
+  VITE_ADDRESS_CHANNELER: ADDRESS_CHANNELER,
 } = env
