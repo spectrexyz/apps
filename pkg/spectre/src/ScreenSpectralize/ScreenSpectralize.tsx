@@ -232,6 +232,12 @@ function Spectralize(
     updateSpectralizeStatus,
   ])
 
+  useEffect(() => {
+    if (snftId) {
+      localStorage.setItem("indexing-snft", snftId)
+    }
+  }, [snftId])
+
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div

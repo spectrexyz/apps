@@ -71,7 +71,7 @@ export function ScreenNft({
   const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
-  const snft = useSnft(id)
+  const snft = useSnft(id, { retry: true })
   const layout = useLayout()
 
   const [nftPrev, nftNext] = snftsAdjacent?.data ?? []
