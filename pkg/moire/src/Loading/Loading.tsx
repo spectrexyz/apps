@@ -8,8 +8,10 @@ import { list } from "../utils"
 export const Loading = memo(
   function Loading({
     background,
+    dots = 3,
   }: {
     background?: string
+    dots?: number
   }) {
     const theme = useTheme()
     background ??= theme.colors.layer2
@@ -27,7 +29,7 @@ export const Loading = memo(
         <div>Loading</div>
         <Dots
           background={background}
-          count={3}
+          count={dots}
           gap={2 * gu}
           radius={1 * gu}
         />
