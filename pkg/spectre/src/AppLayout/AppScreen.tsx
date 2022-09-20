@@ -4,7 +4,7 @@ import {
   ButtonIcon,
   gu,
   IconArrowLeft,
-  Loading,
+  LoadingBox,
   springs,
   useTheme,
 } from "moire"
@@ -92,6 +92,7 @@ export function AppScreen(
       transform: "translateY(0) scale(1)",
     },
   })
+
   const loaderTransitions = useTransition(Boolean(loading), {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -110,7 +111,9 @@ export function AppScreen(
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: "1",
-                paddingBottom: `${compactMenuActive ? 4 * gu : 8 * gu}px`,
+                paddingBottom: loading
+                  ? 0
+                  : `${compactMenuActive ? 4 * gu : 8 * gu}px`,
               }}
             >
               {title && compactMenuActive && (
@@ -207,25 +210,15 @@ export function AppScreen(
                     item && (
                       <a.div
                         style={styles}
-                        css={({ colors }) => ({
+                        css={{
                           position: "absolute",
                           inset: "0",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: "16px",
-                          color: colors.content,
-                        })}
+                        }}
                       >
-                        <div
-                          css={{
-                            padding: "2gu 8gu",
-                            background: colors.background,
-                            borderRadius: "6px",
-                          }}
-                        >
-                          <Loading background={colors.background} />
-                        </div>
+                        <LoadingBox />
                       </a.div>
                     )
                   )}
