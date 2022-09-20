@@ -1,13 +1,12 @@
 import type { ReactNode } from "react"
 import type { SpringValue } from "react-spring"
 
-import { a, useSpring, useTransition } from "react-spring"
+import { a, useTransition } from "react-spring"
 import { match } from "ts-pattern"
 import { IconCheckCircle, IconXCircle } from "../icons"
+import { Loader } from "../Loader"
 import { gu, springs } from "../styles"
 import { useTheme } from "../Theme"
-
-import loadingImage from "./progress-indicator-loading.svg"
 
 export function ProgressIndicator(
   {
@@ -19,8 +18,10 @@ export function ProgressIndicator(
   const transitions = useTransition(status, {
     from: { opacity: 0, transform: "scale(0.4)" },
     enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(2)" },
-    config: springs.bouncy,
+    leave: { opacity: 0, transform: "scale(1.5)" },
+    config: (_, __, state) => (
+      state === "leave" ? springs.snappy : springs.bouncy
+    ),
   })
 
   return (
@@ -89,26 +90,7 @@ function StatusContainer(
 }
 
 function Loading() {
-  const style = useSpring({
-    loop: true,
-    from: { transform: "rotate(0deg)" },
-    to: { transform: "rotate(360deg)" },
-    config: {
-      mass: 0.8,
-      tension: 200,
-      friction: 60,
-      precision: 0.025,
-    },
-  })
-  return (
-    <a.img
-      src={loadingImage}
-      alt=""
-      width={6 * gu}
-      height={6 * gu}
-      style={style}
-    />
-  )
+  return <Loader size={39} strokeWidth={1.5} />
 }
 
 function Error() {
