@@ -12,9 +12,10 @@ import {
   IconPencil,
   IconTwitterLogo,
   isAddressOrEnsName,
-  Loading,
+  Loader,
   noop,
   Tabs,
+  useTheme,
 } from "moire"
 import { useCallback, useMemo, useState } from "react"
 import { useLocation } from "wouter"
@@ -299,17 +300,18 @@ export function ScreenProfile({
 }
 
 function PanelLoading() {
+  const { colors } = useTheme()
   return (
     <div
       css={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: "grid",
+        placeItems: "center",
+        width: "100%",
         height: "40gu",
-        background: "colors.layer2",
+        background: colors.layer2,
       }}
     >
-      <Loading />
+      <Loader mode="moire" background={colors.layer2} />
     </div>
   )
 }

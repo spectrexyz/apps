@@ -5,11 +5,15 @@ import { Loader } from "../Loader"
 import { springs } from "../styles"
 
 export function LoadingBox({
+  className,
+  container,
   visible = true,
   label = "Loading",
 }: {
-  visible?: boolean
+  className?: string
+  container?: (children: ReactNode) => ReactNode
   label?: ReactNode
+  visible?: boolean
 }) {
   const appearTransitions = useTransition(visible, {
     from: { opacity: 0, transform: "scale(0.8)" },
@@ -17,11 +21,18 @@ export function LoadingBox({
     leave: { opacity: 0, transform: "scale(1.2)" },
     config: springs.swift,
   })
+
+  container ??= (children) => <>{children}</>
+
   return appearTransitions((styles, visible) =>
-    visible && (
+    visible && container(
       <a.div
+        className={className}
         style={styles}
-        css={{ position: "absolute" }}
+        css={{
+          position: "absolute",
+          inset: "0",
+        }}
       >
         <div
           css={{
@@ -49,7 +60,7 @@ export function LoadingBox({
             {label}
           </div>
         </div>
-      </a.div>
+      </a.div>,
     )
   )
 }

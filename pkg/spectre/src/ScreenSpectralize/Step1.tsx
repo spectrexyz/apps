@@ -372,7 +372,7 @@ function NftFilePreview() {
               css={({ colors }) => ({
                 position: "absolute",
                 inset: "auto 0 0 auto",
-                display: "flex",
+                display: "grid",
                 placeItems: "center",
                 padding: "1gu",
                 color: colors.accent,

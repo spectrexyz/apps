@@ -25,7 +25,7 @@ export function Loader({
   // Some inner padding can be needed to prevent rounding
   // issues when using the Loader with animated transforms.
   padding?: number
-  mode: "moire" | "normal"
+  mode?: "moire" | "normal"
   size?: number
   strokeWidth?: number
 }) {
@@ -34,7 +34,7 @@ export function Loader({
 
   const maskMode = mode === "moire" || (mode === "normal" && background)
 
-  padding ??= mode === "moire" ? 1 : 0
+  padding ??= 1
   color ??= colors.positive
   background ??= colors.background
 
