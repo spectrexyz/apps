@@ -5,8 +5,6 @@
 - [spectre](./pkg/spectre): the Spectre app.
 - [moire](./pkg/moire): the Spectre UI toolkit.
 - [demo](./pkg/demo): a demo app, mostly to demonstrate components from the Moiré UI toolkit.
-- [website](./pkg/website): the Spectre website.
-- [kit-legacy](./pkg/kit-legacy): old version of the toolkit, only used by `pkg/website`.
 
 ## How to develop
 

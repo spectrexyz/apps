@@ -1,1 +1,0 @@
-export { ButtonIcon } from "./ButtonIcon"

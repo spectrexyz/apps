@@ -1,1 +1,0 @@
-export { Moire } from "./Moire"
