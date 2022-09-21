@@ -1,5 +1,7 @@
 import type { BaseProvider } from "@ethersproject/providers"
+import type { MutationStatus } from "@tanstack/react-query"
 import type { Address, AddressOrEnsName } from "moire"
+import type { SignTxAndWaitStatus } from "./types"
 
 import { utils } from "ethers"
 import { isAddress, isEnsName } from "moire"
@@ -105,4 +107,45 @@ export async function addressesEqual(
     )),
   )
   return resolved[0] === resolved[1]
+}
+
+export function isMutationStatus(status: unknown): status is MutationStatus {
+  return typeof status === "string"
+    && (
+      status === "idle"
+      || status === "success"
+      || status === "loading"
+      || status === "error"
+    )
+}
+
+export function isSignTxAndWaitStatus(
+  status: unknown,
+): status is SignTxAndWaitStatus {
+  return typeof status === "string"
+    && isMutationStatus(status.replace(/^(?:prepare|sign|tx)\:/, ""))
+}
+
+export const SHORT_ID_CHARS = "0123456789"
+  + "abcdefghijklmnopqrstuvwxyz"
+  + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+export const SHORT_ID_BASE = BigInt(SHORT_ID_CHARS.length)
+
+export function toShortId(value: bigint) {
+  let result = ""
+  while (value > 0n) {
+    result = SHORT_ID_CHARS.charAt(Number(value % SHORT_ID_BASE)) + result
+    value = value / SHORT_ID_BASE
+  }
+  return result || "0"
+}
+
+export function fromShortId(shortId: string) {
+  return shortId
+    .split("")
+    .reduce((value, char) => (
+      value * SHORT_ID_BASE + BigInt(
+        SHORT_ID_CHARS.indexOf(char),
+      )
+    ), 0n)
 }

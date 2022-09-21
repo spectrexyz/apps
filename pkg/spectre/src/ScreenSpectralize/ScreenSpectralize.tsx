@@ -1,85 +1,46 @@
-import type { NftMetadataToBeStored } from "../types"
 import type { SpectralizeStatus } from "./use-spectralize"
 
-import { useMutation } from "@tanstack/react-query"
-import { Steps } from "moire"
-import { useCallback, useEffect, useMemo } from "react"
-import { useAccount } from "wagmi"
+import { Button, Steps } from "moire"
+import { useCallback, useEffect } from "react"
+import { match } from "ts-pattern"
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen"
-import { NFT_STORAGE_KEY } from "../environment"
+import { AsyncTask } from "../AsyncTask/AsyncTask"
+import { CHAIN_ID } from "../environment"
 import { useLayout } from "../styles"
+import { isMutationStatus, isSignTxAndWaitStatus } from "../utils"
 import { Step1 } from "./Step1"
 import { Step2 } from "./Step2"
 import { Step3 } from "./Step3"
 import { StepSummary } from "./StepSummary"
-import { useSpectralize } from "./use-spectralize"
+import {
+  useCompleteMintAndSpectralize,
+  useSpectralize,
+} from "./use-spectralize"
 
 const STEPS = [Step1, Step2, Step3, StepSummary]
 
 export function ScreenSpectralize() {
   const [, setLocation] = useLocation()
   const { isConnected } = useAccount()
+  const network = useNetwork()
+  const isCorrectNetwork = network.chain?.id === CHAIN_ID
 
   const resetScroll = useResetScroll()
   const {
     currentStep,
-    description,
-    file,
-    fileType,
-    // fillDemoData,
+    fillDemoData,
     nextStep,
     prevStep,
-    previewFile,
-    status,
-    title,
-    updateStatus,
+    spectralizeStatus,
+    updateSpectralizeStatus,
   } = useSpectralize()
 
-  // useEffect(() => {
-  //   fillDemoData()
-  // }, [fillDemoData])
-
-  const storeNft = useStoreNft()
-
-  const storeNftMetadata = () => {
-    const image = fileType === "image" || (fileType === "video" && !previewFile)
-      ? file
-      : previewFile
-
-    if (image === null || file === null) {
-      return
-    }
-
-    const metadataBase = {
-      description,
-      image,
-      name: title,
-    }
-
-    const metadata: NftMetadataToBeStored = fileType === "image"
-      ? {
-        ...metadataBase,
-        properties: { type: "image" },
-      }
-      : {
-        ...metadataBase,
-        animation_url: file,
-        properties: { type: fileType as "audio" | "video" },
-      }
-
-    storeNft.mutate(metadata)
-  }
-
-  const storeNftStatus = storeNft.status
   useEffect(() => {
-    if (
-      status === "spectralize:nft-upload-data" && storeNftStatus === "success"
-    ) {
-      updateStatus("spectralize:nft-before-tx")
-    }
-  }, [status, storeNftStatus])
+    fillDemoData()
+  }, [fillDemoData])
 
   const prev = useCallback(() => {
     if (currentStep === 0) {
@@ -91,12 +52,11 @@ export function ScreenSpectralize() {
 
   const next = useCallback(() => {
     if (currentStep === STEPS.length - 1) {
-      storeNftMetadata()
-      updateStatus("spectralize:nft-upload-data")
+      updateSpectralizeStatus("store-nft")
     } else {
       nextStep()
     }
-  }, [currentStep, nextStep, updateStatus])
+  }, [currentStep, nextStep])
 
   useEffect(() => {
     resetScroll()
@@ -106,17 +66,15 @@ export function ScreenSpectralize() {
     return <Disconnected onPrev={prev} />
   }
 
-  if (status.startsWith("spectralize:")) {
-    return (
-      <Spectralize
-        onPrev={prev}
-        status={status}
-      />
-    )
+  if (!isCorrectNetwork) {
+    return <WrongNetwork onPrev={prev} />
   }
 
-  // status === "configure"
-  return <Configure onNext={next} onPrev={prev} />
+  if (spectralizeStatus === "configure") {
+    return <Configure onNext={next} onPrev={prev} />
+  }
+
+  return <Spectralize onPrev={prev} />
 }
 
 function Configure({
@@ -196,32 +154,24 @@ function Configure({
   )
 }
 
-function useStoreNft() {
-  return useMutation(
-    async (nftMetadata: NftMetadataToBeStored) => {
-      const { NFTStorage } = await import("nft.storage")
-      if (!NFTStorage) {
-        throw new Error("nft.storage module not loaded properly")
-      }
-      if (!NFT_STORAGE_KEY) {
-        throw new Error("NFT_STORAGE_KEY has not been defined")
-      }
-      const storage = new NFTStorage({ token: NFT_STORAGE_KEY })
-      return storage.store(nftMetadata)
-    },
-  )
-}
-
 function Spectralize(
   {
     onPrev,
-    status,
+    pauseOnSuccess = 500,
   }: {
     onPrev: () => void
-    status: SpectralizeStatus
+    pauseOnSuccess: number
   },
 ) {
   const layout = useLayout()
+  const [, setLocation] = useLocation()
+  const {
+    tokenSymbol,
+    previewUrl,
+    spectralizeStatus,
+    updateSpectralizeStatus,
+  } = useSpectralize()
+  const mintAndSpectralize = useCompleteMintAndSpectralize()
 
   const contentMaxWidth = layout.value({
     small: "none",
@@ -234,13 +184,59 @@ function Spectralize(
     large: "0",
   })
 
-  const stepLabel = useMemo(() => {
-    if (status === "spectralize:nft-upload-data") return "Uploading NFT data…"
-    if (status === "spectralize:nft-before-tx") {
-      return "Ready to sign the transaction."
+  const asyncTaskProps = {
+    title: "Fractionalizing NFT",
+    preview: previewUrl ?? undefined,
+  }
+
+  const {
+    approvalNeeded,
+    approveStatus,
+    snftId,
+    mintStatus,
+    storeNftStatus,
+  } = mintAndSpectralize
+
+  useEffect(() => {
+    let newStatus: null | SpectralizeStatus = null
+    if (spectralizeStatus === "store-nft" && storeNftStatus === "success") {
+      newStatus = approvalNeeded ? "approve" : "mint-and-fractionalize"
     }
-    return "Spectralizing…"
-  }, [status])
+    if (spectralizeStatus === "approve" && approveStatus === "tx:success") {
+      newStatus = "mint-and-fractionalize"
+    }
+    if (
+      spectralizeStatus === "mint-and-fractionalize"
+      && mintStatus === "tx:success"
+    ) {
+      newStatus = "done"
+    }
+
+    let delayTimer: ReturnType<typeof setTimeout>
+    delayTimer = setTimeout(() => {
+      if (newStatus !== null) {
+        updateSpectralizeStatus(newStatus)
+      }
+    }, pauseOnSuccess)
+
+    return () => {
+      clearTimeout(delayTimer)
+    }
+  }, [
+    approvalNeeded,
+    approveStatus,
+    mintStatus,
+    pauseOnSuccess,
+    spectralizeStatus,
+    storeNftStatus,
+    updateSpectralizeStatus,
+  ])
+
+  useEffect(() => {
+    if (snftId) {
+      localStorage.setItem("indexing-snft", snftId)
+    }
+  }, [snftId])
 
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
@@ -257,7 +253,109 @@ function Spectralize(
           textAlign: "center",
         }}
       >
-        {stepLabel}
+        {match(spectralizeStatus)
+          .with("store-nft", () => {
+            const status = mintAndSpectralize.storeNftStatus
+            if (!isMutationStatus(status)) {
+              throw new Error("Wrong status:" + status)
+            }
+            return (
+              <AsyncTask
+                mode={{
+                  type: "async-task",
+                  description: () => (
+                    match(status)
+                      .with(
+                        "loading",
+                        "success",
+                        () =>
+                          "The NFT metadata is now being uploaded to IPFS. "
+                          + "Please wait and do not close this tab before it completes.",
+                      )
+                      .with(
+                        "error",
+                        () => "Error when uploading the NFT data.",
+                      )
+                      .otherwise(() => "")
+                  ),
+                  onRetry() {
+                    mintAndSpectralize.storeNftRetry()
+                  },
+                  status,
+                }}
+                {...asyncTaskProps}
+              />
+            )
+          })
+          .with("approve", () => {
+            const status = mintAndSpectralize.approveStatus
+            if (!isSignTxAndWaitStatus(status)) {
+              throw new Error("Wrong status:" + status)
+            }
+            return (
+              <AsyncTask
+                mode={{
+                  type: "transaction",
+                  onSign() {
+                    mintAndSpectralize.approve()
+                  },
+                  etherscanUrl: "https://etherscan.io/",
+                  githubUrl: "https://github.com/",
+                  onRetry() {
+                    mintAndSpectralize.approveReset()
+                  },
+                  status,
+                  current: 1,
+                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  txLabel: `Approve transfers`,
+                }}
+                {...asyncTaskProps}
+              />
+            )
+          })
+          .with("mint-and-fractionalize", () => {
+            const status = mintAndSpectralize.mintStatus
+            if (!isSignTxAndWaitStatus(status)) {
+              throw new Error("Wrong status:" + status)
+            }
+            return (
+              <AsyncTask
+                mode={{
+                  type: "transaction",
+                  current: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  etherscanUrl: "https://etherscan.io/",
+                  githubUrl:
+                    "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/channeler/Channeler.sol#L63-L66",
+                  onRetry() {
+                    mintAndSpectralize.mintReset()
+                  },
+                  onSign() {
+                    mintAndSpectralize.mint()
+                  },
+                  status,
+                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  txLabel: `Locking NFT & minting ${tokenSymbol}`,
+                }}
+                {...asyncTaskProps}
+              />
+            )
+          })
+          .with("done", () => (
+            <AsyncTask
+              mode={{
+                type: "success",
+                description:
+                  "Your transaction is confirmed and your NFT has been fractionalized. "
+                  + "You can see all the information in the detail page.",
+                action: ["Go to the NFT page", () => {
+                  setLocation(`/nfts/${snftId}`)
+                }],
+              }}
+              {...asyncTaskProps}
+              title="One has become multitude"
+            />
+          ))
+          .otherwise(() => null)}
       </div>
     </AppScreen>
   )
@@ -293,6 +391,61 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
         }}
       >
         Please connect your account to fractionalize your NFT.
+      </div>
+    </AppScreen>
+  )
+}
+
+function WrongNetwork({ onPrev }: { onPrev: () => void }) {
+  const layout = useLayout()
+
+  const contentMaxWidth = layout.value({
+    small: "none",
+    large: "104gu",
+    xlarge: "128gu",
+  })
+  const contentPadding = layout.value({
+    small: "0 3gu",
+    medium: "0 3gu",
+    large: "0",
+  })
+
+  const switchNetwork = useSwitchNetwork()
+  const network = useNetwork()
+
+  const buttonLabel = layout.value({
+    small: `Switch to ${network.chains[0]?.name}`,
+    medium: `Switch to the ${network.chains[0]?.name} network`,
+  })
+
+  return (
+    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
+      <div
+        css={{
+          flexGrow: "1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "3gu",
+          maxWidth: contentMaxWidth,
+          margin: "0 auto",
+          padding: contentPadding,
+          paddingTop: "8gu",
+          textAlign: "center",
+        }}
+      >
+        <div>
+          Your wallet is connected to the wrong network.{" "}
+        </div>
+        <div>
+          <Button
+            label={buttonLabel}
+            onClick={() => {
+              switchNetwork.switchNetwork?.(CHAIN_ID)
+            }}
+          />
+        </div>
       </div>
     </AppScreen>
   )

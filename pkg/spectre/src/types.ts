@@ -1,3 +1,4 @@
+import type { MutationStatus } from "@tanstack/react-query"
 import type { Dnum } from "dnum"
 import type { Address, EnsName } from "moire"
 
@@ -101,3 +102,8 @@ export type NftMetadataToBeStored =
     // video / audio
     | { animation_url: File; properties: { type: "video" | "audio" } }
   )
+
+export type SignTxAndWaitStatus =
+  | `prepare:${MutationStatus}`
+  | `sign:${MutationStatus}`
+  | `tx:${MutationStatus}`

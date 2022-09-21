@@ -1,9 +1,9 @@
 import type { AddressOrEnsName } from "moire"
 import type { ReactNode } from "react"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { FlatTree, Kit } from "moire"
 import { useMemo } from "react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Route, Router, Switch } from "wouter"
 import makeMatcher from "wouter/matcher"
 import { AppLayout } from "../AppLayout/AppLayout"

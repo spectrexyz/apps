@@ -106,7 +106,7 @@ export function Main({ children }: MainProps): JSX.Element {
             },
           },
           "a, button": {
-            /* removes the 300ms delay */
+            // removes the 300ms delay
             touchAction: "manipulation",
           },
         })}

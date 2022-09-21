@@ -13,10 +13,12 @@ import { Chart } from "./Chart"
 import { Diagram } from "./Diagram/Diagram"
 import { Distribution } from "./Distribution"
 import { Icon } from "./Icon"
-import { Loading } from "./Loading"
+import { Loader } from "./Loader"
+import { LoadingBox } from "./LoadingBox"
 import { Moire } from "./Moire"
 import { NftCollection } from "./NftCollection"
 import { PoolWeightDemo } from "./PoolWeightDemo"
+import { ProgressIndicator } from "./ProgressIndicator"
 import { Radio } from "./Radio"
 import { RadioBox } from "./RadioBox"
 import { Slider } from "./Slider"
@@ -43,10 +45,12 @@ const demos: Demo[] = [
   { Diagram },
   { Distribution },
   { Icon },
-  { Loading },
+  { Loader },
+  { LoadingBox },
   { Moire },
   { NftCollection, centered: false },
   { PoolWeightDemo },
+  { ProgressIndicator },
   { Radio },
   { RadioBox },
   { Slider },

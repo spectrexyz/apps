@@ -4,6 +4,7 @@ import type { PoolShare, Proposal, Reward, Snft } from "../types"
 
 import {
   rand,
+  randBoolean,
   randCatchPhrase,
   randNumber,
   random,
@@ -13,6 +14,7 @@ import {
 } from "@ngneat/falso"
 import * as dnum from "dnum"
 import { DAY_MS, list, WEEK_MS } from "moire"
+import { SHORT_ID_CHARS } from "../utils"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -252,14 +254,14 @@ function randomCreator(style: ReturnType<typeof nftStyle>): Snft["creator"] {
   }
 }
 
-let nftIndex = 0
+function randomSnftId() {
+  return rand(SHORT_ID_CHARS.split(""), { length: 27 }).join("")
+}
 
 function randomNft(
   creator: ReturnType<typeof randomCreator>,
   style: ReturnType<typeof nftStyle>,
 ) {
-  nftIndex++
-
   const title = randomTitle()
   const token = randomToken(title)
 
@@ -273,12 +275,12 @@ function randomNft(
   )
 
   return ({
-    id: `${nftIndex}`,
+    id: randomSnftId(),
     buyoutMultiplier,
     buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
     creator: { ...creator },
     description: randomDescription(),
-    guardian: nftIndex % 2
+    guardian: randBoolean()
       ? "0xfabe062eb33af3e68eb3329818d0507949c14142"
       : "0x32dd41219f6a74f739466e6c86091500e81beaa8",
     history: [
