@@ -131,7 +131,7 @@ export function shortenAddress(address: string, charsLength = 4): string {
   ).toLowerCase()
 }
 
-const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
+export const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
 export function isAddress(address: string): address is Address {
   return ADDRESS_RE.test(address)
 }
@@ -146,9 +146,9 @@ export function isAddressOrEnsName(
   return isAddress(address) || isEnsName(address)
 }
 
-const emailRe = /.+@.+/
+export const EMAIL_RE = /.+@.+/
 export function isEmail(email: string): boolean {
-  return emailRe.test(email)
+  return EMAIL_RE.test(email)
 }
 
 export function uid(prefix = "uid"): string {

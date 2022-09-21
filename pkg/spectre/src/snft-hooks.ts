@@ -1,4 +1,4 @@
-import type { UseQueryResult } from "@tanstack/react-query"
+import type { UseQueryOptions, UseQueryResult } from "@tanstack/react-query"
 import type { Address, AddressOrEnsName } from "moire"
 import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
 
@@ -22,10 +22,24 @@ function fakeDelay() {
   })
 }
 
-export function useSnft(id_: string): UseQueryResult<Snft | undefined> {
-  return useQuery(["snft", id_], async () => {
+export function useSnft(
+  id: string,
+  options: {
+    retry?: boolean
+    retryDelay?: number
+  } = {},
+): UseQueryResult<Snft | null> {
+  const { retry = false, retryDelay = 1000 } = options
+  return useQuery(["snft", id], async () => {
     await fakeDelay()
-    return SNFTS.find(({ id }) => id === id_)
+    const snft = SNFTS.find((snft) => snft.id === id)
+    if (!snft) {
+      throw new Error(`NFT not found: ${id}`)
+    }
+    return snft
+  }, {
+    retry,
+    retryDelay,
   })
 }
 
@@ -43,12 +57,10 @@ export function useSnfts({
 }
 
 export function useHighlightedSnfts() {
-  // const allSpectres = useAllSpectres()
-  // console.log("?", allSpectres, SELECTED_SNFTS)
-  return useQuery(
-    ["highlighted-snfts"],
-    () => SELECTED_SNFTS,
-  )
+  return useQuery(["highlighted-snfts"], async () => {
+    await fakeDelay()
+    return SELECTED_SNFTS
+  })
 }
 
 export function useSnftCreator(address: string) {

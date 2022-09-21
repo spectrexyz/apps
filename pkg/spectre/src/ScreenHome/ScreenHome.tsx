@@ -1,7 +1,7 @@
 import type { Snft } from "../types"
 
 import * as dnum from "dnum"
-import { Anchor, Button, TokenBadge } from "moire"
+import { Anchor, Button, LoadingBox, TokenBadge } from "moire"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
@@ -81,6 +81,7 @@ function HighlightedArtists() {
   return (
     <section
       css={{
+        position: "relative",
         width: "100%",
         maxWidth: "160gu",
         margin: "0 auto",
@@ -108,16 +109,31 @@ function HighlightedArtists() {
         </h1>
         {/*<span>View all</span>*/}
       </div>
-      {highlightedSnfts.data && (
-        <Grid>
-          {highlightedSnfts.data.map((snft) => (
-            <HighlightCard
-              key={snft.id}
-              snft={snft}
-            />
-          ))}
-        </Grid>
-      )}
+      <div css={{ position: "relative" }}>
+        <LoadingBox
+          container={(children) => (
+            <div
+              css={{
+                position: "absolute",
+                inset: "5gu auto auto 50%",
+              }}
+            >
+              {children}
+            </div>
+          )}
+          visible={!highlightedSnfts.data}
+        />
+        {highlightedSnfts.data && (
+          <Grid>
+            {highlightedSnfts.data.map((snft) => (
+              <HighlightCard
+                key={snft.id}
+                snft={snft}
+              />
+            ))}
+          </Grid>
+        )}
+      </div>
     </section>
   )
 }
@@ -132,7 +148,10 @@ function HighlightCard({ snft }: { snft: Snft }) {
           event.preventDefault()
           setLocation(`/nfts/${snft.id}`)
         }}
-        css={{ width: "100%" }}
+        css={{
+          display: "block",
+          width: "100%",
+        }}
       >
         <div css={{ paddingBottom: "4gu" }}>
           <img

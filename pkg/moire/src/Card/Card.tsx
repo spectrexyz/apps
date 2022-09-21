@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import type { SpringValue } from "react-spring"
 
 import { a, useTransition } from "react-spring"
-import { Loading } from "../Loading"
+import { Loader } from "../Loader"
 import { springs } from "../styles"
 import { useTheme } from "../Theme"
 
@@ -112,7 +112,7 @@ function LoadingContent(
         borderRadius: radius,
       }}
     >
-      <Loading background={loadingBackground} />
+      <Loader mode="moire" background={loadingBackground} />
     </a.div>
   )
 }

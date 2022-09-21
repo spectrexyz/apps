@@ -4,7 +4,7 @@ import {
   ButtonIcon,
   gu,
   IconArrowLeft,
-  Loading,
+  LoadingBox,
   springs,
   useTheme,
 } from "moire"
@@ -80,6 +80,7 @@ export function AppScreen(
   }, [loading])
 
   const childrenTransitions = useTransition(!loading, {
+    config: springs.appear,
     from: hasBeenLoading
       ? {
         opacity: 0,
@@ -91,10 +92,6 @@ export function AppScreen(
       opacity: 1,
       transform: "translateY(0) scale(1)",
     },
-  })
-  const loaderTransitions = useTransition(Boolean(loading), {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
   })
 
   const layout = useLayout()
@@ -110,7 +107,9 @@ export function AppScreen(
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: "1",
-                paddingBottom: `${compactMenuActive ? 4 * gu : 8 * gu}px`,
+                paddingBottom: loading
+                  ? 0
+                  : `${compactMenuActive ? 4 * gu : 8 * gu}px`,
               }}
             >
               {title && compactMenuActive && (
@@ -203,32 +202,21 @@ export function AppScreen(
                       </a.div>
                     )
                   )}
-                  {loaderTransitions((styles, item) =>
-                    item && (
-                      <a.div
-                        style={styles}
-                        css={({ colors }) => ({
+                  <LoadingBox
+                    visible={Boolean(loading)}
+                    container={(children) => (
+                      <div
+                        css={{
                           position: "absolute",
                           inset: "0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "16px",
-                          color: colors.content,
-                        })}
+                          display: "grid",
+                          placeItems: "center",
+                        }}
                       >
-                        <div
-                          css={{
-                            padding: "2gu 8gu",
-                            background: colors.background,
-                            borderRadius: "6px",
-                          }}
-                        >
-                          <Loading background={colors.background} />
-                        </div>
-                      </a.div>
-                    )
-                  )}
+                        {children}
+                      </div>
+                    )}
+                  />
                 </div>
               </a.div>
             </div>
