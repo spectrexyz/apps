@@ -5,7 +5,15 @@ import { useLayout } from "../styles"
 
 const GridContext = createContext<null | true>(null)
 
-export function Grid({ children }: { children: ReactNode }) {
+export function Grid(
+  {
+    children,
+    className,
+  }: {
+    children: ReactNode
+    className?: string
+  },
+) {
   const layout = useLayout()
 
   const gridTemplateColumns = layout.below(500)
@@ -24,6 +32,7 @@ export function Grid({ children }: { children: ReactNode }) {
   return (
     <GridContext.Provider value={true}>
       <div
+        className={className}
         css={{
           display: "grid",
           gridTemplateColumns,

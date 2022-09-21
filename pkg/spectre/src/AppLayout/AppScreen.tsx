@@ -80,6 +80,7 @@ export function AppScreen(
   }, [loading])
 
   const childrenTransitions = useTransition(!loading, {
+    config: springs.appear,
     from: hasBeenLoading
       ? {
         opacity: 0,
@@ -91,11 +92,6 @@ export function AppScreen(
       opacity: 1,
       transform: "translateY(0) scale(1)",
     },
-  })
-
-  const loaderTransitions = useTransition(Boolean(loading), {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
   })
 
   const layout = useLayout()
@@ -206,22 +202,21 @@ export function AppScreen(
                       </a.div>
                     )
                   )}
-                  {loaderTransitions((styles, item) =>
-                    item && (
-                      <a.div
-                        style={styles}
+                  <LoadingBox
+                    visible={Boolean(loading)}
+                    container={(children) => (
+                      <div
                         css={{
                           position: "absolute",
                           inset: "0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          display: "grid",
+                          placeItems: "center",
                         }}
                       >
-                        <LoadingBox />
-                      </a.div>
-                    )
-                  )}
+                        {children}
+                      </div>
+                    )}
+                  />
                 </div>
               </a.div>
             </div>

@@ -57,12 +57,10 @@ export function useSnfts({
 }
 
 export function useHighlightedSnfts() {
-  // const allSpectres = useAllSpectres()
-  // console.log("?", allSpectres, SELECTED_SNFTS)
-  return useQuery(
-    ["highlighted-snfts"],
-    () => SELECTED_SNFTS,
-  )
+  return useQuery(["highlighted-snfts"], async () => {
+    await fakeDelay()
+    return SELECTED_SNFTS
+  })
 }
 
 export function useSnftCreator(address: string) {
