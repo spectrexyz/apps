@@ -4,18 +4,25 @@ function LoaderDemo() {
   return (
     <div
       css={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "2gu",
-        width: "40gu",
-        height: "20gu",
+        display: "grid",
+        placeItems: "center",
+        padding: "4gu",
         background: "colors.background",
         border: "1px solid colors.layer2",
       }}
     >
-      <Loader mode="moire" />
-      <Loader />
+      <div
+        css={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "2gu",
+        }}
+      >
+        <Loader mode="moire" />
+        <Loader color="pink" />
+        <Loader />
+        <Loader mode="moire" color="pink" />
+      </div>
     </div>
   )
 }

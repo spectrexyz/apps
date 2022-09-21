@@ -16,29 +16,25 @@ export function Loader({
   background,
   color,
   mode = "normal",
+  padding,
   size = 5 * gu,
   strokeWidth = 5,
-}:
-  & {
-    size?: number
-    strokeWidth?: number
-  }
-  & (
-    | {
-      background?: string
-      color?: never
-      mode: "moire"
-    }
-    | {
-      background?: never
-      color?: string
-      mode?: "normal"
-    }
-  ))
-{
+}: {
+  background?: string
+  color?: string
+  // Some inner padding can be needed to prevent rounding
+  // issues when using the Loader with animated transforms.
+  padding?: number
+  mode: "moire" | "normal"
+  size?: number
+  strokeWidth?: number
+}) {
   const { colors } = useTheme()
   const uid = useUid()
 
+  const maskMode = mode === "moire" || (mode === "normal" && background)
+
+  padding ??= mode === "moire" ? 1 : 0
   color ??= colors.positive
   background ??= colors.background
 
@@ -54,10 +50,6 @@ export function Loader({
     },
   })
 
-  // Some padding is needed to prevent glitches when using
-  // the Loader with transforms and the Moiré component.
-  // const padding = mode === "moire" ? 1 : 0
-  const padding = 1
   const radius = size / 2 - padding - strokeWidth / 2
   const circumference = 2 * radius * Math.PI
 
@@ -72,7 +64,7 @@ export function Loader({
         cx="50%"
         cy="50%"
         r={radius}
-        stroke={mode === "moire" ? "black" : color}
+        stroke={maskMode ? "black" : color}
         strokeWidth={strokeWidth}
         strokeDasharray={circumference}
         strokeDashoffset={circumference / 2}
@@ -93,7 +85,7 @@ export function Loader({
         cx="50%"
         cy="50%"
         r={radius}
-        stroke={mode === "moire" ? "black" : color}
+        stroke={maskMode ? "black" : color}
         strokeWidth={strokeWidth}
         strokeDasharray={circumference}
         strokeDashoffset={circumference / 2}
@@ -114,11 +106,22 @@ export function Loader({
         position: "relative",
         width: size,
         height: size,
+        background: maskMode ? background : "none",
       }}
     >
+      {mode !== "moire" && maskMode && (
+        <div
+          css={{
+            position: "absolute",
+            inset: padding,
+            background: color,
+          }}
+        />
+      )}
       {mode === "moire" && (
         <Moire
           height={size - padding * 2}
+          linesColor={color}
           scale={0.5}
           width={size - padding * 2}
           css={{ position: "absolute", inset: padding }}
@@ -131,7 +134,7 @@ export function Loader({
         xmlns="http://www.w3.org/2000/svg"
         css={{ position: "absolute", inset: "0" }}
       >
-        {mode === "moire"
+        {maskMode
           ? (
             <>
               <mask id={uid}>

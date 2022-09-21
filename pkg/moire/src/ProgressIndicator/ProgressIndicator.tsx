@@ -10,11 +10,15 @@ import { useTheme } from "../Theme"
 
 export function ProgressIndicator(
   {
+    background,
     status,
   }: {
+    background?: string
     status: "error" | "success" | "loading"
   },
 ) {
+  const { colors } = useTheme()
+
   const transitions = useTransition(status, {
     from: { opacity: 0, transform: "scale(0.4)" },
     enter: { opacity: 1, transform: "scale(1)" },
@@ -31,26 +35,32 @@ export function ProgressIndicator(
         width: "6gu",
         height: "6gu",
         userSelect: "none",
+        background: background ?? "transparent",
       }}
     >
       {transitions((styles, status) => (
         match(status)
           .with("error", () => (
             <StatusContainer title="Error" {...styles}>
-              <Error />
+              <IconXCircle color={colors.negative} size={6 * gu} />
             </StatusContainer>
           ))
           .with(
             "loading",
             () => (
               <StatusContainer title="Loading" {...styles}>
-                <Loading />
+                <Loader
+                  background={background}
+                  padding={1}
+                  size={40}
+                  strokeWidth={2}
+                />
               </StatusContainer>
             ),
           )
           .with("success", () => (
             <StatusContainer title="Success" {...styles}>
-              <Success />
+              <IconCheckCircle color={colors.positive} size={6 * gu} />
             </StatusContainer>
           ))
           .otherwise(() => null)
@@ -87,18 +97,4 @@ function StatusContainer(
       {children}
     </a.div>
   )
-}
-
-function Loading() {
-  return <Loader size={39} strokeWidth={1.5} />
-}
-
-function Error() {
-  const { colors } = useTheme()
-  return <IconXCircle color={colors.negative} size={6 * gu} />
-}
-
-function Success() {
-  const { colors } = useTheme()
-  return <IconCheckCircle color={colors.positive} size={6 * gu} />
 }
