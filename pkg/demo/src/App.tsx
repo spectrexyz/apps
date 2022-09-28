@@ -100,7 +100,7 @@ function navigate(to: string) {
   window.location.hash = to
 }
 
-function useHashLocation(): [string, (path: string, ...args: any[]) => any] {
+function useHashLocation(): [string, typeof navigate] {
   const [loc, setLoc] = useState(currentLocation())
   useEffect(() => {
     const handler = () => setLoc(currentLocation())

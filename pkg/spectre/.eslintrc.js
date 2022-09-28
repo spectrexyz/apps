@@ -12,6 +12,7 @@ module.exports = {
   },
   plugins: [
     "@typescript-eslint",
+    "@emotion",
   ],
   extends: [
     "eslint:recommended",
@@ -21,9 +22,6 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
-    "plugin:jest-dom/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
@@ -56,6 +54,8 @@ module.exports = {
       },
     ],
     "react/react-in-jsx-scope": "off",
+
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
   },
   settings: {
     react: {

@@ -5,7 +5,7 @@ import { DiscsChain } from "../DiscsChain"
 import { gu } from "../styles"
 import { TokenIcon } from "../TokenIcon"
 
-type SymbolAndImageUrl = [symbol: string, imageUrl: string]
+type SymbolAndImageUrl = [symbolName: string, imageUrl: string]
 
 type TokenInputProps = {
   balance?: string // TODO: deprecate
