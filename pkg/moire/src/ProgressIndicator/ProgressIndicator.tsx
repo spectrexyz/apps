@@ -3,18 +3,23 @@ import type { SpringValue } from "react-spring"
 
 import { a, useTransition } from "react-spring"
 import { match } from "ts-pattern"
-import { IconCheckCircle, IconXCircle } from "../icons"
+import { IconCheckBold, IconXBold } from "../icons"
 import { Loader } from "../Loader"
 import { gu, springs } from "../styles"
 import { useTheme } from "../Theme"
 
+const SIZE = 8 * gu
+const ICON_SIZE = SIZE - 3 * gu
+
 export function ProgressIndicator(
   {
     background,
+    number,
     status,
   }: {
     background?: string
-    status: "error" | "success" | "loading"
+    number?: number
+    status: "error" | "success" | "loading" | "idle"
   },
 ) {
   const { colors } = useTheme()
@@ -32,8 +37,8 @@ export function ProgressIndicator(
     <div
       css={{
         position: "relative",
-        width: "6gu",
-        height: "6gu",
+        width: SIZE,
+        height: SIZE,
         userSelect: "none",
         background: background ?? "transparent",
       }}
@@ -42,25 +47,67 @@ export function ProgressIndicator(
         match(status)
           .with("error", () => (
             <StatusContainer title="Error" {...styles}>
-              <IconXCircle color={colors.negative} size={6 * gu} />
+              <Circle color={colors.negative} />
+              <IconXBold color={colors.negative} size={ICON_SIZE} />
             </StatusContainer>
           ))
           .with(
             "loading",
             () => (
               <StatusContainer title="Loading" {...styles}>
-                <Loader
-                  background={background}
-                  padding={1}
-                  size={40}
-                  strokeWidth={2}
-                />
+                <div
+                  css={{
+                    position: "absolute",
+                    inset: "0",
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                >
+                  <Loader
+                    background={background}
+                    padding={1}
+                    size={SIZE}
+                    strokeWidth={4}
+                  />
+                </div>
+                {number !== undefined && (
+                  <div
+                    css={{
+                      position: "absolute",
+                      inset: "0 0 2px",
+                      display: "grid",
+                      placeItems: "center",
+                      font: "500 33px fonts.sans",
+                      color: "colors.positive",
+                    }}
+                  >
+                    {number}
+                  </div>
+                )}
               </StatusContainer>
             ),
           )
           .with("success", () => (
             <StatusContainer title="Success" {...styles}>
-              <IconCheckCircle color={colors.positive} size={6 * gu} />
+              <Circle color={colors.positive} />
+              <IconCheckBold color={colors.positive} size={ICON_SIZE} />
+            </StatusContainer>
+          ))
+          .with("idle", () => (
+            <StatusContainer title="" {...styles}>
+              <Circle color={colors.positive} />
+              <div
+                css={{
+                  position: "absolute",
+                  inset: "0 0 2px",
+                  display: "grid",
+                  placeItems: "center",
+                  font: "500 33px fonts.sans",
+                  color: "colors.positive",
+                }}
+              >
+                {number}
+              </div>
             </StatusContainer>
           ))
           .otherwise(() => null)
@@ -92,9 +139,24 @@ function StatusContainer(
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        width: SIZE,
+        height: SIZE,
       }}
     >
       {children}
     </a.div>
+  )
+}
+
+function Circle({ color }: { color: string }) {
+  return (
+    <div
+      css={{
+        position: "absolute",
+        inset: "0",
+        borderRadius: "50%",
+        border: `4px solid ${color}`,
+      }}
+    />
   )
 }
