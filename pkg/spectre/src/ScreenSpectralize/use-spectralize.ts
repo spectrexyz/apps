@@ -620,10 +620,10 @@ export function useStoreNft(enabled: boolean) {
   )
 
   useEffect(() => {
-    if (enabled && storeNft.isIdle) {
+    if (enabled && storeNft.isIdle && nftMetadata) {
       storeNft.mutate()
     }
-  }, [enabled, storeNft])
+  }, [enabled, storeNft, nftMetadata])
 
   return storeNft
 }

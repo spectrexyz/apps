@@ -28,6 +28,7 @@ function Heading() {
     small: ["32px/1.2", 16],
     large: ["80px/1.3", 24],
   })
+
   return (
     <div
       css={{

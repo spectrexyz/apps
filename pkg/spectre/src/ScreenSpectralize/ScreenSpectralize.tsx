@@ -1,8 +1,9 @@
+// import type { MutationStatus } from "@tanstack/react-query"
 import type { SpectralizeStatus } from "./use-spectralize"
 
 import { Button, Steps } from "moire"
 import { useCallback, useEffect } from "react"
-import { match } from "ts-pattern"
+import { match, P } from "ts-pattern"
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
@@ -56,7 +57,7 @@ export function ScreenSpectralize() {
     } else {
       nextStep()
     }
-  }, [currentStep, nextStep])
+  }, [currentStep, nextStep, updateSpectralizeStatus])
 
   useEffect(() => {
     resetScroll()
@@ -160,24 +161,41 @@ function Spectralize(
     pauseOnSuccess = 500,
   }: {
     onPrev: () => void
-    pauseOnSuccess: number
+    pauseOnSuccess?: number
   },
 ) {
   const layout = useLayout()
   const [, setLocation] = useLocation()
   const {
-    tokenSymbol,
+    // tokenSymbol,
     previewUrl,
     spectralizeStatus,
     updateSpectralizeStatus,
   } = useSpectralize()
-  const mintAndSpectralize = useCompleteMintAndSpectralize()
+
+  const {
+    approvalNeeded,
+    approve,
+    approveReset,
+    approveStatus,
+    mint,
+    mintReset,
+    mintStatus,
+    snftId,
+    storeNftRetry,
+    storeNftStatus,
+  } = useCompleteMintAndSpectralize()
+
+  // DEMO
+  // let approvalNeeded = false
+  // let storeNftStatus: MutationStatus = "loading"
 
   const contentMaxWidth = layout.value({
     small: "none",
     large: "104gu",
     xlarge: "128gu",
   })
+
   const contentPadding = layout.value({
     small: "0 3gu",
     medium: "0 3gu",
@@ -185,17 +203,9 @@ function Spectralize(
   })
 
   const asyncTaskProps = {
-    title: "Fractionalizing NFT",
+    title: "Mint & fractionalize NFT",
     preview: previewUrl ?? undefined,
   }
-
-  const {
-    approvalNeeded,
-    approveStatus,
-    snftId,
-    mintStatus,
-    storeNftStatus,
-  } = mintAndSpectralize
 
   useEffect(() => {
     let newStatus: null | SpectralizeStatus = null
@@ -212,9 +222,18 @@ function Spectralize(
       newStatus = "done"
     }
 
-    let delayTimer: ReturnType<typeof setTimeout>
-    delayTimer = setTimeout(() => {
-      if (newStatus !== null) {
+    if (newStatus === null) {
+      return
+    }
+
+    // No delay after the NFT metadata storage (only after txes)
+    if (spectralizeStatus === "store-nft") {
+      updateSpectralizeStatus(newStatus)
+      return
+    }
+
+    const delayTimer = setTimeout(() => {
+      if (newStatus) {
         updateSpectralizeStatus(newStatus)
       }
     }, pauseOnSuccess)
@@ -231,6 +250,8 @@ function Spectralize(
     storeNftStatus,
     updateSpectralizeStatus,
   ])
+
+  console.log("???", { spectralizeStatus, storeNftStatus, mintStatus })
 
   useEffect(() => {
     if (snftId) {
@@ -255,19 +276,20 @@ function Spectralize(
       >
         {match(spectralizeStatus)
           .with("store-nft", () => {
-            const status = mintAndSpectralize.storeNftStatus
-            if (!isMutationStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isMutationStatus(storeNftStatus)) {
+              throw new Error(`Wrong status: ${storeNftStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription="You will be asked to sign a transaction in your wallet."
+                jobTitle="Uploading metadata to IPFS…"
                 mode={{
                   type: "async-task",
+                  action: ["Approve", null],
                   description: () => (
-                    match(status)
+                    match(storeNftStatus)
                       .with(
-                        "loading",
-                        "success",
+                        P.union("loading", "success"),
                         () =>
                           "The NFT metadata is now being uploaded to IPFS. "
                           + "Please wait and do not close this tab before it completes.",
@@ -279,62 +301,66 @@ function Spectralize(
                       .otherwise(() => "")
                   ),
                   onRetry() {
-                    mintAndSpectralize.storeNftRetry()
+                    storeNftRetry()
                   },
-                  status,
+                  status: storeNftStatus === "success"
+                    ? "idle"
+                    : storeNftStatus,
                 }}
                 {...asyncTaskProps}
               />
             )
           })
           .with("approve", () => {
-            const status = mintAndSpectralize.approveStatus
-            if (!isSignTxAndWaitStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isSignTxAndWaitStatus(approveStatus)) {
+              throw new Error(`Wrong status: ${approveStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription="You will be asked to sign a transaction in your wallet."
+                jobTitle={"Approve NFT transfer"}
                 mode={{
                   type: "transaction",
                   onSign() {
-                    mintAndSpectralize.approve()
+                    approve()
                   },
                   etherscanUrl: "https://etherscan.io/",
                   githubUrl: "https://github.com/",
                   onRetry() {
-                    mintAndSpectralize.approveReset()
+                    approveReset()
                   },
-                  status,
+                  status: approveStatus,
                   current: 1,
-                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
-                  txLabel: `Approve transfers`,
+                  total: approvalNeeded ? 2 : 1,
+                  signLabel: "Approve",
                 }}
                 {...asyncTaskProps}
               />
             )
           })
           .with("mint-and-fractionalize", () => {
-            const status = mintAndSpectralize.mintStatus
-            if (!isSignTxAndWaitStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isSignTxAndWaitStatus(mintStatus)) {
+              throw new Error(`Wrong status: ${mintStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription="You will be asked to sign a transaction in your wallet."
+                jobTitle={"Mint & fractionalize"}
                 mode={{
                   type: "transaction",
-                  current: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  current: approvalNeeded ? 2 : 1,
                   etherscanUrl: "https://etherscan.io/",
                   githubUrl:
                     "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/channeler/Channeler.sol#L63-L66",
                   onRetry() {
-                    mintAndSpectralize.mintReset()
+                    mintReset()
                   },
                   onSign() {
-                    mintAndSpectralize.mint()
+                    mint()
                   },
-                  status,
-                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
-                  txLabel: `Locking NFT & minting ${tokenSymbol}`,
+                  status: mintStatus,
+                  total: approvalNeeded ? 2 : 1,
+                  signLabel: "Fractionalize",
                 }}
                 {...asyncTaskProps}
               />
@@ -342,6 +368,8 @@ function Spectralize(
           })
           .with("done", () => (
             <AsyncTask
+              jobDescription="The NFT has been minted and fractionalized."
+              jobTitle="Transaction confirmed"
               mode={{
                 type: "success",
                 description:
@@ -352,7 +380,6 @@ function Spectralize(
                 }],
               }}
               {...asyncTaskProps}
-              title="One has become multitude"
             />
           ))
           .otherwise(() => null)}
