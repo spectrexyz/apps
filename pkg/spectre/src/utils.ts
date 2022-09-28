@@ -123,7 +123,7 @@ export function isSignTxAndWaitStatus(
   status: unknown,
 ): status is SignTxAndWaitStatus {
   return typeof status === "string"
-    && isMutationStatus(status.replace(/^(?:prepare|sign|tx)\:/, ""))
+    && isMutationStatus(status.replace(/^(?:prepare|sign|tx):/, ""))
 }
 
 export const SHORT_ID_CHARS = "0123456789"

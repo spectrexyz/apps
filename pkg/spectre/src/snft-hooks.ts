@@ -1,4 +1,4 @@
-import type { UseQueryOptions, UseQueryResult } from "@tanstack/react-query"
+import type { UseQueryResult } from "@tanstack/react-query"
 import type { Address, AddressOrEnsName } from "moire"
 import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
 
