@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
     "declaration": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
+    "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "jsx": "react",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -18,5 +21,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "ES2020",
+    "baseUrl": "./pkg",
+    "paths": {
+      "moire": ["moire/src/index.tsx"]
+    }
   }
 }

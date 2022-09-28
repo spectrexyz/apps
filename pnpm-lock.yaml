@@ -131,6 +131,7 @@ importers:
       '@bpierre/use-viewport': ^0.3.0
       '@elchininet/isometric': ^3.6.0
       '@emotion/cache': ^11.10.3
+      '@emotion/eslint-plugin': ^11.10.0
       '@emotion/react': ^11.10.4
       '@ethersproject/providers': ^5.7.0
       '@graphprotocol/client-cli': ^2.2.8
@@ -205,6 +206,7 @@ importers:
       zod: 3.19.1
       zustand: 4.1.1_react@18.2.0
     devDependencies:
+      '@emotion/eslint-plugin': 11.10.0_eslint@8.23.0
       '@ethersproject/providers': 5.7.0
       '@graphprotocol/client-cli': 2.2.8_graphql@16.6.0
       '@typescript-eslint/eslint-plugin': 5.36.2_2l2r3i3lm6jysqd4ac3ql4n2mm
@@ -1080,6 +1082,15 @@ packages:
       '@emotion/weak-memoize': 0.3.0
       stylis: 4.0.13
     dev: false
+
+  /@emotion/eslint-plugin/11.10.0_eslint@8.23.0:
+    resolution: {integrity: sha512-nWpuoQQrzI9aM9fgn+Pbb0pOau4BhheXyVqHcOYKFq46uSuSR2ivZaDwwCJKI6ScA8Pm7OcoOpwdRH2iisf9cg==}
+    engines: {node: '>=6'}
+    peerDependencies:
+      eslint: 6 || 7 || 8
+    dependencies:
+      eslint: 8.23.0
+    dev: true
 
   /@emotion/hash/0.9.0:
     resolution: {integrity: sha512-14FtKiHhy2QoPIzdTcvh//8OyBlknNs2nXRwIhG904opCby3l+9Xaf/wuPvICBF0rc1ZCNBd3nKe9cd2mecVkQ==}
