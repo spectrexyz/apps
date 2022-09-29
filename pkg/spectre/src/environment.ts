@@ -15,7 +15,7 @@ const addressTransform = (envName: string) =>
     return value
   }
 
-const zAddress = (name) =>
+const zAddress = (name: string) =>
   z.string().transform(
     addressTransform(`VITE_ADDRESS_${name}`),
   )

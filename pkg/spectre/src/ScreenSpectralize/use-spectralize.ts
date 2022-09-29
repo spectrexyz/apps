@@ -592,11 +592,11 @@ function useNftMetadata(): NftMetadataToBeStored | null {
       : {
         ...metadataBase,
         animation_url: file,
-        properties: { type: fileType as "audio" | "video" },
+        properties: { type: fileType },
       }
 
     return metadata
-  }, [fileType, previewFile, description, title])
+  }, [fileType, previewFile, description, title, file])
 }
 
 export function useStoreNft(enabled: boolean) {
@@ -620,10 +620,10 @@ export function useStoreNft(enabled: boolean) {
   )
 
   useEffect(() => {
-    if (enabled && storeNft.isIdle) {
+    if (enabled && storeNft.isIdle && nftMetadata) {
       storeNft.mutate()
     }
-  }, [enabled, storeNft])
+  }, [enabled, storeNft, nftMetadata])
 
   return storeNft
 }
@@ -744,12 +744,14 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
 
   const status = mintAndFractionalize.status
   const logs = mintAndFractionalize.transactionResult.data?.logs
-  const fractionalizeLog = useMemo(() => {
+
+  const spectreId = useMemo<null | bigint>(() => {
     if (status !== "tx:success" || !logs) {
       return null
     }
     const vault = new Contract(ADDRESS_VAULT, VAULT_ABI_EVENT_FRACTIONALIZE)
-    const [parsedLog] = logs
+
+    const parsedLog = logs
       .map((log) => {
         if (log.address.toLowerCase() !== ADDRESS_VAULT.toLowerCase()) {
           return null
@@ -760,21 +762,21 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
           return null
         }
       })
-      .filter(Boolean)
+      .filter(Boolean)[0] ?? null
 
     const args = parsedLog?.args
 
-    return args
-      ? Object.fromEntries(
-        Object.entries(args)
-          .filter(([key]) => !/^\d+$/.test(key))
-          .map(([name, value]) => [
-            name,
-            value._isBigNumber ? BigInt(value.toString()) : value,
-            value,
-          ]),
-      )
-      : null
+    if (!args) {
+      return null
+    }
+
+    for (const key in args) {
+      if (key === "id") {
+        return args[key] ? BigInt(String(args[key])) : null
+      }
+    }
+
+    return null
   }, [status, logs])
 
   const [reset, write] = useMemo(() => [
@@ -783,8 +785,7 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   ], [mintAndFractionalize])
 
   return {
-    snftId: fractionalizeLog?.id ? toShortId(fractionalizeLog?.id) : null,
-    fractionalizeLog,
+    snftId: spectreId ? toShortId(spectreId) : null,
     reset,
     signTxAndWaitStatus: mintAndFractionalize.status,
     write,

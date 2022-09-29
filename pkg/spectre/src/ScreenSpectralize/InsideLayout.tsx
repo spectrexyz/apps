@@ -80,13 +80,14 @@ export function InsideLayout({ heading, intro, sections }: InsideLayoutProps) {
         >
           {intro}
         </p>
-        {sections.map((section) => {
+        {sections.map((section, index) => {
           if (section.type === "simple") {
-            return <div>{section.content}</div>
+            return <div key={index}>{section.content}</div>
           }
           if (section.type === "two-parts") {
             return (
               <div
+                key={index}
                 css={{
                   display: "grid",
                   ...layout.above("large")

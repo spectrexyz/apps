@@ -56,6 +56,7 @@ export const colors = {
   accent: "#58FFCA",
   accent2: "#C0BBFF",
   accent3: "#F597F8",
+  disabled: "#A0A8C2",
   accentContent: "#050E1F",
   accent2Content: "#050E1F",
   accentInverted: "#242D40",

@@ -33,6 +33,7 @@ export function AppScreen(
       | {
         contextual?: ReactNode
         onBack?: () => void
+        disableOnBack?: boolean
         title?: ReactNode
         extraRow?: ReactNode
       }
@@ -57,7 +58,9 @@ export function AppScreen(
   })
   const snapHeader = shouldSnapHeaderAt !== null && hasCompactBar
 
-  const { contextual, onBack, title, extraRow } = compactBar || {}
+  const { contextual, onBack, disableOnBack = false, title, extraRow } =
+    compactBar
+    || {}
 
   const contextValue = useMemo(
     () => ({ compactBarHasExtraRow: Boolean(extraRow) }),
@@ -144,8 +147,15 @@ export function AppScreen(
                         start={onBack
                           ? (
                             <ButtonIcon
+                              disabled={disableOnBack}
                               onClick={onBack}
-                              icon={<IconArrowLeft color={colors.accent} />}
+                              icon={
+                                <IconArrowLeft
+                                  color={disableOnBack
+                                    ? colors.disabled
+                                    : colors.accent}
+                                />
+                              }
                               label="Back"
                               css={{
                                 width: "7gu",
@@ -186,6 +196,11 @@ export function AppScreen(
                   flexGrow: "1",
                   width: "100%",
                   margin: "0 auto",
+                  paddingTop: layout.value({
+                    small: "0",
+                    medium: "4gu",
+                    large: "0",
+                  }),
                 }}
               >
                 <div
@@ -211,6 +226,7 @@ export function AppScreen(
                           inset: "0",
                           display: "grid",
                           placeItems: "center",
+                          overflow: "hidden",
                         }}
                       >
                         {children}

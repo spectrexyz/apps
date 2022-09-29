@@ -82,8 +82,8 @@ export function useSignTxAndWait({
 
   const reset = useCallback(() => {
     contractWrite.reset()
-    prepareContractWrite.refetch()
-    transactionResult.refetch()
+    void prepareContractWrite.refetch()
+    void transactionResult.refetch()
   }, [contractWrite, prepareContractWrite, transactionResult])
 
   return {

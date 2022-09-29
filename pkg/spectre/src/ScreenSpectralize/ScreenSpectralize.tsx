@@ -1,8 +1,9 @@
+// import type { MutationStatus } from "@tanstack/react-query"
 import type { SpectralizeStatus } from "./use-spectralize"
 
 import { Button, Steps } from "moire"
 import { useCallback, useEffect } from "react"
-import { match } from "ts-pattern"
+import { match, P } from "ts-pattern"
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
@@ -43,12 +44,24 @@ export function ScreenSpectralize() {
   }, [fillDemoData])
 
   const prev = useCallback(() => {
+    if (spectralizeStatus !== "configure") {
+      if (confirm("Are you sure you want to abandon?")) {
+        updateSpectralizeStatus("configure")
+      }
+      return
+    }
     if (currentStep === 0) {
       setLocation("/")
     } else {
       prevStep()
     }
-  }, [currentStep, setLocation, prevStep])
+  }, [
+    currentStep,
+    prevStep,
+    setLocation,
+    spectralizeStatus,
+    updateSpectralizeStatus,
+  ])
 
   const next = useCallback(() => {
     if (currentStep === STEPS.length - 1) {
@@ -56,11 +69,11 @@ export function ScreenSpectralize() {
     } else {
       nextStep()
     }
-  }, [currentStep, nextStep])
+  }, [currentStep, nextStep, updateSpectralizeStatus])
 
   useEffect(() => {
     resetScroll()
-  }, [currentStep, resetScroll])
+  }, [currentStep, spectralizeStatus, resetScroll])
 
   if (!isConnected) {
     return <Disconnected onPrev={prev} />
@@ -74,7 +87,7 @@ export function ScreenSpectralize() {
     return <Configure onNext={next} onPrev={prev} />
   }
 
-  return <Spectralize onPrev={prev} />
+  return <Spectralize onAbandon={prev} />
 }
 
 function Configure({
@@ -90,47 +103,43 @@ function Configure({
   const title = currentStepTitle()
   const Step = STEPS[currentStep]
 
-  const compactBar = layout.below("medium") && {
-    title,
-    onBack: onPrev,
-    extraRow: (
-      <div css={{ padding: "0 2gu" }}>
-        <Steps
-          steps={STEPS.length - 1}
-          current={currentStep}
-          direction="horizontal"
-        />
-      </div>
-    ),
-  }
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-  const flexGap = layout.value({
-    small: "3.5gu",
-    large: "4gu",
-    xlarge: "8gu",
-  })
-
   return (
-    <AppScreen compactBar={compactBar}>
+    <AppScreen
+      compactBar={layout.below("medium") && {
+        title,
+        onBack: onPrev,
+        extraRow: (
+          <div css={{ padding: "0 2gu" }}>
+            <Steps
+              steps={STEPS.length - 1}
+              current={currentStep}
+              direction="horizontal"
+            />
+          </div>
+        ),
+      }}
+    >
       <div
         css={{
           display: "flex",
-          gap: flexGap,
+          gap: layout.value({
+            small: "3.5gu",
+            large: "4gu",
+            xlarge: "8gu",
+          }),
           flexDirection: layout.below("medium") ? "column" : "row",
           width: "100%",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
         }}
       >
         {!layout.below("medium") && (
@@ -156,46 +165,38 @@ function Configure({
 
 function Spectralize(
   {
-    onPrev,
+    onAbandon,
     pauseOnSuccess = 500,
   }: {
-    onPrev: () => void
-    pauseOnSuccess: number
+    onAbandon: () => void
+    pauseOnSuccess?: number
   },
 ) {
   const layout = useLayout()
   const [, setLocation] = useLocation()
   const {
-    tokenSymbol,
     previewUrl,
     spectralizeStatus,
     updateSpectralizeStatus,
   } = useSpectralize()
-  const mintAndSpectralize = useCompleteMintAndSpectralize()
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-
-  const asyncTaskProps = {
-    title: "Fractionalizing NFT",
-    preview: previewUrl ?? undefined,
-  }
 
   const {
     approvalNeeded,
+    approve,
+    approveReset,
     approveStatus,
-    snftId,
+    mint,
+    mintReset,
     mintStatus,
+    snftId,
+    storeNftRetry,
     storeNftStatus,
-  } = mintAndSpectralize
+  } = useCompleteMintAndSpectralize()
+
+  const asyncTaskProps = {
+    title: "Mint & fractionalize NFT",
+    preview: previewUrl ?? undefined,
+  }
 
   useEffect(() => {
     let newStatus: null | SpectralizeStatus = null
@@ -212,9 +213,24 @@ function Spectralize(
       newStatus = "done"
     }
 
-    let delayTimer: ReturnType<typeof setTimeout>
-    delayTimer = setTimeout(() => {
-      if (newStatus !== null) {
+    if (newStatus === null) {
+      return
+    }
+
+    // No delay after the NFT metadata storage (only after non final txes)
+    if (spectralizeStatus === "store-nft") {
+      updateSpectralizeStatus(newStatus)
+      return
+    }
+
+    // No delay after the last tx
+    if (newStatus === "done") {
+      updateSpectralizeStatus(newStatus)
+      return
+    }
+
+    const delayTimer = setTimeout(() => {
+      if (newStatus) {
         updateSpectralizeStatus(newStatus)
       }
     }, pauseOnSuccess)
@@ -238,36 +254,60 @@ function Spectralize(
     }
   }, [snftId])
 
+  const canAbandon = match(spectralizeStatus)
+    .with(
+      "store-nft",
+      () => storeNftStatus !== "loading",
+    )
+    .with(
+      "approve",
+      () => approveStatus !== "tx:loading",
+    )
+    .with(
+      "mint-and-fractionalize",
+      () => mintStatus !== "tx:loading",
+    )
+    .otherwise(() => true)
+
   return (
-    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
+    <AppScreen
+      compactBar={{
+        title: "Fractionalize",
+        onBack: onAbandon,
+        disableOnBack: !canAbandon,
+      }}
+    >
       <div
         css={{
           flexGrow: "1",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
-          paddingTop: "8gu",
           textAlign: "center",
         }}
       >
         {match(spectralizeStatus)
           .with("store-nft", () => {
-            const status = mintAndSpectralize.storeNftStatus
-            if (!isMutationStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isMutationStatus(storeNftStatus)) {
+              throw new Error(`Wrong status: ${storeNftStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription="You will be asked to sign a transaction in your wallet."
+                jobTitle="Uploading metadata to IPFS…"
                 mode={{
                   type: "async-task",
+                  action: ["Approve", null],
                   description: () => (
-                    match(status)
+                    match(storeNftStatus)
                       .with(
-                        "loading",
-                        "success",
+                        P.union("loading", "success"),
                         () =>
                           "The NFT metadata is now being uploaded to IPFS. "
                           + "Please wait and do not close this tab before it completes.",
@@ -279,69 +319,91 @@ function Spectralize(
                       .otherwise(() => "")
                   ),
                   onRetry() {
-                    mintAndSpectralize.storeNftRetry()
+                    storeNftRetry()
                   },
-                  status,
+                  status: storeNftStatus === "success"
+                    ? "idle"
+                    : storeNftStatus,
                 }}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
           })
           .with("approve", () => {
-            const status = mintAndSpectralize.approveStatus
-            if (!isSignTxAndWaitStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isSignTxAndWaitStatus(approveStatus)) {
+              throw new Error(`Wrong status: ${approveStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription="You will be asked to sign a transaction in your wallet."
+                jobTitle={"Approve NFT transfer"}
                 mode={{
                   type: "transaction",
                   onSign() {
-                    mintAndSpectralize.approve()
+                    approve()
                   },
                   etherscanUrl: "https://etherscan.io/",
                   githubUrl: "https://github.com/",
                   onRetry() {
-                    mintAndSpectralize.approveReset()
+                    approveReset()
                   },
-                  status,
+                  status: approveStatus,
                   current: 1,
-                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
-                  txLabel: `Approve transfers`,
+                  total: approvalNeeded ? 2 : 1,
+                  signLabel: "Approve",
                 }}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
           })
           .with("mint-and-fractionalize", () => {
-            const status = mintAndSpectralize.mintStatus
-            if (!isSignTxAndWaitStatus(status)) {
-              throw new Error("Wrong status:" + status)
+            if (!isSignTxAndWaitStatus(mintStatus)) {
+              throw new Error(`Wrong status: ${mintStatus}`)
             }
             return (
               <AsyncTask
+                jobDescription={match(mintStatus)
+                  .with(
+                    "tx:success",
+                    () => "The NFT has been minted and fractionalized.",
+                  )
+                  .with(
+                    "sign:loading",
+                    () => "Waiting for signature… please check your wallet.",
+                  )
+                  .otherwise(() =>
+                    "You will be asked to sign a transaction in your wallet."
+                  )}
+                jobTitle={mintStatus === "tx:success"
+                  ? "Transaction confirmed"
+                  : "Mint & fractionalize"}
                 mode={{
                   type: "transaction",
-                  current: mintAndSpectralize.approvalNeeded ? 2 : 1,
+                  current: approvalNeeded ? 2 : 1,
                   etherscanUrl: "https://etherscan.io/",
                   githubUrl:
                     "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/channeler/Channeler.sol#L63-L66",
                   onRetry() {
-                    mintAndSpectralize.mintReset()
+                    mintReset()
                   },
                   onSign() {
-                    mintAndSpectralize.mint()
+                    mint()
                   },
-                  status,
-                  total: mintAndSpectralize.approvalNeeded ? 2 : 1,
-                  txLabel: `Locking NFT & minting ${tokenSymbol}`,
+                  status: mintStatus,
+                  total: approvalNeeded ? 2 : 1,
+                  signLabel: "Fractionalize",
                 }}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
           })
           .with("done", () => (
             <AsyncTask
+              jobDescription="The NFT has been minted and fractionalized."
+              jobTitle="Transaction confirmed"
               mode={{
                 type: "success",
                 description:
@@ -352,7 +414,6 @@ function Spectralize(
                 }],
               }}
               {...asyncTaskProps}
-              title="One has become multitude"
             />
           ))
           .otherwise(() => null)}
@@ -363,18 +424,6 @@ function Spectralize(
 
 function Disconnected({ onPrev }: { onPrev: () => void }) {
   const layout = useLayout()
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div
@@ -383,9 +432,17 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
           paddingTop: "8gu",
           textAlign: "center",
         }}
@@ -398,26 +455,8 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
 
 function WrongNetwork({ onPrev }: { onPrev: () => void }) {
   const layout = useLayout()
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-
   const switchNetwork = useSwitchNetwork()
   const network = useNetwork()
-
-  const buttonLabel = layout.value({
-    small: `Switch to ${network.chains[0]?.name}`,
-    medium: `Switch to the ${network.chains[0]?.name} network`,
-  })
-
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div
@@ -428,9 +467,17 @@ function WrongNetwork({ onPrev }: { onPrev: () => void }) {
           justifyContent: "center",
           alignItems: "center",
           gap: "3gu",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
           paddingTop: "8gu",
           textAlign: "center",
         }}
@@ -440,7 +487,10 @@ function WrongNetwork({ onPrev }: { onPrev: () => void }) {
         </div>
         <div>
           <Button
-            label={buttonLabel}
+            label={layout.value({
+              small: `Switch to ${network.chains[0]?.name}`,
+              medium: `Switch to the ${network.chains[0]?.name} network`,
+            })}
             onClick={() => {
               switchNetwork.switchNetwork?.(CHAIN_ID)
             }}

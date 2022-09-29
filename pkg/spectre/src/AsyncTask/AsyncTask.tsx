@@ -4,26 +4,26 @@ import type { SignTxAndWaitStatus } from "../types"
 
 import {
   Button,
+  ButtonText,
   Details,
   gu,
-  IconArrowClockwise,
   IconGithubLogo,
   IconShare,
   IconShieldCheck,
   Moire,
+  noop,
   ProgressIndicator,
-  springs,
   useTheme,
 } from "moire"
-import { useRef } from "react"
-import { a, useChain, useSpringRef, useTransition } from "react-spring"
 import { match, P } from "ts-pattern"
+import { useLayout } from "../styles"
 
 type ModeAsyncTask = {
   type: "async-task"
   description: (status: MutationStatus) => string
   onRetry: () => void
   status: MutationStatus
+  action: [string, (() => void) | null] // label of the main button, usually staying disabled and representing the next task
 }
 
 type ModeSuccess = {
@@ -41,127 +41,28 @@ type ModeTransaction = {
   onSign: () => void
   status: SignTxAndWaitStatus
   total: number
-  txLabel: string
+  signLabel: string
 }
 
 type Mode = ModeTransaction | ModeAsyncTask | ModeSuccess
 
-function getDescription(mode: Mode) {
-  return match(mode)
-    .with({ type: "transaction" }, (mode) =>
-      match(mode.status)
-        .with(
-          "sign:error",
-          () =>
-            "An error has occurred while signing the transaction. "
-            + "Hit the retry button to sign the transaction again.",
-        )
-        .with("sign:idle", () => (
-          "Hit the button below to sign the transaction in your wallet. "
-          + "Don’t close this tab while the transaction is pending."
-        ))
-        .with("sign:loading", () => (
-          "Check your wallet and sign the transaction there. "
-          + "Don’t close this tab while the transaction is pending."
-        ))
-        .with("tx:loading", () => (
-          "Please wait while your transaction is being confirmed. "
-          + "Don’t close this tab while the transaction is pending."
-        ))
-        .with(
-          "tx:error",
-          () => ("An error has occurred preventing the transaction to be confirmed. "
-            + "Hit the button below to retry signing the transaction."),
-        )
-        .with(
-          "tx:success",
-          () => "The transaction has been successfully confirmed.",
-        )
-        .otherwise(() => (
-          "Confirm the transaction in your wallet to continue. "
-          + "Don’t close this tab while the transaction is pending."
-        )))
-    .with({ type: "async-task" }, (mode) => mode.description(mode.status))
-    .with({ type: "success" }, (mode) => mode.description)
-    .exhaustive()
-}
-
 export function AsyncTask({
+  jobDescription,
+  jobTitle,
   mode,
+  onAbandon,
   preview,
   title,
 }: {
+  jobDescription: string
+  jobTitle: string
   mode: Mode
+  onAbandon?: () => void
   preview?: Url | string // URL or path
   title: string
 }) {
   const { colors } = useTheme()
-
-  const description = getDescription(mode)
-
-  const transitionRefs = [
-    useSpringRef(),
-    useSpringRef(),
-    useSpringRef(),
-  ]
-
-  const descriptionTransitions = useTransition(description, {
-    ref: transitionRefs[0],
-    config: springs.appear,
-    from: { opacity: 0, transform: "scale(0.9)" },
-    enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(1.1)" },
-  })
-
-  const contentTransitions = useTransition(mode, {
-    ref: transitionRefs[1],
-    config: springs.appear,
-    keys: (mode) => (
-      mode.type + (
-        mode.type === "transaction" && mode.status === "sign:idle"
-      )
-    ),
-    from: { opacity: 0, transform: "scale(0.9)" },
-    enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(1.1)" },
-  })
-
-  const footerRef = useRef<HTMLDivElement>(null)
-
-  const footerTransitions = useTransition(mode, {
-    ref: transitionRefs[2],
-    config: springs.appear,
-    keys: (mode) => (
-      mode.type
-      + String(mode.type === "transaction" && mode.status.endsWith(":error"))
-    ),
-    from: {
-      position: "absolute" as const,
-      opacity: 0,
-      transform: "scale(0.9)",
-      height: 11 * gu,
-    },
-    enter: () =>
-      async (next) => {
-        const ref = transitionRefs[2].current[1]
-        if (!ref) return
-
-        await next({ opacity: 1, transform: "scale(1)" })
-        ref.set({ position: "static", height: "auto" })
-      },
-    leave: () =>
-      async (next) => {
-        const ref = transitionRefs[2].current[0]
-        if (!ref) return
-
-        ref.set({ height: footerRef.current?.offsetHeight ?? 11 * gu })
-        await next({ height: 11 * gu, opacity: 0 })
-        ref.set({ position: "absolute" })
-      },
-  })
-
-  useChain(transitionRefs, [0, 0.05, 0.1])
-
+  const layout = useLayout()
   return (
     <section
       css={{
@@ -169,9 +70,12 @@ export function AsyncTask({
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        maxWidth: "500px",
+        maxWidth: layout.value({
+          small: "none",
+          large: "75gu",
+        }),
         margin: "0 auto",
-        padding: "5gu 0",
+        padding: "0",
       }}
     >
       <div
@@ -181,9 +85,15 @@ export function AsyncTask({
           alignItems: "center",
           gap: "4gu",
           width: "100%",
-          paddingTop: "5gu",
-          background: "colors.background",
-          border: "1px solid colors.layer2",
+          padding: "5gu 0 4gu",
+          background: layout.value({
+            small: "none",
+            large: "colors.background",
+          }),
+          border: layout.value({
+            small: "none",
+            large: "1px solid colors.layer2",
+          }),
         }}
       >
         <div
@@ -219,6 +129,7 @@ export function AsyncTask({
             }}
           />
         </div>
+
         <div
           css={{
             display: "flex",
@@ -236,257 +147,282 @@ export function AsyncTask({
             css={{
               position: "relative",
               width: "100%",
-              height: "66px", // 22px line height x 3
             }}
           >
-            {descriptionTransitions((styles, description) => (
-              <a.div
-                style={styles}
-                css={{
-                  position: "absolute",
-                  inset: "0",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <p
-                  css={{
-                    width: "100%",
-                    padding: "0 5gu",
-                    font: "300 16px/22px fonts.mono",
-                    color: "colors.contentDimmed",
-
-                    // truncate
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: "3",
-                    overflow: "hidden",
-                  }}
-                >
-                  {description}
-                </p>
-              </a.div>
-            ))}
+            <JobStatus
+              description={match(mode)
+                .with(
+                  { type: "transaction", status: "tx:error" },
+                  () =>
+                    "An error has occured while signing the transaction, please retry.",
+                )
+                .with(
+                  { type: "transaction", status: "tx:loading" },
+                  () =>
+                    "The transaction has been sent, waiting for confirmation.",
+                )
+                // Generic error message
+                .with(
+                  {
+                    type: P.not("success"),
+                    status: P.when((status) =>
+                      status.endsWith(":error") || status === "error"
+                    ),
+                  },
+                  () => "An error has occurred at this time, please retry.",
+                )
+                .otherwise(() => jobDescription)}
+              jobNumber={mode.type === "transaction" ? mode.current : undefined}
+              title={match(mode)
+                .with(
+                  { type: "transaction" },
+                  (mode) =>
+                    match(mode.status)
+                      .with("tx:success", () => "Transaction confirmed")
+                      .with(
+                        "sign:error",
+                        () => "Signing the transaction failed",
+                      )
+                      .with(
+                        "prepare:error",
+                        () => "Preparing the transaction failed",
+                      )
+                      .with(
+                        "tx:error",
+                        () => "The transaction failed",
+                      )
+                      .otherwise(() => jobTitle),
+                )
+                .otherwise(() => jobTitle)}
+              status={match(mode)
+                .with({ type: "success" }, () => "success" as const)
+                .with({ type: "async-task" }, (mode) => mode.status)
+                .with(
+                  { type: "transaction", status: "tx:loading" },
+                  () => "loading" as const,
+                )
+                .with(
+                  {
+                    type: "transaction",
+                    status: P.union(
+                      "prepare:error",
+                      "sign:error",
+                      "tx:error",
+                    ),
+                  },
+                  () => "error" as const,
+                )
+                .with(
+                  { type: "transaction", status: "tx:success" },
+                  () => "success" as const,
+                )
+                .with(
+                  { type: "transaction" },
+                  () => "idle" as const,
+                )
+                .otherwise(() => "idle" as const)}
+            />
           </div>
         </div>
 
         <div
           css={{
-            position: "relative",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            gap: "2gu",
             width: "100%",
-            height: "6gu",
+            padding: "6gu 5gu 0",
           }}
         >
-          {contentTransitions((styles, mode) => (
-            <a.div
-              style={styles}
-              css={{
-                position: "absolute",
-                inset: "0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {match(mode)
+          {mode.type !== "success" && layout.above("medium") && (
+            <Button
+              label="Abandon"
+              wide
+              onClick={onAbandon}
+              disabled={match(mode)
                 .with(
-                  { type: "transaction", status: "sign:idle" },
-                  (mode) => (
-                    <Button
-                      label="Create transaction"
-                      mode="primary"
-                      onClick={mode.onSign}
-                    />
-                  ),
+                  {
+                    type: "transaction",
+                    status: P.union("tx:loading", "tx:success"),
+                  },
+                  () => true,
                 )
-                .with(
-                  { type: "transaction" },
-                  (mode) => (
-                    <div
-                      css={{
-                        display: "grid",
-                        gap: "1.5gu",
-                        gridTemplateColumns: "6gu 1fr",
-                      }}
-                    >
-                      <div>
-                        {match(mode)
-                          .with(
-                            { status: P.when((s) => s.endsWith(":error")) },
-                            () => <ProgressIndicator status="error" />,
-                          )
-                          .with(
-                            { status: P.when((s) => s.endsWith(":loading")) },
-                            () => <ProgressIndicator status="loading" />,
-                          )
-                          .with(
-                            { status: P.when((s) => s.endsWith(":success")) },
-                            () => <ProgressIndicator status="success" />,
-                          )
-                          .otherwise(() => null)}
-                      </div>
-                      <div
-                        css={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                          padding: "0.25gu 0",
-                          font: "14px/1.5 fonts.sans",
-                        }}
-                      >
-                        <div
-                          css={{
-                            fontSize: "12px",
-                            textTransform: "uppercase",
-                            color: "colors.contentDimmed",
-                          }}
-                        >
-                          <span>
-                            {match(mode)
-                              .when(
-                                (mode) => mode.status.startsWith("sign:"),
-                                () => "Signing transaction",
-                              )
-                              .when(
-                                (mode) => mode.status.startsWith("tx:"),
-                                () => "Confirming transaction",
-                              )
-                              .otherwise(() => "Ethereum transaction")}
-                          </span>
-                          <span>
-                            {` (${mode.current}/${mode.total})`}
-                          </span>
-                        </div>
-                        <div css={{ color: "colors.content" }}>
-                          {mode.txLabel}
-                        </div>
-                      </div>
-                    </div>
-                  ),
-                )
-                .with(
-                  { type: "async-task", status: "loading" },
-                  () => <ProgressIndicator status="loading" />,
-                )
-                .with(
-                  { type: "async-task", status: "success" },
-                  () => <ProgressIndicator status="success" />,
-                )
-                .with(
-                  { type: "success" },
-                  (mode) => (
-                    <Button
-                      label={mode.action[0]}
-                      onClick={mode.action[1]}
-                    />
-                  ),
-                )
-                .otherwise(() =>
-                  mode.type + " · " + (mode.type !== "success" && mode.status)
-                )}
-            </a.div>
-          ))}
+                .otherwise(() => false)}
+            />
+          )}
+          <Button
+            label={match(mode)
+              .with(
+                { type: "async-task" },
+                (mode) => mode.action[0],
+              )
+              .with(
+                { type: "transaction" },
+                (mode) =>
+                  match(mode.status)
+                    .when(
+                      (status) => status.endsWith(":error"),
+                      () => "Retry",
+                    )
+                    .otherwise(() => mode.signLabel),
+              )
+              .with(
+                { type: "success" },
+                (mode) => mode.action[0],
+              )
+              .otherwise(() => "OK")}
+            onClick={match(mode)
+              .when(
+                (mode) => (
+                  mode.type !== "success" && (
+                    mode.status.endsWith(":error") || mode.status === "error"
+                  )
+                ),
+                (mode) =>
+                  () => {
+                    if (mode.type !== "success") {
+                      mode.onRetry()
+                    }
+                  },
+              )
+              .with(
+                { type: "transaction" },
+                (mode) =>
+                  () => {
+                    mode.onSign()
+                  },
+              )
+              .with(
+                { type: "success" },
+                (mode) => mode.action[1],
+              )
+              .otherwise(() => noop)}
+            disabled={match(mode)
+              .with(
+                { type: "async-task" },
+                (mode) => mode.action[1] === null,
+              )
+              .with(
+                {
+                  type: "transaction",
+                  status: P.union("tx:loading", "tx:success"),
+                },
+                () => true,
+              )
+              .otherwise(() => false)}
+            mode="primary"
+            wide
+          />
         </div>
 
-        <a.div
-          ref={footerRef}
-          css={{
-            position: "relative",
-            width: "100%",
-            minHeight: "11gu",
-          }}
-        >
-          {footerTransitions(
-            (styles, mode) => (
-              <a.div
-                style={styles}
+        {mode.type === "transaction" && (
+          <section css={{ width: "100%", padding: "0 5gu" }}>
+            <Details
+              contextual={null}
+              heading={
+                <span>
+                  Contract information
+                  <span
+                    css={{
+                      position: "absolute",
+                      inset: "0 0 auto auto",
+                      display: "flex",
+                      alignItems: "center",
+                      height: "6gu",
+                      paddingRight: "1.5gu",
+                    }}
+                  >
+                    <IconShieldCheck
+                      size={3 * gu}
+                      css={{
+                        color: "colors.accent2",
+                      }}
+                    />
+                  </span>
+                </span>
+              }
+              headingColor={colors.contentHeading}
+            >
+              <div
                 css={{
-                  inset: "0 0 auto",
-                  overflow: "hidden",
-                  minHeight: "11gu",
+                  display: "flex",
+                  gap: "2gu",
+                  width: "100%",
                 }}
               >
-                {match(mode)
-                  .with(
-                    { type: "transaction" },
-                    (mode) =>
-                      mode.status.endsWith(":error")
-                        ? (
-                          <div css={{ height: "11gu" }}>
-                            <Button
-                              icon={<IconArrowClockwise />}
-                              label="Retry"
-                              mode="flat"
-                              onClick={mode.onRetry}
-                              size="compact"
-                              uppercase={true}
-                            />
-                          </div>
-                        )
-                        : (
-                          <section
-                            css={{
-                              width: "100%",
-                              paddingBottom: "5gu",
-                            }}
-                          >
-                            <Details
-                              background={colors.background}
-                              contextual={null}
-                              heading={
-                                <span
-                                  css={{
-                                    display: "flex",
-                                    gap: "1.5gu",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <IconShieldCheck
-                                    size={3 * gu}
-                                    css={{ color: "colors.accent2" }}
-                                  />
-                                  <span>
-                                    Contract information
-                                  </span>
-                                </span>
-                              }
-                              headingCentered
-                              headingColor={colors.contentHeading}
-                            >
-                              <div
-                                css={{
-                                  display: "flex",
-                                  gap: "1.5gu",
-                                  width: "100%",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <Button
-                                  external={true}
-                                  href={mode.etherscanUrl}
-                                  icon={<IconShare />}
-                                  label="Etherscan"
-                                  mode="flat"
-                                />
-                                <Button
-                                  external={true}
-                                  href={mode.githubUrl}
-                                  icon={<IconGithubLogo />}
-                                  label="GitHub"
-                                  mode="flat"
-                                />
-                              </div>
-                            </Details>
-                          </section>
-                        ),
-                  )
-                  .otherwise(() => null)}
-              </a.div>
-            ),
-          )}
-        </a.div>
+                <ButtonText
+                  color={colors.link}
+                  external
+                  href=""
+                  icon={<IconShare size={3 * gu} />}
+                  label="Etherscan"
+                  uppercase
+                  css={{ fontSize: "16px" }}
+                />
+                <ButtonText
+                  color={colors.link}
+                  external
+                  href=""
+                  icon={<IconGithubLogo size={3 * gu} />}
+                  label="GitHub"
+                  uppercase
+                  css={{ fontSize: "16px" }}
+                />
+              </div>
+            </Details>
+          </section>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function JobStatus({
+  description,
+  jobNumber,
+  title,
+  status,
+}: {
+  description: string
+  jobNumber?: number
+  title: string
+  status: MutationStatus
+}) {
+  return (
+    <section
+      css={{
+        display: "flex",
+        flexDirection: "row-reverse",
+        gap: "3gu",
+        width: "50gu",
+        margin: "0 auto",
+      }}
+    >
+      <div
+        css={{
+          font: "300 16px/22px fonts.mono",
+          textAlign: "left",
+          color: "colors.contentDimmed",
+        }}
+      >
+        <h1 css={{ font: "20px/2.2 fonts.sans" }}>
+          {title}
+        </h1>
+        <p
+          css={{
+            // truncate
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: "3",
+            overflow: "hidden",
+          }}
+        >
+          {description}
+        </p>
+      </div>
+      <div css={{ paddingTop: "1.5gu" }}>
+        <ProgressIndicator status={status} number={jobNumber} />
       </div>
     </section>
   )

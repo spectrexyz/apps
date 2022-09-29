@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react"
+import { resolve } from "path"
 import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig } from "vite"
 import pluginRewriteAll from "vite-plugin-rewrite-all"
@@ -38,5 +39,8 @@ export default defineConfig(({ mode }) => ({
       "react-spring",
       "stylis",
     ],
+    alias: {
+      "moire": resolve(__dirname, "../moire/src/index.tsx"),
+    },
   },
 }))

@@ -17,6 +17,7 @@ type ButtonTextProps =
   & ComponentPropsWithoutRef<"a">
   & ButtonAreaProps
   & {
+    color?: string
     icon?: ReactNode
     label: ReactNode
     onClick?: () => void
@@ -26,7 +27,13 @@ type ButtonTextProps =
 export const ButtonText = forwardRef<
   HTMLButtonElement & HTMLAnchorElement,
   ButtonTextProps
->(function ButtonText({ icon, label, uppercase = true, ...props }, ref) {
+>(function ButtonText({
+  color,
+  icon,
+  label,
+  uppercase = true,
+  ...props
+}, ref) {
   return (
     <ButtonArea
       ref={ref}
@@ -36,7 +43,7 @@ export const ButtonText = forwardRef<
         alignItems: "center",
         textTransform: uppercase ? "uppercase" : "none",
         fontSize: "14px",
-        color: colors.content,
+        color: color ?? colors.content,
         "&:active": {
           transform: "translate(1px, 1px)",
         },

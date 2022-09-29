@@ -42,6 +42,7 @@
     "zustand": "4.1.1"
   },
   "devDependencies": {
+    "@emotion/eslint-plugin": "^11.10.0",
     "@ethersproject/providers": "^5.7.0",
     "@graphprotocol/client-cli": "^2.2.8",
     "@typescript-eslint/eslint-plugin": "^5.36.2",

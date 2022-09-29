@@ -4,7 +4,7 @@ import { TokenIcon } from "../TokenIcon"
 type PoolWeightProps = {
   compact?: boolean
   secondary?: ReactNode
-  tokens: Array<[symbol: string, percentage: number]>
+  tokens: Array<[symbolName: string, percentage: number]>
 }
 
 export function PoolWeight(

@@ -106,6 +106,7 @@ export const Button = forwardRef<
     if (mode === "flat-3") return colors.accent
     if (mode === "primary") return colors.accentContent
     if (mode === "primary-2") return colors.accent2Content
+    if (mode === "secondary" && disabled) return colors.disabled
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") {
       return selected ? colors.accent2Content : colors.accent2
@@ -116,7 +117,7 @@ export const Button = forwardRef<
     if (mode === "negative") return colors.negative
 
     return colors.accent // outline or secondary
-  }, [colors, mode, selected])
+  }, [colors, disabled, mode, selected])
 
   return (
     <ButtonContext.Provider value={{ size }}>
@@ -168,6 +169,7 @@ export const Button = forwardRef<
       >
         <ButtonIn
           adjustLabelAlignment={adjustLabelAlignment}
+          disabled={disabled}
           horizontalPadding={horizontalPadding}
           icon={icon}
           label={label}
@@ -180,27 +182,28 @@ export const Button = forwardRef<
   )
 })
 
-type ButtonInProps =
-  & Pick<
-    ButtonProps,
-    | "adjustLabelAlignment"
-    | "horizontalPadding"
-    | "icon"
-    | "label"
-    | "selected"
-    | "size"
-  >
-  & Pick<Required<ButtonProps>, "mode">
-
 function ButtonIn({
   adjustLabelAlignment,
+  disabled,
   horizontalPadding,
   icon,
   label,
   mode,
   selected,
   size,
-}: ButtonInProps) {
+}:
+  & Pick<
+    ButtonProps,
+    | "adjustLabelAlignment"
+    | "disabled"
+    | "horizontalPadding"
+    | "icon"
+    | "label"
+    | "selected"
+    | "size"
+  >
+  & Pick<Required<ButtonProps>, "mode">)
+{
   const flat = mode.startsWith("flat")
   const shadowBounds = useDimensions()
   const { colors } = useTheme()
@@ -217,30 +220,36 @@ function ButtonIn({
     if (mode === "flat") return colors.layer2
     if (mode === "flat-2") return colors.layer1
     if (mode === "flat-3") return colors.background
+    if (mode === "primary" && disabled) return colors.disabled
     if (mode === "primary") return colors.accent
     if (mode === "primary-2") return colors.accent2
     if (mode === "outline-2") return selected ? colors.accent2 : colors.layer2
     if (mode === "outline-3") return colors.background
     if (mode === "positive" || mode === "negative") return colors.layer3
     return colors.background // secondary, secondary-2
-  }, [colors, mode, selected])
+  }, [colors, disabled, mode, selected])
 
   const borderColor = useMemo(() => {
+    if (mode === "primary" && disabled) return colors.disabled
     if (mode === "primary-2") return colors.accent2
+    if (mode === "secondary" && disabled) return colors.disabled
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") return colors.accent2
     if (mode === "outline-3") return colors.warning
     if (mode === "positive") return colors.positive
     if (mode === "negative") return colors.negative
     return colors.accent
-  }, [colors, mode])
+  }, [colors, disabled, mode])
 
   const moireLinesColor = useMemo(() => {
-    if (mode === "primary-2" || mode === "secondary-2") return colors.accent2
+    if (mode === "primary" && disabled) return colors.disabled
+    if (mode === "primary-2") return colors.accent2
+    if (mode === "secondary" && disabled) return colors.disabled
+    if (mode === "secondary-2") return colors.accent2
     if (mode === "positive") return colors.positive
     if (mode === "negative") return colors.negative
     return undefined
-  }, [colors, mode])
+  }, [colors, disabled, mode])
 
   const activeShadowColor = useMemo(() => {
     if (mode === "primary-2" || mode === "secondary-2") return colors.accent2
