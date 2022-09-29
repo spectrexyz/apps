@@ -44,12 +44,24 @@ export function ScreenSpectralize() {
   }, [fillDemoData])
 
   const prev = useCallback(() => {
+    if (spectralizeStatus !== "configure") {
+      if (confirm("Are you sure you want to abandon?")) {
+        updateSpectralizeStatus("configure")
+      }
+      return
+    }
     if (currentStep === 0) {
       setLocation("/")
     } else {
       prevStep()
     }
-  }, [currentStep, setLocation, prevStep])
+  }, [
+    currentStep,
+    prevStep,
+    setLocation,
+    spectralizeStatus,
+    updateSpectralizeStatus,
+  ])
 
   const next = useCallback(() => {
     if (currentStep === STEPS.length - 1) {
@@ -61,7 +73,7 @@ export function ScreenSpectralize() {
 
   useEffect(() => {
     resetScroll()
-  }, [currentStep, resetScroll])
+  }, [currentStep, spectralizeStatus, resetScroll])
 
   if (!isConnected) {
     return <Disconnected onPrev={prev} />
@@ -75,7 +87,7 @@ export function ScreenSpectralize() {
     return <Configure onNext={next} onPrev={prev} />
   }
 
-  return <Spectralize onPrev={prev} />
+  return <Spectralize onAbandon={prev} />
 }
 
 function Configure({
@@ -91,47 +103,43 @@ function Configure({
   const title = currentStepTitle()
   const Step = STEPS[currentStep]
 
-  const compactBar = layout.below("medium") && {
-    title,
-    onBack: onPrev,
-    extraRow: (
-      <div css={{ padding: "0 2gu" }}>
-        <Steps
-          steps={STEPS.length - 1}
-          current={currentStep}
-          direction="horizontal"
-        />
-      </div>
-    ),
-  }
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-  const flexGap = layout.value({
-    small: "3.5gu",
-    large: "4gu",
-    xlarge: "8gu",
-  })
-
   return (
-    <AppScreen compactBar={compactBar}>
+    <AppScreen
+      compactBar={layout.below("medium") && {
+        title,
+        onBack: onPrev,
+        extraRow: (
+          <div css={{ padding: "0 2gu" }}>
+            <Steps
+              steps={STEPS.length - 1}
+              current={currentStep}
+              direction="horizontal"
+            />
+          </div>
+        ),
+      }}
+    >
       <div
         css={{
           display: "flex",
-          gap: flexGap,
+          gap: layout.value({
+            small: "3.5gu",
+            large: "4gu",
+            xlarge: "8gu",
+          }),
           flexDirection: layout.below("medium") ? "column" : "row",
           width: "100%",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
         }}
       >
         {!layout.below("medium") && (
@@ -157,17 +165,16 @@ function Configure({
 
 function Spectralize(
   {
-    onPrev,
+    onAbandon,
     pauseOnSuccess = 500,
   }: {
-    onPrev: () => void
+    onAbandon: () => void
     pauseOnSuccess?: number
   },
 ) {
   const layout = useLayout()
   const [, setLocation] = useLocation()
   const {
-    // tokenSymbol,
     previewUrl,
     spectralizeStatus,
     updateSpectralizeStatus,
@@ -185,22 +192,6 @@ function Spectralize(
     storeNftRetry,
     storeNftStatus,
   } = useCompleteMintAndSpectralize()
-
-  // DEMO
-  // let approvalNeeded = false
-  // let storeNftStatus: MutationStatus = "loading"
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
 
   const asyncTaskProps = {
     title: "Mint & fractionalize NFT",
@@ -263,22 +254,41 @@ function Spectralize(
     }
   }, [snftId])
 
-  const abandon = () => {
-    // todo
-  }
+  const canAbandon = match(spectralizeStatus)
+    .with(
+      "store-nft",
+      () => storeNftStatus !== "loading",
+    )
+    .with(
+      "approve",
+      () => approveStatus !== "tx:loading",
+    )
+    .with(
+      "mint-and-fractionalize",
+      () => mintStatus !== "tx:loading",
+    )
+    .otherwise(() => true)
 
   return (
-    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
+    <AppScreen
+      compactBar={{
+        title: "Fractionalize",
+        onBack: onAbandon,
+        disableOnBack: !canAbandon,
+      }}
+    >
       <div
         css={{
           flexGrow: "1",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
-          paddingTop: "8gu",
           textAlign: "center",
         }}
       >
@@ -315,7 +325,7 @@ function Spectralize(
                     ? "idle"
                     : storeNftStatus,
                 }}
-                onAbandon={abandon}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
@@ -343,7 +353,7 @@ function Spectralize(
                   total: approvalNeeded ? 2 : 1,
                   signLabel: "Approve",
                 }}
-                onAbandon={approveStatus === "tx:loading" ? undefined : abandon}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
@@ -385,7 +395,7 @@ function Spectralize(
                   total: approvalNeeded ? 2 : 1,
                   signLabel: "Fractionalize",
                 }}
-                onAbandon={mintStatus === "tx:loading" ? undefined : abandon}
+                onAbandon={canAbandon ? onAbandon : undefined}
                 {...asyncTaskProps}
               />
             )
@@ -414,18 +424,6 @@ function Spectralize(
 
 function Disconnected({ onPrev }: { onPrev: () => void }) {
   const layout = useLayout()
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div
@@ -434,9 +432,17 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
           paddingTop: "8gu",
           textAlign: "center",
         }}
@@ -449,26 +455,8 @@ function Disconnected({ onPrev }: { onPrev: () => void }) {
 
 function WrongNetwork({ onPrev }: { onPrev: () => void }) {
   const layout = useLayout()
-
-  const contentMaxWidth = layout.value({
-    small: "none",
-    large: "104gu",
-    xlarge: "128gu",
-  })
-  const contentPadding = layout.value({
-    small: "0 3gu",
-    medium: "0 3gu",
-    large: "0",
-  })
-
   const switchNetwork = useSwitchNetwork()
   const network = useNetwork()
-
-  const buttonLabel = layout.value({
-    small: `Switch to ${network.chains[0]?.name}`,
-    medium: `Switch to the ${network.chains[0]?.name} network`,
-  })
-
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
       <div
@@ -479,9 +467,17 @@ function WrongNetwork({ onPrev }: { onPrev: () => void }) {
           justifyContent: "center",
           alignItems: "center",
           gap: "3gu",
-          maxWidth: contentMaxWidth,
+          maxWidth: layout.value({
+            small: "none",
+            large: "104gu",
+            xlarge: "128gu",
+          }),
           margin: "0 auto",
-          padding: contentPadding,
+          padding: layout.value({
+            small: "0 3gu",
+            medium: "0 3gu",
+            large: "0",
+          }),
           paddingTop: "8gu",
           textAlign: "center",
         }}
@@ -491,7 +487,10 @@ function WrongNetwork({ onPrev }: { onPrev: () => void }) {
         </div>
         <div>
           <Button
-            label={buttonLabel}
+            label={layout.value({
+              small: `Switch to ${network.chains[0]?.name}`,
+              medium: `Switch to the ${network.chains[0]?.name} network`,
+            })}
             onClick={() => {
               switchNetwork.switchNetwork?.(CHAIN_ID)
             }}

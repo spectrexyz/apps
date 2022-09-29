@@ -16,6 +16,7 @@ import {
   useTheme,
 } from "moire"
 import { match, P } from "ts-pattern"
+import { useLayout } from "../styles"
 
 type ModeAsyncTask = {
   type: "async-task"
@@ -61,6 +62,7 @@ export function AsyncTask({
   title: string
 }) {
   const { colors } = useTheme()
+  const layout = useLayout()
   return (
     <section
       css={{
@@ -68,9 +70,12 @@ export function AsyncTask({
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        maxWidth: "75gu",
+        maxWidth: layout.value({
+          small: "none",
+          large: "75gu",
+        }),
         margin: "0 auto",
-        padding: "5gu 0",
+        padding: "0",
       }}
     >
       <div
@@ -81,8 +86,14 @@ export function AsyncTask({
           gap: "4gu",
           width: "100%",
           padding: "5gu 0 4gu",
-          background: "colors.background",
-          border: "1px solid colors.layer2",
+          background: layout.value({
+            small: "none",
+            large: "colors.background",
+          }),
+          border: layout.value({
+            small: "none",
+            large: "1px solid colors.layer2",
+          }),
         }}
       >
         <div
@@ -224,15 +235,11 @@ export function AsyncTask({
             padding: "6gu 5gu 0",
           }}
         >
-          {mode.type !== "success" && (
+          {mode.type !== "success" && layout.above("medium") && (
             <Button
               label="Abandon"
               wide
-              onClick={() => {
-                if (confirm("Are you sure you want to abandon?")) {
-                  onAbandon?.()
-                }
-              }}
+              onClick={onAbandon}
               disabled={match(mode)
                 .with(
                   {
