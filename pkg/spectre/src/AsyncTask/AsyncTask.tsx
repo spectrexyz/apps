@@ -4,6 +4,7 @@ import type { SignTxAndWaitStatus } from "../types"
 
 import {
   Button,
+  ButtonText,
   Details,
   gu,
   IconGithubLogo,
@@ -12,11 +13,8 @@ import {
   Moire,
   noop,
   ProgressIndicator,
-  // springs,
   useTheme,
 } from "moire"
-// import { useEffect, useRef, useState } from "react"
-// import { a, useChain, useSpringRef, useTransition } from "react-spring"
 import { match, P } from "ts-pattern"
 
 type ModeAsyncTask = {
@@ -63,9 +61,6 @@ export function AsyncTask({
   title: string
 }) {
   const { colors } = useTheme()
-
-  // const description = getDescription(mode)
-
   return (
     <section
       css={{
@@ -85,7 +80,7 @@ export function AsyncTask({
           alignItems: "center",
           gap: "4gu",
           width: "100%",
-          paddingTop: "5gu",
+          padding: "5gu 0 4gu",
           background: "colors.background",
           border: "1px solid colors.layer2",
         }}
@@ -149,6 +144,11 @@ export function AsyncTask({
                   { type: "transaction", status: "tx:error" },
                   () =>
                     "An error has occured while signing the transaction, please retry.",
+                )
+                .with(
+                  { type: "transaction", status: "tx:loading" },
+                  () =>
+                    "The transaction has been sent, waiting for confirmation.",
                 )
                 // Generic error message
                 .with(
@@ -224,15 +224,26 @@ export function AsyncTask({
             padding: "6gu 5gu 0",
           }}
         >
-          <Button
-            label="Abandon"
-            wide
-            onClick={() => {
-              if (confirm("Are you sure you want to abandon?")) {
-                onAbandon?.()
-              }
-            }}
-          />
+          {mode.type !== "success" && (
+            <Button
+              label="Abandon"
+              wide
+              onClick={() => {
+                if (confirm("Are you sure you want to abandon?")) {
+                  onAbandon?.()
+                }
+              }}
+              disabled={match(mode)
+                .with(
+                  {
+                    type: "transaction",
+                    status: P.union("tx:loading", "tx:success"),
+                  },
+                  () => true,
+                )
+                .otherwise(() => false)}
+            />
+          )}
           <Button
             label={match(mode)
               .with(
@@ -285,65 +296,76 @@ export function AsyncTask({
                 { type: "async-task" },
                 (mode) => mode.action[1] === null,
               )
+              .with(
+                {
+                  type: "transaction",
+                  status: P.union("tx:loading", "tx:success"),
+                },
+                () => true,
+              )
               .otherwise(() => false)}
             mode="primary"
             wide
           />
         </div>
 
-        <section css={{ width: "100%", padding: "0 5gu 5gu" }}>
-          <Details
-            contextual={null}
-            heading={
-              <span>
-                Contract information
-                <span
-                  css={{
-                    position: "absolute",
-                    inset: "0 0 auto auto",
-                    display: "flex",
-                    alignItems: "center",
-                    height: "6gu",
-                    paddingRight: "1.5gu",
-                  }}
-                >
-                  <IconShieldCheck
-                    size={3 * gu}
+        {mode.type === "transaction" && (
+          <section css={{ width: "100%", padding: "0 5gu" }}>
+            <Details
+              contextual={null}
+              heading={
+                <span>
+                  Contract information
+                  <span
                     css={{
-                      color: "colors.accent2",
+                      position: "absolute",
+                      inset: "0 0 auto auto",
+                      display: "flex",
+                      alignItems: "center",
+                      height: "6gu",
+                      paddingRight: "1.5gu",
                     }}
-                  />
+                  >
+                    <IconShieldCheck
+                      size={3 * gu}
+                      css={{
+                        color: "colors.accent2",
+                      }}
+                    />
+                  </span>
                 </span>
-              </span>
-            }
-            headingColor={colors.contentHeading}
-          >
-            <div
-              css={{
-                display: "flex",
-                gap: "1.5gu",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              }
+              headingColor={colors.contentHeading}
             >
-              <Button
-                external={true}
-                href=""
-                icon={<IconShare />}
-                label="Etherscan"
-                mode="flat"
-              />
-              <Button
-                external={true}
-                href=""
-                icon={<IconGithubLogo />}
-                label="GitHub"
-                mode="flat"
-              />
-            </div>
-          </Details>
-        </section>
+              <div
+                css={{
+                  display: "flex",
+                  gap: "2gu",
+                  width: "100%",
+                }}
+              >
+                <ButtonText
+                  color={colors.link}
+                  external
+                  href=""
+                  icon={<IconShare size={3 * gu} />}
+                  label="Etherscan"
+                  uppercase
+                  css={{ fontSize: "16px" }}
+                />
+                <ButtonText
+                  color={colors.link}
+                  external
+                  href=""
+                  icon={<IconGithubLogo size={3 * gu} />}
+                  label="GitHub"
+                  uppercase
+                  css={{ fontSize: "16px" }}
+                />
+              </div>
+            </Details>
+          </section>
+        )}
       </div>
     </section>
   )
@@ -398,43 +420,3 @@ function JobStatus({
     </section>
   )
 }
-
-// function getDescription(mode: Mode) {
-//   return match(mode)
-//     .with({ type: "transaction" }, (mode) =>
-//       match(mode.status)
-//         .with(
-//           "sign:error",
-//           () =>
-//             "An error has occurred while signing the transaction. "
-//             + "Hit the retry button to sign the transaction again.",
-//         )
-//         .with("sign:idle", () => (
-//           "Hit the button below to sign the transaction in your wallet. "
-//           + "Don’t close this tab while the transaction is pending."
-//         ))
-//         .with("sign:loading", () => (
-//           "Check your wallet and sign the transaction there. "
-//           + "Don’t close this tab while the transaction is pending."
-//         ))
-//         .with("tx:loading", () => (
-//           "Please wait while your transaction is being confirmed. "
-//           + "Don’t close this tab while the transaction is pending."
-//         ))
-//         .with(
-//           "tx:error",
-//           () => ("An error has occurred preventing the transaction to be confirmed. "
-//             + "Hit the button below to retry signing the transaction."),
-//         )
-//         .with(
-//           "tx:success",
-//           () => "The transaction has been successfully confirmed.",
-//         )
-//         .otherwise(() => (
-//           "Confirm the transaction in your wallet to continue. "
-//           + "Don’t close this tab while the transaction is pending."
-//         )))
-//     .with({ type: "async-task" }, (mode) => mode.description(mode.status))
-//     .with({ type: "success" }, (mode) => mode.description)
-//     .exhaustive()
-// }

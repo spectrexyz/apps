@@ -226,8 +226,14 @@ function Spectralize(
       return
     }
 
-    // No delay after the NFT metadata storage (only after txes)
+    // No delay after the NFT metadata storage (only after non final txes)
     if (spectralizeStatus === "store-nft") {
+      updateSpectralizeStatus(newStatus)
+      return
+    }
+
+    // No delay after the last tx
+    if (newStatus === "done") {
       updateSpectralizeStatus(newStatus)
       return
     }
@@ -251,13 +257,15 @@ function Spectralize(
     updateSpectralizeStatus,
   ])
 
-  console.log("???", { spectralizeStatus, storeNftStatus, mintStatus })
-
   useEffect(() => {
     if (snftId) {
       localStorage.setItem("indexing-snft", snftId)
     }
   }, [snftId])
+
+  const abandon = () => {
+    // todo
+  }
 
   return (
     <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
@@ -307,6 +315,7 @@ function Spectralize(
                     ? "idle"
                     : storeNftStatus,
                 }}
+                onAbandon={abandon}
                 {...asyncTaskProps}
               />
             )
@@ -334,6 +343,7 @@ function Spectralize(
                   total: approvalNeeded ? 2 : 1,
                   signLabel: "Approve",
                 }}
+                onAbandon={approveStatus === "tx:loading" ? undefined : abandon}
                 {...asyncTaskProps}
               />
             )
@@ -344,8 +354,21 @@ function Spectralize(
             }
             return (
               <AsyncTask
-                jobDescription="You will be asked to sign a transaction in your wallet."
-                jobTitle={"Mint & fractionalize"}
+                jobDescription={match(mintStatus)
+                  .with(
+                    "tx:success",
+                    () => "The NFT has been minted and fractionalized.",
+                  )
+                  .with(
+                    "sign:loading",
+                    () => "Waiting for signature… please check your wallet.",
+                  )
+                  .otherwise(() =>
+                    "You will be asked to sign a transaction in your wallet."
+                  )}
+                jobTitle={mintStatus === "tx:success"
+                  ? "Transaction confirmed"
+                  : "Mint & fractionalize"}
                 mode={{
                   type: "transaction",
                   current: approvalNeeded ? 2 : 1,
@@ -362,6 +385,7 @@ function Spectralize(
                   total: approvalNeeded ? 2 : 1,
                   signLabel: "Fractionalize",
                 }}
+                onAbandon={mintStatus === "tx:loading" ? undefined : abandon}
                 {...asyncTaskProps}
               />
             )
