@@ -1,4 +1,3 @@
-// import type { MutationStatus } from "@tanstack/react-query"
 import type { SpectralizeStatus } from "./use-spectralize"
 
 import { Button, Steps } from "moire"
