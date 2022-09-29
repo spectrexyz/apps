@@ -106,6 +106,7 @@ export const Button = forwardRef<
     if (mode === "flat-3") return colors.accent
     if (mode === "primary") return colors.accentContent
     if (mode === "primary-2") return colors.accent2Content
+    if (mode === "secondary" && disabled) return colors.disabled
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") {
       return selected ? colors.accent2Content : colors.accent2
@@ -116,7 +117,7 @@ export const Button = forwardRef<
     if (mode === "negative") return colors.negative
 
     return colors.accent // outline or secondary
-  }, [colors, mode, selected])
+  }, [colors, disabled, mode, selected])
 
   return (
     <ButtonContext.Provider value={{ size }}>
@@ -231,6 +232,7 @@ function ButtonIn({
   const borderColor = useMemo(() => {
     if (mode === "primary" && disabled) return colors.disabled
     if (mode === "primary-2") return colors.accent2
+    if (mode === "secondary" && disabled) return colors.disabled
     if (mode === "secondary-2") return colors.accent2
     if (mode === "outline-2") return colors.accent2
     if (mode === "outline-3") return colors.warning
@@ -241,7 +243,9 @@ function ButtonIn({
 
   const moireLinesColor = useMemo(() => {
     if (mode === "primary" && disabled) return colors.disabled
-    if (mode === "primary-2" || mode === "secondary-2") return colors.accent2
+    if (mode === "primary-2") return colors.accent2
+    if (mode === "secondary" && disabled) return colors.disabled
+    if (mode === "secondary-2") return colors.accent2
     if (mode === "positive") return colors.positive
     if (mode === "negative") return colors.negative
     return undefined
