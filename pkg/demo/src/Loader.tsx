@@ -6,7 +6,7 @@ function LoaderDemo() {
       css={{
         display: "grid",
         placeItems: "center",
-        padding: "4gu",
+        padding: "15gu 30gu",
         background: "colors.background",
         border: "1px solid colors.layer2",
       }}
