@@ -346,8 +346,9 @@ export type Share = {
 }
 
 export function calculateShares(balances: Dnum[]): Share[] {
-  const total = balances.reduce((total, balance) =>
-    dnum.add(total || 0, balance)
+  const total = balances.reduce(
+    (total, balance) => dnum.add(total, balance),
+    [0n, 18],
   )
 
   const limit = balances.length
