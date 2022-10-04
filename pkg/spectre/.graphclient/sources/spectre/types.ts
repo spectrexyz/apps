@@ -1,32 +1,13 @@
-// @ts-nocheck
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-import { gql } from '@graphql-mesh/utils';
 
-import type { GetMeshOptions } from '@graphql-mesh/runtime';
-import type { YamlConfig } from '@graphql-mesh/types';
-import { PubSub } from '@graphql-mesh/utils';
-import { DefaultLogger } from '@graphql-mesh/utils';
-import MeshCache from "@graphql-mesh/cache-localforage";
-import { fetch as fetchFn } from '@whatwg-node/fetch';
+import { InContextSdkMethod } from '@graphql-mesh/types';
+import { MeshContext } from '@graphql-mesh/runtime';
 
-import GraphqlHandler from "@graphql-mesh/graphql"
-import BareMerger from "@graphql-mesh/merger-bare";
-import { printWithCache } from '@graphql-mesh/utils';
-import { createMeshHTTPHandler } from '@graphql-mesh/http';
-import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext, MeshInstance } from '@graphql-mesh/runtime';
-import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
-import { path as pathModule } from '@graphql-mesh/cross-helpers';
-import type { SpectreContext } from './sources/spectre/types';
-export type Maybe<T> = T | null;
+export namespace SpectreTypes {
+  export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
-
-
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -2049,711 +2030,133 @@ export type sERC20_orderBy =
   | 'issuance'
   | 'pool';
 
-export type WithIndex<TObject> = TObject & Record<string, any>;
-export type ResolversObject<TObject> = WithIndex<TObject>;
-
-export type ResolverTypeWrapper<T> = Promise<T> | T;
-
-
-export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
-
-export type ResolverFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Promise<TResult> | TResult;
-
-export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
-
-export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
-
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
-  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
-}
-
-export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
-  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
-  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
-
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
-  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
-
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
-  parent: TParent,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
-
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
-
-export type NextResolverFn<T> = () => Promise<T>;
-
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
-  next: NextResolverFn<TResult>,
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-/** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = ResolversObject<{
-  BigDecimal: ResolverTypeWrapper<Scalars['BigDecimal']>;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
-  BlockChangedFilter: BlockChangedFilter;
-  Block_height: Block_height;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  Buyout: ResolverTypeWrapper<Buyout>;
-  BuyoutProposal: ResolverTypeWrapper<BuyoutProposal>;
-  BuyoutProposal_filter: BuyoutProposal_filter;
-  BuyoutProposal_orderBy: BuyoutProposal_orderBy;
-  Buyout_filter: Buyout_filter;
-  Buyout_orderBy: Buyout_orderBy;
-  Bytes: ResolverTypeWrapper<Scalars['Bytes']>;
-  Claim: ResolverTypeWrapper<Claim>;
-  Claim_filter: Claim_filter;
-  Claim_orderBy: Claim_orderBy;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Issuance: ResolverTypeWrapper<Issuance>;
-  IssuanceProposal: ResolverTypeWrapper<IssuanceProposal>;
-  IssuanceProposal_filter: IssuanceProposal_filter;
-  IssuanceProposal_orderBy: IssuanceProposal_orderBy;
-  IssuanceState: IssuanceState;
-  Issuance_filter: Issuance_filter;
-  Issuance_orderBy: Issuance_orderBy;
-  Issue: ResolverTypeWrapper<Issue>;
-  Issue_filter: Issue_filter;
-  Issue_orderBy: Issue_orderBy;
-  Join: ResolverTypeWrapper<Join>;
-  Join_filter: Join_filter;
-  Join_orderBy: Join_orderBy;
-  NFT: ResolverTypeWrapper<NFT>;
-  NFT_filter: NFT_filter;
-  NFT_orderBy: NFT_orderBy;
-  OrderDirection: OrderDirection;
-  Pool: ResolverTypeWrapper<Pool>;
-  PoolState: ResolverTypeWrapper<PoolState>;
-  PoolState_filter: PoolState_filter;
-  PoolState_orderBy: PoolState_orderBy;
-  Pool_filter: Pool_filter;
-  Pool_orderBy: Pool_orderBy;
-  ProposalState: ProposalState;
-  Query: ResolverTypeWrapper<{}>;
-  Sale: ResolverTypeWrapper<Sale>;
-  SaleState: SaleState;
-  Sale_filter: Sale_filter;
-  Sale_orderBy: Sale_orderBy;
-  Spectre: ResolverTypeWrapper<Spectre>;
-  SpectreState: SpectreState;
-  Spectre_filter: Spectre_filter;
-  Spectre_orderBy: Spectre_orderBy;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Subscription: ResolverTypeWrapper<{}>;
-  Swap: ResolverTypeWrapper<Swap>;
-  Swap_filter: Swap_filter;
-  Swap_orderBy: Swap_orderBy;
-  _Block_: ResolverTypeWrapper<_Block_>;
-  _Meta_: ResolverTypeWrapper<_Meta_>;
-  _SubgraphErrorPolicy_: _SubgraphErrorPolicy_;
-  sERC20: ResolverTypeWrapper<sERC20>;
-  sERC20_filter: sERC20_filter;
-  sERC20_orderBy: sERC20_orderBy;
-}>;
-
-/** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = ResolversObject<{
-  BigDecimal: Scalars['BigDecimal'];
-  BigInt: Scalars['BigInt'];
-  BlockChangedFilter: BlockChangedFilter;
-  Block_height: Block_height;
-  Boolean: Scalars['Boolean'];
-  Buyout: Buyout;
-  BuyoutProposal: BuyoutProposal;
-  BuyoutProposal_filter: BuyoutProposal_filter;
-  Buyout_filter: Buyout_filter;
-  Bytes: Scalars['Bytes'];
-  Claim: Claim;
-  Claim_filter: Claim_filter;
-  Float: Scalars['Float'];
-  ID: Scalars['ID'];
-  Int: Scalars['Int'];
-  Issuance: Issuance;
-  IssuanceProposal: IssuanceProposal;
-  IssuanceProposal_filter: IssuanceProposal_filter;
-  Issuance_filter: Issuance_filter;
-  Issue: Issue;
-  Issue_filter: Issue_filter;
-  Join: Join;
-  Join_filter: Join_filter;
-  NFT: NFT;
-  NFT_filter: NFT_filter;
-  Pool: Pool;
-  PoolState: PoolState;
-  PoolState_filter: PoolState_filter;
-  Pool_filter: Pool_filter;
-  Query: {};
-  Sale: Sale;
-  Sale_filter: Sale_filter;
-  Spectre: Spectre;
-  Spectre_filter: Spectre_filter;
-  String: Scalars['String'];
-  Subscription: {};
-  Swap: Swap;
-  Swap_filter: Swap_filter;
-  _Block_: _Block_;
-  _Meta_: _Meta_;
-  sERC20: sERC20;
-  sERC20_filter: sERC20_filter;
-}>;
-
-export type entityDirectiveArgs = { };
-
-export type entityDirectiveResolver<Result, Parent, ContextType = MeshContext, Args = entityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type subgraphIdDirectiveArgs = {
-  id: Scalars['String'];
+export type QuerySpectreSdk = {
+  /** undefined **/
+  nft: InContextSdkMethod<SpectreTypes.Query['nft'], SpectreTypes.QuerynftArgs, MeshContext>,
+  /** undefined **/
+  nfts: InContextSdkMethod<SpectreTypes.Query['nfts'], SpectreTypes.QuerynftsArgs, MeshContext>,
+  /** undefined **/
+  spectre: InContextSdkMethod<SpectreTypes.Query['spectre'], SpectreTypes.QueryspectreArgs, MeshContext>,
+  /** undefined **/
+  spectres: InContextSdkMethod<SpectreTypes.Query['spectres'], SpectreTypes.QueryspectresArgs, MeshContext>,
+  /** undefined **/
+  sERC20: InContextSdkMethod<SpectreTypes.Query['sERC20'], SpectreTypes.QuerysERC20Args, MeshContext>,
+  /** undefined **/
+  sERC20S: InContextSdkMethod<SpectreTypes.Query['sERC20S'], SpectreTypes.QuerysERC20SArgs, MeshContext>,
+  /** undefined **/
+  sale: InContextSdkMethod<SpectreTypes.Query['sale'], SpectreTypes.QuerysaleArgs, MeshContext>,
+  /** undefined **/
+  sales: InContextSdkMethod<SpectreTypes.Query['sales'], SpectreTypes.QuerysalesArgs, MeshContext>,
+  /** undefined **/
+  buyoutProposal: InContextSdkMethod<SpectreTypes.Query['buyoutProposal'], SpectreTypes.QuerybuyoutProposalArgs, MeshContext>,
+  /** undefined **/
+  buyoutProposals: InContextSdkMethod<SpectreTypes.Query['buyoutProposals'], SpectreTypes.QuerybuyoutProposalsArgs, MeshContext>,
+  /** undefined **/
+  buyout: InContextSdkMethod<SpectreTypes.Query['buyout'], SpectreTypes.QuerybuyoutArgs, MeshContext>,
+  /** undefined **/
+  buyouts: InContextSdkMethod<SpectreTypes.Query['buyouts'], SpectreTypes.QuerybuyoutsArgs, MeshContext>,
+  /** undefined **/
+  claim: InContextSdkMethod<SpectreTypes.Query['claim'], SpectreTypes.QueryclaimArgs, MeshContext>,
+  /** undefined **/
+  claims: InContextSdkMethod<SpectreTypes.Query['claims'], SpectreTypes.QueryclaimsArgs, MeshContext>,
+  /** undefined **/
+  issuance: InContextSdkMethod<SpectreTypes.Query['issuance'], SpectreTypes.QueryissuanceArgs, MeshContext>,
+  /** undefined **/
+  issuances: InContextSdkMethod<SpectreTypes.Query['issuances'], SpectreTypes.QueryissuancesArgs, MeshContext>,
+  /** undefined **/
+  issue: InContextSdkMethod<SpectreTypes.Query['issue'], SpectreTypes.QueryissueArgs, MeshContext>,
+  /** undefined **/
+  issues: InContextSdkMethod<SpectreTypes.Query['issues'], SpectreTypes.QueryissuesArgs, MeshContext>,
+  /** undefined **/
+  issuanceProposal: InContextSdkMethod<SpectreTypes.Query['issuanceProposal'], SpectreTypes.QueryissuanceProposalArgs, MeshContext>,
+  /** undefined **/
+  issuanceProposals: InContextSdkMethod<SpectreTypes.Query['issuanceProposals'], SpectreTypes.QueryissuanceProposalsArgs, MeshContext>,
+  /** undefined **/
+  pool: InContextSdkMethod<SpectreTypes.Query['pool'], SpectreTypes.QuerypoolArgs, MeshContext>,
+  /** undefined **/
+  pools: InContextSdkMethod<SpectreTypes.Query['pools'], SpectreTypes.QuerypoolsArgs, MeshContext>,
+  /** undefined **/
+  poolState: InContextSdkMethod<SpectreTypes.Query['poolState'], SpectreTypes.QuerypoolStateArgs, MeshContext>,
+  /** undefined **/
+  poolStates: InContextSdkMethod<SpectreTypes.Query['poolStates'], SpectreTypes.QuerypoolStatesArgs, MeshContext>,
+  /** undefined **/
+  swap: InContextSdkMethod<SpectreTypes.Query['swap'], SpectreTypes.QueryswapArgs, MeshContext>,
+  /** undefined **/
+  swaps: InContextSdkMethod<SpectreTypes.Query['swaps'], SpectreTypes.QueryswapsArgs, MeshContext>,
+  /** undefined **/
+  join: InContextSdkMethod<SpectreTypes.Query['join'], SpectreTypes.QueryjoinArgs, MeshContext>,
+  /** undefined **/
+  joins: InContextSdkMethod<SpectreTypes.Query['joins'], SpectreTypes.QueryjoinsArgs, MeshContext>,
+  /** Access to subgraph metadata **/
+  _meta: InContextSdkMethod<SpectreTypes.Query['_meta'], SpectreTypes.Query_metaArgs, MeshContext>
 };
 
-export type subgraphIdDirectiveResolver<Result, Parent, ContextType = MeshContext, Args = subgraphIdDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type MutationSpectreSdk = {
 
-export type derivedFromDirectiveArgs = {
-  field: Scalars['String'];
 };
 
-export type derivedFromDirectiveResolver<Result, Parent, ContextType = MeshContext, Args = derivedFromDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export interface BigDecimalScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigDecimal'], any> {
-  name: 'BigDecimal';
-}
-
-export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
-  name: 'BigInt';
-}
-
-export type BuyoutResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Buyout'] = ResolversParentTypes['Buyout']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sale?: Resolver<ResolversTypes['Sale'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  buyer?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  collateral?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  stock?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  claims?: Resolver<Array<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<BuyoutclaimsArgs, 'skip' | 'first'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type BuyoutProposalResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['BuyoutProposal'] = ResolversParentTypes['BuyoutProposal']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sale?: Resolver<ResolversTypes['Sale'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['ProposalState'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  buyer?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  collateral?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  expiration?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export interface BytesScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Bytes'], any> {
-  name: 'Bytes';
-}
-
-export type ClaimResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Claim'] = ResolversParentTypes['Claim']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  buyout?: Resolver<ResolversTypes['Buyout'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  holder?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  collateral?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IssuanceResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Issuance'] = ResolversParentTypes['Issuance']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sERC20?: Resolver<ResolversTypes['sERC20'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['IssuanceState'], ParentType, ContextType>;
-  guardian?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  pool?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  poolId?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  reserve?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  allocation?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  fee?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  flash?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<IssuanceissuesArgs, 'skip' | 'first'>>;
-  proposals?: Resolver<Array<ResolversTypes['IssuanceProposal']>, ParentType, ContextType, RequireFields<IssuanceproposalsArgs, 'skip' | 'first'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IssuanceProposalResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['IssuanceProposal'] = ResolversParentTypes['IssuanceProposal']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  issuance?: Resolver<ResolversTypes['Issuance'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['ProposalState'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  buyer?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  price?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  expiration?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type IssueResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Issue'] = ResolversParentTypes['Issue']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  issuance?: Resolver<ResolversTypes['Issuance'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  recipient?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type JoinResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Join'] = ResolversParentTypes['Join']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  pool?: Resolver<ResolversTypes['Pool'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  amounts?: Resolver<Array<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type NFTResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['NFT'] = ResolversParentTypes['NFT']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  collection?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  tokenId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  tokenURI?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type PoolResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Pool'] = ResolversParentTypes['Pool']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  sERC20?: Resolver<ResolversTypes['sERC20'], ParentType, ContextType>;
-  sERC20IsToken0?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  states?: Resolver<Array<ResolversTypes['PoolState']>, ParentType, ContextType, RequireFields<PoolstatesArgs, 'skip' | 'first'>>;
-  swaps?: Resolver<Array<ResolversTypes['Swap']>, ParentType, ContextType, RequireFields<PoolswapsArgs, 'skip' | 'first'>>;
-  joins?: Resolver<Array<ResolversTypes['Join']>, ParentType, ContextType, RequireFields<PooljoinsArgs, 'skip' | 'first'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type PoolStateResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['PoolState'] = ResolversParentTypes['PoolState']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  pool?: Resolver<ResolversTypes['Pool'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  balances?: Resolver<Array<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  weights?: Resolver<Array<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  price?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  nft?: Resolver<Maybe<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftArgs, 'id' | 'subgraphError'>>;
-  nfts?: Resolver<Array<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  spectre?: Resolver<Maybe<ResolversTypes['Spectre']>, ParentType, ContextType, RequireFields<QueryspectreArgs, 'id' | 'subgraphError'>>;
-  spectres?: Resolver<Array<ResolversTypes['Spectre']>, ParentType, ContextType, RequireFields<QueryspectresArgs, 'skip' | 'first' | 'subgraphError'>>;
-  sERC20?: Resolver<Maybe<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20Args, 'id' | 'subgraphError'>>;
-  sERC20S?: Resolver<Array<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
-  sale?: Resolver<Maybe<ResolversTypes['Sale']>, ParentType, ContextType, RequireFields<QuerysaleArgs, 'id' | 'subgraphError'>>;
-  sales?: Resolver<Array<ResolversTypes['Sale']>, ParentType, ContextType, RequireFields<QuerysalesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  buyoutProposal?: Resolver<Maybe<ResolversTypes['BuyoutProposal']>, ParentType, ContextType, RequireFields<QuerybuyoutProposalArgs, 'id' | 'subgraphError'>>;
-  buyoutProposals?: Resolver<Array<ResolversTypes['BuyoutProposal']>, ParentType, ContextType, RequireFields<QuerybuyoutProposalsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  buyout?: Resolver<Maybe<ResolversTypes['Buyout']>, ParentType, ContextType, RequireFields<QuerybuyoutArgs, 'id' | 'subgraphError'>>;
-  buyouts?: Resolver<Array<ResolversTypes['Buyout']>, ParentType, ContextType, RequireFields<QuerybuyoutsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  claim?: Resolver<Maybe<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<QueryclaimArgs, 'id' | 'subgraphError'>>;
-  claims?: Resolver<Array<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<QueryclaimsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issuance?: Resolver<Maybe<ResolversTypes['Issuance']>, ParentType, ContextType, RequireFields<QueryissuanceArgs, 'id' | 'subgraphError'>>;
-  issuances?: Resolver<Array<ResolversTypes['Issuance']>, ParentType, ContextType, RequireFields<QueryissuancesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issue?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<QueryissueArgs, 'id' | 'subgraphError'>>;
-  issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<QueryissuesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issuanceProposal?: Resolver<Maybe<ResolversTypes['IssuanceProposal']>, ParentType, ContextType, RequireFields<QueryissuanceProposalArgs, 'id' | 'subgraphError'>>;
-  issuanceProposals?: Resolver<Array<ResolversTypes['IssuanceProposal']>, ParentType, ContextType, RequireFields<QueryissuanceProposalsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  pool?: Resolver<Maybe<ResolversTypes['Pool']>, ParentType, ContextType, RequireFields<QuerypoolArgs, 'id' | 'subgraphError'>>;
-  pools?: Resolver<Array<ResolversTypes['Pool']>, ParentType, ContextType, RequireFields<QuerypoolsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  poolState?: Resolver<Maybe<ResolversTypes['PoolState']>, ParentType, ContextType, RequireFields<QuerypoolStateArgs, 'id' | 'subgraphError'>>;
-  poolStates?: Resolver<Array<ResolversTypes['PoolState']>, ParentType, ContextType, RequireFields<QuerypoolStatesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  swap?: Resolver<Maybe<ResolversTypes['Swap']>, ParentType, ContextType, RequireFields<QueryswapArgs, 'id' | 'subgraphError'>>;
-  swaps?: Resolver<Array<ResolversTypes['Swap']>, ParentType, ContextType, RequireFields<QueryswapsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  join?: Resolver<Maybe<ResolversTypes['Join']>, ParentType, ContextType, RequireFields<QueryjoinArgs, 'id' | 'subgraphError'>>;
-  joins?: Resolver<Array<ResolversTypes['Join']>, ParentType, ContextType, RequireFields<QueryjoinsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
-}>;
-
-export type SaleResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Sale'] = ResolversParentTypes['Sale']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sERC20?: Resolver<ResolversTypes['sERC20'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['SaleState'], ParentType, ContextType>;
-  guardian?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  reserve?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  multiplier?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  opening?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  stock?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  flash?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  escape?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  proposals?: Resolver<Array<ResolversTypes['BuyoutProposal']>, ParentType, ContextType, RequireFields<SaleproposalsArgs, 'skip' | 'first'>>;
-  buyout?: Resolver<Maybe<ResolversTypes['Buyout']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SpectreResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Spectre'] = ResolversParentTypes['Spectre']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  NFT?: Resolver<ResolversTypes['NFT'], ParentType, ContextType>;
-  sERC20?: Resolver<ResolversTypes['sERC20'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['SpectreState'], ParentType, ContextType>;
-  vault?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  broker?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  nft?: SubscriptionResolver<Maybe<ResolversTypes['NFT']>, "nft", ParentType, ContextType, RequireFields<SubscriptionnftArgs, 'id' | 'subgraphError'>>;
-  nfts?: SubscriptionResolver<Array<ResolversTypes['NFT']>, "nfts", ParentType, ContextType, RequireFields<SubscriptionnftsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  spectre?: SubscriptionResolver<Maybe<ResolversTypes['Spectre']>, "spectre", ParentType, ContextType, RequireFields<SubscriptionspectreArgs, 'id' | 'subgraphError'>>;
-  spectres?: SubscriptionResolver<Array<ResolversTypes['Spectre']>, "spectres", ParentType, ContextType, RequireFields<SubscriptionspectresArgs, 'skip' | 'first' | 'subgraphError'>>;
-  sERC20?: SubscriptionResolver<Maybe<ResolversTypes['sERC20']>, "sERC20", ParentType, ContextType, RequireFields<SubscriptionsERC20Args, 'id' | 'subgraphError'>>;
-  sERC20S?: SubscriptionResolver<Array<ResolversTypes['sERC20']>, "sERC20S", ParentType, ContextType, RequireFields<SubscriptionsERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
-  sale?: SubscriptionResolver<Maybe<ResolversTypes['Sale']>, "sale", ParentType, ContextType, RequireFields<SubscriptionsaleArgs, 'id' | 'subgraphError'>>;
-  sales?: SubscriptionResolver<Array<ResolversTypes['Sale']>, "sales", ParentType, ContextType, RequireFields<SubscriptionsalesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  buyoutProposal?: SubscriptionResolver<Maybe<ResolversTypes['BuyoutProposal']>, "buyoutProposal", ParentType, ContextType, RequireFields<SubscriptionbuyoutProposalArgs, 'id' | 'subgraphError'>>;
-  buyoutProposals?: SubscriptionResolver<Array<ResolversTypes['BuyoutProposal']>, "buyoutProposals", ParentType, ContextType, RequireFields<SubscriptionbuyoutProposalsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  buyout?: SubscriptionResolver<Maybe<ResolversTypes['Buyout']>, "buyout", ParentType, ContextType, RequireFields<SubscriptionbuyoutArgs, 'id' | 'subgraphError'>>;
-  buyouts?: SubscriptionResolver<Array<ResolversTypes['Buyout']>, "buyouts", ParentType, ContextType, RequireFields<SubscriptionbuyoutsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  claim?: SubscriptionResolver<Maybe<ResolversTypes['Claim']>, "claim", ParentType, ContextType, RequireFields<SubscriptionclaimArgs, 'id' | 'subgraphError'>>;
-  claims?: SubscriptionResolver<Array<ResolversTypes['Claim']>, "claims", ParentType, ContextType, RequireFields<SubscriptionclaimsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issuance?: SubscriptionResolver<Maybe<ResolversTypes['Issuance']>, "issuance", ParentType, ContextType, RequireFields<SubscriptionissuanceArgs, 'id' | 'subgraphError'>>;
-  issuances?: SubscriptionResolver<Array<ResolversTypes['Issuance']>, "issuances", ParentType, ContextType, RequireFields<SubscriptionissuancesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issue?: SubscriptionResolver<Maybe<ResolversTypes['Issue']>, "issue", ParentType, ContextType, RequireFields<SubscriptionissueArgs, 'id' | 'subgraphError'>>;
-  issues?: SubscriptionResolver<Array<ResolversTypes['Issue']>, "issues", ParentType, ContextType, RequireFields<SubscriptionissuesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  issuanceProposal?: SubscriptionResolver<Maybe<ResolversTypes['IssuanceProposal']>, "issuanceProposal", ParentType, ContextType, RequireFields<SubscriptionissuanceProposalArgs, 'id' | 'subgraphError'>>;
-  issuanceProposals?: SubscriptionResolver<Array<ResolversTypes['IssuanceProposal']>, "issuanceProposals", ParentType, ContextType, RequireFields<SubscriptionissuanceProposalsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  pool?: SubscriptionResolver<Maybe<ResolversTypes['Pool']>, "pool", ParentType, ContextType, RequireFields<SubscriptionpoolArgs, 'id' | 'subgraphError'>>;
-  pools?: SubscriptionResolver<Array<ResolversTypes['Pool']>, "pools", ParentType, ContextType, RequireFields<SubscriptionpoolsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  poolState?: SubscriptionResolver<Maybe<ResolversTypes['PoolState']>, "poolState", ParentType, ContextType, RequireFields<SubscriptionpoolStateArgs, 'id' | 'subgraphError'>>;
-  poolStates?: SubscriptionResolver<Array<ResolversTypes['PoolState']>, "poolStates", ParentType, ContextType, RequireFields<SubscriptionpoolStatesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  swap?: SubscriptionResolver<Maybe<ResolversTypes['Swap']>, "swap", ParentType, ContextType, RequireFields<SubscriptionswapArgs, 'id' | 'subgraphError'>>;
-  swaps?: SubscriptionResolver<Array<ResolversTypes['Swap']>, "swaps", ParentType, ContextType, RequireFields<SubscriptionswapsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  join?: SubscriptionResolver<Maybe<ResolversTypes['Join']>, "join", ParentType, ContextType, RequireFields<SubscriptionjoinArgs, 'id' | 'subgraphError'>>;
-  joins?: SubscriptionResolver<Array<ResolversTypes['Join']>, "joins", ParentType, ContextType, RequireFields<SubscriptionjoinsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  _meta?: SubscriptionResolver<Maybe<ResolversTypes['_Meta_']>, "_meta", ParentType, ContextType, Partial<Subscription_metaArgs>>;
-}>;
-
-export type SwapResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Swap'] = ResolversParentTypes['Swap']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  pool?: Resolver<ResolversTypes['Pool'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  amounts?: Resolver<Array<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type _Block_Resolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['_Block_'] = ResolversParentTypes['_Block_']> = ResolversObject<{
-  hash?: Resolver<Maybe<ResolversTypes['Bytes']>, ParentType, ContextType>;
-  number?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  timestamp?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['_Meta_'] = ResolversParentTypes['_Meta_']> = ResolversObject<{
-  block?: Resolver<ResolversTypes['_Block_'], ParentType, ContextType>;
-  deployment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  hasIndexingErrors?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type sERC20Resolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['sERC20'] = ResolversParentTypes['sERC20']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  spectre?: Resolver<ResolversTypes['Spectre'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  symbol?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  cap?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  sale?: Resolver<Maybe<ResolversTypes['Sale']>, ParentType, ContextType>;
-  issuance?: Resolver<Maybe<ResolversTypes['Issuance']>, ParentType, ContextType>;
-  pool?: Resolver<Maybe<ResolversTypes['Pool']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type Resolvers<ContextType = MeshContext> = ResolversObject<{
-  BigDecimal?: GraphQLScalarType;
-  BigInt?: GraphQLScalarType;
-  Buyout?: BuyoutResolvers<ContextType>;
-  BuyoutProposal?: BuyoutProposalResolvers<ContextType>;
-  Bytes?: GraphQLScalarType;
-  Claim?: ClaimResolvers<ContextType>;
-  Issuance?: IssuanceResolvers<ContextType>;
-  IssuanceProposal?: IssuanceProposalResolvers<ContextType>;
-  Issue?: IssueResolvers<ContextType>;
-  Join?: JoinResolvers<ContextType>;
-  NFT?: NFTResolvers<ContextType>;
-  Pool?: PoolResolvers<ContextType>;
-  PoolState?: PoolStateResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  Sale?: SaleResolvers<ContextType>;
-  Spectre?: SpectreResolvers<ContextType>;
-  Subscription?: SubscriptionResolvers<ContextType>;
-  Swap?: SwapResolvers<ContextType>;
-  _Block_?: _Block_Resolvers<ContextType>;
-  _Meta_?: _Meta_Resolvers<ContextType>;
-  sERC20?: sERC20Resolvers<ContextType>;
-}>;
-
-export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
-  entity?: entityDirectiveResolver<any, any, ContextType>;
-  subgraphId?: subgraphIdDirectiveResolver<any, any, ContextType>;
-  derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
-}>;
-
-export type MeshContext = SpectreContext & BaseMeshContext;
-
-
-const baseDir = pathModule.join(typeof __dirname === 'string' ? __dirname : '/', '..');
-
-const importFn = (moduleId: string) => {
-  const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
-  switch(relativeModuleId) {
-    case ".graphclient/sources/spectre/introspectionSchema":
-      return import("./sources/spectre/introspectionSchema");
-    
-    default:
-      return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
-  }
+export type SubscriptionSpectreSdk = {
+  /** undefined **/
+  nft: InContextSdkMethod<SpectreTypes.Subscription['nft'], SpectreTypes.SubscriptionnftArgs, MeshContext>,
+  /** undefined **/
+  nfts: InContextSdkMethod<SpectreTypes.Subscription['nfts'], SpectreTypes.SubscriptionnftsArgs, MeshContext>,
+  /** undefined **/
+  spectre: InContextSdkMethod<SpectreTypes.Subscription['spectre'], SpectreTypes.SubscriptionspectreArgs, MeshContext>,
+  /** undefined **/
+  spectres: InContextSdkMethod<SpectreTypes.Subscription['spectres'], SpectreTypes.SubscriptionspectresArgs, MeshContext>,
+  /** undefined **/
+  sERC20: InContextSdkMethod<SpectreTypes.Subscription['sERC20'], SpectreTypes.SubscriptionsERC20Args, MeshContext>,
+  /** undefined **/
+  sERC20S: InContextSdkMethod<SpectreTypes.Subscription['sERC20S'], SpectreTypes.SubscriptionsERC20SArgs, MeshContext>,
+  /** undefined **/
+  sale: InContextSdkMethod<SpectreTypes.Subscription['sale'], SpectreTypes.SubscriptionsaleArgs, MeshContext>,
+  /** undefined **/
+  sales: InContextSdkMethod<SpectreTypes.Subscription['sales'], SpectreTypes.SubscriptionsalesArgs, MeshContext>,
+  /** undefined **/
+  buyoutProposal: InContextSdkMethod<SpectreTypes.Subscription['buyoutProposal'], SpectreTypes.SubscriptionbuyoutProposalArgs, MeshContext>,
+  /** undefined **/
+  buyoutProposals: InContextSdkMethod<SpectreTypes.Subscription['buyoutProposals'], SpectreTypes.SubscriptionbuyoutProposalsArgs, MeshContext>,
+  /** undefined **/
+  buyout: InContextSdkMethod<SpectreTypes.Subscription['buyout'], SpectreTypes.SubscriptionbuyoutArgs, MeshContext>,
+  /** undefined **/
+  buyouts: InContextSdkMethod<SpectreTypes.Subscription['buyouts'], SpectreTypes.SubscriptionbuyoutsArgs, MeshContext>,
+  /** undefined **/
+  claim: InContextSdkMethod<SpectreTypes.Subscription['claim'], SpectreTypes.SubscriptionclaimArgs, MeshContext>,
+  /** undefined **/
+  claims: InContextSdkMethod<SpectreTypes.Subscription['claims'], SpectreTypes.SubscriptionclaimsArgs, MeshContext>,
+  /** undefined **/
+  issuance: InContextSdkMethod<SpectreTypes.Subscription['issuance'], SpectreTypes.SubscriptionissuanceArgs, MeshContext>,
+  /** undefined **/
+  issuances: InContextSdkMethod<SpectreTypes.Subscription['issuances'], SpectreTypes.SubscriptionissuancesArgs, MeshContext>,
+  /** undefined **/
+  issue: InContextSdkMethod<SpectreTypes.Subscription['issue'], SpectreTypes.SubscriptionissueArgs, MeshContext>,
+  /** undefined **/
+  issues: InContextSdkMethod<SpectreTypes.Subscription['issues'], SpectreTypes.SubscriptionissuesArgs, MeshContext>,
+  /** undefined **/
+  issuanceProposal: InContextSdkMethod<SpectreTypes.Subscription['issuanceProposal'], SpectreTypes.SubscriptionissuanceProposalArgs, MeshContext>,
+  /** undefined **/
+  issuanceProposals: InContextSdkMethod<SpectreTypes.Subscription['issuanceProposals'], SpectreTypes.SubscriptionissuanceProposalsArgs, MeshContext>,
+  /** undefined **/
+  pool: InContextSdkMethod<SpectreTypes.Subscription['pool'], SpectreTypes.SubscriptionpoolArgs, MeshContext>,
+  /** undefined **/
+  pools: InContextSdkMethod<SpectreTypes.Subscription['pools'], SpectreTypes.SubscriptionpoolsArgs, MeshContext>,
+  /** undefined **/
+  poolState: InContextSdkMethod<SpectreTypes.Subscription['poolState'], SpectreTypes.SubscriptionpoolStateArgs, MeshContext>,
+  /** undefined **/
+  poolStates: InContextSdkMethod<SpectreTypes.Subscription['poolStates'], SpectreTypes.SubscriptionpoolStatesArgs, MeshContext>,
+  /** undefined **/
+  swap: InContextSdkMethod<SpectreTypes.Subscription['swap'], SpectreTypes.SubscriptionswapArgs, MeshContext>,
+  /** undefined **/
+  swaps: InContextSdkMethod<SpectreTypes.Subscription['swaps'], SpectreTypes.SubscriptionswapsArgs, MeshContext>,
+  /** undefined **/
+  join: InContextSdkMethod<SpectreTypes.Subscription['join'], SpectreTypes.SubscriptionjoinArgs, MeshContext>,
+  /** undefined **/
+  joins: InContextSdkMethod<SpectreTypes.Subscription['joins'], SpectreTypes.SubscriptionjoinsArgs, MeshContext>,
+  /** Access to subgraph metadata **/
+  _meta: InContextSdkMethod<SpectreTypes.Subscription['_meta'], SpectreTypes.Subscription_metaArgs, MeshContext>
 };
-
-const rootStore = new MeshStore('.graphclient', new FsStoreStorageAdapter({
-  cwd: baseDir,
-  importFn,
-  fileType: "ts",
-}), {
-  readonly: true,
-  validate: false
-});
-
-export const rawServeConfig: YamlConfig.Config['serve'] = undefined as any
-export async function getMeshOptions(): Promise<GetMeshOptions> {
-const pubsub = new PubSub();
-const sourcesStore = rootStore.child('sources');
-const logger = new DefaultLogger("GraphClient");
-const cache = new (MeshCache as any)({
-      ...({} as any),
-      importFn,
-      store: rootStore.child('cache'),
-      pubsub,
-      logger,
-    } as any)
-
-const sources = [];
-const transforms = [];
-const additionalEnvelopPlugins = [];
-const spectreTransforms = [];
-const additionalTypeDefs = [] as any[];
-const spectreHandler = new GraphqlHandler({
-              name: "spectre",
-              config: {"endpoint":"http://127.0.0.1:8000/subgraphs/name/spectre"},
-              baseDir,
-              cache,
-              pubsub,
-              store: sourcesStore.child("spectre"),
-              logger: logger.child("spectre"),
-              importFn,
-            });
-sources[0] = {
-          name: 'spectre',
-          handler: spectreHandler,
-          transforms: spectreTransforms
-        }
-const additionalResolvers = [] as any[]
-const merger = new(BareMerger as any)({
-        cache,
-        pubsub,
-        logger: logger.child('bareMerger'),
-        store: rootStore.child('bareMerger')
-      })
-
-  return {
-    sources,
-    transforms,
-    additionalTypeDefs,
-    additionalResolvers,
-    cache,
-    pubsub,
-    merger,
-    logger,
-    additionalEnvelopPlugins,
-    get documents() {
-      return [
-      {
-        document: AllSpectresDocument,
-        get rawSDL() {
-          return printWithCache(AllSpectresDocument);
-        },
-        location: 'AllSpectresDocument.graphql'
-      },{
-        document: SpectreByIdDocument,
-        get rawSDL() {
-          return printWithCache(SpectreByIdDocument);
-        },
-        location: 'SpectreByIdDocument.graphql'
-      }
-    ];
-    },
-    fetchFn,
-  };
-}
-
-export function createBuiltMeshHTTPHandler() {
-  return createMeshHTTPHandler({
-    baseDir,
-    getBuiltMesh,
-    rawServeConfig: undefined,
-  })
-}
-
-
-let meshInstance$: Promise<MeshInstance<MeshContext>>;
-
-export function getBuiltGraphClient(): Promise<MeshInstance<MeshContext>> {
-  if (meshInstance$ == null) {
-    meshInstance$ = getMeshOptions().then(meshOptions => getMesh<MeshContext>(meshOptions)).then(mesh => {
-      const id$ = mesh.pubsub.subscribe('destroy', () => {
-        meshInstance$ = undefined;
-        id$.then(id => mesh.pubsub.unsubscribe(id)).catch(err => console.error(err));
-      });
-      return mesh;
-    });
-  }
-  return meshInstance$;
-}
-
-export const execute: ExecuteMeshFn = (...args) => getBuiltGraphClient().then(({ execute }) => execute(...args));
-
-export const subscribe: SubscribeMeshFn = (...args) => getBuiltGraphClient().then(({ subscribe }) => subscribe(...args));
-export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(globalContext?: TGlobalContext) {
-  const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
-  return getSdk<TOperationContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
-}
-export type AllSpectresQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AllSpectresQuery = { spectres: Array<{ sERC20: (
-      Pick<sERC20, 'name' | 'symbol' | 'cap'>
-      & { sale?: Maybe<Pick<Sale, 'id'>>, issuance?: Maybe<Pick<Issuance, 'id'>> }
-    ) }> };
-
-export type SpectreByIdQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type SpectreByIdQuery = { spectre?: Maybe<(
-    Pick<Spectre, 'state' | 'vault' | 'broker'>
-    & { NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI'>, sERC20: (
-      Pick<sERC20, 'id' | 'name' | 'symbol' | 'cap'>
-      & { sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, pool?: Maybe<(
-        Pick<Pool, 'id' | 'address'>
-        & { joins: Array<Pick<Join, 'id'>> }
-      )> }
-    ) }
-  )> };
-
-
-export const AllSpectresDocument = gql`
-    query AllSpectres {
-  spectres {
-    sERC20 {
-      name
-      symbol
-      cap
-      sale {
-        id
-      }
-      issuance {
-        id
-      }
-    }
-  }
-}
-    ` as unknown as DocumentNode<AllSpectresQuery, AllSpectresQueryVariables>;
-export const SpectreByIdDocument = gql`
-    query SpectreById($id: ID!) {
-  spectre(id: $id) {
-    NFT {
-      id
-      collection
-      tokenId
-      tokenURI
-    }
-    sERC20 {
-      id
-      name
-      symbol
-      cap
-      sale {
-        stock
-        multiplier
-        opening
-        escape
-        flash
-        guardian
-        id
-        reserve
-        state
-      }
-      issuance {
-        id
-        reserve
-        state
-        allocation
-        fee
-        flash
-        guardian
-        pool
-        poolId
-      }
-      pool {
-        id
-        joins {
-          id
-        }
-        address
-      }
-    }
-    state
-    vault
-    broker
-  }
-}
-    ` as unknown as DocumentNode<SpectreByIdQuery, SpectreByIdQueryVariables>;
-
-
-
-export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
-  return {
-    AllSpectres(variables?: AllSpectresQueryVariables, options?: C): Promise<AllSpectresQuery> {
-      return requester<AllSpectresQuery, AllSpectresQueryVariables>(AllSpectresDocument, variables, options) as Promise<AllSpectresQuery>;
-    },
-    SpectreById(variables: SpectreByIdQueryVariables, options?: C): Promise<SpectreByIdQuery> {
-      return requester<SpectreByIdQuery, SpectreByIdQueryVariables>(SpectreByIdDocument, variables, options) as Promise<SpectreByIdQuery>;
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export type SpectreContext = {
+      ["spectre"]: { Query: QuerySpectreSdk, Mutation: MutationSpectreSdk, Subscription: SubscriptionSpectreSdk },
+      
+    };
