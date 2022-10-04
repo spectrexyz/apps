@@ -13,3 +13,52 @@ query AllSpectres {
     }
   }
 }
+
+query SpectreById($id: ID!) {
+  spectre(id: $id) {
+    NFT {
+      id
+      collection
+      tokenId
+      tokenURI
+    }
+    sERC20 {
+      id
+      name
+      symbol
+      cap
+      sale {
+        stock
+        multiplier
+        opening
+        escape
+        flash
+        guardian
+        id
+        reserve
+        state
+      }
+      issuance {
+        id
+        reserve
+        state
+        allocation
+        fee
+        flash
+        guardian
+        pool
+        poolId
+      }
+      pool {
+        id
+        joins {
+          id
+        }
+        address
+      }
+    }
+    state
+    vault
+    broker
+  }
+}

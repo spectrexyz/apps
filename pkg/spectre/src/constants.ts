@@ -1,3 +1,5 @@
+export const SERC20_DECIMALS = 18
+
 export const NFT_FILE_TYPES = {
   image: {
     label: "JPG,PNG,GIF,SVG",

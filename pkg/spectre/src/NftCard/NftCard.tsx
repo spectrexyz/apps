@@ -21,16 +21,16 @@ export function NftCard({
       })}
     >
       <Anchor
-        key={snft.id}
-        href={`/nfts/${snft.id}`}
+        key={snft.shortId}
+        href={`/nfts/${snft.shortId}`}
         onClick={(event) => {
           event.preventDefault()
-          setLocation(`/nfts/${snft.id}`)
+          setLocation(`/nfts/${snft.shortId}`)
         }}
         css={{ width: "100%" }}
       >
         <img
-          src={snft.image.url}
+          src={snft.image}
           alt=""
           css={{
             display: "block",

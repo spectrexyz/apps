@@ -127,10 +127,7 @@ function HighlightedArtists() {
         {highlightedSnfts.data && (
           <Grid>
             {highlightedSnfts.data.map((snft) => (
-              <HighlightCard
-                key={snft.id}
-                snft={snft}
-              />
+              <HighlightCard key={snft.id} snft={snft} />
             ))}
           </Grid>
         )}
@@ -144,10 +141,10 @@ function HighlightCard({ snft }: { snft: Snft }) {
   return (
     <div css={{ paddingBottom: "5gu" }}>
       <Anchor
-        href={`/nfts/${snft.id}`}
+        href={`/nfts/${snft.shortId}`}
         onClick={(event) => {
           event.preventDefault()
-          setLocation(`/nfts/${snft.id}`)
+          setLocation(`/nfts/${snft.shortId}`)
         }}
         css={{
           display: "block",
@@ -156,7 +153,7 @@ function HighlightCard({ snft }: { snft: Snft }) {
       >
         <div css={{ paddingBottom: "4gu" }}>
           <img
-            src={snft.image.url}
+            src={snft.image}
             alt=""
             css={{
               display: "block",
@@ -188,7 +185,7 @@ function HighlightCard({ snft }: { snft: Snft }) {
               label={snft.title}
               size="compact"
               onClick={() => {
-                setLocation(`/nfts/${snft.id}`)
+                setLocation(`/nfts/${snft.shortId}`)
               }}
               wide
             />

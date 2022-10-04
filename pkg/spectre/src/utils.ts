@@ -1,7 +1,7 @@
 import type { BaseProvider } from "@ethersproject/providers"
 import type { MutationStatus } from "@tanstack/react-query"
 import type { Address, AddressOrEnsName } from "moire"
-import type { SignTxAndWaitStatus } from "./types"
+import type { ShortId, SignTxAndWaitStatus, SnftId } from "./types"
 
 import { utils } from "ethers"
 import { isAddress, isEnsName } from "moire"
@@ -126,13 +126,14 @@ export function isSignTxAndWaitStatus(
     && isMutationStatus(status.replace(/^(?:prepare|sign|tx):/, ""))
 }
 
-export const SHORT_ID_CHARS = "0123456789"
+const SHORT_ID_CHARS = "0123456789"
   + "abcdefghijklmnopqrstuvwxyz"
   + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-export const SHORT_ID_BASE = BigInt(SHORT_ID_CHARS.length)
+const SHORT_ID_BASE = BigInt(SHORT_ID_CHARS.length)
 
-export function toShortId(value: bigint) {
+export function toShortId(id: SnftId): ShortId {
   let result = ""
+  let value = BigInt(id)
   while (value > 0n) {
     result = SHORT_ID_CHARS.charAt(Number(value % SHORT_ID_BASE)) + result
     value = value / SHORT_ID_BASE
@@ -140,12 +141,50 @@ export function toShortId(value: bigint) {
   return result || "0"
 }
 
-export function fromShortId(shortId: string) {
-  return shortId
-    .split("")
-    .reduce((value, char) => (
-      value * SHORT_ID_BASE + BigInt(
-        SHORT_ID_CHARS.indexOf(char),
-      )
-    ), 0n)
+export function fromShortId(shortId: ShortId): SnftId {
+  return String(
+    shortId
+      .split("")
+      .reduce((value, char) => (
+        value * SHORT_ID_BASE + BigInt(
+          SHORT_ID_CHARS.indexOf(char),
+        )
+      ), 0n),
+  )
+}
+
+export function parseId(id: string): SnftId {
+  try {
+    const parsedId = String(BigInt(id))
+    // probably a long ID already
+    if (parsedId === id) {
+      return parsedId
+    }
+  } catch (_) {
+    // nothing
+  }
+  return fromShortId(id)
+}
+
+const IPFS_PROTOCOL_RE = /^ipfs:\/\/(?:ipfs\/)?([^/]+)(\/.+)?$/
+const IPFS_HASH_RE = /^Qm[1-9A-HJ-NP-Za-km-z]{44}$/
+
+export function ipfsUrl(
+  ipfsIsh: string,
+  url = (cid: string, path = "") => `https://ipfs.io/ipfs/${cid}${path}`,
+): string {
+  // ipfs:// URI
+  const ipfsProtocolMatch = IPFS_PROTOCOL_RE.exec(ipfsIsh)
+  if (ipfsProtocolMatch) {
+    const [, cid, path = ""] = ipfsProtocolMatch
+    return url(cid, path)
+  }
+
+  // standalone cid, probably
+  if (IPFS_HASH_RE.test(ipfsIsh)) {
+    return ipfsUrl(ipfsIsh)
+  }
+
+  // URL, maybe
+  return ipfsIsh
 }

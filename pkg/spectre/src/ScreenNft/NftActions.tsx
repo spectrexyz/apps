@@ -53,7 +53,7 @@ export function NftActions(
           label="NFT buyout"
           mode={highlight === "buyout" ? "primary" : "secondary"}
           onClick={() => {
-            setLocation(`/nfts/${snft.id}/buyout`)
+            setLocation(`/nfts/${snft.shortId}/buyout`)
           }}
           size={xlarge ? undefined : "compact"}
           wide
@@ -63,7 +63,7 @@ export function NftActions(
           label="Buy fractions"
           mode={highlight === "fractions" ? "primary" : "secondary"}
           onClick={() => {
-            setLocation(`/nfts/${snft.id}/buy`)
+            setLocation(`/nfts/${snft.shortId}/buy`)
           }}
           size={xlarge ? undefined : "compact"}
           wide

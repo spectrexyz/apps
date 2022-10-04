@@ -33,8 +33,12 @@ export type Token = {
 export type TokenId = string
 export type TokenLocator = readonly [Address, TokenId]
 
+export type SnftId = string
+export type ShortId = string
+
 export type Snft = Readonly<{
-  id: string
+  id: SnftId
+  shortId: ShortId
   buyoutMultiplier: number
   buyoutPrice: Dnum
   creator: Readonly<{
@@ -48,11 +52,7 @@ export type Snft = Readonly<{
   description: string
   guardian: string
   history: SnftEvent[]
-  image: Readonly<{
-    height: number
-    url: string
-    width: number
-  }>
+  image: string
   pool: {
     eth: Dnum
     token: Dnum

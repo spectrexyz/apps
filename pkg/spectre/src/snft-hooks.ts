@@ -1,10 +1,15 @@
 import type { UseQueryResult } from "@tanstack/react-query"
+import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName } from "moire"
-import type { PoolShare, Reward, Snft, TokenLocator } from "./types"
+import type { PoolShare, Reward, Snft, SnftId, TokenLocator } from "./types"
 
 import { useQuery } from "@tanstack/react-query"
+import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
+import { useMemo } from "react"
 import { useProvider } from "wagmi"
+import { z } from "zod"
+import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
   POOLS_BY_ACCOUNT,
@@ -13,8 +18,8 @@ import {
   SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
-// import { useAllSpectres } from "./subgraph-hooks"
-import { resolveAddress } from "./utils"
+import { useSpectre } from "./subgraph-hooks"
+import { ipfsUrl, resolveAddress, toShortId } from "./utils"
 
 function fakeDelay() {
   return new Promise((resolve) => {
@@ -23,21 +28,113 @@ function fakeDelay() {
 }
 
 export function useSnft(
-  id: string,
+  id: SnftId,
   options: {
     retry?: boolean
     retryDelay?: number
   } = {},
 ): UseQueryResult<Snft | null> {
   const { retry = false, retryDelay = 1000 } = options
-  return useQuery(["snft", id], async () => {
-    await fakeDelay()
-    const snft = SNFTS.find((snft) => snft.id === id)
-    if (!snft) {
+  const spectre = useSpectre(id, { retry, retryDelay })
+  const spectreData = spectre.data
+
+  const tokenURI = spectre.data?.spectre?.NFT.tokenURI
+  const metadata = useQuery(["snft-metadata", tokenURI], async () => {
+    if (!tokenURI) {
+      return null
+    }
+    const response = await fetch(ipfsUrl(tokenURI))
+    const metadata = await response.json()
+    const schema = z.object({
+      image: z.string().min(1),
+      description: z.string().min(1),
+      name: z.string().min(1),
+    })
+    return schema.parse(metadata)
+  }, {
+    enabled: Boolean(tokenURI),
+  })
+  const metadataData = metadata.data
+
+  const snft = useMemo(() => {
+    if (!spectreData || !metadataData) {
+      return null
+    }
+
+    const sale = spectreData.spectre?.sERC20.sale
+    if (!sale) {
+      return null
+    }
+
+    const buyoutMultiplier = Number(
+      dnum.setDecimals(
+        [BigInt(sale.multiplier), 18],
+        0,
+      )[0],
+    )
+
+    const marketCapEth: Dnum = [100_000000000000000000n, 18]
+    const pooledEth: Dnum = [10_000000000000000000n, 18]
+    const pooledToken: Dnum = [10_000000000000000000n, 18]
+    const supply = dnum.from(1_000_000, 18)
+    const minted = dnum.divide(supply, 3)
+    const priceEth = dnum.from(1, 18)
+
+    const snft: Snft = {
+      id,
+      shortId: toShortId(id),
+      buyoutMultiplier,
+      buyoutPrice: dnum.multiply(marketCapEth, buyoutMultiplier),
+      creator: {
+        address: "abc.eth",
+        avatar: "",
+        bio: "",
+        name: "",
+        resolvedAddress: "0xabcdef",
+        url: "",
+      },
+      description: metadataData.description,
+      guardian: "",
+      history: [],
+      image: ipfsUrl(metadataData.image),
+      pool: {
+        eth: pooledEth,
+        token: pooledToken,
+      },
+      proposalTimeout: 2,
+      title: metadataData.name,
+      token: {
+        contractAddress: "0xabc",
+        decimals: SERC20_DECIMALS,
+        distribution: [],
+        holdersCount: 10,
+        marketCapEth,
+        minted,
+        name: spectreData?.spectre?.sERC20.name ?? "",
+        priceEth,
+        supply,
+        symbol: spectreData?.spectre?.sERC20.symbol ?? "",
+        tokenId: "",
+        topHolders: [],
+      },
+    }
+
+    return snft
+  }, [id, metadataData, spectreData])
+
+  return useQuery(["snft", id, spectre.isSuccess], async () => {
+    if (spectre.isSuccess) {
+      return snft
+    }
+
+    const snftDemo = SNFTS.find((snft) => snft.id === id)
+    if (!snftDemo) {
       throw new Error(`NFT not found: ${id}`)
     }
-    return snft
+    await fakeDelay()
+    return snftDemo
   }, {
+    enabled: spectre.status !== "loading",
     retry,
     retryDelay,
   })
@@ -49,14 +146,14 @@ export function useSnfts({
 }: {
   first?: number
   skip?: number
-} = {}) {
+} = {}): UseQueryResult<Snft[]> {
   return useQuery(["snfts", skip, first], async () => {
     await fakeDelay()
     return SNFTS.slice(skip, skip + first)
   })
 }
 
-export function useHighlightedSnfts() {
+export function useHighlightedSnfts(): UseQueryResult<Snft[]> {
   return useQuery(["highlighted-snfts"], async () => {
     await fakeDelay()
     return SELECTED_SNFTS
@@ -95,7 +192,7 @@ export function useSnftsByCreator(
     exclude?: string[]
     first?: number
   } = {},
-) {
+): UseQueryResult<Snft[]> {
   return useQuery(
     ["snfts-by-creator", creatorAddress, exclude.join(""), first],
     async () => {
@@ -115,18 +212,16 @@ export function useSnftsByCreator(
 
 export function useSnftsAdjacent(
   snftId: string,
-) {
+): UseQueryResult<[Snft | undefined, Snft | undefined]> {
   return useQuery(
     ["snfts-adjacent", snftId],
     async () => {
       await fakeDelay()
-
       const index = SNFTS.findIndex(({ id }) => id === snftId)
-      const result: [Snft | undefined, Snft | undefined] = [
+      return [
         SNFTS?.[index - 1],
         SNFTS?.[index + 1],
       ]
-      return result
     },
   )
 }

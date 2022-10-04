@@ -71,7 +71,11 @@ export function ScreenNft({
   const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
-  const snft = useSnft(id, { retry: true })
+  const indexingSnftId = useMemo(() => (
+    localStorage.getItem("indexing-snft")
+  ), [])
+
+  const snft = useSnft(id, { retry: indexingSnftId === id })
   const layout = useLayout()
 
   const [nftPrev, nftNext] = snftsAdjacent?.data ?? []
@@ -180,7 +184,7 @@ export function ScreenNft({
                   onClick={noop}
                 />
                 <LayoutAwareButtonIconLabel
-                  href={snft.data.image.url}
+                  href={snft.data.image}
                   icon={<IconMagnifyingGlassPlus />}
                   label="Zoom"
                   labelPosition="left"

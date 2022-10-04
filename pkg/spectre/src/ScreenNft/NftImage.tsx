@@ -6,7 +6,7 @@ import { useLayout } from "../styles"
 
 type NftImageProps = {
   actionButtons: ReactNode
-  image: { url: string; width: number; height: number }
+  image: string
   label: string
   labelDisplay: ReactNode
   navigationButtons: ReactNode
@@ -102,12 +102,13 @@ export function NftImage({
             margin: "0 auto",
             maxWidth: imgMaxWidth,
             maxHeight: "100%",
-            width: image.width,
+            width: "100%",
             height: "auto",
+            minHeight: "60gu",
           },
         }}
       >
-        <img alt="" src={image.url} width={image.width} height={image.height} />
+        <img alt="" src={image} />
       </div>
     </>
   )

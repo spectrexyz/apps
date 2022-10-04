@@ -16,6 +16,7 @@ import { ScreenLiquidityRemove } from "../ScreenLiquidity/ScreenLiquidityRemove"
 import { ScreenNft } from "../ScreenNft/ScreenNft"
 import { ScreenProfile } from "../ScreenProfile/ScreenProfile"
 import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize"
+import { parseId } from "../utils"
 import { Wagmi } from "../Wagmi"
 import { AppReady } from "./AppReady"
 import { AppScroll } from "./AppScroll"
@@ -52,29 +53,29 @@ export function App() {
 
           {/* NFTs */}
           <Route path="/nfts/:id/buyout">
-            {({ id }) => <ScreenBuyout id={id} />}
+            {({ id }) => <ScreenBuyout id={parseId(id)} />}
           </Route>
           <Route path="/nfts/:id/pool">
-            {({ id }) => <ScreenNft id={id} panel="pool" />}
+            {({ id }) => <ScreenNft id={parseId(id)} panel="pool" />}
           </Route>
           <Route path="/nfts/:id/fractions">
-            {({ id }) => <ScreenNft id={id} panel="fractions" />}
+            {({ id }) => <ScreenNft id={parseId(id)} panel="fractions" />}
           </Route>
           <Route path="/nfts/:id">
-            {({ id }) => <ScreenNft id={id} panel="nft" />}
+            {({ id }) => <ScreenNft id={parseId(id)} panel="nft" />}
           </Route>
 
           {/* Swap */}
           <Route path="/nfts/:id/buy">
-            {({ id }) => <ScreenBuy id={id} />}
+            {({ id }) => <ScreenBuy id={parseId(id)} />}
           </Route>
 
           {/* Liquidity */}
           <Route path="/nfts/:id/add-liquidity">
-            {({ id }) => <ScreenLiquidityAdd id={id} />}
+            {({ id }) => <ScreenLiquidityAdd id={parseId(id)} />}
           </Route>
           <Route path="/nfts/:id/remove-liquidity">
-            {({ id }) => <ScreenLiquidityRemove id={id} />}
+            {({ id }) => <ScreenLiquidityRemove id={parseId(id)} />}
           </Route>
 
           {/* Profile */}

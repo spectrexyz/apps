@@ -1,6 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "moire"
-import type { PoolShare, Proposal, Reward, Snft } from "../types"
+import type { PoolShare, Proposal, Reward, Snft, SnftId } from "../types"
 
 import {
   rand,
@@ -14,7 +14,7 @@ import {
 } from "@ngneat/falso"
 import * as dnum from "dnum"
 import { DAY_MS, list, WEEK_MS } from "moire"
-import { SHORT_ID_CHARS } from "../utils"
+import { fromShortId, toShortId } from "../utils"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -254,14 +254,23 @@ function randomCreator(style: ReturnType<typeof nftStyle>): Snft["creator"] {
   }
 }
 
-function randomSnftId() {
-  return rand(SHORT_ID_CHARS.split(""), { length: 27 }).join("")
+export function random160bits() {
+  return BigInt(
+    "0x" + list(20, () =>
+      randNumber({ min: 0, max: 255 })
+        .toString(16)
+        .padStart(2, "0")).join(""),
+  )
+}
+
+function randomSnftId(): SnftId {
+  return String(random160bits())
 }
 
 function randomNft(
   creator: ReturnType<typeof randomCreator>,
   style: ReturnType<typeof nftStyle>,
-) {
+): Snft {
   const title = randomTitle()
   const token = randomToken(title)
 
@@ -274,8 +283,12 @@ function randomNft(
     0.9 + random() * 0.2, // deviate between -10% and +10%
   )
 
-  return ({
-    id: randomSnftId(),
+  const id = randomSnftId()
+  const shortId = toShortId(id)
+
+  return {
+    id,
+    shortId,
     buyoutMultiplier,
     buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
     creator: { ...creator },
@@ -291,16 +304,12 @@ function randomNft(
       { ...EVENT_2, date: "2021-04-14T11:38" },
       { ...EVENT_3, date: "2021-04-11T14:47" },
     ],
-    image: {
-      url: nftImage(style),
-      width: 500,
-      height: 500,
-    },
+    image: nftImage(style),
     pool: { eth: pooledEth, token: pooledToken },
     proposalTimeout: rand(TIMELOCK_OPTIONS),
     title,
     token,
-  })
+  }
 }
 
 function nftStyle() {
