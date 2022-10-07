@@ -1,4 +1,8 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import type {
+  ComponentPropsWithoutRef,
+  MouseEventHandler,
+  ReactNode,
+} from "react"
 
 import { createContext, forwardRef, useContext, useMemo } from "react"
 import useDimensions from "react-cool-dimensions"
@@ -50,7 +54,7 @@ export type ButtonProps =
     icon?: ReactNode
     label: string
     mode?: ButtonMode
-    onClick?: () => void
+    onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
     selected?: boolean
     // wether the shadow should be part of the button box or not
     shadowInBox?: ShadowInBox

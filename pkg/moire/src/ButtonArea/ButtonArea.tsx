@@ -1,4 +1,9 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import type {
+  ComponentPropsWithoutRef,
+  MouseEvent,
+  MouseEventHandler,
+  ReactNode,
+} from "react"
 
 import { forwardRef, useMemo } from "react"
 
@@ -10,7 +15,7 @@ export type ButtonAreaProps =
     disabled?: boolean
     external?: boolean
     href?: string
-    onClick?: () => void
+    onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
   }
 
 export const ButtonArea = forwardRef<
@@ -20,22 +25,25 @@ export const ButtonArea = forwardRef<
   { disabled = false, href, external, onClick, children, ...props },
   ref,
 ) {
-  if (onClick !== undefined && (href !== undefined || external !== undefined)) {
-    throw new Error(
-      "ButtonArea: the href and external props can’t be set when onClick is set.",
-    )
-  }
-
   const anchorProps = useMemo<ComponentPropsWithoutRef<"a">>(() => {
     if (!href || disabled) {
       return {}
     }
-    const props = {
+
+    const anchorProps = {
       href,
-      onClick,
+      onClick: (event: MouseEvent<HTMLAnchorElement>) => {
+        if (onClick && href) {
+          event.preventDefault()
+          onClick(event)
+        }
+      },
       rel: "noopener noreferrer",
     }
-    return external ? { ...props, target: "_blank" } : props
+
+    return external
+      ? { ...anchorProps, target: "_blank" }
+      : anchorProps
   }, [href, disabled, external, onClick])
 
   return href
