@@ -107,8 +107,9 @@ function SnftCard({
               display: "block",
               width: "100%",
               aspectRatio: "1",
-              objectFit: "cover",
+              objectFit: "contain",
               borderRadius: "6px",
+              background: "colors.layer2",
             }}
           />
         </div>
