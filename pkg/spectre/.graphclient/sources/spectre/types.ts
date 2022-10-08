@@ -701,7 +701,118 @@ export type NFT = {
   collection: Scalars['Bytes'];
   tokenId: Scalars['BigInt'];
   tokenURI: Scalars['String'];
+  creator: Scalars['Bytes'];
+  metadata: NFTMetadata;
 };
+
+export type NFTMetadata = {
+  id: Scalars['ID'];
+  nft: NFT;
+  description: Scalars['String'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type NFTMetadata_filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  nft?: InputMaybe<Scalars['String']>;
+  nft_not?: InputMaybe<Scalars['String']>;
+  nft_gt?: InputMaybe<Scalars['String']>;
+  nft_lt?: InputMaybe<Scalars['String']>;
+  nft_gte?: InputMaybe<Scalars['String']>;
+  nft_lte?: InputMaybe<Scalars['String']>;
+  nft_in?: InputMaybe<Array<Scalars['String']>>;
+  nft_not_in?: InputMaybe<Array<Scalars['String']>>;
+  nft_contains?: InputMaybe<Scalars['String']>;
+  nft_contains_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_contains?: InputMaybe<Scalars['String']>;
+  nft_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  nft_starts_with?: InputMaybe<Scalars['String']>;
+  nft_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_starts_with?: InputMaybe<Scalars['String']>;
+  nft_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_ends_with?: InputMaybe<Scalars['String']>;
+  nft_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_ends_with?: InputMaybe<Scalars['String']>;
+  nft_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_?: InputMaybe<NFT_filter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_gt?: InputMaybe<Scalars['String']>;
+  description_lt?: InputMaybe<Scalars['String']>;
+  description_gte?: InputMaybe<Scalars['String']>;
+  description_lte?: InputMaybe<Scalars['String']>;
+  description_in?: InputMaybe<Array<Scalars['String']>>;
+  description_not_in?: InputMaybe<Array<Scalars['String']>>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_contains_nocase?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  description_starts_with?: InputMaybe<Scalars['String']>;
+  description_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  description_not_starts_with?: InputMaybe<Scalars['String']>;
+  description_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  description_ends_with?: InputMaybe<Scalars['String']>;
+  description_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  description_not_ends_with?: InputMaybe<Scalars['String']>;
+  description_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  image_not?: InputMaybe<Scalars['String']>;
+  image_gt?: InputMaybe<Scalars['String']>;
+  image_lt?: InputMaybe<Scalars['String']>;
+  image_gte?: InputMaybe<Scalars['String']>;
+  image_lte?: InputMaybe<Scalars['String']>;
+  image_in?: InputMaybe<Array<Scalars['String']>>;
+  image_not_in?: InputMaybe<Array<Scalars['String']>>;
+  image_contains?: InputMaybe<Scalars['String']>;
+  image_contains_nocase?: InputMaybe<Scalars['String']>;
+  image_not_contains?: InputMaybe<Scalars['String']>;
+  image_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  image_starts_with?: InputMaybe<Scalars['String']>;
+  image_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  image_not_starts_with?: InputMaybe<Scalars['String']>;
+  image_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  image_ends_with?: InputMaybe<Scalars['String']>;
+  image_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  image_not_ends_with?: InputMaybe<Scalars['String']>;
+  image_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type NFTMetadata_orderBy =
+  | 'id'
+  | 'nft'
+  | 'description'
+  | 'image'
+  | 'name';
 
 export type NFT_filter = {
   id?: InputMaybe<Scalars['ID']>;
@@ -746,6 +857,13 @@ export type NFT_filter = {
   tokenURI_ends_with_nocase?: InputMaybe<Scalars['String']>;
   tokenURI_not_ends_with?: InputMaybe<Scalars['String']>;
   tokenURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  creator?: InputMaybe<Scalars['Bytes']>;
+  creator_not?: InputMaybe<Scalars['Bytes']>;
+  creator_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  creator_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  creator_contains?: InputMaybe<Scalars['Bytes']>;
+  creator_not_contains?: InputMaybe<Scalars['Bytes']>;
+  metadata_?: InputMaybe<NFTMetadata_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -754,7 +872,9 @@ export type NFT_orderBy =
   | 'id'
   | 'collection'
   | 'tokenId'
-  | 'tokenURI';
+  | 'tokenURI'
+  | 'creator'
+  | 'metadata';
 
 /** Defines the order direction, either ascending or descending */
 export type OrderDirection =
@@ -942,10 +1062,13 @@ export type ProposalState =
   | 'Withdrawn';
 
 export type Query = {
+  nftmetadata: Array<NFTMetadata>;
   nft?: Maybe<NFT>;
   nfts: Array<NFT>;
   spectre?: Maybe<Spectre>;
   spectres: Array<Spectre>;
+  spectresCounter?: Maybe<SpectresCounter>;
+  spectresCounters: Array<SpectresCounter>;
   sERC20?: Maybe<sERC20>;
   sERC20S: Array<sERC20>;
   sale?: Maybe<Sale>;
@@ -972,6 +1095,17 @@ export type Query = {
   joins: Array<Join>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+
+export type QuerynftmetadataArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<NFTMetadata_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NFTMetadata_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1006,6 +1140,24 @@ export type QueryspectresArgs = {
   orderBy?: InputMaybe<Spectre_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Spectre_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryspectresCounterArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryspectresCountersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SpectresCounter_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<SpectresCounter_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1474,11 +1626,56 @@ export type Spectre_orderBy =
   | 'vault'
   | 'broker';
 
+export type SpectresCounter = {
+  id: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type SpectresCounter_filter = {
+  id?: InputMaybe<Scalars['String']>;
+  id_not?: InputMaybe<Scalars['String']>;
+  id_gt?: InputMaybe<Scalars['String']>;
+  id_lt?: InputMaybe<Scalars['String']>;
+  id_gte?: InputMaybe<Scalars['String']>;
+  id_lte?: InputMaybe<Scalars['String']>;
+  id_in?: InputMaybe<Array<Scalars['String']>>;
+  id_not_in?: InputMaybe<Array<Scalars['String']>>;
+  id_contains?: InputMaybe<Scalars['String']>;
+  id_contains_nocase?: InputMaybe<Scalars['String']>;
+  id_not_contains?: InputMaybe<Scalars['String']>;
+  id_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  id_starts_with?: InputMaybe<Scalars['String']>;
+  id_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id_not_starts_with?: InputMaybe<Scalars['String']>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id_ends_with?: InputMaybe<Scalars['String']>;
+  id_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  id_not_ends_with?: InputMaybe<Scalars['String']>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<Scalars['Int']>>;
+  count_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type SpectresCounter_orderBy =
+  | 'id'
+  | 'count';
+
 export type Subscription = {
+  nftmetadata: Array<NFTMetadata>;
   nft?: Maybe<NFT>;
   nfts: Array<NFT>;
   spectre?: Maybe<Spectre>;
   spectres: Array<Spectre>;
+  spectresCounter?: Maybe<SpectresCounter>;
+  spectresCounters: Array<SpectresCounter>;
   sERC20?: Maybe<sERC20>;
   sERC20S: Array<sERC20>;
   sale?: Maybe<Sale>;
@@ -1505,6 +1702,17 @@ export type Subscription = {
   joins: Array<Join>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+
+export type SubscriptionnftmetadataArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<NFTMetadata_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NFTMetadata_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1539,6 +1747,24 @@ export type SubscriptionspectresArgs = {
   orderBy?: InputMaybe<Spectre_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Spectre_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionspectresCounterArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionspectresCountersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SpectresCounter_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<SpectresCounter_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -2033,6 +2259,8 @@ export type sERC20_orderBy =
 }
 export type QuerySpectreSdk = {
   /** undefined **/
+  nftmetadata: InContextSdkMethod<SpectreTypes.Query['nftmetadata'], SpectreTypes.QuerynftmetadataArgs, MeshContext>,
+  /** undefined **/
   nft: InContextSdkMethod<SpectreTypes.Query['nft'], SpectreTypes.QuerynftArgs, MeshContext>,
   /** undefined **/
   nfts: InContextSdkMethod<SpectreTypes.Query['nfts'], SpectreTypes.QuerynftsArgs, MeshContext>,
@@ -2040,6 +2268,10 @@ export type QuerySpectreSdk = {
   spectre: InContextSdkMethod<SpectreTypes.Query['spectre'], SpectreTypes.QueryspectreArgs, MeshContext>,
   /** undefined **/
   spectres: InContextSdkMethod<SpectreTypes.Query['spectres'], SpectreTypes.QueryspectresArgs, MeshContext>,
+  /** undefined **/
+  spectresCounter: InContextSdkMethod<SpectreTypes.Query['spectresCounter'], SpectreTypes.QueryspectresCounterArgs, MeshContext>,
+  /** undefined **/
+  spectresCounters: InContextSdkMethod<SpectreTypes.Query['spectresCounters'], SpectreTypes.QueryspectresCountersArgs, MeshContext>,
   /** undefined **/
   sERC20: InContextSdkMethod<SpectreTypes.Query['sERC20'], SpectreTypes.QuerysERC20Args, MeshContext>,
   /** undefined **/
@@ -2098,6 +2330,8 @@ export type MutationSpectreSdk = {
 
 export type SubscriptionSpectreSdk = {
   /** undefined **/
+  nftmetadata: InContextSdkMethod<SpectreTypes.Subscription['nftmetadata'], SpectreTypes.SubscriptionnftmetadataArgs, MeshContext>,
+  /** undefined **/
   nft: InContextSdkMethod<SpectreTypes.Subscription['nft'], SpectreTypes.SubscriptionnftArgs, MeshContext>,
   /** undefined **/
   nfts: InContextSdkMethod<SpectreTypes.Subscription['nfts'], SpectreTypes.SubscriptionnftsArgs, MeshContext>,
@@ -2105,6 +2339,10 @@ export type SubscriptionSpectreSdk = {
   spectre: InContextSdkMethod<SpectreTypes.Subscription['spectre'], SpectreTypes.SubscriptionspectreArgs, MeshContext>,
   /** undefined **/
   spectres: InContextSdkMethod<SpectreTypes.Subscription['spectres'], SpectreTypes.SubscriptionspectresArgs, MeshContext>,
+  /** undefined **/
+  spectresCounter: InContextSdkMethod<SpectreTypes.Subscription['spectresCounter'], SpectreTypes.SubscriptionspectresCounterArgs, MeshContext>,
+  /** undefined **/
+  spectresCounters: InContextSdkMethod<SpectreTypes.Subscription['spectresCounters'], SpectreTypes.SubscriptionspectresCountersArgs, MeshContext>,
   /** undefined **/
   sERC20: InContextSdkMethod<SpectreTypes.Subscription['sERC20'], SpectreTypes.SubscriptionsERC20Args, MeshContext>,
   /** undefined **/

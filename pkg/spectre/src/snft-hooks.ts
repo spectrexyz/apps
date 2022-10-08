@@ -1,14 +1,20 @@
 import type { UseQueryResult } from "@tanstack/react-query"
 import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName } from "moire"
-import type { PoolShare, Reward, Snft, SnftId, TokenLocator } from "./types"
+import type {
+  PoolShare,
+  Reward,
+  Snft,
+  SnftId,
+  SnftPreview,
+  TokenLocator,
+} from "./types"
 
 import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
 import { useMemo } from "react"
 import { useProvider } from "wagmi"
-import { z } from "zod"
 import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
@@ -18,7 +24,7 @@ import {
   SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
-import { useSpectre } from "./subgraph-hooks"
+import { useSpectre, useSpectres } from "./subgraph-hooks"
 import { ipfsUrl, resolveAddress, toShortId } from "./utils"
 
 function fakeDelay() {
@@ -27,42 +33,51 @@ function fakeDelay() {
   })
 }
 
+function isDemoSnft(id: SnftId) {
+  return Boolean(SNFTS.find((snft) => snft.id === id))
+}
+
+const RETRY_DELAY = 1000
+
 export function useSnft(
   id: SnftId,
-  options: {
-    retry?: boolean
-    retryDelay?: number
+  {
+    fetchOptions: {
+      retry = false,
+    } = {},
+  }: {
+    fetchOptions?: {
+      retry?: boolean
+    }
   } = {},
 ): UseQueryResult<Snft | null> {
-  const { retry = false, retryDelay = 1000 } = options
-  const spectre = useSpectre(id, { retry, retryDelay })
-  const spectreData = spectre.data
+  const demoMode = useMemo(() => (
+    isDemoSnft(id)
+  ), [id])
 
-  const tokenURI = spectre.data?.spectre?.NFT.tokenURI
-  const metadata = useQuery(["snft-metadata", tokenURI], async () => {
-    if (!tokenURI) {
-      return null
-    }
-    const response = await fetch(ipfsUrl(tokenURI))
-    const metadata = await response.json()
-    const schema = z.object({
-      image: z.string().min(1),
-      description: z.string().min(1),
-      name: z.string().min(1),
-    })
-    return schema.parse(metadata)
-  }, {
-    enabled: Boolean(tokenURI),
+  const spectre = useSpectre(id, {
+    fetchOptions: {
+      retry,
+      retryDelay: RETRY_DELAY,
+      enabled: !demoMode,
+    },
   })
-  const metadataData = metadata.data
+
+  const spectreData = spectre.data
+  const metadata = spectreData?.spectre?.NFT.metadata
 
   const snft = useMemo(() => {
-    if (!spectreData || !metadataData) {
+    if (!spectreData || !metadata) {
       return null
     }
 
-    const sale = spectreData.spectre?.sERC20.sale
-    if (!sale) {
+    const spectre = spectreData.spectre
+    const serc20 = spectre?.sERC20
+    const sale = serc20?.sale
+    const issuance = serc20?.issuance
+    const nft = spectre?.NFT
+
+    if (!serc20 || !sale || !issuance) {
       return null
     }
 
@@ -86,23 +101,23 @@ export function useSnft(
       buyoutMultiplier,
       buyoutPrice: dnum.multiply(marketCapEth, buyoutMultiplier),
       creator: {
-        address: "abc.eth",
+        address: nft?.creator,
         avatar: "",
         bio: "",
-        name: "",
-        resolvedAddress: "0xabcdef",
+        name: nft?.creator,
+        resolvedAddress: nft?.creator,
         url: "",
       },
-      description: metadataData.description,
-      guardian: "",
+      description: metadata.description,
+      guardian: issuance.guardian,
       history: [],
-      image: ipfsUrl(metadataData.image),
+      image: ipfsUrl(metadata.image),
       pool: {
         eth: pooledEth,
         token: pooledToken,
       },
       proposalTimeout: 2,
-      title: metadataData.name,
+      title: metadata.name,
       token: {
         contractAddress: "0xabc",
         decimals: SERC20_DECIMALS,
@@ -110,20 +125,19 @@ export function useSnft(
         holdersCount: 10,
         marketCapEth,
         minted,
-        name: spectreData?.spectre?.sERC20.name ?? "",
+        name: serc20.name ?? "",
         priceEth,
         supply,
-        symbol: spectreData?.spectre?.sERC20.symbol ?? "",
+        symbol: serc20.symbol ?? "",
         tokenId: "",
         topHolders: [],
       },
     }
-
     return snft
-  }, [id, metadataData, spectreData])
+  }, [id, metadata, spectreData])
 
-  return useQuery(["snft", id, spectre.isSuccess], async () => {
-    if (spectre.isSuccess) {
+  return useQuery(["snft", id, spectre.isSuccess, demoMode], async () => {
+    if (!demoMode) {
       return snft
     }
 
@@ -134,22 +148,45 @@ export function useSnft(
     await fakeDelay()
     return snftDemo
   }, {
-    enabled: spectre.status !== "loading",
+    enabled: demoMode || spectre.status !== "loading",
     retry,
-    retryDelay,
+    retryDelay: RETRY_DELAY,
   })
 }
 
 export function useSnfts({
   first = 10,
   skip = 0,
+  fetchOptions: {
+    retry = false,
+  } = {},
 }: {
   first?: number
   skip?: number
-} = {}): UseQueryResult<Snft[]> {
-  return useQuery(["snfts", skip, first], async () => {
-    await fakeDelay()
-    return SNFTS.slice(skip, skip + first)
+  fetchOptions?: {
+    retry?: boolean
+  }
+} = {}): UseQueryResult<[number, SnftPreview[]]> {
+  return useSpectres((spectres) => {
+    return spectres.map((spectre) => {
+      const snft: SnftPreview = {
+        id: spectre.id,
+        shortId: toShortId(spectre.id),
+        guardian: spectre.sERC20.sale?.guardian,
+        image: ipfsUrl(spectre.NFT.metadata.image),
+        title: spectre.NFT.metadata.name,
+        tokenPriceEth: [0n, 0],
+        tokenSymbol: spectre.sERC20.symbol,
+      }
+      return snft
+    })
+  }, {
+    first,
+    skip,
+    fetchOptions: {
+      retry,
+      retryDelay: RETRY_DELAY,
+    },
   })
 }
 

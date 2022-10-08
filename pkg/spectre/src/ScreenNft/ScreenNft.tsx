@@ -14,7 +14,7 @@ import {
   RadioGroup,
   Tabs,
 } from "moire"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import {
@@ -71,11 +71,19 @@ export function ScreenNft({
   const [timeScale, setTimeScale] = useState<TimeScale>("DAY")
   const [graphType, setGraphType] = useState<GraphType>("market-cap")
 
-  const indexingSnftId = useMemo(() => (
-    localStorage.getItem("indexing-snft")
-  ), [])
+  const indexing = useMemo(() => (
+    localStorage.getItem("indexing-snft") === id
+  ), [id])
 
-  const snft = useSnft(id, { retry: indexingSnftId === id })
+  const snft = useSnft(id, { retry: indexing })
+
+  const snftStatus = snft.status
+  useEffect(() => {
+    if (indexing && snftStatus === "success") {
+      localStorage.removeItem("indexing-snft")
+    }
+  }, [indexing, snftStatus])
+
   const layout = useLayout()
 
   const [nftPrev, nftNext] = snftsAdjacent?.data ?? []
@@ -157,6 +165,7 @@ export function ScreenNft({
         onBack,
       }}
       loading={loading}
+      loadingLabel={indexing ? "Indexing" : "Loading"}
     >
       <div
         css={({ colors }) => ({

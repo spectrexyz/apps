@@ -25,6 +25,7 @@ export function AppScreen(
     children,
     compactBar,
     loading = false,
+    loadingLabel = "Loading",
   }: {
     children: ReactNode
     compactBar:
@@ -38,6 +39,7 @@ export function AppScreen(
         extraRow?: ReactNode
       }
     loading?: boolean | ReactNode
+    loadingLabel?: string
   },
 ) {
   const { colors } = useTheme()
@@ -218,7 +220,6 @@ export function AppScreen(
                     )
                   )}
                   <LoadingBox
-                    visible={Boolean(loading)}
                     container={(children) => (
                       <div
                         css={{
@@ -232,6 +233,8 @@ export function AppScreen(
                         {children}
                       </div>
                     )}
+                    label={loadingLabel}
+                    visible={Boolean(loading)}
                   />
                 </div>
               </a.div>

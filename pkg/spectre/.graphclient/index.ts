@@ -720,7 +720,118 @@ export type NFT = {
   collection: Scalars['Bytes'];
   tokenId: Scalars['BigInt'];
   tokenURI: Scalars['String'];
+  creator: Scalars['Bytes'];
+  metadata: NFTMetadata;
 };
+
+export type NFTMetadata = {
+  id: Scalars['ID'];
+  nft: NFT;
+  description: Scalars['String'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type NFTMetadata_filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  nft?: InputMaybe<Scalars['String']>;
+  nft_not?: InputMaybe<Scalars['String']>;
+  nft_gt?: InputMaybe<Scalars['String']>;
+  nft_lt?: InputMaybe<Scalars['String']>;
+  nft_gte?: InputMaybe<Scalars['String']>;
+  nft_lte?: InputMaybe<Scalars['String']>;
+  nft_in?: InputMaybe<Array<Scalars['String']>>;
+  nft_not_in?: InputMaybe<Array<Scalars['String']>>;
+  nft_contains?: InputMaybe<Scalars['String']>;
+  nft_contains_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_contains?: InputMaybe<Scalars['String']>;
+  nft_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  nft_starts_with?: InputMaybe<Scalars['String']>;
+  nft_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_starts_with?: InputMaybe<Scalars['String']>;
+  nft_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_ends_with?: InputMaybe<Scalars['String']>;
+  nft_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_not_ends_with?: InputMaybe<Scalars['String']>;
+  nft_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  nft_?: InputMaybe<NFT_filter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_gt?: InputMaybe<Scalars['String']>;
+  description_lt?: InputMaybe<Scalars['String']>;
+  description_gte?: InputMaybe<Scalars['String']>;
+  description_lte?: InputMaybe<Scalars['String']>;
+  description_in?: InputMaybe<Array<Scalars['String']>>;
+  description_not_in?: InputMaybe<Array<Scalars['String']>>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_contains_nocase?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  description_starts_with?: InputMaybe<Scalars['String']>;
+  description_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  description_not_starts_with?: InputMaybe<Scalars['String']>;
+  description_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  description_ends_with?: InputMaybe<Scalars['String']>;
+  description_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  description_not_ends_with?: InputMaybe<Scalars['String']>;
+  description_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  image_not?: InputMaybe<Scalars['String']>;
+  image_gt?: InputMaybe<Scalars['String']>;
+  image_lt?: InputMaybe<Scalars['String']>;
+  image_gte?: InputMaybe<Scalars['String']>;
+  image_lte?: InputMaybe<Scalars['String']>;
+  image_in?: InputMaybe<Array<Scalars['String']>>;
+  image_not_in?: InputMaybe<Array<Scalars['String']>>;
+  image_contains?: InputMaybe<Scalars['String']>;
+  image_contains_nocase?: InputMaybe<Scalars['String']>;
+  image_not_contains?: InputMaybe<Scalars['String']>;
+  image_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  image_starts_with?: InputMaybe<Scalars['String']>;
+  image_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  image_not_starts_with?: InputMaybe<Scalars['String']>;
+  image_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  image_ends_with?: InputMaybe<Scalars['String']>;
+  image_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  image_not_ends_with?: InputMaybe<Scalars['String']>;
+  image_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type NFTMetadata_orderBy =
+  | 'id'
+  | 'nft'
+  | 'description'
+  | 'image'
+  | 'name';
 
 export type NFT_filter = {
   id?: InputMaybe<Scalars['ID']>;
@@ -765,6 +876,13 @@ export type NFT_filter = {
   tokenURI_ends_with_nocase?: InputMaybe<Scalars['String']>;
   tokenURI_not_ends_with?: InputMaybe<Scalars['String']>;
   tokenURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  creator?: InputMaybe<Scalars['Bytes']>;
+  creator_not?: InputMaybe<Scalars['Bytes']>;
+  creator_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  creator_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  creator_contains?: InputMaybe<Scalars['Bytes']>;
+  creator_not_contains?: InputMaybe<Scalars['Bytes']>;
+  metadata_?: InputMaybe<NFTMetadata_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -773,7 +891,9 @@ export type NFT_orderBy =
   | 'id'
   | 'collection'
   | 'tokenId'
-  | 'tokenURI';
+  | 'tokenURI'
+  | 'creator'
+  | 'metadata';
 
 /** Defines the order direction, either ascending or descending */
 export type OrderDirection =
@@ -961,10 +1081,13 @@ export type ProposalState =
   | 'Withdrawn';
 
 export type Query = {
+  nftmetadata: Array<NFTMetadata>;
   nft?: Maybe<NFT>;
   nfts: Array<NFT>;
   spectre?: Maybe<Spectre>;
   spectres: Array<Spectre>;
+  spectresCounter?: Maybe<SpectresCounter>;
+  spectresCounters: Array<SpectresCounter>;
   sERC20?: Maybe<sERC20>;
   sERC20S: Array<sERC20>;
   sale?: Maybe<Sale>;
@@ -991,6 +1114,17 @@ export type Query = {
   joins: Array<Join>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+
+export type QuerynftmetadataArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<NFTMetadata_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NFTMetadata_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1025,6 +1159,24 @@ export type QueryspectresArgs = {
   orderBy?: InputMaybe<Spectre_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Spectre_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryspectresCounterArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryspectresCountersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SpectresCounter_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<SpectresCounter_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1493,11 +1645,56 @@ export type Spectre_orderBy =
   | 'vault'
   | 'broker';
 
+export type SpectresCounter = {
+  id: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type SpectresCounter_filter = {
+  id?: InputMaybe<Scalars['String']>;
+  id_not?: InputMaybe<Scalars['String']>;
+  id_gt?: InputMaybe<Scalars['String']>;
+  id_lt?: InputMaybe<Scalars['String']>;
+  id_gte?: InputMaybe<Scalars['String']>;
+  id_lte?: InputMaybe<Scalars['String']>;
+  id_in?: InputMaybe<Array<Scalars['String']>>;
+  id_not_in?: InputMaybe<Array<Scalars['String']>>;
+  id_contains?: InputMaybe<Scalars['String']>;
+  id_contains_nocase?: InputMaybe<Scalars['String']>;
+  id_not_contains?: InputMaybe<Scalars['String']>;
+  id_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  id_starts_with?: InputMaybe<Scalars['String']>;
+  id_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id_not_starts_with?: InputMaybe<Scalars['String']>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id_ends_with?: InputMaybe<Scalars['String']>;
+  id_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  id_not_ends_with?: InputMaybe<Scalars['String']>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<Scalars['Int']>>;
+  count_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type SpectresCounter_orderBy =
+  | 'id'
+  | 'count';
+
 export type Subscription = {
+  nftmetadata: Array<NFTMetadata>;
   nft?: Maybe<NFT>;
   nfts: Array<NFT>;
   spectre?: Maybe<Spectre>;
   spectres: Array<Spectre>;
+  spectresCounter?: Maybe<SpectresCounter>;
+  spectresCounters: Array<SpectresCounter>;
   sERC20?: Maybe<sERC20>;
   sERC20S: Array<sERC20>;
   sale?: Maybe<Sale>;
@@ -1524,6 +1721,17 @@ export type Subscription = {
   joins: Array<Join>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+};
+
+
+export type SubscriptionnftmetadataArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<NFTMetadata_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NFTMetadata_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1558,6 +1766,24 @@ export type SubscriptionspectresArgs = {
   orderBy?: InputMaybe<Spectre_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<Spectre_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionspectresCounterArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionspectresCountersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<SpectresCounter_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<SpectresCounter_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -2151,6 +2377,9 @@ export type ResolversTypes = ResolversObject<{
   Join_filter: Join_filter;
   Join_orderBy: Join_orderBy;
   NFT: ResolverTypeWrapper<NFT>;
+  NFTMetadata: ResolverTypeWrapper<NFTMetadata>;
+  NFTMetadata_filter: NFTMetadata_filter;
+  NFTMetadata_orderBy: NFTMetadata_orderBy;
   NFT_filter: NFT_filter;
   NFT_orderBy: NFT_orderBy;
   OrderDirection: OrderDirection;
@@ -2170,6 +2399,9 @@ export type ResolversTypes = ResolversObject<{
   SpectreState: SpectreState;
   Spectre_filter: Spectre_filter;
   Spectre_orderBy: Spectre_orderBy;
+  SpectresCounter: ResolverTypeWrapper<SpectresCounter>;
+  SpectresCounter_filter: SpectresCounter_filter;
+  SpectresCounter_orderBy: SpectresCounter_orderBy;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
   Swap: ResolverTypeWrapper<Swap>;
@@ -2209,6 +2441,8 @@ export type ResolversParentTypes = ResolversObject<{
   Join: Join;
   Join_filter: Join_filter;
   NFT: NFT;
+  NFTMetadata: NFTMetadata;
+  NFTMetadata_filter: NFTMetadata_filter;
   NFT_filter: NFT_filter;
   Pool: Pool;
   PoolState: PoolState;
@@ -2219,6 +2453,8 @@ export type ResolversParentTypes = ResolversObject<{
   Sale_filter: Sale_filter;
   Spectre: Spectre;
   Spectre_filter: Spectre_filter;
+  SpectresCounter: SpectresCounter;
+  SpectresCounter_filter: SpectresCounter_filter;
   String: Scalars['String'];
   Subscription: {};
   Swap: Swap;
@@ -2343,6 +2579,17 @@ export type NFTResolvers<ContextType = MeshContext, ParentType extends Resolvers
   collection?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   tokenId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   tokenURI?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  creator?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+  metadata?: Resolver<ResolversTypes['NFTMetadata'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NFTMetadataResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['NFTMetadata'] = ResolversParentTypes['NFTMetadata']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  nft?: Resolver<ResolversTypes['NFT'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2368,10 +2615,13 @@ export type PoolStateResolvers<ContextType = MeshContext, ParentType extends Res
 }>;
 
 export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  nftmetadata?: Resolver<Array<ResolversTypes['NFTMetadata']>, ParentType, ContextType, RequireFields<QuerynftmetadataArgs, 'skip' | 'first' | 'subgraphError'>>;
   nft?: Resolver<Maybe<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftArgs, 'id' | 'subgraphError'>>;
   nfts?: Resolver<Array<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftsArgs, 'skip' | 'first' | 'subgraphError'>>;
   spectre?: Resolver<Maybe<ResolversTypes['Spectre']>, ParentType, ContextType, RequireFields<QueryspectreArgs, 'id' | 'subgraphError'>>;
   spectres?: Resolver<Array<ResolversTypes['Spectre']>, ParentType, ContextType, RequireFields<QueryspectresArgs, 'skip' | 'first' | 'subgraphError'>>;
+  spectresCounter?: Resolver<Maybe<ResolversTypes['SpectresCounter']>, ParentType, ContextType, RequireFields<QueryspectresCounterArgs, 'id' | 'subgraphError'>>;
+  spectresCounters?: Resolver<Array<ResolversTypes['SpectresCounter']>, ParentType, ContextType, RequireFields<QueryspectresCountersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sERC20?: Resolver<Maybe<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20Args, 'id' | 'subgraphError'>>;
   sERC20S?: Resolver<Array<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
   sale?: Resolver<Maybe<ResolversTypes['Sale']>, ParentType, ContextType, RequireFields<QuerysaleArgs, 'id' | 'subgraphError'>>;
@@ -2425,11 +2675,20 @@ export type SpectreResolvers<ContextType = MeshContext, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type SpectresCounterResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['SpectresCounter'] = ResolversParentTypes['SpectresCounter']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  nftmetadata?: SubscriptionResolver<Array<ResolversTypes['NFTMetadata']>, "nftmetadata", ParentType, ContextType, RequireFields<SubscriptionnftmetadataArgs, 'skip' | 'first' | 'subgraphError'>>;
   nft?: SubscriptionResolver<Maybe<ResolversTypes['NFT']>, "nft", ParentType, ContextType, RequireFields<SubscriptionnftArgs, 'id' | 'subgraphError'>>;
   nfts?: SubscriptionResolver<Array<ResolversTypes['NFT']>, "nfts", ParentType, ContextType, RequireFields<SubscriptionnftsArgs, 'skip' | 'first' | 'subgraphError'>>;
   spectre?: SubscriptionResolver<Maybe<ResolversTypes['Spectre']>, "spectre", ParentType, ContextType, RequireFields<SubscriptionspectreArgs, 'id' | 'subgraphError'>>;
   spectres?: SubscriptionResolver<Array<ResolversTypes['Spectre']>, "spectres", ParentType, ContextType, RequireFields<SubscriptionspectresArgs, 'skip' | 'first' | 'subgraphError'>>;
+  spectresCounter?: SubscriptionResolver<Maybe<ResolversTypes['SpectresCounter']>, "spectresCounter", ParentType, ContextType, RequireFields<SubscriptionspectresCounterArgs, 'id' | 'subgraphError'>>;
+  spectresCounters?: SubscriptionResolver<Array<ResolversTypes['SpectresCounter']>, "spectresCounters", ParentType, ContextType, RequireFields<SubscriptionspectresCountersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sERC20?: SubscriptionResolver<Maybe<ResolversTypes['sERC20']>, "sERC20", ParentType, ContextType, RequireFields<SubscriptionsERC20Args, 'id' | 'subgraphError'>>;
   sERC20S?: SubscriptionResolver<Array<ResolversTypes['sERC20']>, "sERC20S", ParentType, ContextType, RequireFields<SubscriptionsERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
   sale?: SubscriptionResolver<Maybe<ResolversTypes['Sale']>, "sale", ParentType, ContextType, RequireFields<SubscriptionsaleArgs, 'id' | 'subgraphError'>>;
@@ -2504,11 +2763,13 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   Issue?: IssueResolvers<ContextType>;
   Join?: JoinResolvers<ContextType>;
   NFT?: NFTResolvers<ContextType>;
+  NFTMetadata?: NFTMetadataResolvers<ContextType>;
   Pool?: PoolResolvers<ContextType>;
   PoolState?: PoolStateResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Sale?: SaleResolvers<ContextType>;
   Spectre?: SpectreResolvers<ContextType>;
+  SpectresCounter?: SpectresCounterResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Swap?: SwapResolvers<ContextType>;
   _Block_?: _Block_Resolvers<ContextType>;
@@ -2567,7 +2828,7 @@ const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"http://127.0.0.1:8000/subgraphs/name/spectre"},
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bpierre/spectre-preview"},
               baseDir,
               cache,
               pubsub,
@@ -2601,11 +2862,11 @@ const merger = new(BareMerger as any)({
     get documents() {
       return [
       {
-        document: AllSpectresDocument,
+        document: SpectresDocument,
         get rawSDL() {
-          return printWithCache(AllSpectresDocument);
+          return printWithCache(SpectresDocument);
         },
-        location: 'AllSpectresDocument.graphql'
+        location: 'SpectresDocument.graphql'
       },{
         document: SpectreByIdDocument,
         get rawSDL() {
@@ -2650,13 +2911,22 @@ export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
   return getSdk<TOperationContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
 }
-export type AllSpectresQueryVariables = Exact<{ [key: string]: never; }>;
+export type SpectresQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
 
 
-export type AllSpectresQuery = { spectres: Array<{ sERC20: (
+export type SpectresQuery = { spectresCounter?: Maybe<Pick<SpectresCounter, 'count'>>, spectres: Array<(
+    Pick<Spectre, 'id'>
+    & { NFT: (
+      Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
+      & { metadata: Pick<NFTMetadata, 'name' | 'image'> }
+    ), sERC20: (
       Pick<sERC20, 'name' | 'symbol' | 'cap'>
-      & { sale?: Maybe<Pick<Sale, 'id'>>, issuance?: Maybe<Pick<Issuance, 'id'>> }
-    ) }> };
+      & { sale?: Maybe<Pick<Sale, 'id' | 'guardian'>>, issuance?: Maybe<Pick<Issuance, 'id'>> }
+    ) }
+  )> };
 
 export type SpectreByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2665,7 +2935,10 @@ export type SpectreByIdQueryVariables = Exact<{
 
 export type SpectreByIdQuery = { spectre?: Maybe<(
     Pick<Spectre, 'state' | 'vault' | 'broker'>
-    & { NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI'>, sERC20: (
+    & { NFT: (
+      Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
+      & { metadata: Pick<NFTMetadata, 'name' | 'description' | 'image'> }
+    ), sERC20: (
       Pick<sERC20, 'id' | 'name' | 'symbol' | 'cap'>
       & { sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
@@ -2675,15 +2948,31 @@ export type SpectreByIdQuery = { spectre?: Maybe<(
   )> };
 
 
-export const AllSpectresDocument = gql`
-    query AllSpectres {
-  spectres {
+export const SpectresDocument = gql`
+    query Spectres($first: Int, $skip: Int) {
+  spectresCounter(id: "SpectresCounter") {
+    count
+  }
+  spectres(first: $first, skip: $skip) {
+    id
+    NFT {
+      id
+      collection
+      tokenId
+      tokenURI
+      creator
+      metadata {
+        name
+        image
+      }
+    }
     sERC20 {
       name
       symbol
       cap
       sale {
         id
+        guardian
       }
       issuance {
         id
@@ -2691,7 +2980,7 @@ export const AllSpectresDocument = gql`
     }
   }
 }
-    ` as unknown as DocumentNode<AllSpectresQuery, AllSpectresQueryVariables>;
+    ` as unknown as DocumentNode<SpectresQuery, SpectresQueryVariables>;
 export const SpectreByIdDocument = gql`
     query SpectreById($id: ID!) {
   spectre(id: $id) {
@@ -2700,6 +2989,12 @@ export const SpectreByIdDocument = gql`
       collection
       tokenId
       tokenURI
+      creator
+      metadata {
+        name
+        description
+        image
+      }
     }
     sERC20 {
       id
@@ -2748,8 +3043,8 @@ export const SpectreByIdDocument = gql`
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    AllSpectres(variables?: AllSpectresQueryVariables, options?: C): Promise<AllSpectresQuery> {
-      return requester<AllSpectresQuery, AllSpectresQueryVariables>(AllSpectresDocument, variables, options) as Promise<AllSpectresQuery>;
+    Spectres(variables?: SpectresQueryVariables, options?: C): Promise<SpectresQuery> {
+      return requester<SpectresQuery, SpectresQueryVariables>(SpectresDocument, variables, options) as Promise<SpectresQuery>;
     },
     SpectreById(variables: SpectreByIdQueryVariables, options?: C): Promise<SpectreByIdQuery> {
       return requester<SpectreByIdQuery, SpectreByIdQueryVariables>(SpectreByIdDocument, variables, options) as Promise<SpectreByIdQuery>;

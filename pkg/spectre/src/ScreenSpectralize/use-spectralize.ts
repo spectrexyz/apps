@@ -1,5 +1,5 @@
 import type { Address, Direction } from "moire"
-import type { NftMetadataToBeStored } from "../types"
+import type { NftMetadataToBeStored, SnftId } from "../types"
 
 import { useMutation } from "@tanstack/react-query"
 import { Contract } from "ethers"
@@ -745,7 +745,7 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   const status = mintAndFractionalize.status
   const logs = mintAndFractionalize.transactionResult.data?.logs
 
-  const spectreId = useMemo<null | bigint>(() => {
+  const spectreId = useMemo<null | SnftId>(() => {
     if (status !== "tx:success" || !logs) {
       return null
     }
@@ -772,7 +772,7 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
 
     for (const key in args) {
       if (key === "id") {
-        return args[key] ? BigInt(String(args[key])) : null
+        return args[key] ? String(args[key]) : null
       }
     }
 
@@ -785,7 +785,7 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   ], [mintAndFractionalize])
 
   return {
-    snftId: spectreId ? toShortId(spectreId) : null,
+    snftId: spectreId,
     reset,
     signTxAndWaitStatus: mintAndFractionalize.status,
     write,

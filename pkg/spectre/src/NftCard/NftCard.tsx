@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import type { Snft } from "../types"
+import type { SnftPreview } from "../types"
 
 import { Anchor, co } from "moire"
 import { useLocation } from "wouter"
@@ -9,7 +9,7 @@ export function NftCard({
   snft,
 }: {
   action?: ReactNode
-  snft: Snft
+  snft: SnftPreview
 }) {
   const [, setLocation] = useLocation()
   return (

@@ -2,7 +2,7 @@ import type { Snft } from "../types"
 
 import * as dnum from "dnum"
 import { Anchor, Button, LoadingBox, TokenBadge } from "moire"
-import { useLocation } from "wouter"
+import { Link, useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { useHighlightedSnfts } from "../snft-hooks"
@@ -60,16 +60,20 @@ function Heading() {
           justifyContent: "center",
         }}
       >
-        <Button
-          label="Fractionalize art"
-          mode="primary-2"
-          onClick={() => {
-            setLocation("/fractionalize")
-          }}
-          wide={layout.below("large")}
-        />
+        <Link href="/fractionalize">
+          <Button
+            label="Fractionalize art"
+            mode="primary-2"
+            wide={layout.below("large")}
+          />
+        </Link>
         {!layout.below("large") && (
-          <Button label="Explore artworks" mode="secondary-2" />
+          <Link href="/nfts">
+            <Button
+              label="Explore artworks"
+              mode="secondary-2"
+            />
+          </Link>
         )}
       </div>
     </div>
@@ -108,7 +112,6 @@ function HighlightedArtists() {
         >
           Selected artworks
         </h1>
-        {/*<span>View all</span>*/}
       </div>
       <div css={{ position: "relative" }}>
         <LoadingBox

@@ -1,11 +1,27 @@
-query AllSpectres {
-  spectres {
+query Spectres($first: Int, $skip: Int) {
+  spectresCounter(id: "SpectresCounter") {
+    count
+  }
+  spectres(first: $first, skip: $skip) {
+    id
+    NFT {
+      id
+      collection
+      tokenId
+      tokenURI
+      creator
+      metadata {
+        name
+        image
+      }
+    }
     sERC20 {
       name
       symbol
       cap
       sale {
         id
+        guardian
       }
       issuance {
         id
@@ -21,6 +37,12 @@ query SpectreById($id: ID!) {
       collection
       tokenId
       tokenURI
+      creator
+      metadata {
+        name
+        description
+        image
+      }
     }
     sERC20 {
       id

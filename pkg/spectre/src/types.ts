@@ -62,6 +62,17 @@ export type Snft = Readonly<{
   token: Readonly<Token>
 }>
 
+// A light version of the Snft type, used in cards for example.
+export type SnftPreview = Readonly<{
+  id: SnftId
+  shortId: ShortId
+  guardian: string
+  image: string
+  title: string
+  tokenPriceEth: Dnum
+  tokenSymbol: string
+}>
+
 export type PoolShare = {
   pool: Snft["pool"]
   share: Dnum

@@ -14,7 +14,7 @@ import {
 } from "@ngneat/falso"
 import * as dnum from "dnum"
 import { DAY_MS, list, WEEK_MS } from "moire"
-import { fromShortId, toShortId } from "../utils"
+import { toShortId } from "../utils"
 import { minted } from "./minted"
 import { tokenPrices } from "./token-prices"
 
@@ -116,6 +116,16 @@ function nftImage(style: ReturnType<typeof nftStyle>) {
         y="${xy - size / 2}%"
       />
     `).join(""),
+    `<text
+       alignment-baseline="top"
+       dominant-baseline="hanging"
+       fill="white"
+       font-family="sans"
+       font-size="3"
+       text-anchor="end"
+       x="99"
+       y="1"
+     >demo</text>`,
   ].join(""))
 }
 

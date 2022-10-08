@@ -14,6 +14,7 @@ import { ScreenHome } from "../ScreenHome/ScreenHome"
 import { ScreenLiquidityAdd } from "../ScreenLiquidity/ScreenLiquidityAdd"
 import { ScreenLiquidityRemove } from "../ScreenLiquidity/ScreenLiquidityRemove"
 import { ScreenNft } from "../ScreenNft/ScreenNft"
+import { ScreenNfts } from "../ScreenNfts/ScreenNfts"
 import { ScreenProfile } from "../ScreenProfile/ScreenProfile"
 import { ScreenSpectralize } from "../ScreenSpectralize/ScreenSpectralize"
 import { parseId } from "../utils"
@@ -52,6 +53,12 @@ export function App() {
           </Route>
 
           {/* NFTs */}
+          <Route path="/nfts/page/:page">
+            {({ page }) => <ScreenNfts page={parseInt(page, 10)} />}
+          </Route>
+          <Route path="/nfts">
+            {() => <ScreenNfts page={1} />}
+          </Route>
           <Route path="/nfts/:id/buyout">
             {({ id }) => <ScreenBuyout id={parseId(id)} />}
           </Route>
