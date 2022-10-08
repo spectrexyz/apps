@@ -123,7 +123,7 @@ export function AsyncTask({
               position: "relative",
               zIndex: "2",
               background: `url(${preview}) no-repeat 50% 50%`,
-              backgroundSize: "cover",
+              backgroundSize: "contain",
               height: "36.25gu",
               width: "36.25gu",
             }}

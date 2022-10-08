@@ -16,7 +16,6 @@ export function ScreenNfts({
   const layout = useLayout()
   const snftsQuery = useSnfts()
   const [snftsCount, snfts] = snftsQuery.data ?? [-1, []]
-  console.log("count", snftsCount)
   return (
     <AppScreen
       compactBar={layout.below("medium") && { title: "Spectre" }}
