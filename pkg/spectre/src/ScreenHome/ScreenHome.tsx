@@ -56,6 +56,7 @@ function Heading() {
       <div
         css={{
           display: "flex",
+          flexDirection: layout.below("large") ? "column" : "row",
           gap: "3gu",
           justifyContent: "center",
         }}
@@ -67,14 +68,12 @@ function Heading() {
             wide={layout.below("large")}
           />
         </Link>
-        {!layout.below("large") && (
-          <Link href="/nfts">
-            <Button
-              label="Explore artworks"
-              mode="secondary-2"
-            />
-          </Link>
-        )}
+        <Link href="/nfts">
+          <Button
+            label="Explore artworks"
+            mode="secondary-2"
+          />
+        </Link>
       </div>
     </div>
   )
