@@ -75,7 +75,7 @@ export function ScreenNft({
     localStorage.getItem("indexing-snft") === id
   ), [id])
 
-  const snft = useSnft(id, { retry: indexing })
+  const snft = useSnft(id, { fetchOptions: { retry: indexing } })
 
   const snftStatus = snft.status
   useEffect(() => {
