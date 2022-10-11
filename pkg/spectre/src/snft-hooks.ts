@@ -155,7 +155,7 @@ export function useSnft(
 }
 
 export function useSnfts({
-  first = 10,
+  first = 12,
   skip = 0,
   fetchOptions: {
     retry = false,

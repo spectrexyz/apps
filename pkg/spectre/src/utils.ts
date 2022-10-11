@@ -188,3 +188,14 @@ export function ipfsUrl(
   // URL, maybe
   return ipfsIsh
 }
+
+export function pagination(
+  page: number,
+  itemsPerPage: number,
+  itemsTotal: number,
+) {
+  const pages = Math.ceil(itemsTotal / itemsPerPage)
+  const prev = page > 0 ? page - 1 : null
+  const next = page < pages - 1 ? page + 1 : null
+  return { next, page, pages, prev }
+}

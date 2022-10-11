@@ -22,7 +22,6 @@ export function ScreenHome() {
 }
 
 function Heading() {
-  const [, setLocation] = useLocation()
   const layout = useLayout()
   const [titleFontMetrics, subTitleFontSize] = layout.value({
     small: ["32px/1.2", 16],

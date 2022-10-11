@@ -54,10 +54,10 @@ export function App() {
 
           {/* NFTs */}
           <Route path="/nfts/page/:page">
-            {({ page }) => <ScreenNfts page={parseInt(page, 10)} />}
+            {({ page }) => <ScreenNfts page={parseInt(page, 10) - 1} />}
           </Route>
           <Route path="/nfts">
-            {() => <ScreenNfts page={1} />}
+            {() => <ScreenNfts page={0} />}
           </Route>
           <Route path="/nfts/:id/buyout">
             {({ id }) => <ScreenBuyout id={parseId(id)} />}

@@ -1,12 +1,16 @@
 import type { SnftPreview } from "../types"
 
 import * as dnum from "dnum"
-import { AddressBadge, Anchor, Button, LoadingBox, TokenBadge } from "moire"
+import { AddressBadge, Anchor, Button, ButtonText, TokenBadge } from "moire"
+import { useCallback, useMemo } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
 import { useSnfts } from "../snft-hooks"
 import { useLayout } from "../styles"
+import { pagination } from "../utils"
+
+const SNFTS_PER_PAGE = 12
 
 export function ScreenNfts({
   page,
@@ -14,8 +18,22 @@ export function ScreenNfts({
   page: number
 }) {
   const layout = useLayout()
-  const snftsQuery = useSnfts()
+  const snftsQuery = useSnfts({
+    first: SNFTS_PER_PAGE,
+    skip: SNFTS_PER_PAGE * page,
+  })
   const [snftsCount, snfts] = snftsQuery.data ?? [-1, []]
+
+  const paginationData = useMemo(
+    () => pagination(page, SNFTS_PER_PAGE, snftsCount),
+    [page, snftsCount],
+  )
+
+  const [, setLocation] = useLocation()
+  const setPage = useCallback((page: number) => {
+    setLocation(page === 0 ? "/nfts" : `/nfts/page/${page + 1}`)
+  }, [setLocation])
+
   return (
     <AppScreen
       compactBar={layout.below("medium") && { title: "Spectre" }}
@@ -51,30 +69,23 @@ export function ScreenNfts({
           </h1>
         </div>
         <div css={{ position: "relative" }}>
-          <LoadingBox
-            container={(children) => (
-              <div
-                css={{
-                  position: "absolute",
-                  inset: "5gu auto auto 50%",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            visible={!snfts}
-          />
-          {snfts && (
-            <Grid>
-              {snfts.map((snft) => (
-                <SnftCard
-                  key={snft.id}
-                  snft={snft}
-                />
-              ))}
-            </Grid>
-          )}
+          <Grid>
+            {snfts.map((snft) => (
+              <SnftCard
+                key={snft.id}
+                snft={snft}
+              />
+            ))}
+          </Grid>
         </div>
+        {paginationData.pages > 1 && (
+          <Pagination
+            next={paginationData.next}
+            onPage={setPage}
+            page={paginationData.page}
+            prev={paginationData.prev}
+          />
+        )}
       </section>
     </AppScreen>
   )
@@ -162,6 +173,53 @@ function SnftCard({
           </span>
         </div>
       </div>
+    </div>
+  )
+}
+
+function Pagination(
+  {
+    next,
+    onPage,
+    page,
+    prev,
+  }: {
+    next: number | null
+    onPage: (page: number) => void
+    page: number
+    prev: number | null
+  },
+) {
+  return (
+    <div
+      css={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "2gu",
+      }}
+    >
+      {prev !== null && (
+        <ButtonText
+          label="Previous"
+          onClick={() => {
+            if (prev !== null) {
+              onPage(prev)
+            }
+          }}
+        />
+      )}
+      <div css={{ fontFamily: "fonts.mono" }}>{page + 1}</div>
+      {next !== null && (
+        <ButtonText
+          label="Next"
+          onClick={() => {
+            if (next !== null) {
+              onPage(next)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }
