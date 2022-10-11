@@ -171,7 +171,8 @@ const IPFS_HASH_RE = /^Qm[1-9A-HJ-NP-Za-km-z]{44}$/
 
 export function ipfsUrl(
   ipfsIsh: string,
-  url = (cid: string, path = "") => `https://ipfs.io/ipfs/${cid}${path}`,
+  url = (cid: string, path = "") =>
+    `https://${cid}.ipfs.nftstorage.link${path}`,
 ): string {
   // ipfs:// URI
   const ipfsProtocolMatch = IPFS_PROTOCOL_RE.exec(ipfsIsh)
