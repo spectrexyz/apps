@@ -122,7 +122,7 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
             }}
           >
             <img
-              src={snft.data?.image.url}
+              src={snft.data?.image}
               alt=""
               width={5 * gu}
               height={5 * gu}
@@ -218,7 +218,9 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
                     textTransform: "uppercase",
                   }}
                 >
-                  {ms(new Date(proposal.endsOn).getTime() - Date.now(),  { long: true })}
+                  {ms(new Date(proposal.endsOn).getTime() - Date.now(), {
+                    long: true,
+                  })}
                 </time>
               }
             />

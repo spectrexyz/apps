@@ -1,7 +1,10 @@
+import type { Snft } from "../types"
+
 import { Button, IconDiscordLogo, IconEye } from "moire"
+import { explorerUrl, ipfsUrl } from "../utils"
 import { PanelSection } from "./PanelSection"
 
-export function NftProvenance() {
+export function NftProvenance({ snft }: { snft: Snft }) {
   return (
     <PanelSection title="Provenance">
       <div
@@ -12,9 +15,16 @@ export function NftProvenance() {
         }}
       >
         {[
-          ["View on Etherscan", "https://etherscan.io/"],
-          ["View on IPFS", "https://ipfs.io/"],
-          ["Community Discord", "https://discord.com/"],
+          [
+            "View on Etherscan",
+            explorerUrl({
+              type: "tokenId",
+              contract: snft.nft.contractAddress,
+              tokenId: snft.nft.tokenId,
+            }),
+          ],
+          ["View on IPFS", ipfsUrl(snft.nft.tokenURI)],
+          // ["Community Discord", "https://discord.com/"],
         ].map(([label, url]) => (
           <div key={label + url}>
             <Button

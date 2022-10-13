@@ -76,7 +76,7 @@ export function PoolCard({
                   <TokenIcon
                     key="serc20"
                     size={compact ? 4 * gu : 8 * gu}
-                    src={snft.data?.image.url}
+                    src={snft.data?.image}
                     tokenType="serc20"
                   />,
                 ]}

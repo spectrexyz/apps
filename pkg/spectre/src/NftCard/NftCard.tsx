@@ -60,7 +60,7 @@ export function NftCard({
             color: colors.accent2,
           })}
         >
-          {snft.creator.name}
+          {snft.guardian}
         </p>
         {action}
       </div>

@@ -65,12 +65,12 @@ export function FractionsCard({
             <div css={{ padding: "3gu 3gu 0" }}>
               <div css={{ position: "relative" }}>
                 <OwnsBadge
-                  image={snft.data?.image.url}
+                  image={snft.data?.image}
                   tokens={tokensOwned}
                   percentage={percentageOwned}
                 />
                 <img
-                  src={snft.data.image.url}
+                  src={snft.data.image}
                   alt=""
                   css={{
                     display: "block",

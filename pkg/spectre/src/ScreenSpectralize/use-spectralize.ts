@@ -19,7 +19,6 @@ import {
   ADDRESS_VAULT,
   NFT_STORAGE_KEY,
 } from "../environment"
-import { toShortId } from "../utils"
 import { useSignTxAndWait } from "../web3-hooks"
 
 export type FileType = "image" | "video" | "audio"

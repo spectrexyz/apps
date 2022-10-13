@@ -24,7 +24,7 @@ export function NftPanel({ snft }: { snft: Snft }) {
         <>
           <NftTitle snft={snft} />
           <NftDescription snft={snft} />
-          <NftProvenance />
+          <NftProvenance snft={snft} />
           <MoreNfts snftFrom={snft} />
         </>,
         <>
@@ -46,7 +46,7 @@ export function NftPanel({ snft }: { snft: Snft }) {
         </>,
         <>
           <NftActions snft={snft} />
-          <NftProvenance />
+          <NftProvenance snft={snft} />
           <NftOwnership snft={snft} />
         </>,
         <>
@@ -64,7 +64,7 @@ export function NftPanel({ snft }: { snft: Snft }) {
       </>,
       <>
         <NftActions snft={snft} />
-        <NftProvenance />
+        <NftProvenance snft={snft} />
         <NftOwnership snft={snft} />
         <NftHistory snft={snft} />
         <MoreNfts snftFrom={snft} />

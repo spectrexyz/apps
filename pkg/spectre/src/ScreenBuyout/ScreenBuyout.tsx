@@ -78,10 +78,10 @@ export function ScreenBuyout({ id }: { id: string }) {
                 }}
               >
                 <div css={{ paddingBottom: "3gu" }}>
-                  {snft.data.image.url && (
+                  {snft.data.image && (
                     <img
                       alt=""
-                      src={snft.data.image.url}
+                      src={snft.data.image}
                       css={{
                         display: "block",
                         width: "100%",

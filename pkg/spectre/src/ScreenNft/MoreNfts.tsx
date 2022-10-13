@@ -52,6 +52,10 @@ export function MoreNfts({ snftFrom }: { snftFrom: Snft }) {
     xlarge: "2gu",
   })
 
+  if (!snfts.data?.length) {
+    return null
+  }
+
   return (
     <div
       css={{
