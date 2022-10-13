@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useTrail } from "react-spring"
 import { useLocation } from "wouter"
 import { CREATORS_BY_ENS_NAME } from "./demo-data"
+import { CHAIN_ID } from "./environment"
 import { springs } from "./styles"
 
 export function randomArbitrary(min: number, max: number) {
@@ -199,4 +200,24 @@ export function pagination(
   const prev = page > 0 ? page - 1 : null
   const next = page < pages - 1 ? page + 1 : null
   return { next, page, pages, prev }
+}
+
+export function explorerUrl(
+  options: {
+    type: "tokenId"
+    contract: string
+    tokenId: string
+  } | {
+    type: "tx"
+    hash: string
+  },
+) {
+  let base = "https://etherscan.io"
+  if (CHAIN_ID === 5) base = "https://goerli.etherscan.io"
+
+  if (options.type === "tokenId") {
+    return `${base}/token/${options.contract}?a=${options.tokenId}`
+  }
+
+  return ""
 }
