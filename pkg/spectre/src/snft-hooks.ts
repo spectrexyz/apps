@@ -13,6 +13,7 @@ import type {
 import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
+import { isAddress } from "moire"
 import { useMemo } from "react"
 import { useProvider } from "wagmi"
 import { SERC20_DECIMALS } from "./constants"
@@ -55,7 +56,7 @@ export function useSnft(
     isDemoSnft(id)
   ), [id])
 
-  const spectre = useSpectre(id, {
+  const spectreResult = useSpectre(id, {
     fetchOptions: {
       retry,
       retryDelay: RETRY_DELAY,
@@ -63,15 +64,14 @@ export function useSnft(
     },
   })
 
-  const spectreData = spectre.data
-  const metadata = spectreData?.spectre?.NFT.metadata
+  const spectre = spectreResult.data?.spectre
+  const metadata = spectre?.NFT.metadata
 
   const snft = useMemo(() => {
-    if (!spectreData || !metadata) {
+    if (!spectre || !metadata) {
       return null
     }
 
-    const spectre = spectreData.spectre
     const serc20 = spectre?.sERC20
     const sale = serc20?.sale
     const issuance = serc20?.issuance
@@ -118,6 +118,11 @@ export function useSnft(
       },
       proposalTimeout: 2,
       title: metadata.name,
+      nft: {
+        contractAddress: nft.collection,
+        tokenId: String(nft.tokenId),
+        tokenURI: nft.tokenURI,
+      },
       token: {
         contractAddress: "0xabc",
         decimals: SERC20_DECIMALS,
@@ -134,9 +139,9 @@ export function useSnft(
       },
     }
     return snft
-  }, [id, metadata, spectreData])
+  }, [id, metadata, spectre])
 
-  return useQuery(["snft", id, spectre.isSuccess, demoMode], async () => {
+  return useQuery(["snft", id, spectreResult.isSuccess, demoMode], async () => {
     if (!demoMode) {
       return snft
     }
@@ -148,7 +153,7 @@ export function useSnft(
     await fakeDelay()
     return snftDemo
   }, {
-    enabled: demoMode || spectre.status !== "loading",
+    enabled: demoMode || spectreResult.status !== "loading",
     retry,
     retryDelay: RETRY_DELAY,
   })
