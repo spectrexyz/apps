@@ -5,5 +5,15 @@ sources:
         # endpoint: http://127.0.0.1:8000/subgraphs/name/spectre
         endpoint: https://api.thegraph.com/subgraphs/name/bpierre/spectre-preview
 
+codegen:
+  strictScalars: true
+  immutableTypes: true
+  useTypeImports: false # import name conflict if set to true
+  dedupeFragments: true
+  scalars:
+    BigDecimal: string
+    BigInt: bigint
+    Bytes: string
+
 documents:
   - ./src/spectre-subgraph-queries.graphql
