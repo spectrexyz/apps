@@ -1,6 +1,6 @@
 import type { MutationStatus } from "@tanstack/react-query"
 import type { Dnum } from "dnum"
-import type { Address, EnsName } from "moire"
+import type { Address, AddressOrEnsName } from "moire"
 
 export type TimeScale = "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY"
 
@@ -42,7 +42,7 @@ export type Snft = Readonly<{
   buyoutMultiplier: number
   buyoutPrice: Dnum
   creator: Readonly<{
-    address: EnsName
+    address: AddressOrEnsName
     avatar: string
     bio: string
     name: string
@@ -60,6 +60,11 @@ export type Snft = Readonly<{
   proposalTimeout: number
   title: string
   token: Readonly<Token>
+  nft: Readonly<{
+    contractAddress: Address
+    tokenId: string
+    tokenURI: string
+  }>
 }>
 
 // A light version of the Snft type, used in cards for example.

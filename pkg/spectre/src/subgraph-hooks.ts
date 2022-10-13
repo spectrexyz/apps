@@ -1,9 +1,13 @@
 import type { UseQueryResult } from "@tanstack/react-query"
+import type { Address } from "moire"
 import type { SpectreByIdQuery, SpectresQuery } from "../.graphclient"
 import type { SnftId } from "./types"
 
 import { useQuery } from "@tanstack/react-query"
-import { execute, SpectreByIdDocument, SpectresDocument } from "../.graphclient"
+import { isAddress } from "moire"
+import { getBuiltGraphSDK } from "../.graphclient"
+
+const queries = getBuiltGraphSDK()
 
 export function useSpectres<T>(
   transform: (spectres: SpectresQuery["spectres"]) => T,
@@ -26,13 +30,10 @@ export function useSpectres<T>(
   } = {},
 ): UseQueryResult<[number, T]> {
   return useQuery(["SpectresQuery", first, skip], async () => {
-    const result = await execute(SpectresDocument, { first, skip })
-    if (result.errors && result.errors.length > 0) {
-      throw result.errors[0]
-    }
+    const result = await queries.Spectres({ first, skip })
     return [
-      result.data.spectresCounter.count,
-      transform(result.data.spectres || []),
+      result.spectresCounter?.count ?? 0,
+      transform(result.spectres ?? []),
     ]
   }, { enabled, retry, retryDelay })
 }
@@ -52,15 +53,31 @@ export function useSpectre(
       retryDelay?: number
     }
   } = {},
-): UseQueryResult<SpectreByIdQuery> {
-  return useQuery(["SpectreByIdQuery", id], async () => {
-    const result = await execute(SpectreByIdDocument, { id })
-    if (result.errors && result.errors.length > 0) {
-      throw result.errors[0]
+): UseQueryResult<
+  Omit<SpectreByIdQuery, "spectre"> & {
+    spectre: SpectreByIdQuery["spectre"] & {
+      NFT: NonNullable<SpectreByIdQuery["spectre"]>["NFT"] & {
+        creator: Address
+        collection: Address
+      }
     }
-    if (!result.data?.spectre) {
+  }
+> {
+  return useQuery(["SpectreByIdQuery", id], async () => {
+    const result = await queries.SpectreById({ id })
+    if (!result.spectre) {
       throw new Error(`Spectre ${id} not found`)
     }
-    return result.data
+    if (!isAddress(result.spectre.NFT.creator)) {
+      throw new Error(
+        `spectre.NFT.creator is not a valid address: ${result.spectre.NFT.creator}`,
+      )
+    }
+    if (!isAddress(result.spectre.NFT.collection)) {
+      throw new Error(
+        `spectre.NFT.collection is not a valid address: ${result.spectre.NFT.collection}`,
+      )
+    }
+    return result
   }, { enabled, retry, retryDelay })
 }
