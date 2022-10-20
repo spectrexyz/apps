@@ -2,7 +2,7 @@ query Spectres($first: Int, $skip: Int) {
   spectresCounter(id: "SpectresCounter") {
     count
   }
-  spectres(first: $first, skip: $skip) {
+  spectres(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
     id
     NFT {
       id
@@ -16,15 +16,29 @@ query Spectres($first: Int, $skip: Int) {
       }
     }
     sERC20 {
+      id
+      address
+      cap
       name
       symbol
-      cap
-      sale {
-        id
-        guardian
-      }
       issuance {
+        allocation
+        fee
+        flash
+        guardian
         id
+        reserve
+        state
+      }
+      sale {
+        multiplier
+        stock
+        opening
+        escape
+        flash
+        guardian
+        id
+        reserve
       }
     }
   }
@@ -46,6 +60,7 @@ query SpectreById($id: ID!) {
     }
     sERC20 {
       id
+      address
       name
       symbol
       cap

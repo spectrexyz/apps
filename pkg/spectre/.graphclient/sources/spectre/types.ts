@@ -1540,6 +1540,7 @@ export type Spectre = {
   state: SpectreState;
   vault: Scalars['Bytes'];
   broker: Scalars['Bytes'];
+  timestamp: Scalars['BigInt'];
 };
 
 export type SpectreState =
@@ -1614,6 +1615,14 @@ export type Spectre_filter = {
   broker_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   broker_contains?: InputMaybe<Scalars['Bytes']>;
   broker_not_contains?: InputMaybe<Scalars['Bytes']>;
+  timestamp?: InputMaybe<Scalars['BigInt']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -1624,7 +1633,8 @@ export type Spectre_orderBy =
   | 'sERC20'
   | 'state'
   | 'vault'
-  | 'broker';
+  | 'broker'
+  | 'timestamp';
 
 export type SpectresCounter = {
   id: Scalars['String'];
@@ -2092,6 +2102,7 @@ export type _SubgraphErrorPolicy_ =
 
 export type sERC20 = {
   id: Scalars['ID'];
+  address: Scalars['Bytes'];
   spectre: Spectre;
   name: Scalars['String'];
   symbol: Scalars['String'];
@@ -2110,6 +2121,12 @@ export type sERC20_filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_in?: InputMaybe<Array<Scalars['ID']>>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  address?: InputMaybe<Scalars['Bytes']>;
+  address_not?: InputMaybe<Scalars['Bytes']>;
+  address_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  address_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  address_contains?: InputMaybe<Scalars['Bytes']>;
+  address_not_contains?: InputMaybe<Scalars['Bytes']>;
   spectre?: InputMaybe<Scalars['String']>;
   spectre_not?: InputMaybe<Scalars['String']>;
   spectre_gt?: InputMaybe<Scalars['String']>;
@@ -2248,6 +2265,7 @@ export type sERC20_filter = {
 
 export type sERC20_orderBy =
   | 'id'
+  | 'address'
   | 'spectre'
   | 'name'
   | 'symbol'

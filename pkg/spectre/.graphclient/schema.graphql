@@ -1579,6 +1579,7 @@ type Spectre {
   state: SpectreState!
   vault: Bytes!
   broker: Bytes!
+  timestamp: BigInt!
 }
 
 enum SpectreState {
@@ -1654,6 +1655,14 @@ input Spectre_filter {
   broker_not_in: [Bytes!]
   broker_contains: Bytes
   broker_not_contains: Bytes
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
 }
@@ -1665,6 +1674,7 @@ enum Spectre_orderBy {
   state
   vault
   broker
+  timestamp
 }
 
 type SpectresCounter {
@@ -2226,6 +2236,7 @@ enum _SubgraphErrorPolicy_ {
 
 type sERC20 {
   id: ID!
+  address: Bytes!
   spectre: Spectre!
   name: String!
   symbol: String!
@@ -2244,6 +2255,12 @@ input sERC20_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
+  address: Bytes
+  address_not: Bytes
+  address_in: [Bytes!]
+  address_not_in: [Bytes!]
+  address_contains: Bytes
+  address_not_contains: Bytes
   spectre: String
   spectre_not: String
   spectre_gt: String
@@ -2382,6 +2399,7 @@ input sERC20_filter {
 
 enum sERC20_orderBy {
   id
+  address
   spectre
   name
   symbol

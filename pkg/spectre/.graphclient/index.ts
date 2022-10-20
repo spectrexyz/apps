@@ -1559,6 +1559,7 @@ export type Spectre = {
   readonly state: SpectreState;
   readonly vault: Scalars['Bytes'];
   readonly broker: Scalars['Bytes'];
+  readonly timestamp: Scalars['BigInt'];
 };
 
 export type SpectreState =
@@ -1633,6 +1634,14 @@ export type Spectre_filter = {
   readonly broker_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly broker_contains?: InputMaybe<Scalars['Bytes']>;
   readonly broker_not_contains?: InputMaybe<Scalars['Bytes']>;
+  readonly timestamp?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_not?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  readonly timestamp_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -1643,7 +1652,8 @@ export type Spectre_orderBy =
   | 'sERC20'
   | 'state'
   | 'vault'
-  | 'broker';
+  | 'broker'
+  | 'timestamp';
 
 export type SpectresCounter = {
   readonly id: Scalars['String'];
@@ -2111,6 +2121,7 @@ export type _SubgraphErrorPolicy_ =
 
 export type sERC20 = {
   readonly id: Scalars['ID'];
+  readonly address: Scalars['Bytes'];
   readonly spectre: Spectre;
   readonly name: Scalars['String'];
   readonly symbol: Scalars['String'];
@@ -2129,6 +2140,12 @@ export type sERC20_filter = {
   readonly id_lte?: InputMaybe<Scalars['ID']>;
   readonly id_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
+  readonly address?: InputMaybe<Scalars['Bytes']>;
+  readonly address_not?: InputMaybe<Scalars['Bytes']>;
+  readonly address_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
+  readonly address_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
+  readonly address_contains?: InputMaybe<Scalars['Bytes']>;
+  readonly address_not_contains?: InputMaybe<Scalars['Bytes']>;
   readonly spectre?: InputMaybe<Scalars['String']>;
   readonly spectre_not?: InputMaybe<Scalars['String']>;
   readonly spectre_gt?: InputMaybe<Scalars['String']>;
@@ -2267,6 +2284,7 @@ export type sERC20_filter = {
 
 export type sERC20_orderBy =
   | 'id'
+  | 'address'
   | 'spectre'
   | 'name'
   | 'symbol'
@@ -2672,6 +2690,7 @@ export type SpectreResolvers<ContextType = MeshContext, ParentType extends Resol
   state?: Resolver<ResolversTypes['SpectreState'], ParentType, ContextType>;
   vault?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   broker?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2741,6 +2760,7 @@ export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends Resolv
 
 export type sERC20Resolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['sERC20'] = ResolversParentTypes['sERC20']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   spectre?: Resolver<ResolversTypes['Spectre'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   symbol?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -2923,8 +2943,8 @@ export type SpectresQuery = { readonly spectresCounter?: Maybe<Pick<SpectresCoun
       Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
       & { readonly metadata: Pick<NFTMetadata, 'name' | 'image'> }
     ), readonly sERC20: (
-      Pick<sERC20, 'name' | 'symbol' | 'cap'>
-      & { readonly sale?: Maybe<Pick<Sale, 'id' | 'guardian'>>, readonly issuance?: Maybe<Pick<Issuance, 'id'>> }
+      Pick<sERC20, 'id' | 'address' | 'cap' | 'name' | 'symbol'>
+      & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>> }
     ) }
   )> };
 
@@ -2939,7 +2959,7 @@ export type SpectreByIdQuery = { readonly spectre?: Maybe<(
       Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
       & { readonly metadata: Pick<NFTMetadata, 'name' | 'description' | 'image'> }
     ), readonly sERC20: (
-      Pick<sERC20, 'id' | 'name' | 'symbol' | 'cap'>
+      Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap'>
       & { readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, readonly pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
         & { readonly joins: ReadonlyArray<Pick<Join, 'id'>> }
@@ -2953,7 +2973,7 @@ export const SpectresDocument = gql`
   spectresCounter(id: "SpectresCounter") {
     count
   }
-  spectres(first: $first, skip: $skip) {
+  spectres(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
     id
     NFT {
       id
@@ -2967,15 +2987,29 @@ export const SpectresDocument = gql`
       }
     }
     sERC20 {
+      id
+      address
+      cap
       name
       symbol
-      cap
-      sale {
-        id
-        guardian
-      }
       issuance {
+        allocation
+        fee
+        flash
+        guardian
         id
+        reserve
+        state
+      }
+      sale {
+        multiplier
+        stock
+        opening
+        escape
+        flash
+        guardian
+        id
+        reserve
       }
     }
   }
@@ -2998,6 +3032,7 @@ export const SpectreByIdDocument = gql`
     }
     sERC20 {
       id
+      address
       name
       symbol
       cap
