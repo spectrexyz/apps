@@ -9,8 +9,24 @@ import { getBuiltGraphSDK } from "../.graphclient"
 
 const queries = getBuiltGraphSDK()
 
+type SpectresQuerySpectre = SpectresQuery["spectres"][number]
+type SpectresQuerySerc20 = SpectresQuerySpectre["sERC20"]
+
 export function useSpectres<T>(
-  transform: (spectres: SpectresQuery["spectres"]) => T,
+  transform: (
+    spectre: SpectresQuerySpectre & {
+      sERC20: SpectresQuerySerc20 & {
+        address: Address
+        sale:
+          & SpectresQuerySerc20["sale"]
+          & {
+            guardian: NonNullable<
+              NonNullable<SpectresQuerySerc20["sale"]>["guardian"]
+            >
+          }
+      }
+    },
+  ) => T,
   {
     first = 12,
     skip = 0,
@@ -28,12 +44,22 @@ export function useSpectres<T>(
       retryDelay?: number
     }
   } = {},
-): UseQueryResult<[number, T]> {
+): UseQueryResult<[number, T[]]> {
   return useQuery(["SpectresQuery", first, skip], async () => {
     const result = await queries.Spectres({ first, skip })
+    const { spectres = [] } = result
     return [
       result.spectresCounter?.count ?? 0,
-      transform(result.spectres ?? []),
+      spectres.map((spectre) => {
+        const sale = spectre.sERC20.sale
+        if (!sale) {
+          throw new Error("spectre.sERC20.sale is missing")
+        }
+        return transform({
+          ...spectre,
+          sERC20: { ...spectre.sERC20, sale },
+        })
+      }),
     ]
   }, { enabled, retry, retryDelay })
 }
@@ -59,6 +85,9 @@ export function useSpectre(
       NFT: NonNullable<SpectreByIdQuery["spectre"]>["NFT"] & {
         creator: Address
         collection: Address
+      }
+      sERC20: NonNullable<SpectreByIdQuery["spectre"]>["sERC20"] & {
+        address: Address
       }
     }
   }

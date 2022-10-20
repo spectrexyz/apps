@@ -3,7 +3,10 @@ import { useLayout } from "../styles"
 import { PanelSection } from "./PanelSection"
 
 export function TokenContractInfo(
-  { contractAddress, repoUrl }: {
+  {
+    contractAddress,
+    repoUrl,
+  }: {
     contractAddress: string
     repoUrl: string
   },
@@ -23,6 +26,8 @@ export function TokenContractInfo(
         }}
       >
         <AddressBadge
+          showCopy
+          showExplore
           address={contractAddress}
           rounded
         />

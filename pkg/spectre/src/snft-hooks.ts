@@ -81,25 +81,33 @@ export function useSnft(
       return null
     }
 
-    const buyoutMultiplier = Number(
-      dnum.setDecimals(
-        [BigInt(sale.multiplier), 18],
-        0,
-      )[0],
+    // We only need one digit precision for the multiplier
+    const buyoutMultiplier = Number(BigInt(sale.multiplier) / 10n ** 17n) / 10
+
+    const supply: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
+    const initialBuyoutPrice: Dnum = [BigInt(serc20.sale?.reserve), 18]
+    const initialMarketCapEth: Dnum = dnum.divide(
+      initialBuyoutPrice,
+      buyoutMultiplier,
+    )
+    const initialTokenPriceEth: Dnum = dnum.divide(
+      initialMarketCapEth,
+      supply,
     )
 
-    const marketCapEth: Dnum = [100_000000000000000000n, 18]
+    // TODO: replace with dynamic values
+    const buyoutPrice = initialBuyoutPrice
+    const marketCapEth = initialMarketCapEth
+    const priceEth = initialTokenPriceEth
     const pooledEth: Dnum = [10_000000000000000000n, 18]
-    const pooledToken: Dnum = [10_000000000000000000n, 18]
-    const supply = dnum.from(1_000_000, 18)
+    const pooledToken: Dnum = [10_000000000000000000n, SERC20_DECIMALS]
     const minted = dnum.divide(supply, 3)
-    const priceEth = dnum.from(1, 18)
 
     const snft: Snft = {
       id,
       shortId: toShortId(id),
       buyoutMultiplier,
-      buyoutPrice: dnum.multiply(marketCapEth, buyoutMultiplier),
+      buyoutPrice,
       creator: {
         address: nft?.creator,
         avatar: "",
@@ -124,7 +132,7 @@ export function useSnft(
         tokenURI: nft.tokenURI,
       },
       token: {
-        contractAddress: "0xabc",
+        contractAddress: serc20.address,
         decimals: SERC20_DECIMALS,
         distribution: [],
         holdersCount: 10,
@@ -172,19 +180,17 @@ export function useSnfts({
     retry?: boolean
   }
 } = {}): UseQueryResult<[number, SnftPreview[]]> {
-  return useSpectres((spectres) => {
-    return spectres.map((spectre) => {
-      const snft: SnftPreview = {
-        id: spectre.id,
-        shortId: toShortId(spectre.id),
-        guardian: spectre.sERC20.sale?.guardian,
-        image: ipfsUrl(spectre.NFT.metadata.image),
-        title: spectre.NFT.metadata.name,
-        tokenPriceEth: [0n, 0],
-        tokenSymbol: spectre.sERC20.symbol,
-      }
-      return snft
-    })
+  return useSpectres(({ id, sERC20, NFT }) => {
+    const snft: SnftPreview = {
+      id: id,
+      shortId: toShortId(id),
+      guardian: sERC20.sale.guardian,
+      image: ipfsUrl(NFT.metadata.image),
+      title: NFT.metadata.name,
+      tokenPriceEth: [0n, 0],
+      tokenSymbol: sERC20.symbol,
+    }
+    return snft
   }, {
     first,
     skip,

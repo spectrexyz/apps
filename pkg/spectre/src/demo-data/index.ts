@@ -319,6 +319,11 @@ function randomNft(
     proposalTimeout: rand(TIMELOCK_OPTIONS),
     title,
     token,
+    nft: {
+      contractAddress: randomAddress(),
+      tokenId: randomSnftId(),
+      tokenURI: "",
+    },
   }
 }
 

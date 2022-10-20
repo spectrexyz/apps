@@ -11,6 +11,9 @@ import { NftTitle } from "./NftTitle"
 import { PanelDetails } from "./PanelDetails"
 import { TokenContractInfo } from "./TokenContractInfo"
 
+const TOKEN_REPO_URL =
+  "https://github.com/spectrexyz/protocol/blob/ac7f40212adf94a6e8ac40b21198697bb1bf3a95/contracts/token/sERC20.sol"
+
 export function FractionsPanel({ snft }: { snft: Snft }) {
   const layout = useLayout()
 
@@ -18,8 +21,7 @@ export function FractionsPanel({ snft }: { snft: Snft }) {
     return null
   }
 
-  const tokenContract = "0xfabe062eb33af3e68eb3329818d0507949c14142"
-  const tokenRepoUrl = "https://github.com/"
+  const tokenContract = snft.token.contractAddress
 
   const [primary, secondary, after = null] = (() => {
     if (layout.above("xlarge")) {
@@ -29,7 +31,7 @@ export function FractionsPanel({ snft }: { snft: Snft }) {
           <NftDetails snft={snft} />
           <TokenContractInfo
             contractAddress={tokenContract}
-            repoUrl={tokenRepoUrl}
+            repoUrl={TOKEN_REPO_URL}
           />
           <FractionsMetrics snft={snft} />
         </>,
@@ -52,7 +54,7 @@ export function FractionsPanel({ snft }: { snft: Snft }) {
           <NftActions highlight="fractions" snft={snft} />
           <TokenContractInfo
             contractAddress={tokenContract}
-            repoUrl={tokenRepoUrl}
+            repoUrl={TOKEN_REPO_URL}
           />
           <FractionsMetrics snft={snft} />
         </>,
@@ -68,7 +70,7 @@ export function FractionsPanel({ snft }: { snft: Snft }) {
         <NftActions highlight="fractions" snft={snft} />
         <TokenContractInfo
           contractAddress={tokenContract}
-          repoUrl={tokenRepoUrl}
+          repoUrl={TOKEN_REPO_URL}
         />
         <FractionsMetrics snft={snft} />
         <TokenHealthTip />

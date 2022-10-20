@@ -149,7 +149,7 @@ const initialState: SpectralizeData = {
   rewardsSplit: [],
   nftBuyoutPrice: 15000000000000000000n,
   totalMarketCap: 10000000000000000000n,
-  initialTokenPrice: 1000000000000000n,
+  initialTokenPrice: 10000000000000n,
   maxTokenSupplyCap: 1_000_000n,
   buyoutMultiplier: 15,
   errors: [],
@@ -690,13 +690,14 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
     initialLpTokenWeight,
     maxTokenSupplyCap,
     mintingFees,
+    nftBuyoutPrice,
+    rewardsPct,
+    rewardsSplit,
     targetLpTokenWeight,
     timelock,
     tokenName,
     tokenSymbol,
     tradingFees,
-    rewardsSplit,
-    rewardsPct,
   } = useSpectralize()
 
   const account = useAccount()
@@ -712,10 +713,8 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
         name: tokenName,
         symbol: tokenSymbol,
         cap: ethers.utils.parseEther(String(maxTokenSupplyCap)),
-        multiplier: ethers.utils.parseEther(
-          String(Math.round(buyoutMultiplier / 10)),
-        ),
-        timelock: ethers.BigNumber.from(Math.round(timelock / 1000)), // 10 days
+        multiplier: ethers.utils.parseEther(String(buyoutMultiplier / 10)),
+        timelock: ethers.BigNumber.from(Math.round(timelock / 1000)),
         sMaxNormalizedWeight: ethers.BigNumber.from(
           String(Math.round(targetLpTokenWeight * 10 ** 18)),
         ),
@@ -734,8 +733,8 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
         ),
         buyoutFlash: buyoutMechanism === "flash",
         issuanceFlash: true,
-        buyoutReserve: ethers.utils.parseEther("100"),
-        issuanceReserve: ethers.utils.parseEther("100"),
+        buyoutReserve: ethers.BigNumber.from(nftBuyoutPrice),
+        issuanceReserve: ethers.BigNumber.from(nftBuyoutPrice),
       },
     ],
     enabled: Boolean(enabled && account.address && metadataUri),

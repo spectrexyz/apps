@@ -1,11 +1,17 @@
 import type { ComponentProps, ReactNode } from "react"
 
 import { formatAmount, Percentage, PoolWeight, TokenAmount } from "moire"
+import { match } from "ts-pattern"
 import { useLayout } from "../styles"
 import { InfoGrid } from "./InfoGrid"
 
 export function Metrics(
-  { compress, footer, metrics, heading }: {
+  {
+    compress,
+    footer,
+    metrics,
+    heading,
+  }: {
     compress?: ComponentProps<typeof InfoGrid>["compress"]
     footer?: ComponentProps<typeof InfoGrid>["footer"]
     metrics: {
@@ -37,34 +43,24 @@ export function Metrics(
       compress={compress}
       footer={footer}
       heading={heading}
-      sections={metrics.map(({ heading, content }) => {
-        const { type, value } = content
-        const section = { heading }
-        if (type === "percentage") {
-          return {
-            ...section,
-            content: <Percentage percentage={value.join(".")} />,
-          }
-        }
-        if (type === "usdAmount") {
-          return {
-            ...section,
-            content: (
-              <div
-                css={({ fonts }) => ({
-                  fontFamily: fonts.mono,
-                  fontSize: "32px",
-                })}
-              >
+      sections={metrics.map(({ heading, content }) => ({
+        heading,
+        content: match(content)
+          .with(
+            { type: "percentage" },
+            ({ value }) => <Percentage percentage={value.join(".")} />,
+          )
+          .with(
+            { type: "usdAmount" },
+            ({ value }) => (
+              <div css={{ fontFamily: "fonts.mono", fontSize: "32px" }}>
                 ${formatAmount(value, 0, 2)}
               </div>
             ),
-          }
-        }
-        if (type === "tokenAmount") {
-          return {
-            ...section,
-            content: (
+          )
+          .with(
+            { type: "tokenAmount" },
+            ({ value }) => (
               <TokenAmount
                 compact={layout.below("xlarge")}
                 converted={value.converted}
@@ -72,23 +68,19 @@ export function Metrics(
                 value={value.value}
               />
             ),
-          }
-        }
-        if (type === "poolWeight") {
-          return {
-            ...section,
-            content: (
+          )
+          .with(
+            { type: "poolWeight" },
+            ({ value }) => (
               <PoolWeight
                 compact={layout.below("xlarge")}
                 secondary={value.secondary}
                 tokens={value.tokens}
               />
             ),
-          }
-        }
-
-        throw new Error(`Unknown type: ${type}`)
-      })}
+          )
+          .exhaustive(),
+      }))}
     />
   )
 }
