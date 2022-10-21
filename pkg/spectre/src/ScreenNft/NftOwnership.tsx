@@ -303,8 +303,9 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
             },
           })}
         >
-          <strong>{dnum.format(token.minted)}</strong> out of{" "}
-          <strong>{dnum.format(token.supply)}</strong> {token.symbol} fractions
+          <strong>{dnum.format(token.minted, 2)}</strong> out of{" "}
+          <strong>{dnum.format(token.supply, 2)}</strong> {token.symbol}{" "}
+          fractions
         </div>
       </div>
       <div
