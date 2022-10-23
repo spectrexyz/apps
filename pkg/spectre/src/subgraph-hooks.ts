@@ -12,58 +12,6 @@ const queries = getBuiltGraphSDK()
 type SpectresQuerySpectre = SpectresQuery["spectres"][number]
 type SpectresQuerySerc20 = SpectresQuerySpectre["sERC20"]
 
-export function useSpectres<T>(
-  transform: (
-    spectre: SpectresQuerySpectre & {
-      sERC20: SpectresQuerySerc20 & {
-        address: Address
-        sale:
-          & SpectresQuerySerc20["sale"]
-          & {
-            guardian: NonNullable<
-              NonNullable<SpectresQuerySerc20["sale"]>["guardian"]
-            >
-          }
-      }
-    },
-  ) => T,
-  {
-    first = 12,
-    skip = 0,
-    fetchOptions: {
-      enabled = true,
-      retry = false,
-      retryDelay = 1000,
-    } = {},
-  }: {
-    first?: number
-    skip?: number
-    fetchOptions?: {
-      enabled?: boolean
-      retry?: boolean
-      retryDelay?: number
-    }
-  } = {},
-): UseQueryResult<[number, T[]]> {
-  return useQuery(["SpectresQuery", first, skip], async () => {
-    const result = await queries.Spectres({ first, skip })
-    const { spectres = [] } = result
-    return [
-      result.spectresCounter?.count ?? 0,
-      spectres.map((spectre) => {
-        const sale = spectre.sERC20.sale
-        if (!sale) {
-          throw new Error("spectre.sERC20.sale is missing")
-        }
-        return transform({
-          ...spectre,
-          sERC20: { ...spectre.sERC20, sale },
-        })
-      }),
-    ]
-  }, { enabled, retry, retryDelay })
-}
-
 export function useSpectre(
   id: SnftId,
   {
@@ -108,5 +56,65 @@ export function useSpectre(
       )
     }
     return result
+  }, { enabled, retry, retryDelay })
+}
+
+export function useSpectres<T>(
+  transform: (
+    spectre: SpectresQuerySpectre & {
+      sERC20: SpectresQuerySerc20 & {
+        address: Address
+        sale:
+          & SpectresQuerySerc20["sale"]
+          & {
+            guardian: NonNullable<
+              NonNullable<SpectresQuerySerc20["sale"]>["guardian"]
+            >
+          }
+      }
+    },
+  ) => T,
+  {
+    first = 12,
+    skip = 0,
+    fetchOptions: {
+      enabled = true,
+      retry = false,
+      retryDelay = 1000,
+    } = {},
+  }: {
+    first?: number
+    skip?: number
+    fetchOptions?: {
+      enabled?: boolean
+      retry?: boolean
+      retryDelay?: number
+    }
+  } = {},
+): UseQueryResult<[number, T[]]> {
+  return useQuery(["SpectresQuery", first, skip], async () => {
+    const result = await queries.Spectres({ first, skip })
+    const { spectres = [] } = result
+    return [
+      result.spectresCounter?.count ?? 0,
+      spectres.map((spectre) => {
+        const sale = spectre.sERC20.sale
+        if (!sale) {
+          throw new Error("spectre.sERC20.sale is missing")
+        }
+        const sERC20Address = spectre.sERC20.address
+        if (!isAddress(sERC20Address)) {
+          throw new Error("spectre.sERC20.address is invalid")
+        }
+        return transform({
+          ...spectre,
+          sERC20: {
+            ...spectre.sERC20,
+            address: sERC20Address,
+            sale,
+          },
+        })
+      }),
+    ]
   }, { enabled, retry, retryDelay })
 }

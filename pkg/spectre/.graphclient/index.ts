@@ -2939,10 +2939,7 @@ export type SpectresQueryVariables = Exact<{
 
 export type SpectresQuery = { readonly spectresCounter?: Maybe<Pick<SpectresCounter, 'count'>>, readonly spectres: ReadonlyArray<(
     Pick<Spectre, 'id'>
-    & { readonly NFT: (
-      Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
-      & { readonly metadata: Pick<NFTMetadata, 'name' | 'image'> }
-    ), readonly sERC20: (
+    & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
       Pick<sERC20, 'id' | 'address' | 'cap' | 'name' | 'symbol'>
       & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>> }
     ) }
@@ -2955,10 +2952,7 @@ export type SpectreByIdQueryVariables = Exact<{
 
 export type SpectreByIdQuery = { readonly spectre?: Maybe<(
     Pick<Spectre, 'state' | 'vault' | 'broker'>
-    & { readonly NFT: (
-      Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>
-      & { readonly metadata: Pick<NFTMetadata, 'name' | 'description' | 'image'> }
-    ), readonly sERC20: (
+    & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
       Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap'>
       & { readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, readonly pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
@@ -2981,10 +2975,6 @@ export const SpectresDocument = gql`
       tokenId
       tokenURI
       creator
-      metadata {
-        name
-        image
-      }
     }
     sERC20 {
       id
@@ -3024,11 +3014,6 @@ export const SpectreByIdDocument = gql`
       tokenId
       tokenURI
       creator
-      metadata {
-        name
-        description
-        image
-      }
     }
     sERC20 {
       id

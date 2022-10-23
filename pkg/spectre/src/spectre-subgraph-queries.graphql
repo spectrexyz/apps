@@ -10,10 +10,6 @@ query Spectres($first: Int, $skip: Int) {
       tokenId
       tokenURI
       creator
-      metadata {
-        name
-        image
-      }
     }
     sERC20 {
       id
@@ -52,11 +48,6 @@ query SpectreById($id: ID!) {
       tokenId
       tokenURI
       creator
-      metadata {
-        name
-        description
-        image
-      }
     }
     sERC20 {
       id

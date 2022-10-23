@@ -1,4 +1,4 @@
-import type { UseQueryResult } from "@tanstack/react-query"
+import { useQueries, UseQueryResult } from "@tanstack/react-query"
 import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName } from "moire"
 import type {
@@ -13,10 +13,10 @@ import type {
 import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
-import { isAddress } from "moire"
 import { useMemo } from "react"
 import { useProvider } from "wagmi"
-import { SERC20_DECIMALS } from "./constants"
+import { z } from "zod"
+import { NFT_FILE_TYPES, SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
   POOLS_BY_ACCOUNT,
@@ -27,6 +27,19 @@ import {
 } from "./demo-data"
 import { useSpectre, useSpectres } from "./subgraph-hooks"
 import { ipfsUrl, resolveAddress, toShortId } from "./utils"
+
+const metadataSchema = z.object({
+  "description": z.string().trim().min(1),
+  "image": z.string().trim().min(1),
+  "name": z.string().trim().min(1),
+  "properties": z.object({
+    "type": z.union([
+      z.literal("audio"),
+      z.literal("image"),
+      z.literal("video"),
+    ]),
+  }).optional(),
+})
 
 function fakeDelay() {
   return new Promise((resolve) => {
@@ -64,8 +77,19 @@ export function useSnft(
     },
   })
 
+  const tokenURI = spectreResult.data?.spectre.NFT.tokenURI
+  const metadataQuery = useQuery(["nft-metadata", id], async () => {
+    if (!tokenURI) {
+      return null // type guard
+    }
+    const response = await fetch(ipfsUrl(tokenURI))
+    return metadataSchema.parse(await response.json())
+  }, {
+    enabled: Boolean(tokenURI),
+  })
+
   const spectre = spectreResult.data?.spectre
-  const metadata = spectre?.NFT.metadata
+  const metadata = metadataQuery.data
 
   const snft = useMemo(() => {
     if (!spectre || !metadata) {
@@ -179,26 +203,53 @@ export function useSnfts({
   fetchOptions?: {
     retry?: boolean
   }
-} = {}): UseQueryResult<[number, SnftPreview[]]> {
-  return useSpectres(({ id, sERC20, NFT }) => {
-    const snft: SnftPreview = {
-      id: id,
-      shortId: toShortId(id),
-      guardian: sERC20.sale.guardian,
-      image: ipfsUrl(NFT.metadata.image),
-      title: NFT.metadata.name,
-      tokenPriceEth: [0n, 0],
-      tokenSymbol: sERC20.symbol,
-    }
-    return snft
-  }, {
-    first,
-    skip,
-    fetchOptions: {
-      retry,
-      retryDelay: RETRY_DELAY,
+} = {}): [
+  total: number | null,
+  prefetchStatus: UseQueryResult["status"],
+  snfts: UseQueryResult<SnftPreview>[],
+] {
+  const spectresResult = useSpectres(
+    ({ id, sERC20, NFT }): [string, Omit<SnftPreview, "image" | "title">] => [
+      NFT.tokenURI,
+      {
+        id: id,
+        shortId: toShortId(id),
+        guardian: sERC20.sale.guardian,
+        tokenPriceEth: [0n, 0],
+        tokenSymbol: sERC20.symbol,
+      },
+    ],
+    {
+      first,
+      skip,
+      fetchOptions: {
+        retry,
+        retryDelay: RETRY_DELAY,
+      },
     },
+  )
+
+  const [total, spectres] = spectresResult.data ?? [null, null]
+  const spectresFullResult = useQueries({
+    queries: spectres?.map(([tokenURI, spectre]) => ({
+      queryKey: ["use-snfts", spectre.id],
+      async queryFn() {
+        const response = await fetch(ipfsUrl(tokenURI))
+        const { image, name } = metadataSchema.parse(await response.json())
+        return {
+          ...spectre,
+          image: ipfsUrl(image),
+          title: name,
+        }
+      },
+    })) ?? [],
   })
+
+  return [
+    total,
+    spectresResult.status,
+    spectresFullResult,
+  ]
 }
 
 export function useHighlightedSnfts(): UseQueryResult<Snft[]> {

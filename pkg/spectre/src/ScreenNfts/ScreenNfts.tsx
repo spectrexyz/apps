@@ -18,14 +18,18 @@ export function ScreenNfts({
   page: number
 }) {
   const layout = useLayout()
-  const snftsQuery = useSnfts({
+  const [snftsCount, snftsPrefetchStatus, snftQueries] = useSnfts({
     first: SNFTS_PER_PAGE,
     skip: SNFTS_PER_PAGE * page,
   })
-  const [snftsCount, snfts] = snftsQuery.data ?? [-1, []]
 
   const paginationData = useMemo(
-    () => pagination(page, SNFTS_PER_PAGE, snftsCount),
+    () =>
+      pagination(
+        page,
+        SNFTS_PER_PAGE,
+        snftsCount === null ? -1 : snftsCount,
+      ),
     [page, snftsCount],
   )
 
@@ -37,7 +41,7 @@ export function ScreenNfts({
   return (
     <AppScreen
       compactBar={layout.below("medium") && { title: "Spectre" }}
-      loading={snftsQuery.isLoading}
+      loading={snftsPrefetchStatus === "loading"}
     >
       <section
         css={{
@@ -70,11 +74,13 @@ export function ScreenNfts({
         </div>
         <div css={{ position: "relative" }}>
           <Grid>
-            {snfts.map((snft) => (
-              <SnftCard
-                key={snft.id}
-                snft={snft}
-              />
+            {snftQueries.map((snftQuery) => (
+              snftQuery.data && (
+                <SnftCard
+                  key={snftQuery.data?.id}
+                  snft={snftQuery.data}
+                />
+              )
             ))}
           </Grid>
         </div>
