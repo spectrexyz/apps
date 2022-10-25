@@ -39,7 +39,6 @@ const env = z.object({
     .default("0")
     .transform((value) => Boolean(parseInt(String(value), 10))),
   VITE_INFURA_PROJECT_ID: z.string().min(1),
-  VITE_SUBGRAPH_ENDPOINT: z.string().url(),
   VITE_NFT_STORAGE_KEY: z.string().min(1),
 
   VITE_ADDRESS_SERC20: zAddress("VITE_ADDRESS_SERC20"),
@@ -56,7 +55,6 @@ export const {
   VITE_CHAIN_ID: CHAIN_ID,
   VITE_DEMO_MODE: DEMO_MODE,
   VITE_INFURA_PROJECT_ID: INFURA_PROJECT_ID,
-  VITE_SUBGRAPH_ENDPOINT: SUBGRAPH_ENDPOINT,
   VITE_NFT_STORAGE_KEY: NFT_STORAGE_KEY,
 
   VITE_ADDRESS_SERC20: ADDRESS_SERC20,
