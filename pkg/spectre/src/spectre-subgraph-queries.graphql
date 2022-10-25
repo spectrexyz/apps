@@ -55,6 +55,11 @@ query SpectreById($id: ID!) {
       name
       symbol
       cap
+      minted
+      holders(first: 20, orderBy: amount, orderDirection: desc) {
+        address
+        amount
+      }
       sale {
         stock
         multiplier

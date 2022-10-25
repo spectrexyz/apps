@@ -721,117 +721,7 @@ export type NFT = {
   readonly tokenId: Scalars['BigInt'];
   readonly tokenURI: Scalars['String'];
   readonly creator: Scalars['Bytes'];
-  readonly metadata: NFTMetadata;
 };
-
-export type NFTMetadata = {
-  readonly id: Scalars['ID'];
-  readonly nft: NFT;
-  readonly description: Scalars['String'];
-  readonly image: Scalars['String'];
-  readonly name: Scalars['String'];
-};
-
-export type NFTMetadata_filter = {
-  readonly id?: InputMaybe<Scalars['ID']>;
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  readonly id_gt?: InputMaybe<Scalars['ID']>;
-  readonly id_lt?: InputMaybe<Scalars['ID']>;
-  readonly id_gte?: InputMaybe<Scalars['ID']>;
-  readonly id_lte?: InputMaybe<Scalars['ID']>;
-  readonly id_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
-  readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
-  readonly nft?: InputMaybe<Scalars['String']>;
-  readonly nft_not?: InputMaybe<Scalars['String']>;
-  readonly nft_gt?: InputMaybe<Scalars['String']>;
-  readonly nft_lt?: InputMaybe<Scalars['String']>;
-  readonly nft_gte?: InputMaybe<Scalars['String']>;
-  readonly nft_lte?: InputMaybe<Scalars['String']>;
-  readonly nft_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly nft_not_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly nft_contains?: InputMaybe<Scalars['String']>;
-  readonly nft_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_not_contains?: InputMaybe<Scalars['String']>;
-  readonly nft_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_starts_with?: InputMaybe<Scalars['String']>;
-  readonly nft_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_not_starts_with?: InputMaybe<Scalars['String']>;
-  readonly nft_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_ends_with?: InputMaybe<Scalars['String']>;
-  readonly nft_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_not_ends_with?: InputMaybe<Scalars['String']>;
-  readonly nft_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly nft_?: InputMaybe<NFT_filter>;
-  readonly description?: InputMaybe<Scalars['String']>;
-  readonly description_not?: InputMaybe<Scalars['String']>;
-  readonly description_gt?: InputMaybe<Scalars['String']>;
-  readonly description_lt?: InputMaybe<Scalars['String']>;
-  readonly description_gte?: InputMaybe<Scalars['String']>;
-  readonly description_lte?: InputMaybe<Scalars['String']>;
-  readonly description_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly description_not_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly description_contains?: InputMaybe<Scalars['String']>;
-  readonly description_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly description_not_contains?: InputMaybe<Scalars['String']>;
-  readonly description_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly description_starts_with?: InputMaybe<Scalars['String']>;
-  readonly description_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly description_not_starts_with?: InputMaybe<Scalars['String']>;
-  readonly description_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly description_ends_with?: InputMaybe<Scalars['String']>;
-  readonly description_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly description_not_ends_with?: InputMaybe<Scalars['String']>;
-  readonly description_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly image?: InputMaybe<Scalars['String']>;
-  readonly image_not?: InputMaybe<Scalars['String']>;
-  readonly image_gt?: InputMaybe<Scalars['String']>;
-  readonly image_lt?: InputMaybe<Scalars['String']>;
-  readonly image_gte?: InputMaybe<Scalars['String']>;
-  readonly image_lte?: InputMaybe<Scalars['String']>;
-  readonly image_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly image_not_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly image_contains?: InputMaybe<Scalars['String']>;
-  readonly image_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly image_not_contains?: InputMaybe<Scalars['String']>;
-  readonly image_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly image_starts_with?: InputMaybe<Scalars['String']>;
-  readonly image_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly image_not_starts_with?: InputMaybe<Scalars['String']>;
-  readonly image_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly image_ends_with?: InputMaybe<Scalars['String']>;
-  readonly image_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly image_not_ends_with?: InputMaybe<Scalars['String']>;
-  readonly image_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly name?: InputMaybe<Scalars['String']>;
-  readonly name_not?: InputMaybe<Scalars['String']>;
-  readonly name_gt?: InputMaybe<Scalars['String']>;
-  readonly name_lt?: InputMaybe<Scalars['String']>;
-  readonly name_gte?: InputMaybe<Scalars['String']>;
-  readonly name_lte?: InputMaybe<Scalars['String']>;
-  readonly name_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly name_not_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
-  readonly name_contains?: InputMaybe<Scalars['String']>;
-  readonly name_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly name_not_contains?: InputMaybe<Scalars['String']>;
-  readonly name_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly name_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
-  readonly name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly name_ends_with?: InputMaybe<Scalars['String']>;
-  readonly name_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  readonly name_not_ends_with?: InputMaybe<Scalars['String']>;
-  readonly name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  /** Filter for the block changed event. */
-  readonly _change_block?: InputMaybe<BlockChangedFilter>;
-};
-
-export type NFTMetadata_orderBy =
-  | 'id'
-  | 'nft'
-  | 'description'
-  | 'image'
-  | 'name';
 
 export type NFT_filter = {
   readonly id?: InputMaybe<Scalars['ID']>;
@@ -882,7 +772,6 @@ export type NFT_filter = {
   readonly creator_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly creator_contains?: InputMaybe<Scalars['Bytes']>;
   readonly creator_not_contains?: InputMaybe<Scalars['Bytes']>;
-  readonly metadata_?: InputMaybe<NFTMetadata_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -892,8 +781,7 @@ export type NFT_orderBy =
   | 'collection'
   | 'tokenId'
   | 'tokenURI'
-  | 'creator'
-  | 'metadata';
+  | 'creator';
 
 /** Defines the order direction, either ascending or descending */
 export type OrderDirection =
@@ -1081,7 +969,6 @@ export type ProposalState =
   | 'Withdrawn';
 
 export type Query = {
-  readonly nftmetadata: ReadonlyArray<NFTMetadata>;
   readonly nft?: Maybe<NFT>;
   readonly nfts: ReadonlyArray<NFT>;
   readonly spectre?: Maybe<Spectre>;
@@ -1090,6 +977,8 @@ export type Query = {
   readonly spectresCounters: ReadonlyArray<SpectresCounter>;
   readonly sERC20?: Maybe<sERC20>;
   readonly sERC20S: ReadonlyArray<sERC20>;
+  readonly sERC20Holder?: Maybe<sERC20Holder>;
+  readonly sERC20Holders: ReadonlyArray<sERC20Holder>;
   readonly sale?: Maybe<Sale>;
   readonly sales: ReadonlyArray<Sale>;
   readonly buyoutProposal?: Maybe<BuyoutProposal>;
@@ -1114,17 +1003,6 @@ export type Query = {
   readonly joins: ReadonlyArray<Join>;
   /** Access to subgraph metadata */
   readonly _meta?: Maybe<_Meta_>;
-};
-
-
-export type QuerynftmetadataArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<NFTMetadata_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NFTMetadata_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1195,6 +1073,24 @@ export type QuerysERC20SArgs = {
   orderBy?: InputMaybe<sERC20_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<sERC20_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerysERC20HolderArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerysERC20HoldersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<sERC20Holder_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<sERC20Holder_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -1698,7 +1594,6 @@ export type SpectresCounter_orderBy =
   | 'count';
 
 export type Subscription = {
-  readonly nftmetadata: ReadonlyArray<NFTMetadata>;
   readonly nft?: Maybe<NFT>;
   readonly nfts: ReadonlyArray<NFT>;
   readonly spectre?: Maybe<Spectre>;
@@ -1707,6 +1602,8 @@ export type Subscription = {
   readonly spectresCounters: ReadonlyArray<SpectresCounter>;
   readonly sERC20?: Maybe<sERC20>;
   readonly sERC20S: ReadonlyArray<sERC20>;
+  readonly sERC20Holder?: Maybe<sERC20Holder>;
+  readonly sERC20Holders: ReadonlyArray<sERC20Holder>;
   readonly sale?: Maybe<Sale>;
   readonly sales: ReadonlyArray<Sale>;
   readonly buyoutProposal?: Maybe<BuyoutProposal>;
@@ -1731,17 +1628,6 @@ export type Subscription = {
   readonly joins: ReadonlyArray<Join>;
   /** Access to subgraph metadata */
   readonly _meta?: Maybe<_Meta_>;
-};
-
-
-export type SubscriptionnftmetadataArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<NFTMetadata_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NFTMetadata_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
@@ -1812,6 +1698,24 @@ export type SubscriptionsERC20SArgs = {
   orderBy?: InputMaybe<sERC20_orderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   where?: InputMaybe<sERC20_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionsERC20HolderArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionsERC20HoldersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<sERC20Holder_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<sERC20Holder_filter>;
   block?: InputMaybe<Block_height>;
   subgraphError?: _SubgraphErrorPolicy_;
 };
@@ -2126,10 +2030,82 @@ export type sERC20 = {
   readonly name: Scalars['String'];
   readonly symbol: Scalars['String'];
   readonly cap: Scalars['BigInt'];
+  readonly minted: Scalars['BigInt'];
   readonly sale?: Maybe<Sale>;
   readonly issuance?: Maybe<Issuance>;
   readonly pool?: Maybe<Pool>;
+  readonly holders: ReadonlyArray<sERC20Holder>;
 };
+
+
+export type sERC20holdersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<sERC20Holder_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<sERC20Holder_filter>;
+};
+
+export type sERC20Holder = {
+  readonly id: Scalars['ID'];
+  readonly address: Scalars['Bytes'];
+  readonly amount: Scalars['BigInt'];
+  readonly sERC20: sERC20;
+};
+
+export type sERC20Holder_filter = {
+  readonly id?: InputMaybe<Scalars['ID']>;
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  readonly id_gt?: InputMaybe<Scalars['ID']>;
+  readonly id_lt?: InputMaybe<Scalars['ID']>;
+  readonly id_gte?: InputMaybe<Scalars['ID']>;
+  readonly id_lte?: InputMaybe<Scalars['ID']>;
+  readonly id_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
+  readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
+  readonly address?: InputMaybe<Scalars['Bytes']>;
+  readonly address_not?: InputMaybe<Scalars['Bytes']>;
+  readonly address_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
+  readonly address_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
+  readonly address_contains?: InputMaybe<Scalars['Bytes']>;
+  readonly address_not_contains?: InputMaybe<Scalars['Bytes']>;
+  readonly amount?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_not?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_gt?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_lt?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_gte?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_lte?: InputMaybe<Scalars['BigInt']>;
+  readonly amount_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly amount_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly sERC20?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not?: InputMaybe<Scalars['String']>;
+  readonly sERC20_gt?: InputMaybe<Scalars['String']>;
+  readonly sERC20_lt?: InputMaybe<Scalars['String']>;
+  readonly sERC20_gte?: InputMaybe<Scalars['String']>;
+  readonly sERC20_lte?: InputMaybe<Scalars['String']>;
+  readonly sERC20_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
+  readonly sERC20_not_in?: InputMaybe<ReadonlyArray<Scalars['String']>>;
+  readonly sERC20_contains?: InputMaybe<Scalars['String']>;
+  readonly sERC20_contains_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_contains?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_starts_with?: InputMaybe<Scalars['String']>;
+  readonly sERC20_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_starts_with?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_ends_with?: InputMaybe<Scalars['String']>;
+  readonly sERC20_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_ends_with?: InputMaybe<Scalars['String']>;
+  readonly sERC20_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  readonly sERC20_?: InputMaybe<sERC20_filter>;
+  /** Filter for the block changed event. */
+  readonly _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type sERC20Holder_orderBy =
+  | 'id'
+  | 'address'
+  | 'amount'
+  | 'sERC20';
 
 export type sERC20_filter = {
   readonly id?: InputMaybe<Scalars['ID']>;
@@ -2215,6 +2191,14 @@ export type sERC20_filter = {
   readonly cap_lte?: InputMaybe<Scalars['BigInt']>;
   readonly cap_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly cap_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly minted?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_not?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_gt?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_lt?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_gte?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_lte?: InputMaybe<Scalars['BigInt']>;
+  readonly minted_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly minted_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly sale?: InputMaybe<Scalars['String']>;
   readonly sale_not?: InputMaybe<Scalars['String']>;
   readonly sale_gt?: InputMaybe<Scalars['String']>;
@@ -2278,6 +2262,7 @@ export type sERC20_filter = {
   readonly pool_not_ends_with?: InputMaybe<Scalars['String']>;
   readonly pool_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   readonly pool_?: InputMaybe<Pool_filter>;
+  readonly holders_?: InputMaybe<sERC20Holder_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -2289,9 +2274,11 @@ export type sERC20_orderBy =
   | 'name'
   | 'symbol'
   | 'cap'
+  | 'minted'
   | 'sale'
   | 'issuance'
-  | 'pool';
+  | 'pool'
+  | 'holders';
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -2395,9 +2382,6 @@ export type ResolversTypes = ResolversObject<{
   Join_filter: Join_filter;
   Join_orderBy: Join_orderBy;
   NFT: ResolverTypeWrapper<NFT>;
-  NFTMetadata: ResolverTypeWrapper<NFTMetadata>;
-  NFTMetadata_filter: NFTMetadata_filter;
-  NFTMetadata_orderBy: NFTMetadata_orderBy;
   NFT_filter: NFT_filter;
   NFT_orderBy: NFT_orderBy;
   OrderDirection: OrderDirection;
@@ -2429,6 +2413,9 @@ export type ResolversTypes = ResolversObject<{
   _Meta_: ResolverTypeWrapper<_Meta_>;
   _SubgraphErrorPolicy_: _SubgraphErrorPolicy_;
   sERC20: ResolverTypeWrapper<sERC20>;
+  sERC20Holder: ResolverTypeWrapper<sERC20Holder>;
+  sERC20Holder_filter: sERC20Holder_filter;
+  sERC20Holder_orderBy: sERC20Holder_orderBy;
   sERC20_filter: sERC20_filter;
   sERC20_orderBy: sERC20_orderBy;
 }>;
@@ -2459,8 +2446,6 @@ export type ResolversParentTypes = ResolversObject<{
   Join: Join;
   Join_filter: Join_filter;
   NFT: NFT;
-  NFTMetadata: NFTMetadata;
-  NFTMetadata_filter: NFTMetadata_filter;
   NFT_filter: NFT_filter;
   Pool: Pool;
   PoolState: PoolState;
@@ -2480,6 +2465,8 @@ export type ResolversParentTypes = ResolversObject<{
   _Block_: _Block_;
   _Meta_: _Meta_;
   sERC20: sERC20;
+  sERC20Holder: sERC20Holder;
+  sERC20Holder_filter: sERC20Holder_filter;
   sERC20_filter: sERC20_filter;
 }>;
 
@@ -2598,16 +2585,6 @@ export type NFTResolvers<ContextType = MeshContext, ParentType extends Resolvers
   tokenId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   tokenURI?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
-  metadata?: Resolver<ResolversTypes['NFTMetadata'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type NFTMetadataResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['NFTMetadata'] = ResolversParentTypes['NFTMetadata']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  nft?: Resolver<ResolversTypes['NFT'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2633,7 +2610,6 @@ export type PoolStateResolvers<ContextType = MeshContext, ParentType extends Res
 }>;
 
 export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  nftmetadata?: Resolver<ReadonlyArray<ResolversTypes['NFTMetadata']>, ParentType, ContextType, RequireFields<QuerynftmetadataArgs, 'skip' | 'first' | 'subgraphError'>>;
   nft?: Resolver<Maybe<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftArgs, 'id' | 'subgraphError'>>;
   nfts?: Resolver<ReadonlyArray<ResolversTypes['NFT']>, ParentType, ContextType, RequireFields<QuerynftsArgs, 'skip' | 'first' | 'subgraphError'>>;
   spectre?: Resolver<Maybe<ResolversTypes['Spectre']>, ParentType, ContextType, RequireFields<QueryspectreArgs, 'id' | 'subgraphError'>>;
@@ -2642,6 +2618,8 @@ export type QueryResolvers<ContextType = MeshContext, ParentType extends Resolve
   spectresCounters?: Resolver<ReadonlyArray<ResolversTypes['SpectresCounter']>, ParentType, ContextType, RequireFields<QueryspectresCountersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sERC20?: Resolver<Maybe<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20Args, 'id' | 'subgraphError'>>;
   sERC20S?: Resolver<ReadonlyArray<ResolversTypes['sERC20']>, ParentType, ContextType, RequireFields<QuerysERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
+  sERC20Holder?: Resolver<Maybe<ResolversTypes['sERC20Holder']>, ParentType, ContextType, RequireFields<QuerysERC20HolderArgs, 'id' | 'subgraphError'>>;
+  sERC20Holders?: Resolver<ReadonlyArray<ResolversTypes['sERC20Holder']>, ParentType, ContextType, RequireFields<QuerysERC20HoldersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sale?: Resolver<Maybe<ResolversTypes['Sale']>, ParentType, ContextType, RequireFields<QuerysaleArgs, 'id' | 'subgraphError'>>;
   sales?: Resolver<ReadonlyArray<ResolversTypes['Sale']>, ParentType, ContextType, RequireFields<QuerysalesArgs, 'skip' | 'first' | 'subgraphError'>>;
   buyoutProposal?: Resolver<Maybe<ResolversTypes['BuyoutProposal']>, ParentType, ContextType, RequireFields<QuerybuyoutProposalArgs, 'id' | 'subgraphError'>>;
@@ -2701,7 +2679,6 @@ export type SpectresCounterResolvers<ContextType = MeshContext, ParentType exten
 }>;
 
 export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  nftmetadata?: SubscriptionResolver<ReadonlyArray<ResolversTypes['NFTMetadata']>, "nftmetadata", ParentType, ContextType, RequireFields<SubscriptionnftmetadataArgs, 'skip' | 'first' | 'subgraphError'>>;
   nft?: SubscriptionResolver<Maybe<ResolversTypes['NFT']>, "nft", ParentType, ContextType, RequireFields<SubscriptionnftArgs, 'id' | 'subgraphError'>>;
   nfts?: SubscriptionResolver<ReadonlyArray<ResolversTypes['NFT']>, "nfts", ParentType, ContextType, RequireFields<SubscriptionnftsArgs, 'skip' | 'first' | 'subgraphError'>>;
   spectre?: SubscriptionResolver<Maybe<ResolversTypes['Spectre']>, "spectre", ParentType, ContextType, RequireFields<SubscriptionspectreArgs, 'id' | 'subgraphError'>>;
@@ -2710,6 +2687,8 @@ export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends 
   spectresCounters?: SubscriptionResolver<ReadonlyArray<ResolversTypes['SpectresCounter']>, "spectresCounters", ParentType, ContextType, RequireFields<SubscriptionspectresCountersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sERC20?: SubscriptionResolver<Maybe<ResolversTypes['sERC20']>, "sERC20", ParentType, ContextType, RequireFields<SubscriptionsERC20Args, 'id' | 'subgraphError'>>;
   sERC20S?: SubscriptionResolver<ReadonlyArray<ResolversTypes['sERC20']>, "sERC20S", ParentType, ContextType, RequireFields<SubscriptionsERC20SArgs, 'skip' | 'first' | 'subgraphError'>>;
+  sERC20Holder?: SubscriptionResolver<Maybe<ResolversTypes['sERC20Holder']>, "sERC20Holder", ParentType, ContextType, RequireFields<SubscriptionsERC20HolderArgs, 'id' | 'subgraphError'>>;
+  sERC20Holders?: SubscriptionResolver<ReadonlyArray<ResolversTypes['sERC20Holder']>, "sERC20Holders", ParentType, ContextType, RequireFields<SubscriptionsERC20HoldersArgs, 'skip' | 'first' | 'subgraphError'>>;
   sale?: SubscriptionResolver<Maybe<ResolversTypes['Sale']>, "sale", ParentType, ContextType, RequireFields<SubscriptionsaleArgs, 'id' | 'subgraphError'>>;
   sales?: SubscriptionResolver<ReadonlyArray<ResolversTypes['Sale']>, "sales", ParentType, ContextType, RequireFields<SubscriptionsalesArgs, 'skip' | 'first' | 'subgraphError'>>;
   buyoutProposal?: SubscriptionResolver<Maybe<ResolversTypes['BuyoutProposal']>, "buyoutProposal", ParentType, ContextType, RequireFields<SubscriptionbuyoutProposalArgs, 'id' | 'subgraphError'>>;
@@ -2765,9 +2744,19 @@ export type sERC20Resolvers<ContextType = MeshContext, ParentType extends Resolv
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   symbol?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cap?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  minted?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   sale?: Resolver<Maybe<ResolversTypes['Sale']>, ParentType, ContextType>;
   issuance?: Resolver<Maybe<ResolversTypes['Issuance']>, ParentType, ContextType>;
   pool?: Resolver<Maybe<ResolversTypes['Pool']>, ParentType, ContextType>;
+  holders?: Resolver<ReadonlyArray<ResolversTypes['sERC20Holder']>, ParentType, ContextType, RequireFields<sERC20holdersArgs, 'skip' | 'first'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type sERC20HolderResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['sERC20Holder'] = ResolversParentTypes['sERC20Holder']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  sERC20?: Resolver<ResolversTypes['sERC20'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2783,7 +2772,6 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   Issue?: IssueResolvers<ContextType>;
   Join?: JoinResolvers<ContextType>;
   NFT?: NFTResolvers<ContextType>;
-  NFTMetadata?: NFTMetadataResolvers<ContextType>;
   Pool?: PoolResolvers<ContextType>;
   PoolState?: PoolStateResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -2795,6 +2783,7 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   _Block_?: _Block_Resolvers<ContextType>;
   _Meta_?: _Meta_Resolvers<ContextType>;
   sERC20?: sERC20Resolvers<ContextType>;
+  sERC20Holder?: sERC20HolderResolvers<ContextType>;
 }>;
 
 export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
@@ -2848,7 +2837,7 @@ const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bpierre/spectre-preview"},
+              config: {"endpoint":"http://127.0.0.1:8000/subgraphs/name/spectre"},
               baseDir,
               cache,
               pubsub,
@@ -2953,8 +2942,8 @@ export type SpectreByIdQueryVariables = Exact<{
 export type SpectreByIdQuery = { readonly spectre?: Maybe<(
     Pick<Spectre, 'state' | 'vault' | 'broker'>
     & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
-      Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap'>
-      & { readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, readonly pool?: Maybe<(
+      Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap' | 'minted'>
+      & { readonly holders: ReadonlyArray<Pick<sERC20Holder, 'address' | 'amount'>>, readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, readonly pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
         & { readonly joins: ReadonlyArray<Pick<Join, 'id'>> }
       )> }
@@ -3021,6 +3010,11 @@ export const SpectreByIdDocument = gql`
       name
       symbol
       cap
+      minted
+      holders(first: 20, orderBy: amount, orderDirection: desc) {
+        address
+        amount
+      }
       sale {
         stock
         multiplier

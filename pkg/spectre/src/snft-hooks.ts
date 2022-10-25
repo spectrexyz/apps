@@ -13,10 +13,11 @@ import type {
 import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
+import { isAddress } from "moire"
 import { useMemo } from "react"
 import { useProvider } from "wagmi"
 import { z } from "zod"
-import { NFT_FILE_TYPES, SERC20_DECIMALS } from "./constants"
+import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
   POOLS_BY_ACCOUNT,
@@ -109,6 +110,8 @@ export function useSnft(
     const buyoutMultiplier = Number(BigInt(sale.multiplier) / 10n ** 17n) / 10
 
     const supply: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
+    const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
+
     const initialBuyoutPrice: Dnum = [BigInt(serc20.sale?.reserve), 18]
     const initialMarketCapEth: Dnum = dnum.divide(
       initialBuyoutPrice,
@@ -125,7 +128,6 @@ export function useSnft(
     const priceEth = initialTokenPriceEth
     const pooledEth: Dnum = [10_000000000000000000n, 18]
     const pooledToken: Dnum = [10_000000000000000000n, SERC20_DECIMALS]
-    const minted = dnum.divide(supply, 3)
 
     const snft: Snft = {
       id,
@@ -158,7 +160,10 @@ export function useSnft(
       token: {
         contractAddress: serc20.address,
         decimals: SERC20_DECIMALS,
-        distribution: [],
+        distribution: serc20.holders.map((holder) => ({
+          quantity: [BigInt(holder.amount), SERC20_DECIMALS] as const,
+          address: isAddress(holder.address) ? holder.address : null,
+        })),
         holdersCount: 10,
         marketCapEth,
         minted,
@@ -173,22 +178,28 @@ export function useSnft(
     return snft
   }, [id, metadata, spectre])
 
-  return useQuery(["snft", id, spectreResult.isSuccess, demoMode], async () => {
-    if (!demoMode) {
-      return snft
-    }
+  return useQuery(
+    ["snft", id, spectreResult.isSuccess, demoMode],
+    async () => {
+      if (!demoMode) {
+        return snft
+      }
 
-    const snftDemo = SNFTS.find((snft) => snft.id === id)
-    if (!snftDemo) {
-      throw new Error(`NFT not found: ${id}`)
-    }
-    await fakeDelay()
-    return snftDemo
-  }, {
-    enabled: demoMode || spectreResult.status !== "loading",
-    retry,
-    retryDelay: RETRY_DELAY,
-  })
+      const snftDemo = SNFTS.find((snft) => snft.id === id)
+      if (!snftDemo) {
+        throw new Error(`NFT not found: ${id}`)
+      }
+      await fakeDelay()
+      return snftDemo
+    },
+    {
+      enabled: demoMode || (
+        spectreResult.status !== "loading" && metadataQuery.status !== "loading"
+      ),
+      retry,
+      retryDelay: RETRY_DELAY,
+    },
+  )
 }
 
 export function useSnfts({

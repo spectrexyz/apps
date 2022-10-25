@@ -7,7 +7,7 @@
     "serve": "vite preview",
     "import:moire-assets": "pnpm moire-copy-assets ./public/moire",
     "lint": "eslint --ext .tsx,.ts src/",
-    "build:subgraph-code": "pnpm graphclient build"
+    "codegen:subgraph": "pnpm graphclient build"
   },
   "dependencies": {
     "@bpierre/use-viewport": "^0.3.0",

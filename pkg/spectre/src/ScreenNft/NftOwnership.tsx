@@ -57,9 +57,14 @@ export function NftOwnership({ snft }: { snft: Snft }) {
     [distribution],
   )
 
-  const mintedValue = useMemo(() => [
-    Number(divideRoundBigInt(minted[0] * 100n, supply[0])),
-  ], [minted, supply])
+  const mintedDistributionValue = useMemo(() => {
+    const value = Number(divideRoundBigInt(minted[0] * 100n, supply[0]))
+    return [
+      value === 0
+        ? 0
+        : Math.max(value, 2 / 100), // 1% minimum
+    ]
+  }, [minted, supply])
 
   return (
     <PanelSection
@@ -99,7 +104,7 @@ export function NftOwnership({ snft }: { snft: Snft }) {
           startFromEmpty={false}
           values={!showDistribution ? [] : mode === "distribution"
             ? shares.map((s) => s.percentage)
-            : mintedValue}
+            : mintedDistributionValue}
         />
       </div>
       {mode === "distribution"
