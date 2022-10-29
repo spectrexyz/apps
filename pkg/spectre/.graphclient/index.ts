@@ -2943,7 +2943,10 @@ export type SpectreByIdQuery = { readonly spectre?: Maybe<(
     Pick<Spectre, 'state' | 'vault' | 'broker'>
     & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
       Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap' | 'minted'>
-      & { readonly holders: ReadonlyArray<Pick<sERC20Holder, 'address' | 'amount'>>, readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>>, readonly pool?: Maybe<(
+      & { readonly holders: ReadonlyArray<Pick<sERC20Holder, 'address' | 'amount'>>, readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<(
+        Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>
+        & { readonly issues: ReadonlyArray<Pick<Issue, 'amount' | 'timestamp'>> }
+      )>, readonly pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
         & { readonly joins: ReadonlyArray<Pick<Join, 'id'>>, readonly states: ReadonlyArray<Pick<PoolState, 'price' | 'timestamp'>> }
       )> }
@@ -3036,6 +3039,10 @@ export const SpectreByIdDocument = gql`
         guardian
         pool
         poolId
+        issues(orderBy: timestamp, orderDirection: asc) {
+          amount
+          timestamp
+        }
       }
       pool {
         id

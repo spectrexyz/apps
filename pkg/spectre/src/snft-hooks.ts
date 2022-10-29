@@ -86,6 +86,42 @@ function buildPriceHistory(
   return history
 }
 
+// Returns the mint history as percentages
+function buildMintHistory(
+  values: Array<readonly [Date, Dnum]>,
+  totalSupply: Dnum,
+): Snft["token"]["mintHistory"] {
+  const history: Snft["token"]["mintHistory"] = {
+    "ALL": [],
+    "YEAR": [],
+    "MONTH": [],
+    "WEEK": [],
+    "DAY": [],
+  }
+
+  const now = Date.now()
+  const latestValue = values.at(-1)?.[1]
+  if (!latestValue) return history
+
+  values.forEach(([time, value]) => {
+    const _time = time.getTime()
+    const share = dnum.toNumber(dnum.divide(value, totalSupply))
+    if (_time > now - DAY_MS * 1) history.DAY.push(share)
+    if (_time > now - DAY_MS * 7) history.WEEK.push(share)
+    if (_time > now - DAY_MS * 30) history.MONTH.push(share)
+    if (_time > now - DAY_MS * 365) history.YEAR.push(share)
+    history.ALL.push(share)
+  })
+
+  const latestShare = dnum.toNumber(dnum.divide(latestValue, totalSupply))
+  if (history.DAY.length < 2) history.DAY = [latestShare, latestShare]
+  if (history.WEEK.length < 2) history.WEEK = [latestShare, latestShare]
+  if (history.MONTH.length < 2) history.MONTH = [latestShare, latestShare]
+  if (history.YEAR.length < 2) history.YEAR = [latestShare, latestShare]
+
+  return history
+}
+
 export function useSnft(
   id: SnftId,
   {
@@ -172,6 +208,14 @@ export function useSnft(
       dnum.from(state.price, SERC20_DECIMALS),
     ] as const)))
 
+    const mintHistory = buildMintHistory(
+      serc20.issuance.issues?.map(({ timestamp, amount }) => ([
+        new Date(parseInt(String(timestamp), 10) * 1000),
+        [BigInt(amount), SERC20_DECIMALS],
+      ] as const)) ?? [],
+      supply,
+    )
+
     const snft: Snft = {
       id,
       shortId: toShortId(id),
@@ -209,14 +253,15 @@ export function useSnft(
         })),
         holdersCount: 10,
         marketCapEth,
+        mintHistory,
         minted,
         name: serc20.name ?? "",
         priceEth,
+        priceHistory,
         supply,
         symbol: serc20.symbol ?? "",
         tokenId: "",
         topHolders: [],
-        priceHistory,
       },
     }
     return snft

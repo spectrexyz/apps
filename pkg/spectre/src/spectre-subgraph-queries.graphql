@@ -81,6 +81,10 @@ query SpectreById($id: ID!) {
         guardian
         pool
         poolId
+        issues(orderBy: timestamp, orderDirection: asc) {
+          amount
+          timestamp
+        }
       }
       pool {
         id

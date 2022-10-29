@@ -18,7 +18,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
-import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
+import { buyoutMultiplier, poolEthWeights } from "../demo-data"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"
@@ -327,7 +327,7 @@ export function ScreenNft({
               <MintedChart
                 onScaleChange={setTimeScale}
                 scale={timeScale}
-                values={minted[timeScale]}
+                values={snft.data?.token.mintHistory[timeScale] ?? []}
               />
             )}
           </div>

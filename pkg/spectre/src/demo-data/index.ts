@@ -15,7 +15,7 @@ import {
 import * as dnum from "dnum"
 import { DAY_MS, list, WEEK_MS } from "moire"
 import { toShortId } from "../utils"
-import { minted } from "./minted"
+import { minted as mintHistory } from "./minted"
 import { tokenPrices } from "./token-prices"
 
 seed("123")
@@ -228,16 +228,17 @@ function randomToken(nftName: string): Snft["token"] {
     contractAddress: randomAddress(),
     decimals: 18,
     distribution,
-    topHolders,
     holdersCount,
     marketCapEth: dnum.multiply(priceEth, supply),
+    mintHistory,
     minted,
     name: nftName,
     priceEth,
+    priceHistory: tokenPrices,
     supply,
     symbol,
     tokenId: "1",
-    priceHistory: tokenPrices,
+    topHolders,
   }
 }
 
@@ -544,5 +545,4 @@ export const poolEthWeights: Record<
   "ALL": [0.2, 0.8],
 }
 
-export { minted }
 export { tokenPrices }

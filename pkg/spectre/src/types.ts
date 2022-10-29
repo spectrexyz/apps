@@ -32,6 +32,10 @@ export type Token = {
     "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
     Dnum[]
   >
+  mintHistory: Record<
+    "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
+    number[]
+  >
 }
 
 export type TokenId = string
