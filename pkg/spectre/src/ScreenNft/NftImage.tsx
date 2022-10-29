@@ -41,7 +41,7 @@ export function NftImage({
 
   const imgMaxWidth = layout.value({
     small: "calc(100% - 4gu)",
-    xlarge: "100%",
+    xlarge: "100gu",
   })
 
   return (
@@ -97,6 +97,9 @@ export function NftImage({
       <div
         css={{
           position: "relative",
+          minHeight: "60gu",
+          display: "grid",
+          placeItems: "center",
           "img": {
             display: "block",
             margin: "0 auto",
@@ -104,7 +107,7 @@ export function NftImage({
             maxHeight: "100%",
             width: "100%",
             height: "auto",
-            minHeight: "60gu",
+            minHeight: "60gu", // TODO: remove (only used for the demo images)
           },
         }}
       >
