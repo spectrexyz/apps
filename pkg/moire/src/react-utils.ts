@@ -1,3 +1,5 @@
+import type { FocusEvent } from "react"
+
 import {
   createElement,
   FC,
@@ -30,16 +32,16 @@ export function useKey(
   }, [callback, condition, key])
 }
 
-export function useFocus() {
+export function useFocus<T = HTMLElement>() {
   const [focused, setFocused] = useState(false)
   return {
     bindEvents: {
-      onFocus: (event: FocusEvent) => {
+      onFocus: (event: FocusEvent<T, Element>) => {
         if (event.target === event.currentTarget) {
           setFocused(true)
         }
       },
-      onBlur: (event: FocusEvent) => {
+      onBlur: (event: FocusEvent<T, Element>) => {
         if (event.target === event.currentTarget) {
           setFocused(false)
         }
