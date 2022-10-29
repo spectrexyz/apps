@@ -2837,7 +2837,7 @@ const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"http://127.0.0.1:8000/subgraphs/name/spectre"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.5"},
               baseDir,
               cache,
               pubsub,
