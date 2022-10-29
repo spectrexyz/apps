@@ -13,7 +13,7 @@ import type {
 import { useQuery } from "@tanstack/react-query"
 import * as dnum from "dnum"
 import uniqBy from "lodash.uniqby"
-import { isAddress } from "moire"
+import { DAY_MS, isAddress } from "moire"
 import { useMemo } from "react"
 import { useProvider } from "wagmi"
 import { z } from "zod"
@@ -53,6 +53,38 @@ function isDemoSnft(id: SnftId) {
 }
 
 const RETRY_DELAY = 1000
+
+function buildPriceHistory(
+  values: Array<readonly [Date, Dnum]>,
+): Snft["token"]["priceHistory"] {
+  const history: Snft["token"]["priceHistory"] = {
+    "ALL": [],
+    "YEAR": [],
+    "MONTH": [],
+    "WEEK": [],
+    "DAY": [],
+  }
+
+  const now = Date.now()
+  const latestValue = values.at(-1)?.[1]
+  if (!latestValue) return history
+
+  values.forEach(([time, value]) => {
+    const _time = time.getTime()
+    if (_time > now - DAY_MS * 1) history.DAY.push(value)
+    if (_time > now - DAY_MS * 7) history.WEEK.push(value)
+    if (_time > now - DAY_MS * 30) history.MONTH.push(value)
+    if (_time > now - DAY_MS * 365) history.YEAR.push(value)
+    history.ALL.push(value)
+  })
+
+  if (history.DAY.length < 2) history.DAY = [latestValue, latestValue]
+  if (history.WEEK.length < 2) history.WEEK = [latestValue, latestValue]
+  if (history.MONTH.length < 2) history.MONTH = [latestValue, latestValue]
+  if (history.YEAR.length < 2) history.YEAR = [latestValue, latestValue]
+
+  return history
+}
 
 export function useSnft(
   id: SnftId,
@@ -122,12 +154,23 @@ export function useSnft(
       supply,
     )
 
-    // TODO: replace with dynamic values
-    const buyoutPrice = initialBuyoutPrice
-    const marketCapEth = initialMarketCapEth
-    const priceEth = initialTokenPriceEth
+    const poolStates = serc20.pool?.states ?? []
+    const lastPoolState = poolStates.at(-1)
+
+    const priceEth = lastPoolState
+      ? dnum.from(lastPoolState.price, SERC20_DECIMALS)
+      : initialTokenPriceEth
+    const marketCapEth = dnum.multiply(priceEth, supply)
+    const buyoutPrice = dnum.multiply(marketCapEth, buyoutMultiplier)
+
+    // TODO: replace with actual values
     const pooledEth: Dnum = [10_000000000000000000n, 18]
     const pooledToken: Dnum = [10_000000000000000000n, SERC20_DECIMALS]
+
+    const priceHistory = buildPriceHistory(poolStates.map((state) => ([
+      new Date(parseInt(String(state.timestamp), 10) * 1000),
+      dnum.from(state.price, SERC20_DECIMALS),
+    ] as const)))
 
     const snft: Snft = {
       id,
@@ -173,6 +216,7 @@ export function useSnft(
         symbol: serc20.symbol ?? "",
         tokenId: "",
         topHolders: [],
+        priceHistory,
       },
     }
     return snft

@@ -84,10 +84,14 @@ query SpectreById($id: ID!) {
       }
       pool {
         id
+        address
         joins {
           id
         }
-        address
+        states(orderBy: timestamp, orderDirection: asc) {
+          price
+          timestamp
+        }
       }
     }
     state

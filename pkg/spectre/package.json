@@ -19,7 +19,7 @@
     "@types/lodash.uniqby": "^4.7.7",
     "buffer": "^6.0.3",
     "csstype": "^3.1.0",
-    "dnum": "^1.5.1",
+    "dnum": "^1.6.0",
     "ethers": "^5.7.0",
     "events": "^3.3.0",
     "graphql": "^16.6.0",

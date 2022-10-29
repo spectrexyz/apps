@@ -237,6 +237,7 @@ function randomToken(nftName: string): Snft["token"] {
     supply,
     symbol,
     tokenId: "1",
+    priceHistory: tokenPrices,
   }
 }
 

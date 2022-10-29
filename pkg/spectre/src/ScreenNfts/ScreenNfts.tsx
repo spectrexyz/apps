@@ -73,16 +73,20 @@ export function ScreenNfts({
           </h1>
         </div>
         <div css={{ position: "relative" }}>
-          <Grid>
-            {snftQueries.map((snftQuery) => (
-              snftQuery.data && (
-                <SnftCard
-                  key={snftQuery.data?.id}
-                  snft={snftQuery.data}
-                />
-              )
-            ))}
-          </Grid>
+          {snftsPrefetchStatus === "error"
+            ? "Error loading the NFTs, please try reloading."
+            : (
+              <Grid>
+                {snftQueries.map((snftQuery) => (
+                  snftQuery.data && (
+                    <SnftCard
+                      key={snftQuery.data?.id}
+                      snft={snftQuery.data}
+                    />
+                  )
+                ))}
+              </Grid>
+            )}
         </div>
         {paginationData.pages > 1 && (
           <Pagination

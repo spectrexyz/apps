@@ -28,6 +28,10 @@ export type Token = {
   symbol: string
   tokenId: string
   topHolders: Array<readonly [name: string, picture: string]>
+  priceHistory: Record<
+    "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
+    Dnum[]
+  >
 }
 
 export type TokenId = string

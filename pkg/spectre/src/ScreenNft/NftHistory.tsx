@@ -13,7 +13,7 @@ import { PanelSection } from "./PanelSection"
 
 export function NftHistory({ snft }: { snft: Snft }) {
   const [more, setMore] = useState(false)
-  return (
+  return snft.history.length === 0 ? null : (
     <PanelSection title="Activity">
       <div css={{ display: "flex", flexDirection: "column", gap: "2gu" }}>
         {(more ? snft.history : snft.history.slice(0, 3)).map((event) => (

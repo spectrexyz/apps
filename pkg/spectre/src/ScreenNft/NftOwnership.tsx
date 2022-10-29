@@ -31,6 +31,8 @@ const DISTRIBUTION_COLORS = [
   "#F597F8",
 ]
 
+const PREVIEW_ITEMS = 5
+
 function distributionColor(groupIndex: number, mode?: string) {
   return mode === "percentage"
     ? MINTED_SUPPLY_COLOR
@@ -174,76 +176,86 @@ function DistributionList({ shares, token }: {
           </tr>
         </thead>
         <tbody css={{ "td": { whiteSpace: "nowrap" } }}>
-          {(more ? shares : shares.slice(0, 5)).map((share, index) => {
-            const address = share.index === -1
-              ? null
-              : distribution[share.index].address
-            return (
-              <tr key={index}>
-                <td>
-                  <div
-                    css={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "2gu",
-                    }}
-                  >
-                    <Bullet color={distributionColor(index)} />
-                    <div css={{ width: "20gu" }}>
-                      {address === null
-                        ? <BadgeSimple label="Other accounts" />
-                        : <AddressBadge address={address} rounded />}
+          {(more ? shares : shares.slice(0, PREVIEW_ITEMS)).map(
+            (share, index) => {
+              const address = share.index === -1
+                ? null
+                : distribution[share.index].address
+              return (
+                <tr key={index}>
+                  <td>
+                    <div
+                      css={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "2gu",
+                      }}
+                    >
+                      <Bullet color={distributionColor(index)} />
+                      <div css={{ width: "20gu" }}>
+                        {address === null
+                          ? <BadgeSimple label="Other accounts" />
+                          : <AddressBadge address={address} rounded />}
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  {share.percentage}%
-                </td>
-                {!layout.below("xlarge") && (
-                  <>
-                    <td>
-                      {share.amount === null
-                        ? "−"
-                        : dnum.format(share.amount, 2)}{" "}
-                      <span
-                        css={({ colors }) => ({ color: colors.contentDimmed })}
-                      >
-                        {symbol}
-                      </span>
-                    </td>
-                    <td>
-                      {share.amount === null
-                        ? "−"
-                        : dnum.format(dnum.multiply(share.amount, priceEth), 2)}
-                      {" "}
-                      <span
-                        css={({ colors }) => ({ color: colors.contentDimmed })}
-                      >
-                        ETH
-                      </span>
-                    </td>
-                  </>
-                )}
-              </tr>
-            )
-          })}
+                  </td>
+                  <td>
+                    {share.percentage}%
+                  </td>
+                  {!layout.below("xlarge") && (
+                    <>
+                      <td>
+                        {share.amount === null
+                          ? "−"
+                          : dnum.format(share.amount, 2)}{" "}
+                        <span
+                          css={({ colors }) => ({
+                            color: colors.contentDimmed,
+                          })}
+                        >
+                          {symbol}
+                        </span>
+                      </td>
+                      <td>
+                        {share.amount === null
+                          ? "−"
+                          : dnum.format(
+                            dnum.multiply(share.amount, priceEth),
+                            2,
+                          )}{" "}
+                        <span
+                          css={({ colors }) => ({
+                            color: colors.contentDimmed,
+                          })}
+                        >
+                          ETH
+                        </span>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              )
+            },
+          )}
         </tbody>
       </table>
-      <div
-        css={{
-          display: "flex",
-          justifyContent: "center",
-          paddingTop: "3gu",
-        }}
-      >
-        <Button
-          label={`Show ${more ? "less" : "more"}`}
-          mode="flat-2"
-          size="compact"
-          uppercase
-          onClick={() => setMore((v) => !v)}
-        />
-      </div>
+      {shares.length > PREVIEW_ITEMS && (
+        <div
+          css={{
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: "3gu",
+          }}
+        >
+          <Button
+            label={`Show ${more ? "less" : "more"}`}
+            mode="flat-2"
+            size="compact"
+            uppercase
+            onClick={() => setMore((v) => !v)}
+          />
+        </div>
+      )}
     </div>
   )
 }

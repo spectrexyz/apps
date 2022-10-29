@@ -1,6 +1,15 @@
+import type { Dnum } from "dnum"
+
+import * as dnum from "dnum"
+import { SERC20_DECIMALS } from "../constants"
+
+function toDnum(value: number) {
+  return dnum.from(value, SERC20_DECIMALS)
+}
+
 export const tokenPrices: Record<
   "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
-  number[]
+  Dnum[]
 > = {
   "DAY": [
     2777.21,
@@ -27,7 +36,7 @@ export const tokenPrices: Record<
     2814.67,
     2776.85,
     2781.17,
-  ],
+  ].map(toDnum),
   "WEEK": [
     2654.22,
     2565.91,
@@ -57,7 +66,7 @@ export const tokenPrices: Record<
     2808.2,
     2814.67,
     2781.17,
-  ],
+  ].map(toDnum),
   "MONTH": [
     2893.56,
     2780.08,
@@ -89,7 +98,7 @@ export const tokenPrices: Record<
     2774.89,
     2814.67,
     2781.17,
-  ],
+  ].map(toDnum),
   "YEAR": [
     1920,
     1964.23,
@@ -143,7 +152,7 @@ export const tokenPrices: Record<
     2727.6,
     2774.89,
     2781.17,
-  ],
+  ].map(toDnum),
   "ALL": [
     12.61,
     13.93,
@@ -450,5 +459,5 @@ export const tokenPrices: Record<
     2727.6,
     2774.89,
     2783.2,
-  ],
+  ].map(toDnum),
 }

@@ -158,14 +158,12 @@ export function FractionsChart({
             <Label
               label="Fraction Price"
               row={0}
-              value={"$1.64"}
               valueRef={peekHistory.labelRefPrice}
             />
 
             <Label
               label="Total Market Cap"
               row={1}
-              value={"$749K"}
               valueRef={peekHistory.labelRefMarketCap}
             />
 
@@ -173,7 +171,6 @@ export function FractionsChart({
               color={colors.accent3}
               label="NFT Buyout Price"
               row={2}
-              value={"$825K"}
               valueRef={peekHistory.labelRefBuyoutPrice}
             />
 
@@ -283,7 +280,7 @@ function Curve({
       )
 
       if (close) {
-        const lastX = curvePoints[curvePoints.length - 1][0]
+        const lastX = curvePoints.at(-1)?.[0] ?? 0
         path += `
           L ${lastX} ${graphGeometry.bottom}
           L ${graphGeometry.left} ${graphGeometry.bottom}
@@ -480,12 +477,7 @@ function usePeekHistory(
         ref.current.innerHTML = content
       }
     })
-  }, [
-    labelRefBuyoutPrice,
-    labelRefMarketCap,
-    labelRefPrice,
-    labels,
-  ])
+  }, [labels])
 
   const visible = useRef(false)
   const lastVisibleIndex = useRef(lastIndex)
@@ -545,15 +537,15 @@ function usePeekHistory(
     onMouseLeave: () => {
       if (!focused) hide()
     },
-    onMouseMove: (event: MouseEvent) => {
+    onMouseMove: (event: MouseEvent<SVGSVGElement>) => {
       move(event.pageX, event.pageY)
     },
-    onTouchMove: (event: TouchEvent) => {
+    onTouchMove: (event: TouchEvent<SVGSVGElement>) => {
       move(event.touches[0].pageX, event.touches[0].pageY)
     },
   }
 
-  const { focused, bindEvents: bindFocusEvents } = useFocus()
+  const { focused, bindEvents: bindFocusEvents } = useFocus<HTMLDivElement>()
   useKey("ArrowLeft", () => {
     show(Math.max(0, lastVisibleIndex.current - 1))
   }, focused)
@@ -599,11 +591,15 @@ const Dot = forwardRef<SVGCircleElement, { color: string }>(
 )
 
 function Label(
-  { label, value, valueRef, color, row }: {
+  {
+    color,
+    label,
+    row,
+    valueRef,
+  }: {
     color?: string
     label: string
     row: number
-    value: string
     valueRef: RefObject<SVGTSpanElement>
   },
 ) {
@@ -619,9 +615,7 @@ function Label(
       <tspan
         ref={valueRef}
         fill={color ?? colors.accent}
-      >
-        {value}
-      </tspan>
+      />
     </text>
   )
 }

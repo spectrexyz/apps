@@ -45,14 +45,15 @@ export function useSpectre(
     if (!result.spectre) {
       throw new Error(`Spectre ${id} not found`)
     }
-    if (!isAddress(result.spectre.NFT.creator)) {
+    const { spectre } = result
+    if (!isAddress(spectre.NFT.creator)) {
       throw new Error(
-        `spectre.NFT.creator is not a valid address: ${result.spectre.NFT.creator}`,
+        `spectre.NFT.creator is not a valid address: ${spectre.NFT.creator}`,
       )
     }
-    if (!isAddress(result.spectre.NFT.collection)) {
+    if (!isAddress(spectre.NFT.collection)) {
       throw new Error(
-        `spectre.NFT.collection is not a valid address: ${result.spectre.NFT.collection}`,
+        `spectre.NFT.collection is not a valid address: ${spectre.NFT.collection}`,
       )
     }
     return result

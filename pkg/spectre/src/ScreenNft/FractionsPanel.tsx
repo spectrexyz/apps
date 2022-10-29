@@ -141,28 +141,28 @@ function FractionsMetrics({ snft }: { snft: Snft }) {
             },
           },
         },
-        {
-          heading: "Minting fees",
-          content: {
-            type: "tokenAmount",
-            value: {
-              converted: ethToUsd(mintingFees),
-              symbol: "ETH",
-              value: dnum.format(mintingFees, 2),
-            },
-          },
-        },
-        {
-          heading: "Trading fees",
-          content: {
-            type: "tokenAmount",
-            value: {
-              converted: ethToUsd(tradingFees),
-              symbol: "ETH",
-              value: dnum.format(tradingFees, 2),
-            },
-          },
-        },
+        // {
+        //   heading: "Minting fees",
+        //   content: {
+        //     type: "tokenAmount",
+        //     value: {
+        //       converted: ethToUsd(mintingFees),
+        //       symbol: "ETH",
+        //       value: dnum.format(mintingFees, 2),
+        //     },
+        //   },
+        // },
+        // {
+        //   heading: "Trading fees",
+        //   content: {
+        //     type: "tokenAmount",
+        //     value: {
+        //       converted: ethToUsd(tradingFees),
+        //       symbol: "ETH",
+        //       value: dnum.format(tradingFees, 2),
+        //     },
+        //   },
+        // },
       ]}
     />
   )

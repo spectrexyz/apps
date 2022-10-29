@@ -1,9 +1,10 @@
+import type { Dnum } from "dnum"
 import type { ComponentProps } from "react"
 import type { TimeScale } from "../types"
 
+import * as dnum from "dnum"
 import {
   ButtonIconLabel,
-  formatAmount,
   IconArrowLeft,
   IconArrowRight,
   IconMagnifyingGlassPlus,
@@ -17,12 +18,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
-import {
-  buyoutMultiplier,
-  minted,
-  poolEthWeights,
-  tokenPrices,
-} from "../demo-data"
+import { buyoutMultiplier, minted, poolEthWeights } from "../demo-data"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"
@@ -124,37 +120,57 @@ export function ScreenNft({
     setLocation("/")
   }, [setLocation])
 
+  const priceHistory = snft.data?.token.priceHistory
+  const supply = snft.data?.token.supply
+
   const history = useMemo(() => {
-    const history = Object.entries(tokenPrices).find(([scale]) => {
-      return scale === timeScale
-    })?.[1]
+    const priceHistory = snft.data?.token.priceHistory
+    if (!priceHistory) return []
+    const history = Object.entries(priceHistory).find(([scale]) => (
+      scale === timeScale
+    ))?.[1]
     if (!history) {
       throw new Error(`Wrong timescale value (${timeScale})`)
     }
     return history
-  }, [timeScale])
+  }, [timeScale, priceHistory])
 
   const normalizedHistory = useMemo(() => {
-    const max = Math.max(...history)
-    const min = Math.min(...history)
-    return history.map((v) => ((v - min) / (max - min)))
+    const max = history.reduce<null | Dnum>(
+      (max, v) => !max || v[0] > max[0] ? v : max,
+      null,
+    )
+    const min = history.reduce<null | Dnum>(
+      (min, v) => !min || v[0] < min[0] ? v : min,
+      null,
+    )
+    if (!max || !min) {
+      return [0, 0]
+    }
+    const height = dnum.subtract(max, min)
+    return history.map((v) => (
+      height[0] === 0n ? 0.5 : dnum.toNumber(
+        dnum.divide(dnum.subtract(v, min), height),
+      )
+    ))
   }, [history])
 
   const fractionChartLabels = useCallback((valueIndex: number) => {
     const price = history[valueIndex]
-    const supply = 100_000_000
+    if (!price || !supply) {
+      return { buyoutPrice: "", marketCap: "", price: "" }
+    }
 
-    const format = (value: number) =>
-      `$${
-        formatAmount(BigInt(Math.round(value)), 0, { compact: true, digits: 2 })
-      }`
+    const format = (value: Dnum) =>
+      `${dnum.format(value, { compact: true })} ETH`
 
+    const marketCap = dnum.multiply(price, supply)
     return {
-      buyoutPrice: format(supply * price * buyoutMultiplier),
-      marketCap: format(supply * price),
+      buyoutPrice: format(dnum.multiply(marketCap, buyoutMultiplier)),
+      marketCap: format(marketCap),
       price: format(price),
     }
-  }, [history])
+  }, [history, supply])
 
   const loading = snft.isLoading
 
