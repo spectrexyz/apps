@@ -2,8 +2,8 @@ sources:
   - name: spectre
     handler:
       graphql:
+        endpoint: https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.5
         # endpoint: http://127.0.0.1:8000/subgraphs/name/spectre
-        endpoint: https://api.thegraph.com/subgraphs/name/bpierre/spectre-preview
 
 codegen:
   strictScalars: true
