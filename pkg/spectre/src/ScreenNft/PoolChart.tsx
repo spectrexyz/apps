@@ -1,6 +1,8 @@
+import type { Dnum } from "dnum"
 import type { Interpolation, SpringValue } from "react-spring"
 import type { TimeScale } from "../types"
 
+import * as dnum from "dnum"
 import { gu, lerp, useTheme } from "moire"
 import { useCallback, useMemo, useState } from "react"
 import useDimensions from "react-cool-dimensions"
@@ -28,15 +30,19 @@ export function PoolChart({
   onScaleChange,
   scale,
   ethWeight,
+  tokenSymbol,
 }: {
   compact?: boolean
   onScaleChange: (scale: TimeScale) => void
   scale: TimeScale
-  ethWeight: [start: number, end: number]
+  ethWeight: [start: Dnum, end: Dnum]
+  tokenSymbol: string
 }) {
   const bounds = useDimensions()
   const width = bounds.width
   const height = bounds.height
+
+  const ethWeight_ = ethWeight.map((value) => dnum.toNumber(value))
 
   const graphGeometry = useMemo<GraphGeometry>(() => {
     const tspacing = 0 * gu // top spacing
@@ -66,8 +72,8 @@ export function PoolChart({
   const { timeScaleButtonsTransition } = useReveal()
 
   const closestPctIndexesStart: [number, number] = [
-    Math.round(ethWeight[0] * 10),
-    Math.round((1 - ethWeight[0]) * 10),
+    Math.round(ethWeight_[0] * 10),
+    Math.round((1 - ethWeight_[0]) * 10),
   ]
 
   return (
@@ -84,11 +90,12 @@ export function PoolChart({
             <Frame
               closestPctIndexesStart={closestPctIndexesStart}
               graphPoint={graphPoint}
+              tokenSymbol={tokenSymbol}
             />
             <TwoLines
-              from={[ethWeight[0], 1 - ethWeight[0]]}
+              from={[ethWeight_[0], 1 - ethWeight_[0]]}
               graphPoint={graphPoint}
-              to={[ethWeight[1], 1 - ethWeight[1]]}
+              to={[ethWeight_[1], 1 - ethWeight_[1]]}
             />
             {null && (
               <g>
@@ -205,9 +212,14 @@ function TwoLines(
   )
 }
 
-function Frame({ closestPctIndexesStart, graphPoint }: {
+function Frame({
+  closestPctIndexesStart,
+  graphPoint,
+  tokenSymbol,
+}: {
   closestPctIndexesStart: [number, number]
   graphPoint: GraphPointFn
+  tokenSymbol: string
 }) {
   const { colors } = useTheme()
   const { progress } = useSpring({
@@ -242,7 +254,7 @@ function Frame({ closestPctIndexesStart, graphPoint }: {
           active = [colors.accent3, "ETH"]
         }
         if (i === closestPctIndexesStart[1] - 1) {
-          active = [colors.accent, "MOI"]
+          active = [colors.accent, tokenSymbol]
         }
         return (
           <DashPercent

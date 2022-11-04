@@ -95,6 +95,7 @@ query SpectreById($id: ID!) {
         states(orderBy: timestamp, orderDirection: asc) {
           price
           timestamp
+          weights
         }
       }
     }

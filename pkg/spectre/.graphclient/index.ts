@@ -2948,7 +2948,7 @@ export type SpectreByIdQuery = { readonly spectre?: Maybe<(
         & { readonly issues: ReadonlyArray<Pick<Issue, 'amount' | 'timestamp'>> }
       )>, readonly pool?: Maybe<(
         Pick<Pool, 'id' | 'address'>
-        & { readonly joins: ReadonlyArray<Pick<Join, 'id'>>, readonly states: ReadonlyArray<Pick<PoolState, 'price' | 'timestamp'>> }
+        & { readonly joins: ReadonlyArray<Pick<Join, 'id'>>, readonly states: ReadonlyArray<Pick<PoolState, 'price' | 'timestamp' | 'weights'>> }
       )> }
     ) }
   )> };
@@ -3053,6 +3053,7 @@ export const SpectreByIdDocument = gql`
         states(orderBy: timestamp, orderDirection: asc) {
           price
           timestamp
+          weights
         }
       }
     }

@@ -28,13 +28,11 @@ export type Token = {
   symbol: string
   tokenId: string
   topHolders: Array<readonly [name: string, picture: string]>
-  priceHistory: Record<
-    "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
-    Dnum[]
-  >
-  mintHistory: Record<
-    "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
-    number[]
+  priceHistory: Record<TimeScale, Dnum[]>
+  mintHistory: Record<TimeScale, number[]>
+  ethWeightHistory: Record<
+    TimeScale,
+    [ethWeightStart: Dnum, ethWeightEnd: Dnum]
   >
 }
 

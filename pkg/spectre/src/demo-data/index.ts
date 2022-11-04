@@ -1,6 +1,13 @@
 import type { Dnum } from "dnum"
 import type { Address } from "moire"
-import type { PoolShare, Proposal, Reward, Snft, SnftId } from "../types"
+import type {
+  PoolShare,
+  Proposal,
+  Reward,
+  Snft,
+  SnftId,
+  TimeScale,
+} from "../types"
 
 import {
   rand,
@@ -23,6 +30,8 @@ seed("123")
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => -0.5 + random())
 }
+
+const dn = (v: number) => dnum.from(v, 18)
 
 export const buyoutMultiplier = 1.1
 
@@ -235,6 +244,13 @@ function randomToken(nftName: string): Snft["token"] {
     name: nftName,
     priceEth,
     priceHistory: tokenPrices,
+    ethWeightHistory: {
+      "DAY": [dn(0.7), dn(0.79)],
+      "WEEK": [dn(0.5), dn(0.8)],
+      "MONTH": [dn(0.4), dn(0.8)],
+      "YEAR": [dn(0.3), dn(0.8)],
+      "ALL": [dn(0.2), dn(0.8)],
+    },
     supply,
     symbol,
     tokenId: "1",
@@ -533,16 +549,5 @@ export const PROPOSALS_BY_ACCOUNT = new Map<Address, Proposal[]>(
 )
 
 export const TOKENS = SNFTS.map((snft) => snft.token)
-
-export const poolEthWeights: Record<
-  "ALL" | "YEAR" | "MONTH" | "WEEK" | "DAY",
-  [ethWeightStart: number, ethWeightEnd: number]
-> = {
-  "DAY": [0.7, 0.79],
-  "WEEK": [0.5, 0.8],
-  "MONTH": [0.4, 0.8],
-  "YEAR": [0.3, 0.8],
-  "ALL": [0.2, 0.8],
-}
 
 export { tokenPrices }

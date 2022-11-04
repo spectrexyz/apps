@@ -18,7 +18,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
-import { buyoutMultiplier, poolEthWeights } from "../demo-data"
+import { buyoutMultiplier } from "../demo-data"
 import { useSnft, useSnftsAdjacent } from "../snft-hooks"
 import { useLayout } from "../styles"
 import { FractionsChart } from "./FractionsChart"
@@ -355,11 +355,14 @@ export function ScreenNft({
               }),
             }}
           >
-            <PoolChart
-              onScaleChange={setTimeScale}
-              scale={timeScale}
-              ethWeight={poolEthWeights[timeScale]}
-            />
+            {snft.data && (
+              <PoolChart
+                onScaleChange={setTimeScale}
+                scale={timeScale}
+                ethWeight={snft.data.token.ethWeightHistory[timeScale]}
+                tokenSymbol={snft.data.token.symbol}
+              />
+            )}
           </div>
         )}
       </div>

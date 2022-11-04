@@ -7,6 +7,7 @@ import type {
   Snft,
   SnftId,
   SnftPreview,
+  TimeScale,
   TokenLocator,
 } from "./types"
 
@@ -53,6 +54,59 @@ function isDemoSnft(id: SnftId) {
 }
 
 const RETRY_DELAY = 1000
+
+function buildEthWeightHistory(
+  values: Array<readonly [Date, Dnum]>,
+): Snft["token"]["ethWeightHistory"] {
+  const now = Date.now()
+
+  const todaysValue: [Date, Dnum] = [
+    new Date(),
+    // 0.2 is the default used in use-spectralize.ts
+    // values.at(-1) ?? dnum.from(0.2, 18),
+    values.at(-1)?.[1] ?? dnum.from(0.2, 18),
+  ]
+
+  const groups: Record<
+    TimeScale,
+    [[Date, Dnum], [Date, Dnum]]
+  > = {
+    "ALL": [todaysValue, todaysValue],
+    "YEAR": [todaysValue, todaysValue],
+    "MONTH": [todaysValue, todaysValue],
+    "WEEK": [todaysValue, todaysValue],
+    "DAY": [todaysValue, todaysValue],
+  }
+
+  values.forEach(([time, ethWeight]) => {
+    const durations = [
+      [DAY_MS * 1, groups.DAY],
+      [DAY_MS * 7, groups.WEEK],
+      [DAY_MS * 30, groups.MONTH],
+      [DAY_MS * 365, groups.YEAR],
+      [DAY_MS * 365, groups.YEAR],
+      [null, groups.ALL],
+    ] as const
+
+    durations.forEach(([groupDuration, group]) => {
+      if (!(groupDuration === null || time.getTime() > (now - groupDuration))) {
+        return
+      }
+      if (time < group[0][0]) {
+        group[0] = [time, ethWeight]
+      }
+      if (time > group[1][0]) {
+        group[1] = [time, ethWeight]
+      }
+    })
+  })
+
+  return Object.entries(groups)
+    .reduce((result, [groupName, values]) => ({
+      ...result,
+      [groupName]: values.map(([_time, weight]) => weight),
+    }), {}) as Record<TimeScale, [Dnum, Dnum]> // we can safely use “as” here since we created this record right above
+}
 
 function buildPriceHistory(
   values: Array<readonly [Date, Dnum]>,
@@ -208,6 +262,11 @@ export function useSnft(
       dnum.from(state.price, SERC20_DECIMALS),
     ] as const)))
 
+    const ethWeightHistory = buildEthWeightHistory(poolStates.map((state) => ([
+      new Date(parseInt(String(state.timestamp), 10) * 1000),
+      [BigInt(state.weights[0]), SERC20_DECIMALS],
+    ] as const)))
+
     const mintHistory = buildMintHistory(
       serc20.issuance.issues?.map(({ timestamp, amount }) => ([
         new Date(parseInt(String(timestamp), 10) * 1000),
@@ -251,6 +310,7 @@ export function useSnft(
           quantity: [BigInt(holder.amount), SERC20_DECIMALS] as const,
           address: isAddress(holder.address) ? holder.address : null,
         })),
+        ethWeightHistory,
         holdersCount: 10,
         marketCapEth,
         mintHistory,
