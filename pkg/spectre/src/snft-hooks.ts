@@ -418,10 +418,15 @@ export function useSnfts({
   ]
 }
 
-export function useHighlightedSnfts(): UseQueryResult<Snft[]> {
-  return useQuery(["highlighted-snfts"], async () => {
-    await fakeDelay()
-    return SELECTED_SNFTS
+export function useHighlightedSnfts(): ReturnType<typeof useSnfts> {
+  // return useQuery(["highlighted-snfts"], async () => {
+  //   await fakeDelay()
+  //   return SELECTED_SNFTS
+  // })
+  // TODO: filter by highlighted
+  return useSnfts({
+    first: 9,
+    fetchOptions: { retry: true },
   })
 }
 

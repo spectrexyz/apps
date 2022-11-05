@@ -1,7 +1,7 @@
-import type { Snft } from "../types"
+import type { SnftPreview } from "../types"
 
 import * as dnum from "dnum"
-import { Anchor, Button, LoadingBox, TokenBadge } from "moire"
+import { AddressBadge, Anchor, Button, LoadingBox, TokenBadge } from "moire"
 import { Link, useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { Grid } from "../AppLayout/Grid"
@@ -79,7 +79,7 @@ function Heading() {
 }
 
 function HighlightedArtists() {
-  const highlightedSnfts = useHighlightedSnfts()
+  const [snftsCount, snftsPrefetchStatus, snftQueries] = useHighlightedSnfts()
   const layout = useLayout()
   return (
     <section
@@ -123,21 +123,28 @@ function HighlightedArtists() {
               {children}
             </div>
           )}
-          visible={!highlightedSnfts.data}
+          visible={snftsPrefetchStatus === "loading"}
         />
-        {highlightedSnfts.data && (
-          <Grid>
-            {highlightedSnfts.data.map((snft) => (
-              <HighlightCard key={snft.id} snft={snft} />
-            ))}
-          </Grid>
-        )}
+        {snftsPrefetchStatus === "error"
+          ? "Error loading the NFTs, please try reloading."
+          : (
+            <Grid>
+              {snftQueries.map((snftQuery) =>
+                snftQuery.data && (
+                  <HighlightCard
+                    key={snftQuery.data.id}
+                    snft={snftQuery.data}
+                  />
+                )
+              )}
+            </Grid>
+          )}
       </div>
     </section>
   )
 }
 
-function HighlightCard({ snft }: { snft: Snft }) {
+function HighlightCard({ snft }: { snft: SnftPreview }) {
   const [, setLocation] = useLocation()
   return (
     <div css={{ paddingBottom: "5gu" }}>
@@ -192,22 +199,25 @@ function HighlightCard({ snft }: { snft: Snft }) {
             />
           </div>
           <div css={{ flexShrink: "0" }}>
-            <TokenBadge label={snft.token.symbol} />
+            <TokenBadge label={snft.tokenSymbol} />
           </div>
         </div>
         <div>
           <Anchor
-            href={`/${snft.creator.address}`}
+            href={`/${snft.guardian}`}
             onClick={(event) => {
               event.preventDefault()
-              setLocation(`/${snft.creator.address}`)
+              setLocation(`/${snft.guardian}`)
             }}
-            css={{ color: "colors.link" }}
+            css={{
+              color: "colors.link",
+              textDecoration: "none",
+            }}
           >
-            {snft.creator.name}
+            <AddressBadge address={snft.guardian} />
           </Anchor>
           <span css={{ whiteSpace: "nowrap" }}>
-            {dnum.format(snft.token.priceEth, 4)} ETH
+            {dnum.format(snft.tokenPriceEth, 4)} ETH
           </span>
         </div>
       </div>
