@@ -97,6 +97,12 @@ query SpectreById($id: ID!) {
           timestamp
           weights
         }
+        latestState: states(first: 1, orderBy: timestamp, orderDirection: desc) {
+          balances
+          price
+          timestamp
+          weights
+        }
       }
     }
     state

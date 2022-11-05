@@ -244,6 +244,7 @@ export function useSnft(
       supply,
     )
 
+    const latestPoolState = serc20.pool?.latestState[0]
     const poolStates = serc20.pool?.states ?? []
     const lastPoolState = poolStates.at(-1)
 
@@ -253,9 +254,14 @@ export function useSnft(
     const marketCapEth = dnum.multiply(priceEth, supply)
     const buyoutPrice = dnum.multiply(marketCapEth, buyoutMultiplier)
 
-    // TODO: replace with actual values
-    const pooledEth: Dnum = [10_000000000000000000n, 18]
-    const pooledToken: Dnum = [10_000000000000000000n, SERC20_DECIMALS]
+    const pooledEth: Dnum = [
+      BigInt(latestPoolState ? latestPoolState.balances[1] : 0),
+      18,
+    ]
+    const pooledToken: Dnum = [
+      BigInt(latestPoolState ? latestPoolState.balances[0] : 0),
+      SERC20_DECIMALS,
+    ]
 
     const priceHistory = buildPriceHistory(poolStates.map((state) => ([
       new Date(parseInt(String(state.timestamp), 10) * 1000),
