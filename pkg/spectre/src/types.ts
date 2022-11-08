@@ -59,6 +59,8 @@ export type Snft = Readonly<{
   guardian: string
   history: SnftEvent[]
   image: string
+  issuanceAllocation: Dnum
+  issuanceFee: Dnum
   pool: {
     eth: Dnum
     token: Dnum

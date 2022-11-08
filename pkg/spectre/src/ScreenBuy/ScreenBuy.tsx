@@ -324,11 +324,49 @@ export function ScreenBuy({ id }: { id: string }) {
                   <Group heading="Slippage">
                     <p>−</p>
                   </Group>
-                  <Group heading="Creator & community rewards (−0%)">
-                    <p>−</p>
+                  <Group
+                    heading={`Rewards (${
+                      snft.data?.issuanceAllocation
+                        ? dn.format(snft.data.issuanceAllocation)
+                        : "−"
+                    }%)`}
+                  >
+                    <p>
+                      {snft.data?.issuanceAllocation && ethValue
+                        ? (
+                          `${
+                            dn.format(
+                              dn.multiply(
+                                ethValue,
+                                dn.divide(snft.data.issuanceAllocation, 100),
+                              ),
+                            )
+                          } ETH`
+                        )
+                        : "−"}
+                    </p>
                   </Group>
-                  <Group heading="Minting fee (−%)">
-                    <p>−</p>
+                  <Group
+                    heading={`Minting fee (${
+                      snft.data?.issuanceFee
+                        ? dn.format(snft.data.issuanceFee)
+                        : "−"
+                    }%)`}
+                  >
+                    <p>
+                      {snft.data?.issuanceFee && ethValue
+                        ? (
+                          `${
+                            dn.format(
+                              dn.multiply(
+                                ethValue,
+                                dn.divide(snft.data.issuanceFee, 100),
+                              ),
+                            )
+                          } ETH`
+                        )
+                        : "−"}
+                    </p>
                   </Group>
                   <Group heading="Protocol fee (−%)">
                     <p>−</p>

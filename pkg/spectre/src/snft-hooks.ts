@@ -300,6 +300,8 @@ export function useSnft(
       guardian: issuance.guardian,
       history: [],
       image: ipfsUrl(metadata.image),
+      issuanceFee: [BigInt(issuance.fee), 18],
+      issuanceAllocation: [BigInt(issuance.allocation), 18],
       pool: {
         eth: pooledEth,
         token: pooledToken,
