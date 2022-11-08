@@ -124,7 +124,6 @@ export function ScreenNft({
   const supply = snft.data?.token.supply
 
   const history = useMemo(() => {
-    const priceHistory = snft.data?.token.priceHistory
     if (!priceHistory) return []
     const history = Object.entries(priceHistory).find(([scale]) => (
       scale === timeScale

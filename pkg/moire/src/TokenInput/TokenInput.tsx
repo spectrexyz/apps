@@ -12,7 +12,7 @@ type TokenInputProps = {
   balanceConverted?: string // TODO: deprecate
   onBalanceClick?: () => void // TODO: deprecate
 
-  maxButton?: boolean
+  onMaxClick?: () => void
   onChange: (value: string) => void
   pair?: [string | SymbolAndImageUrl, string | SymbolAndImageUrl]
   secondaryEnd?: ReactNode
@@ -24,7 +24,7 @@ type TokenInputProps = {
 export function TokenInput({
   balance,
   balanceConverted,
-  maxButton = false,
+  onMaxClick,
   onBalanceClick,
   onChange,
   pair,
@@ -73,7 +73,7 @@ export function TokenInput({
             display: "flex",
             alignItems: "center",
             height: "100%",
-            paddingRight: maxButton ? "2gu" : "0.5gu",
+            paddingRight: onMaxClick ? "2gu" : "0.5gu",
           }}
         >
           {pair
@@ -99,12 +99,13 @@ export function TokenInput({
               ? pair.map((v) => Array.isArray(v) ? v[0] : v).join("-")
               : symbol}
           </span>
-          {maxButton && (
+          {onMaxClick && (
             <Button
               mode="flat-2"
               label="Max"
               adjustLabelAlignment={false}
               horizontalPadding={1 * gu}
+              onClick={onMaxClick}
               css={{
                 height: "3gu",
                 textTransform: "uppercase",

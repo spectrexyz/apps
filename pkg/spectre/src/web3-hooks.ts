@@ -1,4 +1,6 @@
-import type { ContractInterface } from "ethers"
+import type { Abi } from "abitype"
+import type { Dnum } from "dnum"
+// import type { ContractInterface } from "ethers"
 import type { Address, AddressOrEnsName } from "moire"
 import type { SignTxAndWaitStatus } from "./types"
 
@@ -6,6 +8,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useCallback, useMemo } from "react"
 import {
   useAccount,
+  useBalance,
   useContractWrite,
   usePrepareContractWrite,
   useProvider,
@@ -14,6 +17,26 @@ import {
 import { CREATORS_BY_ADDRESS } from "./demo-data"
 import { DEMO_MODE } from "./environment"
 import { addressesEqual } from "./utils"
+
+export function useConnectedAccountBalance(): (
+  // The return type should be infered by TS, but an issue
+  // prevents it so we declare it explicitly.
+  // https://github.com/microsoft/TypeScript/issues/47663
+  Omit<ReturnType<typeof useBalance>, "data"> & { data?: Dnum }
+) {
+  const account = useAccount()
+  const balance = useBalance({
+    addressOrName: account.address,
+    enabled: account.status === "connected",
+  })
+  return {
+    ...balance,
+    data: balance.data && ([
+      BigInt(String(balance.data.value)),
+      18,
+    ] as const),
+  }
+}
 
 export function useIsConnectedAddress(address: AddressOrEnsName) {
   const provider = useProvider()
@@ -35,22 +58,32 @@ export function useIsConnectedAddress(address: AddressOrEnsName) {
 }
 
 export function useSignTxAndWait({
-  addressOrName,
+  address,
   args,
-  contractInterface,
+  abi,
   enabled = true,
   functionName,
 }: {
-  addressOrName: AddressOrEnsName
+  address: AddressOrEnsName
   args: unknown[]
-  contractInterface: ContractInterface
+  abi: Abi
   enabled?: boolean
   functionName: string
-}) {
+}): {
+  // The return type should be infered by TS, but an issue
+  // prevents it so we declare it explicitly.
+  // https://github.com/microsoft/TypeScript/issues/47663
+  contractWrite: ReturnType<typeof useContractWrite>
+  prepareContractWrite: ReturnType<typeof usePrepareContractWrite>
+  reset: () => void
+  status: SignTxAndWaitStatus
+  transactionResult: ReturnType<typeof useWaitForTransaction>
+  write: () => void
+} {
   const prepareContractWrite = usePrepareContractWrite({
-    addressOrName,
+    address,
     args,
-    contractInterface,
+    abi,
     enabled,
     functionName,
   })

@@ -1,5 +1,8 @@
+import type { Dnum } from "dnum"
+import type { Address } from "moire"
 import type { ReactNode } from "react"
 
+import * as dn from "dnum"
 import {
   Button,
   ButtonIcon,
@@ -18,16 +21,16 @@ import {
   useTheme,
   WEEK_MS,
 } from "moire"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { a, useSpring } from "react-spring"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { CenteredContainer } from "../AppLayout/CenteredContainer"
-import { useSnft } from "../snft-hooks"
+import { useSnft, useTokenPrice } from "../snft-hooks"
 import { useLabelStyle, useLayout } from "../styles"
 import { SwapModule } from "./SwapModule"
 
-const SLIPPAGE_MAX = 10
+const SLIPPAGE_MAX = 10 // in %
 
 const TIMEFRAME_OPTIONS = [
   1 * DAY_MS,
@@ -46,15 +49,27 @@ const TIMEFRAME_DEFAULT = 1 * WEEK_MS
 const SLIPPAGE_DEFAULT = 0.5
 
 export function ScreenBuy({ id }: { id: string }) {
-  const snft = useSnft(id)
-  const [, setLocation] = useLocation()
   const layout = useLayout()
   const { colors } = useTheme()
+  const [, setLocation] = useLocation()
+
+  const snft = useSnft(id)
   const [mechanism, setMechanism] = useState<"MINT" | "SWAP">("MINT")
   const [showMechanismWarning, setShowMechanismWarning] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
-
   const settings = useSettings()
+
+  const [ethValue, setEthValue] = useState<null | Dnum>(null)
+  const [tokenValue, setTokenValue] = useState<null | Dnum>(null)
+  const tokenPrice = useTokenPrice(snft.data?.token.contractAddress)
+
+  useEffect(() => {
+    setTokenValue(
+      ethValue && tokenPrice.data
+        ? dn.multiply(ethValue, tokenPrice.data)
+        : null,
+    )
+  }, [ethValue, tokenPrice])
 
   const settingsBtnAnim = useSpring({
     config: springs.snappy,
@@ -220,7 +235,13 @@ export function ScreenBuy({ id }: { id: string }) {
                   padding: layout.below("medium") ? "3gu 0 0" : "3gu 0",
                 }}
               >
-                {snft.data && <SwapModule id={snft.data.id} />}
+                {snft.data && (
+                  <SwapModule
+                    id={snft.data.id}
+                    tokenValue={tokenValue}
+                    onEthValueChange={setEthValue}
+                  />
+                )}
                 <div
                   css={({ colors }) => ({
                     display: "grid",
@@ -264,42 +285,53 @@ export function ScreenBuy({ id }: { id: string }) {
                             ? "Mint fractions"
                             : "Swap fractions"}
                         </span>
-                        <Button
-                          label={mechanism === "MINT"
-                            ? "Change"
-                            : "Change to mint"}
-                          mode="flat-3"
-                          size="mini"
-                          uppercase
-                          onClick={() => {
-                            if (mechanism === "MINT") {
-                              setShowMechanismWarning(true)
-                            } else {
-                              setMechanism("MINT")
-                            }
-                          }}
-                          css={{ color: "#F7B186" }}
-                        />
+                        {false && /* disabled for now (only mint) */ (
+                          <Button
+                            label={mechanism === "MINT"
+                              ? "Change"
+                              : "Change to mint"}
+                            mode="flat-3"
+                            size="mini"
+                            uppercase
+                            onClick={() => {
+                              if (mechanism === "MINT") {
+                                setShowMechanismWarning(true)
+                              } else {
+                                setMechanism("MINT")
+                              }
+                            }}
+                            css={{ color: "#F7B186" }}
+                          />
+                        )}
                       </p>
                     </Group>
                   )}
                   <Group heading="Est. price">
-                    <p>~ 0.0643709 ETH per {snft.data?.token.symbol}</p>
+                    <p>
+                      {tokenPrice.data
+                        ? `~ ${
+                          dn.format(
+                            dn.divide(dn.from(1, 18), tokenPrice.data),
+                            { trailingZeros: false, digits: 8 },
+                          )
+                        } ETH per ${snft.data?.token.symbol}`
+                        : ""}
+                    </p>
                   </Group>
                   <Group heading="Network fee">
-                    <p>~ $67.49</p>
+                    <p>−</p>
                   </Group>
                   <Group heading="Slippage">
-                    <p>0.5%</p>
+                    <p>−</p>
                   </Group>
-                  <Group heading="Creator & community rewards (10%)">
-                    <p>$120.56</p>
+                  <Group heading="Creator & community rewards (−0%)">
+                    <p>−</p>
                   </Group>
-                  <Group heading="Minting fee (2%)">
-                    <p>$27.33</p>
+                  <Group heading="Minting fee (−%)">
+                    <p>−</p>
                   </Group>
-                  <Group heading="Protocol fee (1%)">
-                    <p>$13.42</p>
+                  <Group heading="Protocol fee (−%)">
+                    <p>−</p>
                   </Group>
                 </div>
 

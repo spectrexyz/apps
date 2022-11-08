@@ -1,4 +1,4 @@
-import type { MouseEvent, RefObject } from "react"
+import type { MouseEvent, RefObject, TouchEvent } from "react"
 import type { Interpolation, SpringValue } from "react-spring"
 import type { TimeScale } from "../types"
 

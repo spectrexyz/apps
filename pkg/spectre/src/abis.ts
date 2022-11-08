@@ -99,7 +99,7 @@ export const CHANNELER_ABI_MINT_AND_FRACTIONALIZE = [
     "stateMutability": "nonpayable",
     "type": "function",
   },
-]
+] as const
 
 export const VAULT_ABI_EVENT_FRACTIONALIZE = [
   {
@@ -139,4 +139,26 @@ export const VAULT_ABI_EVENT_FRACTIONALIZE = [
     "name": "Fractionalize",
     "type": "event",
   },
-]
+] as const
+
+export const ISSUER_ABI_PRICE_OF = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+    ],
+    "name": "priceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256",
+      },
+    ],
+    "stateMutability": "view",
+    "type": "function",
+  },
+] as const

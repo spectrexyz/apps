@@ -1,13 +1,6 @@
 import type { Dnum } from "dnum"
 import type { Address } from "moire"
-import type {
-  PoolShare,
-  Proposal,
-  Reward,
-  Snft,
-  SnftId,
-  TimeScale,
-} from "../types"
+import type { PoolShare, Proposal, Reward, Snft, SnftId } from "../types"
 
 import {
   rand,

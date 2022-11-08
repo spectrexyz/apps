@@ -632,18 +632,18 @@ export function useApproveTransfers(enabled: boolean) {
   const [watch, setWatch] = useState(true)
 
   const isApprovedForAll = useContractRead({
-    addressOrName: ADDRESS_SERC721,
-    args: [address, ADDRESS_VAULT],
-    contractInterface: erc721ABI,
+    address: ADDRESS_SERC721,
+    args: address && [address, ADDRESS_VAULT],
+    abi: erc721ABI,
     enabled: Boolean(address),
     functionName: "isApprovedForAll",
     watch: watch && enabled,
   })
 
   const approveTx = useSignTxAndWait({
-    addressOrName: ADDRESS_SERC721,
+    address: ADDRESS_SERC721,
     args: [ADDRESS_VAULT, true],
-    contractInterface: erc721ABI,
+    abi: erc721ABI,
     enabled,
     functionName: "setApprovalForAll",
   })
@@ -703,8 +703,8 @@ function useMintAndSpectralize(enabled: boolean, metadataUri: string | null) {
   const account = useAccount()
 
   const mintAndFractionalize = useSignTxAndWait({
-    addressOrName: ADDRESS_CHANNELER,
-    contractInterface: CHANNELER_ABI_MINT_AND_FRACTIONALIZE,
+    address: ADDRESS_CHANNELER,
+    abi: CHANNELER_ABI_MINT_AND_FRACTIONALIZE,
     functionName: "mintAndFractionalize",
     args: [
       metadataUri,

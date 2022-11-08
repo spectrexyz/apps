@@ -79,7 +79,7 @@ function Heading() {
 }
 
 function HighlightedArtists() {
-  const [snftsCount, snftsPrefetchStatus, snftQueries] = useHighlightedSnfts()
+  const [, snftsPrefetchStatus, snftQueries] = useHighlightedSnfts()
   const layout = useLayout()
   return (
     <section

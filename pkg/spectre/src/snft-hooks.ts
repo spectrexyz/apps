@@ -1,4 +1,4 @@
-import { useQueries, UseQueryResult } from "@tanstack/react-query"
+import type { UseQueryResult } from "@tanstack/react-query"
 import type { Dnum } from "dnum"
 import type { Address, AddressOrEnsName } from "moire"
 import type {
@@ -11,22 +11,24 @@ import type {
   TokenLocator,
 } from "./types"
 
-import { useQuery } from "@tanstack/react-query"
-import * as dnum from "dnum"
+import { useQueries, useQuery } from "@tanstack/react-query"
+import * as dn from "dnum"
 import uniqBy from "lodash.uniqby"
 import { DAY_MS, isAddress } from "moire"
 import { useMemo } from "react"
-import { useProvider } from "wagmi"
+import { useContractRead, useProvider } from "wagmi"
 import { z } from "zod"
+import { ISSUER_ABI_PRICE_OF } from "./abis"
 import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
   POOLS_BY_ACCOUNT,
   PROPOSALS_BY_ACCOUNT,
   REWARDS_BY_ACCOUNT,
-  SELECTED_SNFTS,
+  // SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
+import { ADDRESS_ISSUER } from "./environment"
 import { useSpectre, useSpectres } from "./subgraph-hooks"
 import { ipfsUrl, resolveAddress, toShortId } from "./utils"
 
@@ -63,8 +65,8 @@ function buildEthWeightHistory(
   const todaysValue: [Date, Dnum] = [
     new Date(),
     // 0.2 is the default used in use-spectralize.ts
-    // values.at(-1) ?? dnum.from(0.2, 18),
-    values.at(-1)?.[1] ?? dnum.from(0.2, 18),
+    // values.at(-1) ?? dn.from(0.2, 18),
+    values.at(-1)?.[1] ?? dn.from(0.2, 18),
   ]
 
   const groups: Record<
@@ -104,7 +106,7 @@ function buildEthWeightHistory(
   return Object.entries(groups)
     .reduce((result, [groupName, values]) => ({
       ...result,
-      [groupName]: values.map(([_time, weight]) => weight),
+      [groupName]: values.map(([, weight]) => weight),
     }), {}) as Record<TimeScale, [Dnum, Dnum]> // we can safely use “as” here since we created this record right above
 }
 
@@ -159,7 +161,7 @@ function buildMintHistory(
 
   values.forEach(([time, value]) => {
     const _time = time.getTime()
-    const share = dnum.toNumber(dnum.divide(value, totalSupply))
+    const share = dn.toNumber(dn.divide(value, totalSupply))
     if (_time > now - DAY_MS * 1) history.DAY.push(share)
     if (_time > now - DAY_MS * 7) history.WEEK.push(share)
     if (_time > now - DAY_MS * 30) history.MONTH.push(share)
@@ -167,7 +169,7 @@ function buildMintHistory(
     history.ALL.push(share)
   })
 
-  const latestShare = dnum.toNumber(dnum.divide(latestValue, totalSupply))
+  const latestShare = dn.toNumber(dn.divide(latestValue, totalSupply))
   if (history.DAY.length < 2) history.DAY = [latestShare, latestShare]
   if (history.WEEK.length < 2) history.WEEK = [latestShare, latestShare]
   if (history.MONTH.length < 2) history.MONTH = [latestShare, latestShare]
@@ -235,11 +237,11 @@ export function useSnft(
     const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
 
     const initialBuyoutPrice: Dnum = [BigInt(serc20.sale?.reserve), 18]
-    const initialMarketCapEth: Dnum = dnum.divide(
+    const initialMarketCapEth: Dnum = dn.divide(
       initialBuyoutPrice,
       buyoutMultiplier,
     )
-    const initialTokenPriceEth: Dnum = dnum.divide(
+    const initialTokenPriceEth: Dnum = dn.divide(
       initialMarketCapEth,
       supply,
     )
@@ -249,10 +251,10 @@ export function useSnft(
     const lastPoolState = poolStates.at(-1)
 
     const priceEth = lastPoolState
-      ? dnum.from(lastPoolState.price, SERC20_DECIMALS)
+      ? dn.from(lastPoolState.price, SERC20_DECIMALS)
       : initialTokenPriceEth
-    const marketCapEth = dnum.multiply(priceEth, supply)
-    const buyoutPrice = dnum.multiply(marketCapEth, buyoutMultiplier)
+    const marketCapEth = dn.multiply(priceEth, supply)
+    const buyoutPrice = dn.multiply(marketCapEth, buyoutMultiplier)
 
     const pooledEth: Dnum = [
       BigInt(latestPoolState ? latestPoolState.balances[1] : 0),
@@ -265,7 +267,7 @@ export function useSnft(
 
     const priceHistory = buildPriceHistory(poolStates.map((state) => ([
       new Date(parseInt(String(state.timestamp), 10) * 1000),
-      dnum.from(state.price, SERC20_DECIMALS),
+      dn.from(state.price, SERC20_DECIMALS),
     ] as const)))
 
     const ethWeightHistory = buildEthWeightHistory(poolStates.map((state) => ([
@@ -632,4 +634,29 @@ export function useProposalsByAddress(
     },
     { enabled: Boolean(address.data) },
   )
+}
+
+// price is in token qty per ETH
+export function useTokenPrice(serc20Address?: Address) {
+  const tokenIssuingPriceBigNumber = useContractRead({
+    address: ADDRESS_ISSUER,
+    abi: ISSUER_ABI_PRICE_OF,
+    functionName: "priceOf",
+    args: serc20Address && [serc20Address],
+    enabled: Boolean(serc20Address),
+  })
+
+  const tokenIssuingPrice = useMemo<Dnum | null>(
+    () => {
+      return tokenIssuingPriceBigNumber.data
+        ? [BigInt(String(tokenIssuingPriceBigNumber.data)), SERC20_DECIMALS]
+        : null
+    },
+    [tokenIssuingPriceBigNumber.data],
+  )
+
+  return {
+    ...tokenIssuingPriceBigNumber,
+    data: tokenIssuingPrice,
+  }
 }

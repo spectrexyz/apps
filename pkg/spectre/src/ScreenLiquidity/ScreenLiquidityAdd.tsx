@@ -193,7 +193,7 @@ function SwapModule({ id }: { id: string }) {
             value={ethValue}
             balance="106.970"
             balanceConverted="$283,982"
-            maxButton
+            onMaxClick={() => {}}
           />
         </div>
       </div>
@@ -226,7 +226,7 @@ function SwapModule({ id }: { id: string }) {
               value={ethValue}
               balance="106.970"
               balanceConverted="$283,982"
-              maxButton
+              onMaxClick={() => {}}
             />
           )}
         </div>

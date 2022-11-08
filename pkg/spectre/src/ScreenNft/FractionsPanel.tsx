@@ -104,8 +104,8 @@ function TokenHealthTip() {
 function FractionsMetrics({ snft }: { snft: Snft }) {
   const ethToUsd = useEthToUsdFormat()
 
-  const mintingFees = dnum.from(12.17, 18)
-  const tradingFees = dnum.from(31.06, 18)
+  // const mintingFees = dnum.from(12.17, 18)
+  // const tradingFees = dnum.from(31.06, 18)
 
   return (
     <Metrics
