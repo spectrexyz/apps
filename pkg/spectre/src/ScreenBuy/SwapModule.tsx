@@ -46,7 +46,7 @@ export function SwapModule({
 
   useEffect(() => {
     onEthValueChange(parsedEthValue)
-  }, [parsedEthValue && dn.toJSON(parsedEthValue)])
+  }, [parsedEthValue, onEthValueChange])
 
   return snft.data
     ? (
@@ -97,7 +97,7 @@ export function SwapModule({
         >
           <Label label="To (estimated)" />
           <TokenInput
-            onChange={() => {}}
+            onChange={noop}
             symbol={snft.data?.token.symbol}
             value={tokenValue ? dn.format(tokenValue, 2) : ""}
           />

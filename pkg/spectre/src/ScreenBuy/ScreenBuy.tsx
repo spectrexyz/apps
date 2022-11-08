@@ -1,5 +1,4 @@
 import type { Dnum } from "dnum"
-import type { Address } from "moire"
 import type { ReactNode } from "react"
 
 import * as dn from "dnum"
@@ -15,6 +14,7 @@ import {
   IconGearSix,
   IconGearSixFilled,
   Incremental,
+  NO_BREAK_SPACE,
   Slider,
   springs,
   Tip,
@@ -325,7 +325,7 @@ export function ScreenBuy({ id }: { id: string }) {
                     <p>−</p>
                   </Group>
                   <Group
-                    heading={`Rewards (${
+                    heading={`Rewards${NO_BREAK_SPACE}(${
                       snft.data?.issuanceAllocation
                         ? dn.format(snft.data.issuanceAllocation)
                         : "−"
@@ -341,7 +341,7 @@ export function ScreenBuy({ id }: { id: string }) {
                                 dn.divide(snft.data.issuanceAllocation, 100),
                               ),
                             )
-                          } ETH`
+                          }${NO_BREAK_SPACE}ETH`
                         )
                         : "−"}
                     </p>
@@ -363,7 +363,7 @@ export function ScreenBuy({ id }: { id: string }) {
                                 dn.divide(snft.data.issuanceFee, 100),
                               ),
                             )
-                          } ETH`
+                          }${NO_BREAK_SPACE}ETH`
                         )
                         : "−"}
                     </p>
