@@ -34,7 +34,6 @@ export const ButtonArea = forwardRef<
       href,
       onClick: (event: MouseEvent<HTMLAnchorElement>) => {
         if (onClick && href) {
-          event.preventDefault()
           onClick(event)
         }
       },
