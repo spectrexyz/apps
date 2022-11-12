@@ -47,6 +47,7 @@ export type Snft = Readonly<{
   shortId: ShortId
   buyoutMultiplier: number
   buyoutPrice: Dnum
+  buyoutFlash: boolean
   creator: Readonly<{
     address: AddressOrEnsName
     avatar: string
@@ -61,6 +62,7 @@ export type Snft = Readonly<{
   image: string
   issuanceAllocation: Dnum
   issuanceFee: Dnum
+  issuanceFlash: boolean
   pool: {
     eth: Dnum
     token: Dnum

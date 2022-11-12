@@ -288,6 +288,7 @@ export function useSnft(
       shortId: toShortId(id),
       buyoutMultiplier,
       buyoutPrice,
+      buyoutFlash: Boolean(sale.flash),
       creator: {
         address: nft?.creator,
         avatar: "",
@@ -302,6 +303,7 @@ export function useSnft(
       image: ipfsUrl(metadata.image),
       issuanceFee: [BigInt(issuance.fee), 18],
       issuanceAllocation: [BigInt(issuance.allocation), 18],
+      issuanceFlash: Boolean(issuance.flash),
       pool: {
         eth: pooledEth,
         token: pooledToken,

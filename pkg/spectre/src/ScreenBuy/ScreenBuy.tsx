@@ -373,7 +373,16 @@ export function ScreenBuy({ id }: { id: string }) {
                   </Group>
                 </div>
 
-                <Important />
+                <div css={{ paddingTop: "2gu" }}>
+                  {snft.data?.buyoutFlash === false && (
+                    <Tip title="Important">
+                      Upon approval from the NFT guardian, your fractions will
+                      be minted and transferred to the connected account. Buying
+                      proposals approval may take up to one week. Opt-in for
+                      email notifications here.
+                    </Tip>
+                  )}
+                </div>
 
                 <div css={{ paddingTop: "3gu" }}>
                   <Button label="Place order" mode="primary" wide shadowInBox />
@@ -407,18 +416,6 @@ function Group({
       </h1>
       <div>{children}</div>
     </section>
-  )
-}
-
-function Important() {
-  return (
-    <div css={{ paddingTop: "2gu" }}>
-      <Tip title="Important">
-        Upon approval from the NFT guardian, your fractions will be minted and
-        transferred to the connected account. Buying proposals approval may take
-        up to one week. Opt-in for email notifications here.
-      </Tip>
-    </div>
   )
 }
 
