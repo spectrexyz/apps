@@ -45,7 +45,10 @@ export function Grid(
         {Children.map(
           children,
           (node, index) => (
-            <div key={index} css={{ overflow: "hidden" }}>
+            <div
+              key={index}
+              css={{ overflow: "hidden", display: "grid" }}
+            >
               {node}
             </div>
           ),

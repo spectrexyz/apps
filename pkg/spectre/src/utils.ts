@@ -199,7 +199,8 @@ export function pagination(
   const pages = Math.ceil(itemsTotal / itemsPerPage)
   const prev = page > 0 ? page - 1 : null
   const next = page < pages - 1 ? page + 1 : null
-  return { next, page, pages, prev }
+  const pageItems = next === null ? itemsTotal % itemsPerPage : itemsPerPage
+  return { next, page, pages, prev, pageItems }
 }
 
 export function explorerUrl(

@@ -1,7 +1,15 @@
 import type { SnftPreview } from "../types"
 
 import * as dnum from "dnum"
-import { AddressBadge, Anchor, Button, ButtonText, TokenBadge } from "moire"
+import {
+  AddressBadge,
+  Anchor,
+  Button,
+  ButtonText,
+  Card,
+  list,
+  TokenBadge,
+} from "moire"
 import { useCallback, useMemo } from "react"
 import { useLocation } from "wouter"
 import { AppScreen } from "../AppLayout/AppScreen"
@@ -77,18 +85,21 @@ export function ScreenNfts({
             ? "Error loading the NFTs, please try reloading."
             : (
               <Grid>
-                {snftQueries.map((snftQuery) => (
-                  snftQuery.data && (
+                {list(paginationData.pageItems ?? 0, (index) => {
+                  const snftQuery = snftQueries[index]
+                  const loading = !snftQuery || snftQuery.status === "loading"
+                  return (
                     <SnftCard
-                      key={snftQuery.data?.id}
-                      snft={snftQuery.data}
+                      key={index}
+                      loading={loading}
+                      snft={snftQuery?.data}
                     />
                   )
-                ))}
+                })}
               </Grid>
             )}
         </div>
-        {paginationData.pages > 1 && (
+        {snftsPrefetchStatus === "success" && paginationData.pages > 1 && (
           <Pagination
             next={paginationData.next}
             onPage={setPage}
@@ -102,88 +113,94 @@ export function ScreenNfts({
 }
 
 function SnftCard({
+  loading,
   snft,
 }: {
-  snft: SnftPreview
+  loading: boolean
+  snft?: SnftPreview
 }) {
   const [, setLocation] = useLocation()
   return (
-    <div css={{ paddingBottom: "5gu" }}>
-      <Anchor
-        href={`/nfts/${snft.shortId}`}
-        onClick={(event) => {
-          event.preventDefault()
-          setLocation(`/nfts/${snft.shortId}`)
-        }}
-        css={{
-          display: "block",
-          width: "100%",
-        }}
-      >
-        <div css={{ paddingBottom: "4gu" }}>
-          <img
-            src={snft.image}
-            alt=""
+    <Card loading={loading}>
+      {snft && (
+        <div css={{ paddingBottom: "5gu" }}>
+          <Anchor
+            href={`/nfts/${snft.shortId}`}
+            onClick={(event) => {
+              event.preventDefault()
+              setLocation(`/nfts/${snft.shortId}`)
+            }}
             css={{
               display: "block",
               width: "100%",
-              aspectRatio: "1",
-              objectFit: "contain",
-              borderRadius: "6px",
-              background: "colors.layer2",
-            }}
-          />
-        </div>
-      </Anchor>
-      <div
-        css={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "2gu",
-          "& > div": {
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "2gu",
-          },
-        }}
-      >
-        <div>
-          <div css={{ flexShrink: "1", flexGrow: "0" }}>
-            <Button
-              mode="primary"
-              label={snft.title}
-              size="compact"
-              onClick={() => {
-                setLocation(`/nfts/${snft.shortId}`)
-              }}
-              wide
-            />
-          </div>
-          <div css={{ flexShrink: "0" }}>
-            <TokenBadge label={snft.tokenSymbol} />
-          </div>
-        </div>
-        <div>
-          <Anchor
-            href={`/${snft.guardian}`}
-            onClick={(event) => {
-              event.preventDefault()
-              setLocation(`/${snft.guardian}`)
-            }}
-            css={{
-              color: "colors.link",
-              textDecoration: "none",
             }}
           >
-            <AddressBadge address={snft.guardian} />
+            <div css={{ paddingBottom: "4gu" }}>
+              <img
+                src={snft.image}
+                alt=""
+                css={{
+                  display: "block",
+                  width: "100%",
+                  aspectRatio: "1",
+                  objectFit: "contain",
+                  borderRadius: "6px",
+                  background: "colors.layer2",
+                }}
+              />
+            </div>
           </Anchor>
-          <span css={{ whiteSpace: "nowrap" }}>
-            {dnum.format(snft.tokenPriceEth, 4)} ETH
-          </span>
+          <div
+            css={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "2gu",
+              "& > div": {
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "2gu",
+              },
+            }}
+          >
+            <div>
+              <div css={{ flexShrink: "1", flexGrow: "0" }}>
+                <Button
+                  mode="primary"
+                  label={snft.title}
+                  size="compact"
+                  onClick={() => {
+                    setLocation(`/nfts/${snft.shortId}`)
+                  }}
+                  wide
+                />
+              </div>
+              <div css={{ flexShrink: "0" }}>
+                <TokenBadge label={snft.tokenSymbol} />
+              </div>
+            </div>
+            <div>
+              <Anchor
+                href={`/${snft.guardian}`}
+                onClick={(event) => {
+                  event.preventDefault()
+                  setLocation(`/${snft.guardian}`)
+                }}
+                css={{
+                  color: "colors.link",
+                  textDecoration: "none",
+                }}
+              >
+                <AddressBadge address={snft.guardian} />
+              </Anchor>
+              <span css={{ whiteSpace: "nowrap" }}>
+                {dnum.format(snft.tokenPriceEth, 4)} ETH
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </Card>
   )
 }
 

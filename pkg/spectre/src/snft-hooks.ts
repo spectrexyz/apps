@@ -429,11 +429,19 @@ export function useHighlightedSnfts(): ReturnType<typeof useSnfts> {
   //   await fakeDelay()
   //   return SELECTED_SNFTS
   // })
+
   // TODO: filter by highlighted
-  return useSnfts({
-    first: 9,
-    fetchOptions: { retry: true },
-  })
+  const [
+    total,
+    spectresResultStatus,
+    spectresFullResult,
+  ] = useSnfts({ first: 9, fetchOptions: { retry: true } })
+
+  return [
+    Math.min(9, total ?? 9),
+    spectresResultStatus,
+    spectresFullResult,
+  ]
 }
 
 export function useSnftCreator(address: string) {

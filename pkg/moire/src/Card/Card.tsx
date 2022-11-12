@@ -49,6 +49,7 @@ export function Card({
           overflow: "hidden",
           display: "flex",
           height: "100%",
+          minHeight: loading ? "50gu" : "0",
         }}
       >
         {loadingTransition((styles, loading) => (
