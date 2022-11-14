@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef, useState } from "react"
 import { a, useSpring, useTransition } from "react-spring"
 import { useAccount, useEnsName } from "wagmi"
-import { Link, useLocation } from "wouter"
+import { Link } from "wouter"
 import { AccountWindow } from "../Account"
 import { useAppReady } from "../App/AppReady"
 import { useAppScroll } from "../App/AppScroll"
@@ -38,7 +38,6 @@ export function AppLayoutTopBar({
 }
 
 export function TopBar() {
-  const [, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
   const [connectAccountOpened, setConnectAccountOpened] = useState(false)
   const [accountOpened, setAccountOpened] = useState(false)
@@ -126,30 +125,32 @@ export function TopBar() {
                     </li>
                   ))}
                 </ul>
-                <ButtonArea
-                  title="Home"
-                  onClick={() => setLocation("/")}
-                  css={{
-                    position: "absolute",
-                    inset: "50%",
-                    transform: "translate(-50%, -50%)",
-                    alignItems: "center",
-                    height: "100%",
-                    padding: "0 10px",
-                    outlineOffset: "-2px",
-                  }}
-                >
-                  <img
-                    src={logo}
-                    alt=""
-                    width="64"
-                    height="76"
+                <Link href="/">
+                  <ButtonArea
+                    title="Home"
                     css={{
-                      width: `${logoSize}gu`,
-                      height: "auto",
+                      position: "absolute",
+                      inset: "50%",
+                      transform: "translate(-50%, -50%)",
+                      alignItems: "center",
+                      height: "100%",
+                      padding: "0 10px",
+                      outlineOffset: "-2px",
                     }}
-                  />
-                </ButtonArea>
+                  >
+                    <img
+                      src={logo}
+                      alt=""
+                      width="64"
+                      height="76"
+                      css={{
+                        width: `${logoSize}gu`,
+                        height: "auto",
+                      }}
+                    />
+                  </ButtonArea>
+                </Link>
+
                 <div>
                   {address
                     ? (
@@ -186,7 +187,6 @@ export function TopBar() {
 }
 
 export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
-  const [, setLocation] = useLocation()
   const { appReadyTransition } = useAppReady()
 
   const [shouldHide, setShouldHide] = useState(false)
@@ -253,18 +253,19 @@ export function TopBarCompact({ autoHide }: { autoHide: boolean }) {
                     borderBottom: `1px solid ${colors.outline2}`,
                   })}
                 >
-                  <ButtonArea
-                    title="Home"
-                    onClick={() => setLocation("/")}
-                    css={{
-                      alignItems: "center",
-                      height: "100%",
-                      padding: "0 10px",
-                      outlineOffset: "-2px",
-                    }}
-                  >
-                    <img src={logo} alt="" width="40.5" height="48" />
-                  </ButtonArea>
+                  <Link href="/">
+                    <ButtonArea
+                      title="Home"
+                      css={{
+                        alignItems: "center",
+                        height: "100%",
+                        padding: "0 10px",
+                        outlineOffset: "-2px",
+                      }}
+                    >
+                      <img src={logo} alt="" width="40.5" height="48" />
+                    </ButtonArea>
+                  </Link>
                   <ButtonArea
                     title="Menu"
                     onClick={() => setMenuOpened((v) => !v)}

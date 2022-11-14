@@ -7,17 +7,6 @@ import { gu, springs } from "../styles"
 import { useTheme } from "../Theme"
 import { shortenAddress } from "../utils"
 
-type AddressBadgeProps = {
-  address: string
-  ensName?: string
-  error?: boolean
-  rounded?: boolean
-  showCopy?: boolean
-  showExplore?: boolean
-  size?: "medium" | "large"
-  transparent?: boolean
-}
-
 export function AddressBadge({
   address,
   ensName,
@@ -27,7 +16,16 @@ export function AddressBadge({
   showExplore = false,
   size = "medium",
   transparent = false,
-}: AddressBadgeProps): JSX.Element {
+}: {
+  address: string
+  ensName?: string | null
+  error?: boolean
+  rounded?: boolean
+  showCopy?: boolean
+  showExplore?: boolean
+  size?: "medium" | "large"
+  transparent?: boolean
+}): JSX.Element {
   let iconSize = rounded ? 3 * gu : 2.5 * gu
   if (size === "large") iconSize = 4 * gu
   const { colors } = useTheme()
