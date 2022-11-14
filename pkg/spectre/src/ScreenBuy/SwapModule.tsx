@@ -2,7 +2,8 @@ import type { Dnum } from "dnum"
 
 import * as dn from "dnum"
 import { ButtonIcon, noop, TokenInput, usePrice } from "moire"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { match } from "ts-pattern"
 import { useSnft } from "../snft-hooks"
 import { useConnectedAccountBalance } from "../web3-hooks"
 
@@ -22,27 +23,28 @@ export function SwapModule({
   const ethBalance = useConnectedAccountBalance()
   const ethUsdPrice = usePrice("eth", "usd")
 
-  const [formattedEthBalance, formattedEthBalanceUsd] = useMemo(() => (
-    ethBalance.data
-      ? [
-        dn.format(ethBalance.data, 2),
-        ethUsdPrice.data !== undefined && `$${
-          dn.format(
-            dn.multiply(ethBalance.data, ethUsdPrice.data),
-            2,
-          )
-        }`,
-      ]
-      : [undefined, undefined]
-  ), [ethBalance, ethUsdPrice])
+  const formattedEthBalance = useMemo(() => (
+    ethBalance.data ? dn.format(ethBalance.data, 2) : undefined
+  ), [ethBalance])
 
-  const parsedEthValue: Dnum | null = useMemo(() => {
+  const parsedEthValue = useMemo(() => {
     try {
       return dn.from(ethInputValue.replace(/([0-9])\.$/, "$1"), 18)
     } catch (err) {
       return null
     }
   }, [ethInputValue])
+
+  const inputValueUsd = useMemo(() => (
+    ethUsdPrice.data !== undefined && parsedEthValue
+      ? `$${
+        dn.format(
+          dn.multiply(parsedEthValue, ethUsdPrice.data),
+          2,
+        )
+      }`
+      : ""
+  ), [ethUsdPrice, parsedEthValue])
 
   useEffect(() => {
     onEthValueChange(parsedEthValue)
@@ -66,7 +68,7 @@ export function SwapModule({
                   {formattedEthBalance} ETH
                 </>
               )}
-              secondaryEnd={formattedEthBalanceUsd}
+              secondaryEnd={inputValueUsd}
               onMaxClick={() => {
                 if (ethBalance.data) {
                   setEthInputValue(dn.format(ethBalance.data))

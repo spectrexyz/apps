@@ -1,10 +1,10 @@
 import type { Abi } from "abitype"
 import type { Dnum } from "dnum"
-// import type { ContractInterface } from "ethers"
 import type { Address, AddressOrEnsName } from "moire"
 import type { SignTxAndWaitStatus } from "./types"
 
 import { useQuery } from "@tanstack/react-query"
+import { BigNumber } from "ethers"
 import { useCallback, useMemo } from "react"
 import {
   useAccount,
@@ -63,12 +63,14 @@ export function useSignTxAndWait({
   abi,
   enabled = true,
   functionName,
+  value,
 }: {
   address: AddressOrEnsName
   args: unknown[]
   abi: Abi
   enabled?: boolean
   functionName: string
+  value?: Dnum
 }): {
   // The return type should be infered by TS, but an issue
   // prevents it so we declare it explicitly.
@@ -80,12 +82,15 @@ export function useSignTxAndWait({
   transactionResult: ReturnType<typeof useWaitForTransaction>
   write: () => void
 } {
+  const value_ = value ? BigNumber.from(value[0]) : null
+
   const prepareContractWrite = usePrepareContractWrite({
     address,
     args,
     abi,
     enabled,
     functionName,
+    overrides: value_ === null ? {} : { value: value_ },
   })
 
   const contractWrite = useContractWrite(prepareContractWrite.config)

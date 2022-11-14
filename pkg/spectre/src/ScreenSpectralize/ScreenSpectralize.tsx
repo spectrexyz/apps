@@ -1,14 +1,13 @@
 import type { SpectralizeStatus } from "./use-spectralize"
 
-import { Button, Steps } from "moire"
+import { Steps } from "moire"
 import { useCallback, useEffect } from "react"
 import { match, P } from "ts-pattern"
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi"
 import { useLocation } from "wouter"
 import { useResetScroll } from "../App/AppScroll"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { AsyncTask } from "../AsyncTask/AsyncTask"
-import { CHAIN_ID } from "../environment"
+import { RequireConnected } from "../RequireConnected/RequireConnected"
 import { useLayout } from "../styles"
 import { isMutationStatus, isSignTxAndWaitStatus } from "../utils"
 import { Step1 } from "./Step1"
@@ -24,9 +23,6 @@ const STEPS = [Step1, Step2, Step3, StepSummary]
 
 export function ScreenSpectralize() {
   const [, setLocation] = useLocation()
-  const { isConnected } = useAccount()
-  const network = useNetwork()
-  const isCorrectNetwork = network.chain?.id === CHAIN_ID
 
   const resetScroll = useResetScroll()
   const {
@@ -74,19 +70,16 @@ export function ScreenSpectralize() {
     resetScroll()
   }, [currentStep, spectralizeStatus, resetScroll])
 
-  if (!isConnected) {
-    return <Disconnected onPrev={prev} />
-  }
-
-  if (!isCorrectNetwork) {
-    return <WrongNetwork onPrev={prev} />
-  }
-
-  if (spectralizeStatus === "configure") {
-    return <Configure onNext={next} onPrev={prev} />
-  }
-
-  return <Spectralize onAbandon={prev} />
+  return (
+    <RequireConnected
+      onBack={prev}
+      messageConnect="Please connect your account to fractionalize your NFT."
+    >
+      {spectralizeStatus === "configure"
+        ? <Configure onNext={next} onPrev={prev} />
+        : <Spectralize onAbandon={prev} />}
+    </RequireConnected>
+  )
 }
 
 function Configure({
@@ -416,85 +409,6 @@ function Spectralize(
             />
           ))
           .otherwise(() => null)}
-      </div>
-    </AppScreen>
-  )
-}
-
-function Disconnected({ onPrev }: { onPrev: () => void }) {
-  const layout = useLayout()
-  return (
-    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
-      <div
-        css={{
-          flexGrow: "1",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: layout.value({
-            small: "none",
-            large: "104gu",
-            xlarge: "128gu",
-          }),
-          margin: "0 auto",
-          padding: layout.value({
-            small: "0 3gu",
-            medium: "0 3gu",
-            large: "0",
-          }),
-          paddingTop: "8gu",
-          textAlign: "center",
-        }}
-      >
-        Please connect your account to fractionalize your NFT.
-      </div>
-    </AppScreen>
-  )
-}
-
-function WrongNetwork({ onPrev }: { onPrev: () => void }) {
-  const layout = useLayout()
-  const switchNetwork = useSwitchNetwork()
-  const network = useNetwork()
-  return (
-    <AppScreen compactBar={{ title: "Fractionalize", onBack: onPrev }}>
-      <div
-        css={{
-          flexGrow: "1",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "3gu",
-          maxWidth: layout.value({
-            small: "none",
-            large: "104gu",
-            xlarge: "128gu",
-          }),
-          margin: "0 auto",
-          padding: layout.value({
-            small: "0 3gu",
-            medium: "0 3gu",
-            large: "0",
-          }),
-          paddingTop: "8gu",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          Your wallet is connected to the wrong network.{" "}
-        </div>
-        <div>
-          <Button
-            label={layout.value({
-              small: `Switch to ${network.chains[0]?.name}`,
-              medium: `Switch to the ${network.chains[0]?.name} network`,
-            })}
-            onClick={() => {
-              switchNetwork.switchNetwork?.(CHAIN_ID)
-            }}
-          />
-        </div>
       </div>
     </AppScreen>
   )

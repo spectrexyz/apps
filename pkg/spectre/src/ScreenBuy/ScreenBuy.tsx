@@ -1,7 +1,9 @@
 import type { Dnum } from "dnum"
-import type { ReactNode } from "react"
+import type { FormEventHandler, ReactNode } from "react"
+import type { Snft } from "../types"
 
 import * as dn from "dnum"
+import { BigNumber } from "ethers"
 import {
   Button,
   ButtonIcon,
@@ -21,13 +23,19 @@ import {
   useTheme,
   WEEK_MS,
 } from "moire"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { a, useSpring } from "react-spring"
+import { match } from "ts-pattern"
 import { useLocation } from "wouter"
+import { ISSUER_ABI_ISSUE } from "../abis"
 import { AppScreen } from "../AppLayout/AppScreen"
 import { CenteredContainer } from "../AppLayout/CenteredContainer"
+import { AsyncTask } from "../AsyncTask/AsyncTask"
+import { ADDRESS_ISSUER } from "../environment"
+import { RequireConnected } from "../RequireConnected/RequireConnected"
 import { useSnft, useTokenPrice } from "../snft-hooks"
 import { useLabelStyle, useLayout } from "../styles"
+import { useSignTxAndWait } from "../web3-hooks"
 import { SwapModule } from "./SwapModule"
 
 const SLIPPAGE_MAX = 10 // in %
@@ -60,16 +68,13 @@ export function ScreenBuy({ id }: { id: string }) {
   const settings = useSettings()
 
   const [ethValue, setEthValue] = useState<null | Dnum>(null)
-  const [tokenValue, setTokenValue] = useState<null | Dnum>(null)
   const tokenPrice = useTokenPrice(snft.data?.token.contractAddress)
 
-  useEffect(() => {
-    setTokenValue(
-      ethValue && tokenPrice.data
-        ? dn.multiply(ethValue, tokenPrice.data)
-        : null,
-    )
-  }, [ethValue, tokenPrice])
+  const tokenValue = useMemo(() => {
+    return ethValue && tokenPrice.data
+      ? dn.multiply(ethValue, tokenPrice.data)
+      : null
+  }, [ethValue, tokenPrice.data])
 
   const settingsBtnAnim = useSpring({
     config: springs.snappy,
@@ -122,276 +127,377 @@ export function ScreenBuy({ id }: { id: string }) {
     ? `Buy ${snft.data?.token.symbol}`
     : "−"
 
+  const [mode, setMode] = useState<"swap-form" | "swap-tx" | "swap-success">(
+    "swap-form",
+  )
+
+  const handleSubmit: FormEventHandler = useCallback((event) => {
+    event.preventDefault()
+    if (ethValue && ethValue[0] > 0n) {
+      setMode("swap-tx")
+    }
+  }, [ethValue])
+
+  const buy = useBuy({
+    enabled: mode === "swap-tx" && ethValue !== null && tokenValue !== null,
+    ethValue: ethValue ?? undefined,
+    expected: tokenValue ?? undefined,
+    snft: snft.data ?? undefined,
+  })
+
   return (
-    <AppScreen
-      compactBar={layout.below("medium") && {
-        contextual: settingsButton,
-        onBack,
-        title,
-      }}
-      loading={loading}
+    <RequireConnected
+      onBack={() => {}}
+      messageConnect="Please connect your account to buy the NFT token."
     >
-      {!layout.below("medium") && <BackButton onClick={onBack} />}
-      <CenteredContainer maxWidth={layout.below("medium") ? null : 75 * gu}>
-        <section
-          css={({ colors }) => ({
-            padding: layout.below("medium") ? "3gu 3gu 0" : "3gu 5gu 5gu",
-            background: layout.below("medium")
-              ? "transparent"
-              : colors.background,
-            border: layout.below("medium") ? 0 : `1px solid ${colors.layer2}`,
-          })}
-        >
-          {!layout.below("medium") && (
-            <div css={{ display: "flex", justifyContent: "space-between" }}>
-              <h1
-                css={{
-                  display: "flex",
-                  alignItems: "center",
-                  textTransform: "uppercase",
-                }}
+      <AppScreen
+        compactBar={layout.below("medium") && {
+          contextual: settingsButton,
+          onBack,
+          title,
+        }}
+        loading={loading}
+      >
+        {match(mode)
+          .with("swap-form", () => (
+            <>
+              {!layout.below("medium") && <BackButton onClick={onBack} />}
+              <CenteredContainer
+                maxWidth={layout.below("medium")
+                  ? null
+                  : 75 * gu}
               >
-                {title}
-              </h1>
-              <div css={{ marginRight: "-1gu" }}>
-                {settingsButton}
-              </div>
-            </div>
-          )}
-          {showSettings
-            ? (
-              <div>
-                <p
-                  css={({ colors, fonts }) => ({
-                    paddingTop: "1.5gu",
-                    fontFamily: fonts.sans,
-                    fontSize: "14px",
-                    color: colors.contentDimmed,
-                  })}
-                >
-                  Modifying these settings will affect all transactions created
-                  with the enabled account. You can always reset them to the
-                  original default.
-                </p>
-                <Fieldset
-                  contextual={
-                    <span
-                      css={({ colors }) => ({
-                        fontSize: "18px",
-                        color: colors.accent,
-                      })}
-                    >
-                      {settings.slippage}%
-                    </span>
-                  }
-                  dimmed
-                  label="Slippage"
-                >
-                  <Slider
-                    labels={["0%", `${SLIPPAGE_MAX}%`]}
-                    onChange={settings.onSlippageChange}
-                    onLabelClick={settings.onSlippageLabelClick}
-                    value={settings.slippagePct}
-                  />
-                </Fieldset>
-                <Incremental
-                  label="Proposal timeframe"
-                  onDecrease={settings.onTimeframeDecrease}
-                  onIncrease={settings.onTimeframeIncrease}
-                  enableDecrease={settings.timeframeIndex > 0}
-                  enableIncrease={settings.timeframeIndex
-                    < TIMEFRAME_OPTIONS.length - 1}
-                  value={formatDuration(settings.timeframe)}
-                />
-                <div
-                  css={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "2.5gu",
-                    paddingTop: "3gu",
-                  }}
-                >
-                  <Button
-                    label="Reset"
-                    onClick={() => {
-                      settings.reset()
-                    }}
-                  />
-                  <Button
-                    label={layout.below("medium") ? "Save" : "Save changes"}
-                    mode="primary"
-                    onClick={() => {
-                      setShowSettings(false)
-                    }}
-                  />
-                </div>
-              </div>
-            )
-            : (
-              <div
-                css={{
-                  width: "100%",
-                  margin: "0 auto",
-                  padding: layout.below("medium") ? "3gu 0 0" : "3gu 0",
-                }}
-              >
-                {snft.data && (
-                  <SwapModule
-                    id={snft.data.id}
-                    tokenValue={tokenValue}
-                    onEthValueChange={setEthValue}
-                  />
-                )}
-                <div
-                  css={({ colors }) => ({
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    alignContent: "end",
-                    padding: "0 2gu 3gu",
-                    background: colors.layer1,
-                    "section:first-of-type": {
-                      gridColumn: "span 2",
-                    },
-                    "section:nth-of-type(odd):not(:first-of-type)": {
-                      textAlign: "right",
-                    },
-                  })}
-                >
-                  {showMechanismWarning && (
-                    <Tip
-                      title="Change buying mechanism"
-                      type="warning"
-                      confirmLabel="Swap fractions"
-                      onCancel={() => {
-                        setShowMechanismWarning(false)
-                      }}
-                      onConfirm={() => {
-                        setMechanism("SWAP")
-                        setShowMechanismWarning(false)
-                      }}
-                    >
-                      At present, minting fractions from the liquidity pool is
-                      the cheapest option to fulfill your buying order. You can
-                      override the default mechanism if you prefer to swap
-                      fractions instead, but note that the exchange rate will be
-                      higher.
-                    </Tip>
-                  )}
-                  {!showMechanismWarning && (
-                    <Group heading="Buying mechanism">
-                      <p>
-                        <span css={{ marginRight: "1.5gu" }}>
-                          {mechanism === "MINT"
-                            ? "Mint fractions"
-                            : "Swap fractions"}
-                        </span>
-                        {false && /* disabled for now (only mint) */ (
-                          <Button
-                            label={mechanism === "MINT"
-                              ? "Change"
-                              : "Change to mint"}
-                            mode="flat-3"
-                            size="mini"
-                            uppercase
-                            onClick={() => {
-                              if (mechanism === "MINT") {
-                                setShowMechanismWarning(true)
-                              } else {
-                                setMechanism("MINT")
-                              }
-                            }}
-                            css={{ color: "#F7B186" }}
+                <form onSubmit={handleSubmit}>
+                  <section
+                    css={({ colors }) => ({
+                      padding: layout.below("medium")
+                        ? "3gu 3gu 0"
+                        : "3gu 5gu 5gu",
+                      background: layout.below("medium")
+                        ? "transparent"
+                        : colors.background,
+                      border: layout.below("medium")
+                        ? 0
+                        : `1px solid ${colors.layer2}`,
+                    })}
+                  >
+                    {!layout.below("medium") && (
+                      <div
+                        css={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <h1
+                          css={{
+                            display: "flex",
+                            alignItems: "center",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {title}
+                        </h1>
+                        <div css={{ marginRight: "-1gu" }}>
+                          {settingsButton}
+                        </div>
+                      </div>
+                    )}
+                    {showSettings
+                      ? (
+                        <div>
+                          <p
+                            css={({ colors, fonts }) => ({
+                              paddingTop: "1.5gu",
+                              fontFamily: fonts.sans,
+                              fontSize: "14px",
+                              color: colors.contentDimmed,
+                            })}
+                          >
+                            Modifying these settings will affect all
+                            transactions created with the enabled account. You
+                            can always reset them to the original default.
+                          </p>
+                          <Fieldset
+                            contextual={
+                              <span
+                                css={({ colors }) => ({
+                                  fontSize: "18px",
+                                  color: colors.accent,
+                                })}
+                              >
+                                {settings.slippage}%
+                              </span>
+                            }
+                            dimmed
+                            label="Slippage"
+                          >
+                            <Slider
+                              labels={["0%", `${SLIPPAGE_MAX}%`]}
+                              onChange={settings.onSlippageChange}
+                              onLabelClick={settings.onSlippageLabelClick}
+                              value={settings.slippagePct}
+                            />
+                          </Fieldset>
+                          <Incremental
+                            label="Proposal timeframe"
+                            onDecrease={settings.onTimeframeDecrease}
+                            onIncrease={settings.onTimeframeIncrease}
+                            enableDecrease={settings.timeframeIndex > 0}
+                            enableIncrease={settings.timeframeIndex
+                              < TIMEFRAME_OPTIONS.length - 1}
+                            value={formatDuration(settings.timeframe)}
                           />
-                        )}
-                      </p>
-                    </Group>
-                  )}
-                  <Group heading="Est. price">
-                    <p>
-                      {tokenPrice.data
-                        ? `~ ${
-                          dn.format(
-                            dn.divide(dn.from(1, 18), tokenPrice.data),
-                            { trailingZeros: false, digits: 8 },
-                          )
-                        } ETH per ${snft.data?.token.symbol}`
-                        : ""}
-                    </p>
-                  </Group>
-                  <Group heading="Network fee">
-                    <p>−</p>
-                  </Group>
-                  <Group heading="Slippage">
-                    <p>−</p>
-                  </Group>
-                  <Group
-                    heading={`Rewards${NO_BREAK_SPACE}(${
-                      snft.data?.issuanceAllocation
-                        ? dn.format(snft.data.issuanceAllocation)
-                        : "−"
-                    }%)`}
-                  >
-                    <p>
-                      {snft.data?.issuanceAllocation && ethValue
-                        ? (
-                          `${
-                            dn.format(
-                              dn.multiply(
-                                ethValue,
-                                dn.divide(snft.data.issuanceAllocation, 100),
-                              ),
-                            )
-                          }${NO_BREAK_SPACE}ETH`
-                        )
-                        : "−"}
-                    </p>
-                  </Group>
-                  <Group
-                    heading={`Minting fee (${
-                      snft.data?.issuanceFee
-                        ? dn.format(snft.data.issuanceFee)
-                        : "−"
-                    }%)`}
-                  >
-                    <p>
-                      {snft.data?.issuanceFee && ethValue
-                        ? (
-                          `${
-                            dn.format(
-                              dn.multiply(
-                                ethValue,
-                                dn.divide(snft.data.issuanceFee, 100),
-                              ),
-                            )
-                          }${NO_BREAK_SPACE}ETH`
-                        )
-                        : "−"}
-                    </p>
-                  </Group>
-                  <Group heading="Protocol fee (−%)">
-                    <p>−</p>
-                  </Group>
-                </div>
+                          <div
+                            css={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: "2.5gu",
+                              paddingTop: "3gu",
+                            }}
+                          >
+                            <Button
+                              label="Reset"
+                              onClick={() => {
+                                settings.reset()
+                              }}
+                            />
+                            <Button
+                              label={layout.below("medium")
+                                ? "Save"
+                                : "Save changes"}
+                              mode="primary"
+                              onClick={() => {
+                                setShowSettings(false)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )
+                      : (
+                        <div
+                          css={{
+                            width: "100%",
+                            margin: "0 auto",
+                            padding: layout.below("medium")
+                              ? "3gu 0 0"
+                              : "3gu 0",
+                          }}
+                        >
+                          {snft.data && (
+                            <SwapModule
+                              id={snft.data.id}
+                              tokenValue={tokenValue}
+                              onEthValueChange={setEthValue}
+                            />
+                          )}
+                          <div
+                            css={({ colors }) => ({
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              alignContent: "end",
+                              padding: "0 2gu 3gu",
+                              background: colors.layer1,
+                              "section:first-of-type": {
+                                gridColumn: "span 2",
+                              },
+                              "section:nth-of-type(odd):not(:first-of-type)": {
+                                textAlign: "right",
+                              },
+                            })}
+                          >
+                            {showMechanismWarning && (
+                              <Tip
+                                title="Change buying mechanism"
+                                type="warning"
+                                confirmLabel="Swap fractions"
+                                onCancel={() => {
+                                  setShowMechanismWarning(false)
+                                }}
+                                onConfirm={() => {
+                                  setMechanism("SWAP")
+                                  setShowMechanismWarning(false)
+                                }}
+                              >
+                                At present, minting fractions from the liquidity
+                                pool is the cheapest option to fulfill your
+                                buying order. You can override the default
+                                mechanism if you prefer to swap fractions
+                                instead, but note that the exchange rate will be
+                                higher.
+                              </Tip>
+                            )}
+                            {!showMechanismWarning && (
+                              <Group heading="Buying mechanism">
+                                <p>
+                                  <span css={{ marginRight: "1.5gu" }}>
+                                    {mechanism === "MINT"
+                                      ? "Mint fractions"
+                                      : "Swap fractions"}
+                                  </span>
+                                  {false && /* disabled for now (only mint) */ (
+                                    <Button
+                                      label={mechanism === "MINT"
+                                        ? "Change"
+                                        : "Change to mint"}
+                                      mode="flat-3"
+                                      size="mini"
+                                      uppercase
+                                      onClick={() => {
+                                        if (mechanism === "MINT") {
+                                          setShowMechanismWarning(true)
+                                        } else {
+                                          setMechanism("MINT")
+                                        }
+                                      }}
+                                      css={{ color: "#F7B186" }}
+                                    />
+                                  )}
+                                </p>
+                              </Group>
+                            )}
+                            <Group heading="Est. price">
+                              <p>
+                                {tokenPrice.data
+                                  ? `~ ${
+                                    dn.format(
+                                      dn.divide(
+                                        dn.from(1, 18),
+                                        tokenPrice.data,
+                                      ),
+                                      { trailingZeros: false, digits: 8 },
+                                    )
+                                  }${NO_BREAK_SPACE}ETH per ${
+                                    snft.data?.token.symbol
+                                  }`
+                                  : ""}
+                              </p>
+                            </Group>
+                            <Group heading="Network fee">
+                              <p>−</p>
+                            </Group>
+                            <Group heading="Slippage">
+                              <p>−</p>
+                            </Group>
+                            <Group
+                              heading={`Rewards${NO_BREAK_SPACE}(${
+                                snft.data?.issuanceAllocation
+                                  ? dn.format(snft.data.issuanceAllocation)
+                                  : "−"
+                              }%)`}
+                            >
+                              <p>
+                                {snft.data?.issuanceAllocation && ethValue
+                                  ? (
+                                    `${
+                                      dn.format(
+                                        dn.multiply(
+                                          ethValue,
+                                          dn.divide(
+                                            snft.data.issuanceAllocation,
+                                            100,
+                                          ),
+                                        ),
+                                      )
+                                    }${NO_BREAK_SPACE}ETH`
+                                  )
+                                  : "−"}
+                              </p>
+                            </Group>
+                            <Group
+                              heading={`Minting fee (${
+                                snft.data?.issuanceFee
+                                  ? dn.format(snft.data.issuanceFee)
+                                  : "−"
+                              }%)`}
+                            >
+                              <p>
+                                {snft.data?.issuanceFee && ethValue
+                                  ? (
+                                    `${
+                                      dn.format(
+                                        dn.multiply(
+                                          ethValue,
+                                          dn.divide(snft.data.issuanceFee, 100),
+                                        ),
+                                      )
+                                    }${NO_BREAK_SPACE}ETH`
+                                  )
+                                  : "−"}
+                              </p>
+                            </Group>
+                            <Group heading="Protocol fee (−%)">
+                              <p>−</p>
+                            </Group>
+                          </div>
 
-                <div css={{ paddingTop: "2gu" }}>
-                  {snft.data?.buyoutFlash === false && (
-                    <Tip title="Important">
-                      Upon approval from the NFT guardian, your fractions will
-                      be minted and transferred to the connected account. Buying
-                      proposals approval may take up to one week. Opt-in for
-                      email notifications here.
-                    </Tip>
-                  )}
-                </div>
+                          <div css={{ paddingTop: "2gu" }}>
+                            {snft.data?.buyoutFlash === false && (
+                              <Tip title="Important">
+                                Upon approval from the NFT guardian, your
+                                fractions will be minted and transferred to the
+                                connected account. Buying proposals approval may
+                                take up to one week. Opt-in for email
+                                notifications here.
+                              </Tip>
+                            )}
+                          </div>
 
-                <div css={{ paddingTop: "3gu" }}>
-                  <Button label="Place order" mode="primary" wide shadowInBox />
-                </div>
-              </div>
-            )}
-        </section>
-      </CenteredContainer>
-    </AppScreen>
+                          <div css={{ paddingTop: "3gu" }}>
+                            <Button
+                              label="Place order"
+                              mode="primary"
+                              shadowInBox
+                              type="submit"
+                              wide
+                            />
+                          </div>
+                        </div>
+                      )}
+                  </section>
+                </form>
+              </CenteredContainer>
+            </>
+          ))
+          .with("swap-tx", () =>
+            // only for the type checker, tokenValue and ethValue are always truthy when mode=swap-tx
+            tokenValue && ethValue && (
+              <AsyncTask
+                title={`Buy ${snft.data?.token.symbol}`}
+                jobDescription={`You will spend ${
+                  dn.format(ethValue, 2)
+                }${NO_BREAK_SPACE}ETH and receive a minimum of ${
+                  dn.format(tokenValue, 2)
+                }${NO_BREAK_SPACE}${snft.data?.token.symbol}.`}
+                jobTitle={`Swap ETH for ${snft.data?.token.symbol}`}
+                mode={{
+                  type: "transaction",
+                  current: 1,
+                  etherscanUrl:
+                    `https://etherscan.io/address/${ADDRESS_ISSUER}#code`,
+                  githubUrl:
+                    "https://github.com/spectrexyz/protocol/blob/1cc7a31ebef753a5a8ac6b39d7b733e93d7cece7/contracts/issuer/Issuer.sol#L155-L176",
+                  onRetry() {
+                    buy.reset()
+                  },
+                  onSign() {
+                    buy.write()
+                  },
+                  onDone() {
+                    setLocation(snft.data ? `/nfts/${snft.data.id}` : "/")
+                  },
+                  status: buy.status,
+                  total: 1,
+                  signLabel: "Buy",
+                }}
+                onAbandon={() => {
+                  setMode("swap-form")
+                }}
+              />
+            ))
+          .with("swap-success", () => null)
+          .otherwise(() => null)}
+      </AppScreen>
+    </RequireConnected>
   )
 }
 
@@ -495,4 +601,31 @@ function useSettings() {
     slippagePct: slippage / SLIPPAGE_MAX,
     timeframe,
   }
+}
+
+function useBuy(
+  {
+    enabled,
+    ethValue,
+    expected,
+    snft,
+  }: {
+    enabled: boolean
+    ethValue?: Dnum
+    expected?: Dnum
+    snft?: Snft
+  },
+) {
+  // const expected_ = expected ? BigNumber.from(expected[0]) : null
+  const expected_ = expected ? BigNumber.from(0n) : null // TODO: figure out why using the calculated expected value gets rejected by the contract
+  const tokenAddress = snft?.token.contractAddress
+  const enabled_ = Boolean(enabled && ethValue && expected_ && tokenAddress)
+  return useSignTxAndWait({
+    abi: ISSUER_ABI_ISSUE,
+    address: ADDRESS_ISSUER,
+    args: [tokenAddress, expected_],
+    enabled: enabled_,
+    functionName: "issue",
+    value: ethValue,
+  })
 }

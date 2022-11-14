@@ -162,3 +162,24 @@ export const ISSUER_ABI_PRICE_OF = [
     "type": "function",
   },
 ] as const
+
+export const ISSUER_ABI_ISSUE = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+      {
+        "internalType": "uint256",
+        "name": "expected",
+        "type": "uint256",
+      },
+    ],
+    "name": "issue",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+  },
+] as const

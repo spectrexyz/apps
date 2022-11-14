@@ -1,5 +1,6 @@
 import type { MutationStatus } from "@tanstack/react-query"
 import type { Url } from "moire"
+import type { ReactNode } from "react"
 import type { SignTxAndWaitStatus } from "../types"
 
 import {
@@ -37,6 +38,7 @@ type ModeTransaction = {
   current: number
   etherscanUrl: Url
   githubUrl: Url
+  onDone?: () => void
   onRetry: () => void
   onSign: () => void
   status: SignTxAndWaitStatus
@@ -204,11 +206,7 @@ export function AsyncTask({
                 .with(
                   {
                     type: "transaction",
-                    status: P.union(
-                      "prepare:error",
-                      "sign:error",
-                      "tx:error",
-                    ),
+                    status: P.union("prepare:error", "sign:error", "tx:error"),
                   },
                   () => "error" as const,
                 )
@@ -235,7 +233,9 @@ export function AsyncTask({
             padding: "6gu 5gu 0",
           }}
         >
-          {mode.type !== "success" && layout.above("medium") && (
+          {mode.type !== "success"
+            && (!(mode.type === "transaction" && mode.status === "tx:success"))
+            && layout.above("medium") && (
             <Button
               label="Abandon"
               wide
@@ -265,12 +265,10 @@ export function AsyncTask({
                       (status) => status.endsWith(":error"),
                       () => "Retry",
                     )
+                    .with("tx:success", () => "OK")
                     .otherwise(() => mode.signLabel),
               )
-              .with(
-                { type: "success" },
-                (mode) => mode.action[0],
-              )
+              .with({ type: "success" }, (mode) => mode.action[0])
               .otherwise(() => "OK")}
             onClick={match(mode)
               .when(
@@ -290,7 +288,11 @@ export function AsyncTask({
                 { type: "transaction" },
                 (mode) =>
                   () => {
-                    mode.onSign()
+                    if (mode.status === "tx:success") {
+                      mode.onDone?.()
+                    } else {
+                      mode.onSign()
+                    }
                   },
               )
               .with(
@@ -304,11 +306,12 @@ export function AsyncTask({
                 (mode) => mode.action[1] === null,
               )
               .with(
-                {
-                  type: "transaction",
-                  status: P.union("tx:loading", "tx:success"),
-                },
+                { type: "transaction", status: "tx:loading" },
                 () => true,
+              )
+              .with(
+                { type: "transaction", status: "tx:success" },
+                (mode) => !mode.onDone,
               )
               .otherwise(() => false)}
             mode="primary"
@@ -354,7 +357,7 @@ export function AsyncTask({
                 <ButtonText
                   color={colors.link}
                   external
-                  href=""
+                  href={mode.etherscanUrl}
                   icon={<IconShare size={3 * gu} />}
                   label="Etherscan"
                   uppercase
@@ -363,7 +366,7 @@ export function AsyncTask({
                 <ButtonText
                   color={colors.link}
                   external
-                  href=""
+                  href={mode.githubUrl}
                   icon={<IconGithubLogo size={3 * gu} />}
                   label="GitHub"
                   uppercase
@@ -384,7 +387,7 @@ function JobStatus({
   title,
   status,
 }: {
-  description: string
+  description: ReactNode
   jobNumber?: number
   title: string
   status: MutationStatus
@@ -401,6 +404,7 @@ function JobStatus({
     >
       <div
         css={{
+          flexGrow: "1",
           font: "300 16px/22px fonts.mono",
           textAlign: "left",
           color: "colors.contentDimmed",
