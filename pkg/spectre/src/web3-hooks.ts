@@ -26,9 +26,10 @@ export function useConnectedAccountBalance(): (
 ) {
   const account = useAccount()
   const balance = useBalance({
-    addressOrName: account.address,
+    address: account.address,
     enabled: account.status === "connected",
   })
+
   return {
     ...balance,
     data: balance.data && ([

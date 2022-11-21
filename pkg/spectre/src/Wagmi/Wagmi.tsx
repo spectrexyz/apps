@@ -1,9 +1,14 @@
 import type { ReactNode } from "react"
 
-import { providers } from "ethers"
-import { createClient, defaultChains, WagmiConfig } from "wagmi"
+import {
+  configureChains,
+  createClient,
+  defaultChains,
+  WagmiConfig,
+} from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
+import { infuraProvider } from "wagmi/providers/infura"
 import "../walletconnect-compat"
 
 import { CHAIN_ID, INFURA_PROJECT_ID } from "../environment"
@@ -18,16 +23,22 @@ if (!INFURA_PROJECT_ID) {
   throw new Error("INFURA_PROJECT_ID missing.")
 }
 
+const { chains, provider, webSocketProvider } = configureChains(
+  [CHAIN],
+  [infuraProvider({ apiKey: INFURA_PROJECT_ID })],
+)
+
 const client = createClient({
   autoConnect: true,
+  provider,
+  webSocketProvider,
   connectors: [
-    new InjectedConnector({ chains: [CHAIN] }),
+    new InjectedConnector({ chains }),
     new WalletConnectConnector({
-      chains: [CHAIN],
+      chains,
       options: { infuraId: INFURA_PROJECT_ID },
     }),
   ],
-  provider: new providers.InfuraProvider(CHAIN_ID, INFURA_PROJECT_ID),
 })
 
 export function Wagmi({ children }: { children: ReactNode }) {
