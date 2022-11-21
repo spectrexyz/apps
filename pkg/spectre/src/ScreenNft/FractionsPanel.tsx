@@ -128,12 +128,12 @@ function FractionsMetrics({ snft }: { snft: Snft }) {
             type: "tokenAmount",
             value: {
               converted: `${dnum.format(snft.token.minted, 0)} of ${
-                dnum.format(snft.token.supply, 0)
+                dnum.format(snft.token.cap, 0)
               } MOI`,
               symbol: "%",
               value: dnum.format(
                 dnum.multiply(
-                  dnum.divide(snft.token.minted, snft.token.supply),
+                  dnum.divide(snft.token.minted, snft.token.cap),
                   100,
                 ),
                 1,

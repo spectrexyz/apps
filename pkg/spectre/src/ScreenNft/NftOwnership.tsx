@@ -52,7 +52,7 @@ export function NftOwnership({ snft }: { snft: Snft }) {
     }
   }, [inView])
 
-  const { distribution, minted, supply } = snft.token
+  const { distribution, minted, cap } = snft.token
 
   const shares = useMemo(
     () => calculateShares(distribution.map((s) => s.quantity)),
@@ -60,13 +60,13 @@ export function NftOwnership({ snft }: { snft: Snft }) {
   )
 
   const mintedDistributionValue = useMemo(() => {
-    const value = Number(divideRoundBigInt(minted[0] * 100n, supply[0]))
+    const value = Number(divideRoundBigInt(minted[0] * 100n, cap[0]))
     return [
       value === 0
         ? 0
         : Math.max(value, 2 / 100), // 1% minimum
     ]
-  }, [minted, supply])
+  }, [minted, cap])
 
   return (
     <PanelSection
@@ -308,7 +308,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
     >
       <div>
         <div css={labelStyle}>Minted supply</div>
-        <Percentage percentage={dnum.divide(token.minted, token.supply)} />
+        <Percentage percentage={dnum.divide(token.minted, token.cap)} />
         <div
           css={({ colors }) => ({
             fontSize: "16px",
@@ -321,8 +321,7 @@ function MintedSupplySummary({ token }: { token: Snft["token"] }) {
           })}
         >
           <strong>{dnum.format(token.minted, 2)}</strong> out of{" "}
-          <strong>{dnum.format(token.supply, 2)}</strong> {token.symbol}{" "}
-          fractions
+          <strong>{dnum.format(token.cap, 2)}</strong> {token.symbol} fractions
         </div>
       </div>
       <div

@@ -121,7 +121,7 @@ export function ScreenNft({
   }, [setLocation])
 
   const priceHistory = snft.data?.token.priceHistory
-  const supply = snft.data?.token.supply
+  const cap = snft.data?.token.cap
 
   const history = useMemo(() => {
     if (!priceHistory) return []
@@ -156,20 +156,20 @@ export function ScreenNft({
 
   const fractionChartLabels = useCallback((valueIndex: number) => {
     const price = history[valueIndex]
-    if (!price || !supply) {
+    if (!price || !cap) {
       return { buyoutPrice: "", marketCap: "", price: "" }
     }
 
     const format = (value: Dnum) =>
       `${dnum.format(value, { compact: true })} ETH`
 
-    const marketCap = dnum.multiply(price, supply)
+    const marketCap = dnum.multiply(price, cap)
     return {
       buyoutPrice: format(dnum.multiply(marketCap, buyoutMultiplier)),
       marketCap: format(marketCap),
       price: format(price),
     }
-  }, [history, supply])
+  }, [history, cap])
 
   const loading = snft.isLoading
 

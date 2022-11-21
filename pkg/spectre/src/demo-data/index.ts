@@ -197,12 +197,12 @@ function randomToken(nftName: string): Snft["token"] {
   if (!index) {
     throw new Error("All tokenIndexes have been used")
   }
-  const supplyNumber = randNumber({ min: 100, max: 100_000 })
-  const supply = dnum.from(supplyNumber, 18)
+  const capNumber = randNumber({ min: 100, max: 100_000 })
+  const cap = dnum.from(capNumber, 18)
   const minted = dnum.from(
     randNumber({
-      min: Math.ceil(supplyNumber / 4),
-      max: supplyNumber,
+      min: Math.ceil(capNumber / 4),
+      max: capNumber,
     }),
     18,
   )
@@ -231,7 +231,7 @@ function randomToken(nftName: string): Snft["token"] {
     decimals: 18,
     distribution,
     holdersCount,
-    marketCapEth: dnum.multiply(priceEth, supply),
+    marketCapEth: dnum.multiply(priceEth, cap),
     mintHistory,
     minted,
     name: nftName,
@@ -244,7 +244,7 @@ function randomToken(nftName: string): Snft["token"] {
       "YEAR": [dn(0.3), dn(0.8)],
       "ALL": [dn(0.2), dn(0.8)],
     },
-    supply,
+    cap,
     symbol,
     tokenId: "1",
     topHolders,
@@ -310,8 +310,15 @@ function randomNft(
   return {
     id,
     shortId,
+    buyoutFlash: true,
     buyoutMultiplier,
+    buyoutOpening: BigInt(
+      Date.now() + randNumber({ min: -7, max: 7 }) * DAY_MS,
+    ),
     buyoutPrice: dnum.multiply(token.marketCapEth, buyoutMultiplier),
+    issuanceAllocation: [17500000000000000000n, 18],
+    issuanceFee: [5000000000000000000n, 18],
+    issuanceFlash: true,
     creator: { ...creator },
     description: randomDescription(),
     guardian: randBoolean()
@@ -327,7 +334,6 @@ function randomNft(
     ],
     image: nftImage(style),
     pool: { eth: pooledEth, token: pooledToken },
-    proposalTimeout: rand(TIMELOCK_OPTIONS),
     title,
     token,
     nft: {
@@ -411,9 +417,9 @@ export const FRACTIONS_BY_ACCOUNT = new Map(
             const min = randNumber({ min: 10, max: 40 })
             const max = Number(
               dnum.divide(
-                snft.token.supply,
+                snft.token.cap,
                 snft.token.holdersCount,
-              )[0] / 10n ** BigInt(snft.token.supply[1]),
+              )[0] / 10n ** BigInt(snft.token.cap[1]),
             )
             const quantity = dnum.multiply(
               randNumber({ min, max: max < min ? min + max : max }),
@@ -458,7 +464,7 @@ function randomReward(rewardType: Reward["rewardType"]): Reward {
 
   const amount = rewardType === "buyout"
     ? dnum.from(random() * 4, true) // 0 to 4 ETH
-    : dnum.divide(snft.token.supply, randNumber({ min: 1000, max: 2000 }))
+    : dnum.divide(snft.token.cap, randNumber({ min: 1000, max: 2000 }))
 
   const token: Reward["token"] = rewardType === "buyout"
     ? "ETH"
@@ -511,7 +517,7 @@ function randomProposal(): Proposal {
       {
         type: "mint",
         quantity: dnum.multiply(
-          dnum.subtract(snft.token.supply, snft.token.minted),
+          dnum.subtract(snft.token.cap, snft.token.minted),
           0.1 + random() * 0.9, // mint between 10% and 90% of the remaining
         ),
       },

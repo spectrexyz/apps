@@ -1,5 +1,7 @@
 import type { BaseProvider } from "@ethersproject/providers"
 import type { MutationStatus } from "@tanstack/react-query"
+import type { Dnum } from "dnum"
+import type { BigNumber } from "ethers"
 import type { Address, AddressOrEnsName } from "moire"
 import type { ShortId, SignTxAndWaitStatus, SnftId } from "./types"
 
@@ -221,4 +223,10 @@ export function explorerUrl(
   }
 
   return ""
+}
+
+export function dnumFromWagmiAmount(
+  amount: { value: BigNumber; decimals: number },
+): Dnum {
+  return [BigInt(String(amount.value)), amount.decimals]
 }

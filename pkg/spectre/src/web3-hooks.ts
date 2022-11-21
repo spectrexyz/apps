@@ -16,7 +16,7 @@ import {
 } from "wagmi"
 import { CREATORS_BY_ADDRESS } from "./demo-data"
 import { DEMO_MODE } from "./environment"
-import { addressesEqual } from "./utils"
+import { addressesEqual, dnumFromWagmiAmount } from "./utils"
 
 export function useConnectedAccountBalance(): (
   // The return type should be infered by TS, but an issue
@@ -32,10 +32,7 @@ export function useConnectedAccountBalance(): (
 
   return {
     ...balance,
-    data: balance.data && ([
-      BigInt(String(balance.data.value)),
-      18,
-    ] as const),
+    data: balance.data && dnumFromWagmiAmount(balance.data),
   }
 }
 

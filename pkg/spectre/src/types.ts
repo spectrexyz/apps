@@ -16,15 +16,15 @@ export type Distribution = Array<{
 }>
 
 export type Token = {
+  cap: Dnum // cap = supply cap
   contractAddress: Address
   decimals: number
   distribution: Distribution
   holdersCount: number
   marketCapEth: Dnum
-  minted: Dnum
+  minted: Dnum // minted = minted supply
   name: string
   priceEth: Dnum
-  supply: Dnum
   symbol: string
   tokenId: string
   topHolders: Array<readonly [name: string, picture: string]>
@@ -67,7 +67,7 @@ export type Snft = Readonly<{
     eth: Dnum
     token: Dnum
   }
-  proposalTimeout: number
+  buyoutOpening: bigint
   title: string
   token: Readonly<Token>
   nft: Readonly<{

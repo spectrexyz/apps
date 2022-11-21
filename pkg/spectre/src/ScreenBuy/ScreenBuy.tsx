@@ -127,7 +127,7 @@ export function ScreenBuy({ id }: { id: string }) {
     ? `Buy ${snft.data?.token.symbol}`
     : "−"
 
-  const [mode, setMode] = useState<"swap-form" | "swap-tx" | "swap-success">(
+  const [mode, setMode] = useState<"swap-form" | "swap-tx">(
     "swap-form",
   )
 
@@ -147,7 +147,9 @@ export function ScreenBuy({ id }: { id: string }) {
 
   return (
     <RequireConnected
-      onBack={() => {}}
+      onBack={() => {
+        setLocation(snft.data ? `/nfts/${snft.data.id}` : "/")
+      }}
       messageConnect="Please connect your account to buy the NFT token."
     >
       <AppScreen
@@ -458,7 +460,7 @@ export function ScreenBuy({ id }: { id: string }) {
               </CenteredContainer>
             </>
           ))
-          .with("swap-tx", () =>
+          .with("swap-tx", () => (
             // only for the type checker, tokenValue and ethValue are always truthy when mode=swap-tx
             tokenValue && ethValue && (
               <AsyncTask
@@ -493,8 +495,8 @@ export function ScreenBuy({ id }: { id: string }) {
                   setMode("swap-form")
                 }}
               />
-            ))
-          .with("swap-success", () => null)
+            )
+          ))
           .otherwise(() => null)}
       </AppScreen>
     </RequireConnected>

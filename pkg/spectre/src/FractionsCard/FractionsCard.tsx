@@ -25,14 +25,14 @@ export function FractionsCard({
   const layout = useLayout()
 
   const tokenData = token.data
-  const supply = tokenData?.supply
+  const cap = tokenData?.cap
 
   const percentageOwned = useMemo(
     () =>
-      supply
-        ? dnum.format(dnum.divide(quantity, supply), 3) + "%"
+      cap
+        ? dnum.format(dnum.divide(quantity, cap), 3) + "%"
         : "−",
-    [quantity, supply],
+    [quantity, cap],
   )
 
   const tokensOwned = useMemo(

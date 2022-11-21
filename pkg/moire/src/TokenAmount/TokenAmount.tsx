@@ -57,10 +57,10 @@ export function TokenAmount(
       </div>
       {converted && (
         <div
-          css={({ colors }) => ({
+          css={{
             marginTop: "0",
-            color: colors.contentDimmed,
-          })}
+            color: "colors.contentDimmed",
+          }}
         >
           {converted}
         </div>

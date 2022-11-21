@@ -14,11 +14,11 @@ import type {
 import { useQueries, useQuery } from "@tanstack/react-query"
 import * as dn from "dnum"
 import uniqBy from "lodash.uniqby"
-import { DAY_MS, isAddress } from "moire"
+import { ADDRESS_NULL, DAY_MS, isAddress } from "moire"
 import { useMemo } from "react"
 import { useContractRead, useProvider } from "wagmi"
 import { z } from "zod"
-import { ISSUER_ABI_PRICE_OF } from "./abis"
+import { BROKER_ABI_PRICE_OF_FOR, ISSUER_ABI_PRICE_OF } from "./abis"
 import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
@@ -28,7 +28,7 @@ import {
   // SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
-import { ADDRESS_ISSUER } from "./environment"
+import { ADDRESS_BROKER, ADDRESS_ISSUER } from "./environment"
 import { useSpectre, useSpectres } from "./subgraph-hooks"
 import { ipfsUrl, resolveAddress, toShortId } from "./utils"
 
@@ -145,7 +145,7 @@ function buildPriceHistory(
 // Returns the mint history as percentages
 function buildMintHistory(
   values: Array<readonly [Date, Dnum]>,
-  totalSupply: Dnum,
+  cap: Dnum,
 ): Snft["token"]["mintHistory"] {
   const history: Snft["token"]["mintHistory"] = {
     "ALL": [],
@@ -161,7 +161,7 @@ function buildMintHistory(
 
   values.forEach(([time, value]) => {
     const _time = time.getTime()
-    const share = dn.toNumber(dn.divide(value, totalSupply))
+    const share = dn.toNumber(dn.divide(value, cap))
     if (_time > now - DAY_MS * 1) history.DAY.push(share)
     if (_time > now - DAY_MS * 7) history.WEEK.push(share)
     if (_time > now - DAY_MS * 30) history.MONTH.push(share)
@@ -169,7 +169,7 @@ function buildMintHistory(
     history.ALL.push(share)
   })
 
-  const latestShare = dn.toNumber(dn.divide(latestValue, totalSupply))
+  const latestShare = dn.toNumber(dn.divide(latestValue, cap))
   if (history.DAY.length < 2) history.DAY = [latestShare, latestShare]
   if (history.WEEK.length < 2) history.WEEK = [latestShare, latestShare]
   if (history.MONTH.length < 2) history.MONTH = [latestShare, latestShare]
@@ -216,8 +216,13 @@ export function useSnft(
   const spectre = spectreResult.data?.spectre
   const metadata = metadataQuery.data
 
+  const { data: buyoutPrice } = useBuyoutPriceFor(
+    spectre?.sERC20.address,
+    ADDRESS_NULL,
+  )
+
   const snft = useMemo(() => {
-    if (!spectre || !metadata) {
+    if (!spectre) {
       return null
     }
 
@@ -226,24 +231,26 @@ export function useSnft(
     const issuance = serc20?.issuance
     const nft = spectre?.NFT
 
-    if (!serc20 || !sale || !issuance) {
+    if (!buyoutPrice || !issuance || !sale || !serc20 || !metadata) {
       return null
     }
 
     // We only need one digit precision for the multiplier
     const buyoutMultiplier = Number(BigInt(sale.multiplier) / 10n ** 17n) / 10
 
-    const supply: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
+    const cap: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
     const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
 
     const initialBuyoutPrice: Dnum = [BigInt(serc20.sale?.reserve), 18]
+
     const initialMarketCapEth: Dnum = dn.divide(
       initialBuyoutPrice,
       buyoutMultiplier,
     )
+
     const initialTokenPriceEth: Dnum = dn.divide(
       initialMarketCapEth,
-      supply,
+      cap,
     )
 
     const latestPoolState = serc20.pool?.latestState[0]
@@ -253,8 +260,7 @@ export function useSnft(
     const priceEth = lastPoolState
       ? dn.from(lastPoolState.price, SERC20_DECIMALS)
       : initialTokenPriceEth
-    const marketCapEth = dn.multiply(priceEth, supply)
-    const buyoutPrice = dn.multiply(marketCapEth, buyoutMultiplier)
+    const marketCapEth = dn.multiply(priceEth, cap)
 
     const pooledEth: Dnum = [
       BigInt(latestPoolState ? latestPoolState.balances[1] : 0),
@@ -280,15 +286,16 @@ export function useSnft(
         new Date(parseInt(String(timestamp), 10) * 1000),
         [BigInt(amount), SERC20_DECIMALS],
       ] as const)) ?? [],
-      supply,
+      cap,
     )
 
     const snft: Snft = {
       id,
       shortId: toShortId(id),
-      buyoutMultiplier,
-      buyoutPrice,
       buyoutFlash: Boolean(sale.flash),
+      buyoutMultiplier,
+      buyoutOpening: sale.opening,
+      buyoutPrice,
       creator: {
         address: nft?.creator,
         avatar: "",
@@ -308,7 +315,6 @@ export function useSnft(
         eth: pooledEth,
         token: pooledToken,
       },
-      proposalTimeout: 2,
       title: metadata.name,
       nft: {
         contractAddress: nft.collection,
@@ -316,6 +322,7 @@ export function useSnft(
         tokenURI: nft.tokenURI,
       },
       token: {
+        cap,
         contractAddress: serc20.address,
         decimals: SERC20_DECIMALS,
         distribution: serc20.holders.map((holder) => ({
@@ -330,14 +337,13 @@ export function useSnft(
         name: serc20.name ?? "",
         priceEth,
         priceHistory,
-        supply,
         symbol: serc20.symbol ?? "",
         tokenId: "",
         topHolders: [],
       },
     }
     return snft
-  }, [id, metadata, spectre])
+  }, [buyoutPrice, id, metadata, spectre])
 
   return useQuery(
     ["snft", id, spectreResult.isSuccess, demoMode],
@@ -671,4 +677,52 @@ export function useTokenPrice(serc20Address?: Address) {
     ...tokenIssuingPriceBigNumber,
     data: tokenIssuingPrice,
   }
+}
+
+// Returns the buyout price for a given address, excluding the owned tokens
+export function useBuyoutPriceFor(serc20Address?: Address, account?: Address) {
+  const buyoutPriceBigNumber = useContractRead({
+    address: ADDRESS_BROKER,
+    abi: BROKER_ABI_PRICE_OF_FOR,
+    functionName: "priceOfFor",
+    args: serc20Address && account && [serc20Address, account],
+    enabled: Boolean(serc20Address && account),
+  })
+
+  const buyoutPrice = useMemo<Dnum | null>(
+    () => {
+      return buyoutPriceBigNumber.data?.[0]
+        ? [BigInt(String(buyoutPriceBigNumber.data[0])), SERC20_DECIMALS]
+        : null
+    },
+    [buyoutPriceBigNumber.data],
+  )
+
+  return {
+    ...buyoutPriceBigNumber,
+    data: buyoutPrice,
+  }
+}
+
+export function useSerc20Share({
+  account,
+  snftId,
+}: {
+  account?: Address
+  snftId?: SnftId
+}): [share?: Dnum, balance?: Dnum] {
+  const snft = useSnft(snftId ?? "")
+  const { distribution = [] } = snft.data?.token ?? {}
+
+  const accountShare = useMemo(() => (
+    distribution.find((share) => (
+      share.address?.toLowerCase() === account?.toLowerCase()
+    ))
+  ), [distribution, account])
+
+  const balance = accountShare?.quantity ?? undefined
+  const cap = snft.data?.token.cap ?? undefined
+  const share = balance && cap && dn.divide(balance, cap, 18)
+
+  return [share, balance]
 }

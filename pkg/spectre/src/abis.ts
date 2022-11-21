@@ -183,3 +183,78 @@ export const ISSUER_ABI_ISSUE = [
     "type": "function",
   },
 ] as const
+
+export const BROKER_ABI_CREATE_PROPOSAL = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+      {
+        "internalType": "uint256",
+        "name": "lifespan",
+        "type": "uint256",
+      },
+    ],
+    "name": "createProposal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256",
+      },
+    ],
+    "stateMutability": "payable",
+    "type": "function",
+  },
+] as const
+
+export const BROKER_ABI_BUYOUT = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+    ],
+    "name": "buyout",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function",
+  },
+] as const
+
+export const BROKER_ABI_PRICE_OF_FOR = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+      {
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address",
+      },
+    ],
+    "name": "priceOfFor",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateral",
+        "type": "uint256",
+      },
+    ],
+    "stateMutability": "view",
+    "type": "function",
+  },
+] as const

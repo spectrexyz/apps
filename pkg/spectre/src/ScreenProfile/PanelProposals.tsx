@@ -195,7 +195,7 @@ function ProposalCard({ proposal }: { proposal: Proposal }) {
                       {ownershipPct}%
                     </span>
                     <span css={{ color: "colors.contentDimmed" }}>
-                      ~ {dnum.format(snft.data?.token.supply, {
+                      ~ {dnum.format(snft.data?.token.cap, {
                         compact: true,
                         digits: 2,
                       })} {snft.data?.token.symbol} fractions
