@@ -258,3 +258,70 @@ export const BROKER_ABI_PRICE_OF_FOR = [
     "type": "function",
   },
 ] as const
+
+export const BROKER_ABI_SALE_OF = [
+  {
+    "inputs": [
+      {
+        "internalType": "contract sIERC20",
+        "name": "sERC20",
+        "type": "address",
+      },
+    ],
+    "name": "saleOf",
+    "outputs": [
+      {
+        "internalType": "enum Sales.State",
+        "name": "state",
+        "type": "uint8",
+      },
+      {
+        "internalType": "address",
+        "name": "guardian",
+        "type": "address",
+      },
+      {
+        "internalType": "uint256",
+        "name": "reserve",
+        "type": "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "multiplier",
+        "type": "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "opening",
+        "type": "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "stock",
+        "type": "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "nbOfProposals",
+        "type": "uint256",
+      },
+      {
+        "internalType": "bool",
+        "name": "flash",
+        "type": "bool",
+      },
+      {
+        "internalType": "bool",
+        "name": "escape",
+        "type": "bool",
+      },
+      {
+        "internalType": "bool",
+        "name": "cap",
+        "type": "bool",
+      },
+    ],
+    "stateMutability": "view",
+    "type": "function",
+  },
+] as const

@@ -18,7 +18,11 @@ import { ADDRESS_NULL, DAY_MS, isAddress } from "moire"
 import { useMemo } from "react"
 import { useContractRead, useProvider } from "wagmi"
 import { z } from "zod"
-import { BROKER_ABI_PRICE_OF_FOR, ISSUER_ABI_PRICE_OF } from "./abis"
+import {
+  BROKER_ABI_PRICE_OF_FOR,
+  BROKER_ABI_SALE_OF,
+  ISSUER_ABI_PRICE_OF,
+} from "./abis"
 import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
@@ -221,31 +225,35 @@ export function useSnft(
     ADDRESS_NULL,
   )
 
+  const { data: sale } = useSale(spectre?.sERC20.address)
+
   const snft = useMemo(() => {
     if (!spectre) {
       return null
     }
 
     const serc20 = spectre?.sERC20
-    const sale = serc20?.sale
     const issuance = serc20?.issuance
     const nft = spectre?.NFT
 
-    if (!buyoutPrice || !issuance || !sale || !serc20 || !metadata) {
+    if (
+      !buyoutPrice
+      || !issuance
+      || !metadata
+      || !sale
+      || !serc20
+    ) {
       return null
     }
-
-    // We only need one digit precision for the multiplier
-    const buyoutMultiplier = Number(BigInt(sale.multiplier) / 10n ** 17n) / 10
 
     const cap: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
     const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
 
-    const initialBuyoutPrice: Dnum = [BigInt(serc20.sale?.reserve), 18]
+    const initialBuyoutPrice: Dnum = sale.reserve
 
     const initialMarketCapEth: Dnum = dn.divide(
       initialBuyoutPrice,
-      buyoutMultiplier,
+      sale.multiplier,
     )
 
     const initialTokenPriceEth: Dnum = dn.divide(
@@ -293,8 +301,9 @@ export function useSnft(
       id,
       shortId: toShortId(id),
       buyoutFlash: Boolean(sale.flash),
-      buyoutMultiplier,
+      buyoutMultiplier: sale.multiplier,
       buyoutOpening: sale.opening,
+      buyoutState: sale.state,
       buyoutPrice,
       creator: {
         address: nft?.creator,
@@ -343,7 +352,7 @@ export function useSnft(
       },
     }
     return snft
-  }, [buyoutPrice, id, metadata, spectre])
+  }, [buyoutPrice, id, metadata, spectre, sale])
 
   return useQuery(
     ["snft", id, spectreResult.isSuccess, demoMode],
@@ -701,6 +710,48 @@ export function useBuyoutPriceFor(serc20Address?: Address, account?: Address) {
   return {
     ...buyoutPriceBigNumber,
     data: buyoutPrice,
+  }
+}
+
+export function useSale(
+  serc20Address?: Address,
+): ReturnType<typeof useContractRead> & {
+  data?: {
+    flash: boolean
+    multiplier: number
+    opening: bigint
+    reserve: Dnum
+    state: Snft["buyoutState"]
+  }
+} {
+  const sale = useContractRead({
+    address: ADDRESS_BROKER,
+    abi: BROKER_ABI_SALE_OF,
+    functionName: "saleOf",
+    args: serc20Address && [serc20Address],
+    enabled: Boolean(serc20Address),
+  })
+
+  // order must match the enum declaration in Sales.sol
+  const saleStateEnum: Snft["buyoutState"][] = [
+    "Null",
+    "Pending",
+    "Opened",
+    "Closed",
+  ]
+
+  return {
+    ...sale,
+    data: sale.data && {
+      flash: sale.data.flash,
+      multiplier: Number(
+        // We only need one digit precision for the multiplier
+        BigInt(String(sale.data.multiplier)) / 10n ** 17n,
+      ) / 10,
+      opening: BigInt(String(sale.data.opening)),
+      reserve: [BigInt(String(sale.data.reserve)), 18],
+      state: saleStateEnum[sale.data?.state ?? -1] ?? "Null",
+    },
   }
 }
 

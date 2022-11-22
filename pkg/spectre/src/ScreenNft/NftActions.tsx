@@ -48,16 +48,29 @@ export function NftActions(
         },
       ]}
       footer={[
-        <Button
-          key="nft-buyout"
-          label="NFT buyout"
-          mode={highlight === "buyout" ? "primary" : "secondary"}
-          onClick={() => {
-            setLocation(`/nfts/${snft.shortId}/buyout`)
-          }}
-          size={xlarge ? undefined : "compact"}
-          wide
-        />,
+        <div>
+          <Button
+            key="nft-buyout"
+            label="NFT buyout"
+            mode={highlight === "buyout" ? "primary" : "secondary"}
+            onClick={() => {
+              setLocation(`/nfts/${snft.shortId}/buyout`)
+            }}
+            size={xlarge ? undefined : "compact"}
+            wide
+            disabled={snft.buyoutState !== "Opened"}
+          />
+          {snft.buyoutState !== "Opened" && (
+            <div css={{ paddingTop: "2gu", color: "colors.contentDimmed" }}>
+              {snft.buyoutState === "Pending"
+                && "Will be available after the timelock."}
+              {snft.buyoutState === "Closed"
+                && "Buyout closed."}
+              {snft.buyoutState === "Null"
+                && "Buyout not available."}
+            </div>
+          )}
+        </div>,
         <Button
           key="buy-fractions"
           label="Buy fractions"

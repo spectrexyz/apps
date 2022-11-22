@@ -48,6 +48,7 @@ export type Snft = Readonly<{
   buyoutMultiplier: number
   buyoutPrice: Dnum
   buyoutFlash: boolean
+  buyoutState: "Null" | "Pending" | "Opened" | "Closed"
   creator: Readonly<{
     address: AddressOrEnsName
     avatar: string
