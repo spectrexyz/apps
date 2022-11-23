@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, SelectionSetNode, FieldNode, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { gql } from '@graphql-mesh/utils';
 
@@ -10,14 +10,17 @@ import { DefaultLogger } from '@graphql-mesh/utils';
 import MeshCache from "@graphql-mesh/cache-localforage";
 import { fetch as fetchFn } from '@whatwg-node/fetch';
 
+import { MeshResolvedSource } from '@graphql-mesh/runtime';
+import { MeshTransform, MeshPlugin } from '@graphql-mesh/types';
 import GraphqlHandler from "@graphql-mesh/graphql"
 import BareMerger from "@graphql-mesh/merger-bare";
 import { printWithCache } from '@graphql-mesh/utils';
-import { createMeshHTTPHandler } from '@graphql-mesh/http';
+import { createMeshHTTPHandler, MeshHTTPHandler } from '@graphql-mesh/http';
 import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext, MeshInstance } from '@graphql-mesh/runtime';
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
-import type { SpectreContext } from './sources/spectre/types';
+import { ImportFn } from '@graphql-mesh/types';
+import type { SpectreTypes } from './sources/spectre/types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2035,6 +2038,7 @@ export type sERC20 = {
   readonly issuance?: Maybe<Issuance>;
   readonly pool?: Maybe<Pool>;
   readonly holders: ReadonlyArray<sERC20Holder>;
+  readonly price: Scalars['BigInt'];
 };
 
 
@@ -2263,6 +2267,14 @@ export type sERC20_filter = {
   readonly pool_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   readonly pool_?: InputMaybe<Pool_filter>;
   readonly holders_?: InputMaybe<sERC20Holder_filter>;
+  readonly price?: InputMaybe<Scalars['BigInt']>;
+  readonly price_not?: InputMaybe<Scalars['BigInt']>;
+  readonly price_gt?: InputMaybe<Scalars['BigInt']>;
+  readonly price_lt?: InputMaybe<Scalars['BigInt']>;
+  readonly price_gte?: InputMaybe<Scalars['BigInt']>;
+  readonly price_lte?: InputMaybe<Scalars['BigInt']>;
+  readonly price_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
+  readonly price_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -2278,7 +2290,8 @@ export type sERC20_orderBy =
   | 'sale'
   | 'issuance'
   | 'pool'
-  | 'holders';
+  | 'holders'
+  | 'price';
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -2289,7 +2302,21 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+
+export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  fragment: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+
+export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
+  selectionSet: string | ((fieldNode: FieldNode) => SelectionSetNode);
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>
+  | StitchingResolver<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -2749,6 +2776,7 @@ export type sERC20Resolvers<ContextType = MeshContext, ParentType extends Resolv
   issuance?: Resolver<Maybe<ResolversTypes['Issuance']>, ParentType, ContextType>;
   pool?: Resolver<Maybe<ResolversTypes['Pool']>, ParentType, ContextType>;
   holders?: Resolver<ReadonlyArray<ResolversTypes['sERC20Holder']>, ParentType, ContextType, RequireFields<sERC20holdersArgs, 'skip' | 'first'>>;
+  price?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2792,16 +2820,16 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = SpectreContext & BaseMeshContext;
+export type MeshContext = SpectreTypes.Context & BaseMeshContext;
 
 
 const baseDir = pathModule.join(typeof __dirname === 'string' ? __dirname : '/', '..');
 
-const importFn = (moduleId: string) => {
+const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
     case ".graphclient/sources/spectre/introspectionSchema":
-      return import("./sources/spectre/introspectionSchema");
+      return import("./sources/spectre/introspectionSchema") as T;
     
     default:
       return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
@@ -2830,14 +2858,14 @@ const cache = new (MeshCache as any)({
       logger,
     } as any)
 
-const sources = [];
-const transforms = [];
-const additionalEnvelopPlugins = [];
+const sources: MeshResolvedSource[] = [];
+const transforms: MeshTransform[] = [];
+const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
 const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.5"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.7"},
               baseDir,
               cache,
               pubsub,
@@ -2889,23 +2917,23 @@ const merger = new(BareMerger as any)({
   };
 }
 
-export function createBuiltMeshHTTPHandler() {
-  return createMeshHTTPHandler({
+export function createBuiltMeshHTTPHandler(): MeshHTTPHandler<MeshContext> {
+  return createMeshHTTPHandler<MeshContext>({
     baseDir,
-    getBuiltMesh,
+    getBuiltMesh: getBuiltGraphClient,
     rawServeConfig: undefined,
   })
 }
 
 
-let meshInstance$: Promise<MeshInstance<MeshContext>>;
+let meshInstance$: Promise<MeshInstance> | undefined;
 
-export function getBuiltGraphClient(): Promise<MeshInstance<MeshContext>> {
+export function getBuiltGraphClient(): Promise<MeshInstance> {
   if (meshInstance$ == null) {
-    meshInstance$ = getMeshOptions().then(meshOptions => getMesh<MeshContext>(meshOptions)).then(mesh => {
-      const id$ = mesh.pubsub.subscribe('destroy', () => {
+    meshInstance$ = getMeshOptions().then(meshOptions => getMesh(meshOptions)).then(mesh => {
+      const id = mesh.pubsub.subscribe('destroy', () => {
         meshInstance$ = undefined;
-        id$.then(id => mesh.pubsub.unsubscribe(id)).catch(err => console.error(err));
+        mesh.pubsub.unsubscribe(id);
       });
       return mesh;
     });
@@ -2918,7 +2946,7 @@ export const execute: ExecuteMeshFn = (...args) => getBuiltGraphClient().then(({
 export const subscribe: SubscribeMeshFn = (...args) => getBuiltGraphClient().then(({ subscribe }) => subscribe(...args));
 export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(globalContext?: TGlobalContext) {
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
-  return getSdk<TOperationContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
+  return getSdk<TOperationContext, TGlobalContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
 }
 export type SpectresQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -2930,7 +2958,7 @@ export type SpectresQuery = { readonly spectresCounter?: Maybe<Pick<SpectresCoun
     Pick<Spectre, 'id'>
     & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
       Pick<sERC20, 'id' | 'address' | 'cap' | 'name' | 'symbol'>
-      & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>> }
+      & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>>, readonly pool?: Maybe<{ readonly latestState: ReadonlyArray<Pick<PoolState, 'balances' | 'price' | 'timestamp' | 'weights'>> }> }
     ) }
   )> };
 
@@ -2992,6 +3020,14 @@ export const SpectresDocument = gql`
         guardian
         id
         reserve
+      }
+      pool {
+        latestState: states(first: 1, orderBy: timestamp, orderDirection: desc) {
+          balances
+          price
+          timestamp
+          weights
+        }
       }
     }
   }

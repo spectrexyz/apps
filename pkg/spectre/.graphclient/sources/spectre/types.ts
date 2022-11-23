@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { InContextSdkMethod } from '@graphql-mesh/types';
 import { MeshContext } from '@graphql-mesh/runtime';
@@ -16,7 +17,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   BigDecimal: any;
-  BigInt: bigint;
+  BigInt: any;
   Bytes: any;
 };
 
@@ -2016,6 +2017,7 @@ export type sERC20 = {
   issuance?: Maybe<Issuance>;
   pool?: Maybe<Pool>;
   holders: Array<sERC20Holder>;
+  price: Scalars['BigInt'];
 };
 
 
@@ -2244,6 +2246,14 @@ export type sERC20_filter = {
   pool_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   pool_?: InputMaybe<Pool_filter>;
   holders_?: InputMaybe<sERC20Holder_filter>;
+  price?: InputMaybe<Scalars['BigInt']>;
+  price_not?: InputMaybe<Scalars['BigInt']>;
+  price_gt?: InputMaybe<Scalars['BigInt']>;
+  price_lt?: InputMaybe<Scalars['BigInt']>;
+  price_gte?: InputMaybe<Scalars['BigInt']>;
+  price_lte?: InputMaybe<Scalars['BigInt']>;
+  price_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  price_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
 };
@@ -2259,151 +2269,153 @@ export type sERC20_orderBy =
   | 'sale'
   | 'issuance'
   | 'pool'
-  | 'holders';
+  | 'holders'
+  | 'price';
 
-}
-export type QuerySpectreSdk = {
-  /** undefined **/
-  nft: InContextSdkMethod<SpectreTypes.Query['nft'], SpectreTypes.QuerynftArgs, MeshContext>,
-  /** undefined **/
-  nfts: InContextSdkMethod<SpectreTypes.Query['nfts'], SpectreTypes.QuerynftsArgs, MeshContext>,
-  /** undefined **/
-  spectre: InContextSdkMethod<SpectreTypes.Query['spectre'], SpectreTypes.QueryspectreArgs, MeshContext>,
-  /** undefined **/
-  spectres: InContextSdkMethod<SpectreTypes.Query['spectres'], SpectreTypes.QueryspectresArgs, MeshContext>,
-  /** undefined **/
-  spectresCounter: InContextSdkMethod<SpectreTypes.Query['spectresCounter'], SpectreTypes.QueryspectresCounterArgs, MeshContext>,
-  /** undefined **/
-  spectresCounters: InContextSdkMethod<SpectreTypes.Query['spectresCounters'], SpectreTypes.QueryspectresCountersArgs, MeshContext>,
-  /** undefined **/
-  sERC20: InContextSdkMethod<SpectreTypes.Query['sERC20'], SpectreTypes.QuerysERC20Args, MeshContext>,
-  /** undefined **/
-  sERC20S: InContextSdkMethod<SpectreTypes.Query['sERC20S'], SpectreTypes.QuerysERC20SArgs, MeshContext>,
-  /** undefined **/
-  sERC20Holder: InContextSdkMethod<SpectreTypes.Query['sERC20Holder'], SpectreTypes.QuerysERC20HolderArgs, MeshContext>,
-  /** undefined **/
-  sERC20Holders: InContextSdkMethod<SpectreTypes.Query['sERC20Holders'], SpectreTypes.QuerysERC20HoldersArgs, MeshContext>,
-  /** undefined **/
-  sale: InContextSdkMethod<SpectreTypes.Query['sale'], SpectreTypes.QuerysaleArgs, MeshContext>,
-  /** undefined **/
-  sales: InContextSdkMethod<SpectreTypes.Query['sales'], SpectreTypes.QuerysalesArgs, MeshContext>,
-  /** undefined **/
-  buyoutProposal: InContextSdkMethod<SpectreTypes.Query['buyoutProposal'], SpectreTypes.QuerybuyoutProposalArgs, MeshContext>,
-  /** undefined **/
-  buyoutProposals: InContextSdkMethod<SpectreTypes.Query['buyoutProposals'], SpectreTypes.QuerybuyoutProposalsArgs, MeshContext>,
-  /** undefined **/
-  buyout: InContextSdkMethod<SpectreTypes.Query['buyout'], SpectreTypes.QuerybuyoutArgs, MeshContext>,
-  /** undefined **/
-  buyouts: InContextSdkMethod<SpectreTypes.Query['buyouts'], SpectreTypes.QuerybuyoutsArgs, MeshContext>,
-  /** undefined **/
-  claim: InContextSdkMethod<SpectreTypes.Query['claim'], SpectreTypes.QueryclaimArgs, MeshContext>,
-  /** undefined **/
-  claims: InContextSdkMethod<SpectreTypes.Query['claims'], SpectreTypes.QueryclaimsArgs, MeshContext>,
-  /** undefined **/
-  issuance: InContextSdkMethod<SpectreTypes.Query['issuance'], SpectreTypes.QueryissuanceArgs, MeshContext>,
-  /** undefined **/
-  issuances: InContextSdkMethod<SpectreTypes.Query['issuances'], SpectreTypes.QueryissuancesArgs, MeshContext>,
-  /** undefined **/
-  issue: InContextSdkMethod<SpectreTypes.Query['issue'], SpectreTypes.QueryissueArgs, MeshContext>,
-  /** undefined **/
-  issues: InContextSdkMethod<SpectreTypes.Query['issues'], SpectreTypes.QueryissuesArgs, MeshContext>,
-  /** undefined **/
-  issuanceProposal: InContextSdkMethod<SpectreTypes.Query['issuanceProposal'], SpectreTypes.QueryissuanceProposalArgs, MeshContext>,
-  /** undefined **/
-  issuanceProposals: InContextSdkMethod<SpectreTypes.Query['issuanceProposals'], SpectreTypes.QueryissuanceProposalsArgs, MeshContext>,
-  /** undefined **/
-  pool: InContextSdkMethod<SpectreTypes.Query['pool'], SpectreTypes.QuerypoolArgs, MeshContext>,
-  /** undefined **/
-  pools: InContextSdkMethod<SpectreTypes.Query['pools'], SpectreTypes.QuerypoolsArgs, MeshContext>,
-  /** undefined **/
-  poolState: InContextSdkMethod<SpectreTypes.Query['poolState'], SpectreTypes.QuerypoolStateArgs, MeshContext>,
-  /** undefined **/
-  poolStates: InContextSdkMethod<SpectreTypes.Query['poolStates'], SpectreTypes.QuerypoolStatesArgs, MeshContext>,
-  /** undefined **/
-  swap: InContextSdkMethod<SpectreTypes.Query['swap'], SpectreTypes.QueryswapArgs, MeshContext>,
-  /** undefined **/
-  swaps: InContextSdkMethod<SpectreTypes.Query['swaps'], SpectreTypes.QueryswapsArgs, MeshContext>,
-  /** undefined **/
-  join: InContextSdkMethod<SpectreTypes.Query['join'], SpectreTypes.QueryjoinArgs, MeshContext>,
-  /** undefined **/
-  joins: InContextSdkMethod<SpectreTypes.Query['joins'], SpectreTypes.QueryjoinsArgs, MeshContext>,
+  export type QuerySdk = {
+      /** null **/
+  nft: InContextSdkMethod<Query['nft'], QuerynftArgs, MeshContext>,
+  /** null **/
+  nfts: InContextSdkMethod<Query['nfts'], QuerynftsArgs, MeshContext>,
+  /** null **/
+  spectre: InContextSdkMethod<Query['spectre'], QueryspectreArgs, MeshContext>,
+  /** null **/
+  spectres: InContextSdkMethod<Query['spectres'], QueryspectresArgs, MeshContext>,
+  /** null **/
+  spectresCounter: InContextSdkMethod<Query['spectresCounter'], QueryspectresCounterArgs, MeshContext>,
+  /** null **/
+  spectresCounters: InContextSdkMethod<Query['spectresCounters'], QueryspectresCountersArgs, MeshContext>,
+  /** null **/
+  sERC20: InContextSdkMethod<Query['sERC20'], QuerysERC20Args, MeshContext>,
+  /** null **/
+  sERC20S: InContextSdkMethod<Query['sERC20S'], QuerysERC20SArgs, MeshContext>,
+  /** null **/
+  sERC20Holder: InContextSdkMethod<Query['sERC20Holder'], QuerysERC20HolderArgs, MeshContext>,
+  /** null **/
+  sERC20Holders: InContextSdkMethod<Query['sERC20Holders'], QuerysERC20HoldersArgs, MeshContext>,
+  /** null **/
+  sale: InContextSdkMethod<Query['sale'], QuerysaleArgs, MeshContext>,
+  /** null **/
+  sales: InContextSdkMethod<Query['sales'], QuerysalesArgs, MeshContext>,
+  /** null **/
+  buyoutProposal: InContextSdkMethod<Query['buyoutProposal'], QuerybuyoutProposalArgs, MeshContext>,
+  /** null **/
+  buyoutProposals: InContextSdkMethod<Query['buyoutProposals'], QuerybuyoutProposalsArgs, MeshContext>,
+  /** null **/
+  buyout: InContextSdkMethod<Query['buyout'], QuerybuyoutArgs, MeshContext>,
+  /** null **/
+  buyouts: InContextSdkMethod<Query['buyouts'], QuerybuyoutsArgs, MeshContext>,
+  /** null **/
+  claim: InContextSdkMethod<Query['claim'], QueryclaimArgs, MeshContext>,
+  /** null **/
+  claims: InContextSdkMethod<Query['claims'], QueryclaimsArgs, MeshContext>,
+  /** null **/
+  issuance: InContextSdkMethod<Query['issuance'], QueryissuanceArgs, MeshContext>,
+  /** null **/
+  issuances: InContextSdkMethod<Query['issuances'], QueryissuancesArgs, MeshContext>,
+  /** null **/
+  issue: InContextSdkMethod<Query['issue'], QueryissueArgs, MeshContext>,
+  /** null **/
+  issues: InContextSdkMethod<Query['issues'], QueryissuesArgs, MeshContext>,
+  /** null **/
+  issuanceProposal: InContextSdkMethod<Query['issuanceProposal'], QueryissuanceProposalArgs, MeshContext>,
+  /** null **/
+  issuanceProposals: InContextSdkMethod<Query['issuanceProposals'], QueryissuanceProposalsArgs, MeshContext>,
+  /** null **/
+  pool: InContextSdkMethod<Query['pool'], QuerypoolArgs, MeshContext>,
+  /** null **/
+  pools: InContextSdkMethod<Query['pools'], QuerypoolsArgs, MeshContext>,
+  /** null **/
+  poolState: InContextSdkMethod<Query['poolState'], QuerypoolStateArgs, MeshContext>,
+  /** null **/
+  poolStates: InContextSdkMethod<Query['poolStates'], QuerypoolStatesArgs, MeshContext>,
+  /** null **/
+  swap: InContextSdkMethod<Query['swap'], QueryswapArgs, MeshContext>,
+  /** null **/
+  swaps: InContextSdkMethod<Query['swaps'], QueryswapsArgs, MeshContext>,
+  /** null **/
+  join: InContextSdkMethod<Query['join'], QueryjoinArgs, MeshContext>,
+  /** null **/
+  joins: InContextSdkMethod<Query['joins'], QueryjoinsArgs, MeshContext>,
   /** Access to subgraph metadata **/
-  _meta: InContextSdkMethod<SpectreTypes.Query['_meta'], SpectreTypes.Query_metaArgs, MeshContext>
-};
+  _meta: InContextSdkMethod<Query['_meta'], Query_metaArgs, MeshContext>
+  };
 
-export type MutationSpectreSdk = {
+  export type MutationSdk = {
+    
+  };
 
-};
-
-export type SubscriptionSpectreSdk = {
-  /** undefined **/
-  nft: InContextSdkMethod<SpectreTypes.Subscription['nft'], SpectreTypes.SubscriptionnftArgs, MeshContext>,
-  /** undefined **/
-  nfts: InContextSdkMethod<SpectreTypes.Subscription['nfts'], SpectreTypes.SubscriptionnftsArgs, MeshContext>,
-  /** undefined **/
-  spectre: InContextSdkMethod<SpectreTypes.Subscription['spectre'], SpectreTypes.SubscriptionspectreArgs, MeshContext>,
-  /** undefined **/
-  spectres: InContextSdkMethod<SpectreTypes.Subscription['spectres'], SpectreTypes.SubscriptionspectresArgs, MeshContext>,
-  /** undefined **/
-  spectresCounter: InContextSdkMethod<SpectreTypes.Subscription['spectresCounter'], SpectreTypes.SubscriptionspectresCounterArgs, MeshContext>,
-  /** undefined **/
-  spectresCounters: InContextSdkMethod<SpectreTypes.Subscription['spectresCounters'], SpectreTypes.SubscriptionspectresCountersArgs, MeshContext>,
-  /** undefined **/
-  sERC20: InContextSdkMethod<SpectreTypes.Subscription['sERC20'], SpectreTypes.SubscriptionsERC20Args, MeshContext>,
-  /** undefined **/
-  sERC20S: InContextSdkMethod<SpectreTypes.Subscription['sERC20S'], SpectreTypes.SubscriptionsERC20SArgs, MeshContext>,
-  /** undefined **/
-  sERC20Holder: InContextSdkMethod<SpectreTypes.Subscription['sERC20Holder'], SpectreTypes.SubscriptionsERC20HolderArgs, MeshContext>,
-  /** undefined **/
-  sERC20Holders: InContextSdkMethod<SpectreTypes.Subscription['sERC20Holders'], SpectreTypes.SubscriptionsERC20HoldersArgs, MeshContext>,
-  /** undefined **/
-  sale: InContextSdkMethod<SpectreTypes.Subscription['sale'], SpectreTypes.SubscriptionsaleArgs, MeshContext>,
-  /** undefined **/
-  sales: InContextSdkMethod<SpectreTypes.Subscription['sales'], SpectreTypes.SubscriptionsalesArgs, MeshContext>,
-  /** undefined **/
-  buyoutProposal: InContextSdkMethod<SpectreTypes.Subscription['buyoutProposal'], SpectreTypes.SubscriptionbuyoutProposalArgs, MeshContext>,
-  /** undefined **/
-  buyoutProposals: InContextSdkMethod<SpectreTypes.Subscription['buyoutProposals'], SpectreTypes.SubscriptionbuyoutProposalsArgs, MeshContext>,
-  /** undefined **/
-  buyout: InContextSdkMethod<SpectreTypes.Subscription['buyout'], SpectreTypes.SubscriptionbuyoutArgs, MeshContext>,
-  /** undefined **/
-  buyouts: InContextSdkMethod<SpectreTypes.Subscription['buyouts'], SpectreTypes.SubscriptionbuyoutsArgs, MeshContext>,
-  /** undefined **/
-  claim: InContextSdkMethod<SpectreTypes.Subscription['claim'], SpectreTypes.SubscriptionclaimArgs, MeshContext>,
-  /** undefined **/
-  claims: InContextSdkMethod<SpectreTypes.Subscription['claims'], SpectreTypes.SubscriptionclaimsArgs, MeshContext>,
-  /** undefined **/
-  issuance: InContextSdkMethod<SpectreTypes.Subscription['issuance'], SpectreTypes.SubscriptionissuanceArgs, MeshContext>,
-  /** undefined **/
-  issuances: InContextSdkMethod<SpectreTypes.Subscription['issuances'], SpectreTypes.SubscriptionissuancesArgs, MeshContext>,
-  /** undefined **/
-  issue: InContextSdkMethod<SpectreTypes.Subscription['issue'], SpectreTypes.SubscriptionissueArgs, MeshContext>,
-  /** undefined **/
-  issues: InContextSdkMethod<SpectreTypes.Subscription['issues'], SpectreTypes.SubscriptionissuesArgs, MeshContext>,
-  /** undefined **/
-  issuanceProposal: InContextSdkMethod<SpectreTypes.Subscription['issuanceProposal'], SpectreTypes.SubscriptionissuanceProposalArgs, MeshContext>,
-  /** undefined **/
-  issuanceProposals: InContextSdkMethod<SpectreTypes.Subscription['issuanceProposals'], SpectreTypes.SubscriptionissuanceProposalsArgs, MeshContext>,
-  /** undefined **/
-  pool: InContextSdkMethod<SpectreTypes.Subscription['pool'], SpectreTypes.SubscriptionpoolArgs, MeshContext>,
-  /** undefined **/
-  pools: InContextSdkMethod<SpectreTypes.Subscription['pools'], SpectreTypes.SubscriptionpoolsArgs, MeshContext>,
-  /** undefined **/
-  poolState: InContextSdkMethod<SpectreTypes.Subscription['poolState'], SpectreTypes.SubscriptionpoolStateArgs, MeshContext>,
-  /** undefined **/
-  poolStates: InContextSdkMethod<SpectreTypes.Subscription['poolStates'], SpectreTypes.SubscriptionpoolStatesArgs, MeshContext>,
-  /** undefined **/
-  swap: InContextSdkMethod<SpectreTypes.Subscription['swap'], SpectreTypes.SubscriptionswapArgs, MeshContext>,
-  /** undefined **/
-  swaps: InContextSdkMethod<SpectreTypes.Subscription['swaps'], SpectreTypes.SubscriptionswapsArgs, MeshContext>,
-  /** undefined **/
-  join: InContextSdkMethod<SpectreTypes.Subscription['join'], SpectreTypes.SubscriptionjoinArgs, MeshContext>,
-  /** undefined **/
-  joins: InContextSdkMethod<SpectreTypes.Subscription['joins'], SpectreTypes.SubscriptionjoinsArgs, MeshContext>,
+  export type SubscriptionSdk = {
+      /** null **/
+  nft: InContextSdkMethod<Subscription['nft'], SubscriptionnftArgs, MeshContext>,
+  /** null **/
+  nfts: InContextSdkMethod<Subscription['nfts'], SubscriptionnftsArgs, MeshContext>,
+  /** null **/
+  spectre: InContextSdkMethod<Subscription['spectre'], SubscriptionspectreArgs, MeshContext>,
+  /** null **/
+  spectres: InContextSdkMethod<Subscription['spectres'], SubscriptionspectresArgs, MeshContext>,
+  /** null **/
+  spectresCounter: InContextSdkMethod<Subscription['spectresCounter'], SubscriptionspectresCounterArgs, MeshContext>,
+  /** null **/
+  spectresCounters: InContextSdkMethod<Subscription['spectresCounters'], SubscriptionspectresCountersArgs, MeshContext>,
+  /** null **/
+  sERC20: InContextSdkMethod<Subscription['sERC20'], SubscriptionsERC20Args, MeshContext>,
+  /** null **/
+  sERC20S: InContextSdkMethod<Subscription['sERC20S'], SubscriptionsERC20SArgs, MeshContext>,
+  /** null **/
+  sERC20Holder: InContextSdkMethod<Subscription['sERC20Holder'], SubscriptionsERC20HolderArgs, MeshContext>,
+  /** null **/
+  sERC20Holders: InContextSdkMethod<Subscription['sERC20Holders'], SubscriptionsERC20HoldersArgs, MeshContext>,
+  /** null **/
+  sale: InContextSdkMethod<Subscription['sale'], SubscriptionsaleArgs, MeshContext>,
+  /** null **/
+  sales: InContextSdkMethod<Subscription['sales'], SubscriptionsalesArgs, MeshContext>,
+  /** null **/
+  buyoutProposal: InContextSdkMethod<Subscription['buyoutProposal'], SubscriptionbuyoutProposalArgs, MeshContext>,
+  /** null **/
+  buyoutProposals: InContextSdkMethod<Subscription['buyoutProposals'], SubscriptionbuyoutProposalsArgs, MeshContext>,
+  /** null **/
+  buyout: InContextSdkMethod<Subscription['buyout'], SubscriptionbuyoutArgs, MeshContext>,
+  /** null **/
+  buyouts: InContextSdkMethod<Subscription['buyouts'], SubscriptionbuyoutsArgs, MeshContext>,
+  /** null **/
+  claim: InContextSdkMethod<Subscription['claim'], SubscriptionclaimArgs, MeshContext>,
+  /** null **/
+  claims: InContextSdkMethod<Subscription['claims'], SubscriptionclaimsArgs, MeshContext>,
+  /** null **/
+  issuance: InContextSdkMethod<Subscription['issuance'], SubscriptionissuanceArgs, MeshContext>,
+  /** null **/
+  issuances: InContextSdkMethod<Subscription['issuances'], SubscriptionissuancesArgs, MeshContext>,
+  /** null **/
+  issue: InContextSdkMethod<Subscription['issue'], SubscriptionissueArgs, MeshContext>,
+  /** null **/
+  issues: InContextSdkMethod<Subscription['issues'], SubscriptionissuesArgs, MeshContext>,
+  /** null **/
+  issuanceProposal: InContextSdkMethod<Subscription['issuanceProposal'], SubscriptionissuanceProposalArgs, MeshContext>,
+  /** null **/
+  issuanceProposals: InContextSdkMethod<Subscription['issuanceProposals'], SubscriptionissuanceProposalsArgs, MeshContext>,
+  /** null **/
+  pool: InContextSdkMethod<Subscription['pool'], SubscriptionpoolArgs, MeshContext>,
+  /** null **/
+  pools: InContextSdkMethod<Subscription['pools'], SubscriptionpoolsArgs, MeshContext>,
+  /** null **/
+  poolState: InContextSdkMethod<Subscription['poolState'], SubscriptionpoolStateArgs, MeshContext>,
+  /** null **/
+  poolStates: InContextSdkMethod<Subscription['poolStates'], SubscriptionpoolStatesArgs, MeshContext>,
+  /** null **/
+  swap: InContextSdkMethod<Subscription['swap'], SubscriptionswapArgs, MeshContext>,
+  /** null **/
+  swaps: InContextSdkMethod<Subscription['swaps'], SubscriptionswapsArgs, MeshContext>,
+  /** null **/
+  join: InContextSdkMethod<Subscription['join'], SubscriptionjoinArgs, MeshContext>,
+  /** null **/
+  joins: InContextSdkMethod<Subscription['joins'], SubscriptionjoinsArgs, MeshContext>,
   /** Access to subgraph metadata **/
-  _meta: InContextSdkMethod<SpectreTypes.Subscription['_meta'], SpectreTypes.Subscription_metaArgs, MeshContext>
-};
-export type SpectreContext = {
-      ["spectre"]: { Query: QuerySpectreSdk, Mutation: MutationSpectreSdk, Subscription: SubscriptionSpectreSdk },
+  _meta: InContextSdkMethod<Subscription['_meta'], Subscription_metaArgs, MeshContext>
+  };
+
+  export type Context = {
+      ["spectre"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
       
     };
+}

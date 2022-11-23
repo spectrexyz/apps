@@ -36,6 +36,14 @@ query Spectres($first: Int, $skip: Int) {
         id
         reserve
       }
+      pool {
+        latestState: states(first: 1, orderBy: timestamp, orderDirection: desc) {
+          balances
+          price
+          timestamp
+          weights
+        }
+      }
     }
   }
 }
