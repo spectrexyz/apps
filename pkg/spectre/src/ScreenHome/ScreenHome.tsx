@@ -135,7 +135,7 @@ function HighlightedArtists() {
         />
         {snftsPrefetchStatus === "error"
           ? "Error loading the NFTs, please try reloading."
-          : (
+          : snftsPrefetchStatus === "success" && (
             <Grid>
               {list(snftsCount ?? 0, (index) => {
                 const snftQuery = snftQueries[index]
@@ -235,8 +235,16 @@ function HighlightCard({
                 >
                   <AddressBadge address={snft.guardian} />
                 </Anchor>
-                <span css={{ whiteSpace: "nowrap" }}>
-                  {dnum.format(snft.tokenPriceEth, 4)} ETH
+                <span
+                  css={{ whiteSpace: "nowrap" }}
+                >
+                  {snft.tokenPriceEth
+                    ? (
+                      <span title={`${dnum.format(snft.tokenPriceEth)} ETH`}>
+                        {dnum.format(snft.tokenPriceEth, 4)} ETH
+                      </span>
+                    )
+                    : <span>−</span>}
                 </span>
               </div>
             </div>
