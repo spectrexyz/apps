@@ -73,7 +73,7 @@ export function ScreenBuy({ id }: { id: string }) {
 
   const tokenValue = useMemo(() => {
     return ethValue && tokenPrice
-      ? dn.multiply(ethValue, tokenPrice)
+      ? dn.divide(ethValue, tokenPrice)
       : null
   }, [ethValue, tokenPrice])
 
@@ -363,10 +363,7 @@ export function ScreenBuy({ id }: { id: string }) {
                                 {tokenPrice
                                   ? `~ ${
                                     dn.format(
-                                      dn.divide(
-                                        dn.from(1, 18),
-                                        tokenPrice,
-                                      ),
+                                      tokenPrice,
                                       { trailingZeros: false, digits: 8 },
                                     )
                                   }${NO_BREAK_SPACE}ETH per ${
