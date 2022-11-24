@@ -2865,7 +2865,7 @@ const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.7"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.9"},
               baseDir,
               cache,
               pubsub,
@@ -2957,8 +2957,8 @@ export type SpectresQueryVariables = Exact<{
 export type SpectresQuery = { readonly spectresCounter?: Maybe<Pick<SpectresCounter, 'count'>>, readonly spectres: ReadonlyArray<(
     Pick<Spectre, 'id'>
     & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
-      Pick<sERC20, 'id' | 'address' | 'cap' | 'name' | 'symbol'>
-      & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>>, readonly pool?: Maybe<{ readonly latestState: ReadonlyArray<Pick<PoolState, 'balances' | 'price' | 'timestamp' | 'weights'>> }> }
+      Pick<sERC20, 'id' | 'address' | 'cap' | 'name' | 'symbol' | 'price'>
+      & { readonly issuance?: Maybe<Pick<Issuance, 'allocation' | 'fee' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly sale?: Maybe<Pick<Sale, 'multiplier' | 'stock' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve'>> }
     ) }
   )> };
 
@@ -2970,7 +2970,7 @@ export type SpectreByIdQueryVariables = Exact<{
 export type SpectreByIdQuery = { readonly spectre?: Maybe<(
     Pick<Spectre, 'state' | 'vault' | 'broker'>
     & { readonly NFT: Pick<NFT, 'id' | 'collection' | 'tokenId' | 'tokenURI' | 'creator'>, readonly sERC20: (
-      Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap' | 'minted'>
+      Pick<sERC20, 'id' | 'address' | 'name' | 'symbol' | 'cap' | 'minted' | 'price'>
       & { readonly holders: ReadonlyArray<Pick<sERC20Holder, 'address' | 'amount'>>, readonly sale?: Maybe<Pick<Sale, 'stock' | 'multiplier' | 'opening' | 'escape' | 'flash' | 'guardian' | 'id' | 'reserve' | 'state'>>, readonly issuance?: Maybe<(
         Pick<Issuance, 'id' | 'reserve' | 'state' | 'allocation' | 'fee' | 'flash' | 'guardian' | 'pool' | 'poolId'>
         & { readonly issues: ReadonlyArray<Pick<Issue, 'amount' | 'timestamp'>> }
@@ -3002,6 +3002,7 @@ export const SpectresDocument = gql`
       cap
       name
       symbol
+      price
       issuance {
         allocation
         fee
@@ -3020,14 +3021,6 @@ export const SpectresDocument = gql`
         guardian
         id
         reserve
-      }
-      pool {
-        latestState: states(first: 1, orderBy: timestamp, orderDirection: desc) {
-          balances
-          price
-          timestamp
-          weights
-        }
       }
     }
   }
@@ -3050,6 +3043,7 @@ export const SpectreByIdDocument = gql`
       symbol
       cap
       minted
+      price
       holders(first: 20, orderBy: amount, orderDirection: desc) {
         address
         amount

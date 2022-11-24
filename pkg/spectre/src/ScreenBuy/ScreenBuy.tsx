@@ -33,7 +33,7 @@ import { CenteredContainer } from "../AppLayout/CenteredContainer"
 import { AsyncTask } from "../AsyncTask/AsyncTask"
 import { ADDRESS_ISSUER } from "../environment"
 import { RequireConnected } from "../RequireConnected/RequireConnected"
-import { useSnft, useTokenPrice } from "../snft-hooks"
+import { useSnft } from "../snft-hooks"
 import { useLabelStyle, useLayout } from "../styles"
 import { useSignTxAndWait } from "../web3-hooks"
 import { SwapModule } from "./SwapModule"
@@ -68,13 +68,14 @@ export function ScreenBuy({ id }: { id: string }) {
   const settings = useSettings()
 
   const [ethValue, setEthValue] = useState<null | Dnum>(null)
-  const tokenPrice = useTokenPrice(snft.data?.token.contractAddress)
+
+  const tokenPrice = snft.data?.token.priceEth
 
   const tokenValue = useMemo(() => {
-    return ethValue && tokenPrice.data
-      ? dn.multiply(ethValue, tokenPrice.data)
+    return ethValue && tokenPrice
+      ? dn.multiply(ethValue, tokenPrice)
       : null
-  }, [ethValue, tokenPrice.data])
+  }, [ethValue, tokenPrice])
 
   const settingsBtnAnim = useSpring({
     config: springs.snappy,
@@ -359,12 +360,12 @@ export function ScreenBuy({ id }: { id: string }) {
                             )}
                             <Group heading="Est. price">
                               <p>
-                                {tokenPrice.data
+                                {tokenPrice
                                   ? `~ ${
                                     dn.format(
                                       dn.divide(
                                         dn.from(1, 18),
-                                        tokenPrice.data,
+                                        tokenPrice,
                                       ),
                                       { trailingZeros: false, digits: 8 },
                                     )

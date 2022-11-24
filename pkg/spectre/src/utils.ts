@@ -228,5 +228,5 @@ export function explorerUrl(
 export function dnumFromWagmiAmount(
   amount: { value: BigNumber; decimals: number },
 ): Dnum {
-  return [BigInt(String(amount.value)), amount.decimals]
+  return [amount.value.toBigInt(), amount.decimals]
 }

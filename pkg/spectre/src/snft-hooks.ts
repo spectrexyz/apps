@@ -18,11 +18,7 @@ import { ADDRESS_NULL, DAY_MS, isAddress } from "moire"
 import { useMemo } from "react"
 import { useContractRead, useProvider } from "wagmi"
 import { z } from "zod"
-import {
-  BROKER_ABI_PRICE_OF_FOR,
-  BROKER_ABI_SALE_OF,
-  ISSUER_ABI_PRICE_OF,
-} from "./abis"
+import { BROKER_ABI_PRICE_OF_FOR, BROKER_ABI_SALE_OF } from "./abis"
 import { SERC20_DECIMALS } from "./constants"
 import {
   FRACTIONS_BY_ACCOUNT,
@@ -32,7 +28,7 @@ import {
   // SELECTED_SNFTS,
   SNFTS,
 } from "./demo-data"
-import { ADDRESS_BROKER, ADDRESS_ISSUER } from "./environment"
+import { ADDRESS_BROKER } from "./environment"
 import { useSpectre, useSpectres } from "./subgraph-hooks"
 import { ipfsUrl, resolveAddress, toShortId } from "./utils"
 
@@ -224,7 +220,6 @@ export function useSnft(
     spectre?.sERC20.address,
     ADDRESS_NULL,
   )
-
   const { data: sale } = useSale(spectre?.sERC20.address)
 
   const snft = useMemo(() => {
@@ -248,27 +243,14 @@ export function useSnft(
 
     const cap: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
     const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
-
-    const initialBuyoutPrice: Dnum = sale.reserve
-
-    const initialMarketCapEth: Dnum = dn.divide(
-      initialBuyoutPrice,
-      sale.multiplier,
-    )
-
-    const initialTokenPriceEth: Dnum = dn.divide(
-      initialMarketCapEth,
-      cap,
+    const tokenPrice = dn.divide(
+      dn.from(1, 18),
+      [BigInt(serc20.price), SERC20_DECIMALS],
     )
 
     const latestPoolState = serc20.pool?.latestState[0]
     const poolStates = serc20.pool?.states ?? []
-    const lastPoolState = poolStates.at(-1)
-
-    const priceEth = lastPoolState
-      ? dn.from(lastPoolState.price, SERC20_DECIMALS)
-      : initialTokenPriceEth
-    const marketCapEth = dn.multiply(priceEth, cap)
+    const marketCapEth = dn.multiply(tokenPrice, cap)
 
     const pooledEth: Dnum = [
       BigInt(latestPoolState ? latestPoolState.balances[1] : 0),
@@ -344,7 +326,7 @@ export function useSnft(
         mintHistory,
         minted,
         name: serc20.name ?? "",
-        priceEth,
+        priceEth: tokenPrice,
         priceHistory,
         symbol: serc20.symbol ?? "",
         tokenId: "",
@@ -352,7 +334,7 @@ export function useSnft(
       },
     }
     return snft
-  }, [buyoutPrice, id, metadata, spectre, sale])
+  }, [buyoutPrice, id, metadata, sale, spectre])
 
   return useQuery(
     ["snft", id, spectreResult.isSuccess, demoMode],
@@ -402,17 +384,17 @@ export function useSnfts({
         id: id,
         shortId: toShortId(id),
         guardian: sERC20.sale.guardian,
-        tokenPriceEth: [0n, 0],
+        tokenPriceEth: dn.divide(
+          dn.from(1, 18),
+          [BigInt(sERC20.price), SERC20_DECIMALS],
+        ),
         tokenSymbol: sERC20.symbol,
       },
     ],
     {
       first,
       skip,
-      fetchOptions: {
-        retry,
-        retryDelay: RETRY_DELAY,
-      },
+      fetchOptions: { retry, retryDelay: RETRY_DELAY },
     },
   )
 
@@ -661,31 +643,6 @@ export function useProposalsByAddress(
     },
     { enabled: Boolean(address.data) },
   )
-}
-
-// price is in token qty per ETH
-export function useTokenPrice(serc20Address?: Address) {
-  const tokenIssuingPriceBigNumber = useContractRead({
-    address: ADDRESS_ISSUER,
-    abi: ISSUER_ABI_PRICE_OF,
-    functionName: "priceOf",
-    args: serc20Address && [serc20Address],
-    enabled: Boolean(serc20Address),
-  })
-
-  const tokenIssuingPrice = useMemo<Dnum | null>(
-    () => {
-      return tokenIssuingPriceBigNumber.data
-        ? [BigInt(String(tokenIssuingPriceBigNumber.data)), SERC20_DECIMALS]
-        : null
-    },
-    [tokenIssuingPriceBigNumber.data],
-  )
-
-  return {
-    ...tokenIssuingPriceBigNumber,
-    data: tokenIssuingPrice,
-  }
 }
 
 // Returns the buyout price for a given address, excluding the owned tokens

@@ -85,7 +85,7 @@ export type SnftPreview = Readonly<{
   guardian: string
   image: string
   title: string
-  tokenPriceEth: Dnum
+  tokenPriceEth?: Dnum
   tokenSymbol: string
 }>
 

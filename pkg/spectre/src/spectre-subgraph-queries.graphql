@@ -17,6 +17,7 @@ query Spectres($first: Int, $skip: Int) {
       cap
       name
       symbol
+      price
       issuance {
         allocation
         fee
@@ -35,14 +36,6 @@ query Spectres($first: Int, $skip: Int) {
         guardian
         id
         reserve
-      }
-      pool {
-        latestState: states(first: 1, orderBy: timestamp, orderDirection: desc) {
-          balances
-          price
-          timestamp
-          weights
-        }
       }
     }
   }
@@ -64,6 +57,7 @@ query SpectreById($id: ID!) {
       symbol
       cap
       minted
+      price
       holders(first: 20, orderBy: amount, orderDirection: desc) {
         address
         amount
