@@ -25,7 +25,7 @@ export function LoadingBox({
   container ??= (children) => <>{children}</>
 
   return appearTransitions((styles, visible) =>
-    visible && container(
+    visible && container && container(
       <a.div
         className={className}
         style={styles}

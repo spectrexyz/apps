@@ -123,7 +123,7 @@ function useSpringProgress(): [
   const progress = useRef({ value: 0, running: true })
   const springRef = useSpringRef()
 
-  useSpring<{ progress: number }>({
+  useSpring<{ progress: number }>(() => ({
     ref: springRef,
     config: springs.sluggish,
     from: { progress: 0 },
@@ -137,7 +137,7 @@ function useSpringProgress(): [
     onStart() {
       progress.current.running = true
     },
-  })
+  }))
 
   const restart = useCallback(() => {
     springRef.current[0].stop(true)

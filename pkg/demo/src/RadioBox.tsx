@@ -7,8 +7,8 @@ export function RadioBox() {
   const options = ["Option A", "Option B", "Option C"]
   return (
     <RadioGroup
-      onChange={(id) => {
-        setSelected(id as number)
+      onChange={(id: number) => {
+        setSelected(id)
       }}
       selected={selected}
     >

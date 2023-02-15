@@ -2,7 +2,7 @@ import { createContext, forwardRef, ReactNode, useContext } from "react"
 import { useUid } from "../react-utils"
 
 type FieldsetProps = {
-  children: ReactNode
+  children: ReactNode | ((id: string) => ReactNode)
   contextual?: ReactNode
   dimmed?: boolean
   error?: boolean | string
@@ -15,17 +15,14 @@ const FieldsetContext = createContext<{ labelFor?: string }>({
 })
 
 export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
-  function Fieldset(
-    {
-      children,
-      contextual,
-      dimmed = false,
-      error = false,
-      label,
-      optional = false,
-    }: FieldsetProps,
-    ref,
-  ): JSX.Element {
+  function Fieldset({
+    children,
+    contextual,
+    dimmed = false,
+    error = false,
+    label,
+    optional = false,
+  }: FieldsetProps, ref): JSX.Element {
     const labelFor = useUid()
     return (
       <FieldsetContext.Provider value={{ labelFor }}>
@@ -36,7 +33,11 @@ export const Fieldset = forwardRef<HTMLElement, FieldsetProps>(
             marginTop: "2gu",
             padding: "2gu",
             background: colors.layer2,
-            outline: `${error ? "2px" : "0"} solid ${colors.warning}`,
+            outline: `${
+              error
+                ? "2px"
+                : "0"
+            } solid ${colors.warning}`,
             "header": {
               display: "flex",
               justifyContent: "space-between",

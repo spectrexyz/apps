@@ -11,7 +11,7 @@ import {
 } from "./ButtonText"
 import { useInfoTitleIconColor, useInfoTitleIconSize } from "./Info"
 import { gu } from "./styles"
-import { useTipIconSize } from "./Tip"
+import { useTipIconSize } from "./Tip/Tip"
 
 export function useIconSize(size?: number): number {
   const isInsideButton = useInsideButton()

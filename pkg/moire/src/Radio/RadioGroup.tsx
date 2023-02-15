@@ -64,14 +64,14 @@ function findSiblingId<Id extends RadioId>(
   return _radios[0] === undefined ? null : _radios[0]
 }
 
-export function RadioGroup<Id extends RadioId>({
+export function RadioGroup({
   children,
   selected,
   onChange = noop,
-}: RadioGroupProps<Id>) {
-  const [radios, setRadios] = useState<Set<Id>>(new Set())
+}: RadioGroupProps<RadioId>) {
+  const [radios, setRadios] = useState<Set<RadioId>>(new Set())
 
-  const addRadio = useCallback((id: Id) => {
+  const addRadio = useCallback((id: RadioId) => {
     setRadios((radios) => {
       const _radios = new Set(radios)
       _radios.add(id)
@@ -79,7 +79,7 @@ export function RadioGroup<Id extends RadioId>({
     })
   }, [])
 
-  const removeRadio = useCallback((id: Id) => {
+  const removeRadio = useCallback((id: RadioId) => {
     setRadios((radios) => {
       const _radios = new Set(radios)
       _radios.delete(id)
@@ -88,14 +88,14 @@ export function RadioGroup<Id extends RadioId>({
   }, [])
 
   const selectPrev = () => {
-    const id = findSiblingId<Id>(radios, selected, -1)
+    const id = findSiblingId<RadioId>(radios, selected, -1)
     if (id !== null) {
       onChange(id)
     }
   }
 
   const selectNext = () => {
-    const id = findSiblingId<Id>(radios, selected, 1)
+    const id = findSiblingId<RadioId>(radios, selected, 1)
     if (id !== null) {
       onChange(id)
     }

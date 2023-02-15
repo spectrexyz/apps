@@ -29,10 +29,6 @@ export default defineConfig(async ({ mode }) => ({
   },
   esbuild: {
     jsxFactory: "jsx",
-    jsxInject: `
-      import { Fragment } from 'react'
-      import { jsx } from '@emotion/react'
-    `,
     jsxFragment: "Fragment",
   },
   optimizeDeps: {
