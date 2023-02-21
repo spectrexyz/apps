@@ -243,10 +243,12 @@ export function useSnft(
 
     const cap: Dnum = [BigInt(serc20.cap), SERC20_DECIMALS]
     const minted: Dnum = [BigInt(serc20.minted), SERC20_DECIMALS]
-    const tokenPrice = dn.divide(
-      dn.from(1, 18),
-      [BigInt(serc20.price), SERC20_DECIMALS],
-    )
+    const tokenPrice = BigInt(serc20.price) === 0n
+      ? dn.from(0n, SERC20_DECIMALS)
+      : dn.divide(
+        dn.from(1, 18),
+        [BigInt(serc20.price), SERC20_DECIMALS],
+      )
 
     const latestPoolState = serc20.pool?.latestState[0]
     const poolStates = serc20.pool?.states ?? []

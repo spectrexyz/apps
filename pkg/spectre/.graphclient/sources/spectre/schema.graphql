@@ -92,6 +92,10 @@ input BuyoutProposal_filter {
   timestamp_not_in: [BigInt!]
   buyer: Bytes
   buyer_not: Bytes
+  buyer_gt: Bytes
+  buyer_lt: Bytes
+  buyer_gte: Bytes
+  buyer_lte: Bytes
   buyer_in: [Bytes!]
   buyer_not_in: [Bytes!]
   buyer_contains: Bytes
@@ -122,11 +126,22 @@ input BuyoutProposal_filter {
   expiration_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [BuyoutProposal_filter]
+  or: [BuyoutProposal_filter]
 }
 
 enum BuyoutProposal_orderBy {
   id
   sale
+  sale__id
+  sale__state
+  sale__guardian
+  sale__reserve
+  sale__multiplier
+  sale__opening
+  sale__stock
+  sale__flash
+  sale__escape
   state
   timestamp
   buyer
@@ -175,6 +190,10 @@ input Buyout_filter {
   timestamp_not_in: [BigInt!]
   buyer: Bytes
   buyer_not: Bytes
+  buyer_gt: Bytes
+  buyer_lt: Bytes
+  buyer_gte: Bytes
+  buyer_lte: Bytes
   buyer_in: [Bytes!]
   buyer_not_in: [Bytes!]
   buyer_contains: Bytes
@@ -206,11 +225,22 @@ input Buyout_filter {
   claims_: Claim_filter
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Buyout_filter]
+  or: [Buyout_filter]
 }
 
 enum Buyout_orderBy {
   id
   sale
+  sale__id
+  sale__state
+  sale__guardian
+  sale__reserve
+  sale__multiplier
+  sale__opening
+  sale__stock
+  sale__flash
+  sale__escape
   timestamp
   buyer
   value
@@ -270,6 +300,10 @@ input Claim_filter {
   timestamp_not_in: [BigInt!]
   holder: Bytes
   holder_not: Bytes
+  holder_gt: Bytes
+  holder_lt: Bytes
+  holder_gte: Bytes
+  holder_lte: Bytes
   holder_in: [Bytes!]
   holder_not_in: [Bytes!]
   holder_contains: Bytes
@@ -292,11 +326,19 @@ input Claim_filter {
   collateral_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Claim_filter]
+  or: [Claim_filter]
 }
 
 enum Claim_orderBy {
   id
   buyout
+  buyout__id
+  buyout__timestamp
+  buyout__buyer
+  buyout__value
+  buyout__collateral
+  buyout__stock
   timestamp
   holder
   value
@@ -373,6 +415,10 @@ input IssuanceProposal_filter {
   timestamp_not_in: [BigInt!]
   buyer: Bytes
   buyer_not: Bytes
+  buyer_gt: Bytes
+  buyer_lt: Bytes
+  buyer_gte: Bytes
+  buyer_lte: Bytes
   buyer_in: [Bytes!]
   buyer_not_in: [Bytes!]
   buyer_contains: Bytes
@@ -403,11 +449,22 @@ input IssuanceProposal_filter {
   expiration_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [IssuanceProposal_filter]
+  or: [IssuanceProposal_filter]
 }
 
 enum IssuanceProposal_orderBy {
   id
   issuance
+  issuance__id
+  issuance__state
+  issuance__guardian
+  issuance__pool
+  issuance__poolId
+  issuance__reserve
+  issuance__allocation
+  issuance__fee
+  issuance__flash
   state
   timestamp
   buyer
@@ -458,18 +515,30 @@ input Issuance_filter {
   state_not_in: [IssuanceState!]
   guardian: Bytes
   guardian_not: Bytes
+  guardian_gt: Bytes
+  guardian_lt: Bytes
+  guardian_gte: Bytes
+  guardian_lte: Bytes
   guardian_in: [Bytes!]
   guardian_not_in: [Bytes!]
   guardian_contains: Bytes
   guardian_not_contains: Bytes
   pool: Bytes
   pool_not: Bytes
+  pool_gt: Bytes
+  pool_lt: Bytes
+  pool_gte: Bytes
+  pool_lte: Bytes
   pool_in: [Bytes!]
   pool_not_in: [Bytes!]
   pool_contains: Bytes
   pool_not_contains: Bytes
   poolId: Bytes
   poolId_not: Bytes
+  poolId_gt: Bytes
+  poolId_lt: Bytes
+  poolId_gte: Bytes
+  poolId_lte: Bytes
   poolId_in: [Bytes!]
   poolId_not_in: [Bytes!]
   poolId_contains: Bytes
@@ -506,11 +575,20 @@ input Issuance_filter {
   proposals_: IssuanceProposal_filter
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Issuance_filter]
+  or: [Issuance_filter]
 }
 
 enum Issuance_orderBy {
   id
   sERC20
+  sERC20__id
+  sERC20__address
+  sERC20__name
+  sERC20__symbol
+  sERC20__cap
+  sERC20__minted
+  sERC20__price
   state
   guardian
   pool
@@ -572,6 +650,10 @@ input Issue_filter {
   timestamp_not_in: [BigInt!]
   recipient: Bytes
   recipient_not: Bytes
+  recipient_gt: Bytes
+  recipient_lt: Bytes
+  recipient_gte: Bytes
+  recipient_lte: Bytes
   recipient_in: [Bytes!]
   recipient_not_in: [Bytes!]
   recipient_contains: Bytes
@@ -594,11 +676,22 @@ input Issue_filter {
   amount_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Issue_filter]
+  or: [Issue_filter]
 }
 
 enum Issue_orderBy {
   id
   issuance
+  issuance__id
+  issuance__state
+  issuance__guardian
+  issuance__pool
+  issuance__poolId
+  issuance__reserve
+  issuance__allocation
+  issuance__fee
+  issuance__flash
   timestamp
   recipient
   value
@@ -653,6 +746,10 @@ input Join_filter {
   timestamp_not_in: [BigInt!]
   from: Bytes
   from_not: Bytes
+  from_gt: Bytes
+  from_lt: Bytes
+  from_gte: Bytes
+  from_lte: Bytes
   from_in: [Bytes!]
   from_not_in: [Bytes!]
   from_contains: Bytes
@@ -665,11 +762,16 @@ input Join_filter {
   amounts_not_contains_nocase: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Join_filter]
+  or: [Join_filter]
 }
 
 enum Join_orderBy {
   id
   pool
+  pool__id
+  pool__address
+  pool__sERC20IsToken0
   timestamp
   from
   amounts
@@ -694,6 +796,10 @@ input NFT_filter {
   id_not_in: [ID!]
   collection: Bytes
   collection_not: Bytes
+  collection_gt: Bytes
+  collection_lt: Bytes
+  collection_gte: Bytes
+  collection_lte: Bytes
   collection_in: [Bytes!]
   collection_not_in: [Bytes!]
   collection_contains: Bytes
@@ -728,12 +834,18 @@ input NFT_filter {
   tokenURI_not_ends_with_nocase: String
   creator: Bytes
   creator_not: Bytes
+  creator_gt: Bytes
+  creator_lt: Bytes
+  creator_gte: Bytes
+  creator_lte: Bytes
   creator_in: [Bytes!]
   creator_not_in: [Bytes!]
   creator_contains: Bytes
   creator_not_contains: Bytes
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [NFT_filter]
+  or: [NFT_filter]
 }
 
 enum NFT_orderBy {
@@ -829,11 +941,16 @@ input PoolState_filter {
   price_not_in: [BigDecimal!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [PoolState_filter]
+  or: [PoolState_filter]
 }
 
 enum PoolState_orderBy {
   id
   pool
+  pool__id
+  pool__address
+  pool__sERC20IsToken0
   timestamp
   balances
   weights
@@ -851,6 +968,10 @@ input Pool_filter {
   id_not_in: [ID!]
   address: Bytes
   address_not: Bytes
+  address_gt: Bytes
+  address_lt: Bytes
+  address_gte: Bytes
+  address_lte: Bytes
   address_in: [Bytes!]
   address_not_in: [Bytes!]
   address_contains: Bytes
@@ -885,12 +1006,21 @@ input Pool_filter {
   joins_: Join_filter
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Pool_filter]
+  or: [Pool_filter]
 }
 
 enum Pool_orderBy {
   id
   address
   sERC20
+  sERC20__id
+  sERC20__address
+  sERC20__name
+  sERC20__symbol
+  sERC20__cap
+  sERC20__minted
+  sERC20__price
   sERC20IsToken0
   states
   swaps
@@ -1385,6 +1515,10 @@ input Sale_filter {
   state_not_in: [SaleState!]
   guardian: Bytes
   guardian_not: Bytes
+  guardian_gt: Bytes
+  guardian_lt: Bytes
+  guardian_gte: Bytes
+  guardian_lte: Bytes
   guardian_in: [Bytes!]
   guardian_not_in: [Bytes!]
   guardian_contains: Bytes
@@ -1453,11 +1587,20 @@ input Sale_filter {
   buyout_: Buyout_filter
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Sale_filter]
+  or: [Sale_filter]
 }
 
 enum Sale_orderBy {
   id
   sERC20
+  sERC20__id
+  sERC20__address
+  sERC20__name
+  sERC20__symbol
+  sERC20__cap
+  sERC20__minted
+  sERC20__price
   state
   guardian
   reserve
@@ -1468,6 +1611,12 @@ enum Sale_orderBy {
   escape
   proposals
   buyout
+  buyout__id
+  buyout__timestamp
+  buyout__buyer
+  buyout__value
+  buyout__collateral
+  buyout__stock
 }
 
 type Spectre {
@@ -1543,12 +1692,20 @@ input Spectre_filter {
   state_not_in: [SpectreState!]
   vault: Bytes
   vault_not: Bytes
+  vault_gt: Bytes
+  vault_lt: Bytes
+  vault_gte: Bytes
+  vault_lte: Bytes
   vault_in: [Bytes!]
   vault_not_in: [Bytes!]
   vault_contains: Bytes
   vault_not_contains: Bytes
   broker: Bytes
   broker_not: Bytes
+  broker_gt: Bytes
+  broker_lt: Bytes
+  broker_gte: Bytes
+  broker_lte: Bytes
   broker_in: [Bytes!]
   broker_not_in: [Bytes!]
   broker_contains: Bytes
@@ -1563,12 +1720,26 @@ input Spectre_filter {
   timestamp_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Spectre_filter]
+  or: [Spectre_filter]
 }
 
 enum Spectre_orderBy {
   id
   NFT
+  NFT__id
+  NFT__collection
+  NFT__tokenId
+  NFT__tokenURI
+  NFT__creator
   sERC20
+  sERC20__id
+  sERC20__address
+  sERC20__name
+  sERC20__symbol
+  sERC20__cap
+  sERC20__minted
+  sERC20__price
   state
   vault
   broker
@@ -1611,6 +1782,8 @@ input SpectresCounter_filter {
   count_not_in: [Int!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [SpectresCounter_filter]
+  or: [SpectresCounter_filter]
 }
 
 enum SpectresCounter_orderBy {
@@ -2087,6 +2260,10 @@ input Swap_filter {
   timestamp_not_in: [BigInt!]
   from: Bytes
   from_not: Bytes
+  from_gt: Bytes
+  from_lt: Bytes
+  from_gte: Bytes
+  from_lte: Bytes
   from_in: [Bytes!]
   from_not_in: [Bytes!]
   from_contains: Bytes
@@ -2099,11 +2276,16 @@ input Swap_filter {
   amounts_not_contains_nocase: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Swap_filter]
+  or: [Swap_filter]
 }
 
 enum Swap_orderBy {
   id
   pool
+  pool__id
+  pool__address
+  pool__sERC20IsToken0
   timestamp
   from
   amounts
@@ -2176,6 +2358,10 @@ input sERC20Holder_filter {
   id_not_in: [ID!]
   address: Bytes
   address_not: Bytes
+  address_gt: Bytes
+  address_lt: Bytes
+  address_gte: Bytes
+  address_lte: Bytes
   address_in: [Bytes!]
   address_not_in: [Bytes!]
   address_contains: Bytes
@@ -2211,6 +2397,8 @@ input sERC20Holder_filter {
   sERC20_: sERC20_filter
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [sERC20Holder_filter]
+  or: [sERC20Holder_filter]
 }
 
 enum sERC20Holder_orderBy {
@@ -2218,6 +2406,13 @@ enum sERC20Holder_orderBy {
   address
   amount
   sERC20
+  sERC20__id
+  sERC20__address
+  sERC20__name
+  sERC20__symbol
+  sERC20__cap
+  sERC20__minted
+  sERC20__price
 }
 
 input sERC20_filter {
@@ -2231,6 +2426,10 @@ input sERC20_filter {
   id_not_in: [ID!]
   address: Bytes
   address_not: Bytes
+  address_gt: Bytes
+  address_lt: Bytes
+  address_gte: Bytes
+  address_lte: Bytes
   address_in: [Bytes!]
   address_not_in: [Bytes!]
   address_contains: Bytes
@@ -2386,19 +2585,47 @@ input sERC20_filter {
   price_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [sERC20_filter]
+  or: [sERC20_filter]
 }
 
 enum sERC20_orderBy {
   id
   address
   spectre
+  spectre__id
+  spectre__state
+  spectre__vault
+  spectre__broker
+  spectre__timestamp
   name
   symbol
   cap
   minted
   sale
+  sale__id
+  sale__state
+  sale__guardian
+  sale__reserve
+  sale__multiplier
+  sale__opening
+  sale__stock
+  sale__flash
+  sale__escape
   issuance
+  issuance__id
+  issuance__state
+  issuance__guardian
+  issuance__pool
+  issuance__poolId
+  issuance__reserve
+  issuance__allocation
+  issuance__fee
+  issuance__flash
   pool
+  pool__id
+  pool__address
+  pool__sERC20IsToken0
   holders
   price
 }

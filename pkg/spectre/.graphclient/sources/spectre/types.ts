@@ -106,6 +106,10 @@ export type BuyoutProposal_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   buyer?: InputMaybe<Scalars['Bytes']>;
   buyer_not?: InputMaybe<Scalars['Bytes']>;
+  buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  buyer_lte?: InputMaybe<Scalars['Bytes']>;
   buyer_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -136,11 +140,22 @@ export type BuyoutProposal_filter = {
   expiration_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<BuyoutProposal_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<BuyoutProposal_filter>>>;
 };
 
 export type BuyoutProposal_orderBy =
   | 'id'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'state'
   | 'timestamp'
   | 'buyer'
@@ -188,6 +203,10 @@ export type Buyout_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   buyer?: InputMaybe<Scalars['Bytes']>;
   buyer_not?: InputMaybe<Scalars['Bytes']>;
+  buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  buyer_lte?: InputMaybe<Scalars['Bytes']>;
   buyer_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -219,11 +238,22 @@ export type Buyout_filter = {
   claims_?: InputMaybe<Claim_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Buyout_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Buyout_filter>>>;
 };
 
 export type Buyout_orderBy =
   | 'id'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'timestamp'
   | 'buyer'
   | 'value'
@@ -280,6 +310,10 @@ export type Claim_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   holder?: InputMaybe<Scalars['Bytes']>;
   holder_not?: InputMaybe<Scalars['Bytes']>;
+  holder_gt?: InputMaybe<Scalars['Bytes']>;
+  holder_lt?: InputMaybe<Scalars['Bytes']>;
+  holder_gte?: InputMaybe<Scalars['Bytes']>;
+  holder_lte?: InputMaybe<Scalars['Bytes']>;
   holder_in?: InputMaybe<Array<Scalars['Bytes']>>;
   holder_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   holder_contains?: InputMaybe<Scalars['Bytes']>;
@@ -302,11 +336,19 @@ export type Claim_filter = {
   collateral_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Claim_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Claim_filter>>>;
 };
 
 export type Claim_orderBy =
   | 'id'
   | 'buyout'
+  | 'buyout__id'
+  | 'buyout__timestamp'
+  | 'buyout__buyer'
+  | 'buyout__value'
+  | 'buyout__collateral'
+  | 'buyout__stock'
   | 'timestamp'
   | 'holder'
   | 'value'
@@ -400,6 +442,10 @@ export type IssuanceProposal_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   buyer?: InputMaybe<Scalars['Bytes']>;
   buyer_not?: InputMaybe<Scalars['Bytes']>;
+  buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  buyer_lte?: InputMaybe<Scalars['Bytes']>;
   buyer_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -430,11 +476,22 @@ export type IssuanceProposal_filter = {
   expiration_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<IssuanceProposal_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<IssuanceProposal_filter>>>;
 };
 
 export type IssuanceProposal_orderBy =
   | 'id'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'state'
   | 'timestamp'
   | 'buyer'
@@ -483,18 +540,30 @@ export type Issuance_filter = {
   state_not_in?: InputMaybe<Array<IssuanceState>>;
   guardian?: InputMaybe<Scalars['Bytes']>;
   guardian_not?: InputMaybe<Scalars['Bytes']>;
+  guardian_gt?: InputMaybe<Scalars['Bytes']>;
+  guardian_lt?: InputMaybe<Scalars['Bytes']>;
+  guardian_gte?: InputMaybe<Scalars['Bytes']>;
+  guardian_lte?: InputMaybe<Scalars['Bytes']>;
   guardian_in?: InputMaybe<Array<Scalars['Bytes']>>;
   guardian_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   guardian_contains?: InputMaybe<Scalars['Bytes']>;
   guardian_not_contains?: InputMaybe<Scalars['Bytes']>;
   pool?: InputMaybe<Scalars['Bytes']>;
   pool_not?: InputMaybe<Scalars['Bytes']>;
+  pool_gt?: InputMaybe<Scalars['Bytes']>;
+  pool_lt?: InputMaybe<Scalars['Bytes']>;
+  pool_gte?: InputMaybe<Scalars['Bytes']>;
+  pool_lte?: InputMaybe<Scalars['Bytes']>;
   pool_in?: InputMaybe<Array<Scalars['Bytes']>>;
   pool_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   pool_contains?: InputMaybe<Scalars['Bytes']>;
   pool_not_contains?: InputMaybe<Scalars['Bytes']>;
   poolId?: InputMaybe<Scalars['Bytes']>;
   poolId_not?: InputMaybe<Scalars['Bytes']>;
+  poolId_gt?: InputMaybe<Scalars['Bytes']>;
+  poolId_lt?: InputMaybe<Scalars['Bytes']>;
+  poolId_gte?: InputMaybe<Scalars['Bytes']>;
+  poolId_lte?: InputMaybe<Scalars['Bytes']>;
   poolId_in?: InputMaybe<Array<Scalars['Bytes']>>;
   poolId_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   poolId_contains?: InputMaybe<Scalars['Bytes']>;
@@ -531,11 +600,20 @@ export type Issuance_filter = {
   proposals_?: InputMaybe<IssuanceProposal_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Issuance_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Issuance_filter>>>;
 };
 
 export type Issuance_orderBy =
   | 'id'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'guardian'
   | 'pool'
@@ -596,6 +674,10 @@ export type Issue_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   recipient?: InputMaybe<Scalars['Bytes']>;
   recipient_not?: InputMaybe<Scalars['Bytes']>;
+  recipient_gt?: InputMaybe<Scalars['Bytes']>;
+  recipient_lt?: InputMaybe<Scalars['Bytes']>;
+  recipient_gte?: InputMaybe<Scalars['Bytes']>;
+  recipient_lte?: InputMaybe<Scalars['Bytes']>;
   recipient_in?: InputMaybe<Array<Scalars['Bytes']>>;
   recipient_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   recipient_contains?: InputMaybe<Scalars['Bytes']>;
@@ -618,11 +700,22 @@ export type Issue_filter = {
   amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Issue_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Issue_filter>>>;
 };
 
 export type Issue_orderBy =
   | 'id'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'timestamp'
   | 'recipient'
   | 'value'
@@ -676,6 +769,10 @@ export type Join_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from?: InputMaybe<Scalars['Bytes']>;
   from_not?: InputMaybe<Scalars['Bytes']>;
+  from_gt?: InputMaybe<Scalars['Bytes']>;
+  from_lt?: InputMaybe<Scalars['Bytes']>;
+  from_gte?: InputMaybe<Scalars['Bytes']>;
+  from_lte?: InputMaybe<Scalars['Bytes']>;
   from_in?: InputMaybe<Array<Scalars['Bytes']>>;
   from_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   from_contains?: InputMaybe<Scalars['Bytes']>;
@@ -688,11 +785,16 @@ export type Join_filter = {
   amounts_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Join_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Join_filter>>>;
 };
 
 export type Join_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'from'
   | 'amounts';
@@ -716,6 +818,10 @@ export type NFT_filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   collection?: InputMaybe<Scalars['Bytes']>;
   collection_not?: InputMaybe<Scalars['Bytes']>;
+  collection_gt?: InputMaybe<Scalars['Bytes']>;
+  collection_lt?: InputMaybe<Scalars['Bytes']>;
+  collection_gte?: InputMaybe<Scalars['Bytes']>;
+  collection_lte?: InputMaybe<Scalars['Bytes']>;
   collection_in?: InputMaybe<Array<Scalars['Bytes']>>;
   collection_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   collection_contains?: InputMaybe<Scalars['Bytes']>;
@@ -750,12 +856,18 @@ export type NFT_filter = {
   tokenURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   creator?: InputMaybe<Scalars['Bytes']>;
   creator_not?: InputMaybe<Scalars['Bytes']>;
+  creator_gt?: InputMaybe<Scalars['Bytes']>;
+  creator_lt?: InputMaybe<Scalars['Bytes']>;
+  creator_gte?: InputMaybe<Scalars['Bytes']>;
+  creator_lte?: InputMaybe<Scalars['Bytes']>;
   creator_in?: InputMaybe<Array<Scalars['Bytes']>>;
   creator_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   creator_contains?: InputMaybe<Scalars['Bytes']>;
   creator_not_contains?: InputMaybe<Scalars['Bytes']>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<NFT_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<NFT_filter>>>;
 };
 
 export type NFT_orderBy =
@@ -876,11 +988,16 @@ export type PoolState_filter = {
   price_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<PoolState_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<PoolState_filter>>>;
 };
 
 export type PoolState_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'balances'
   | 'weights'
@@ -897,6 +1014,10 @@ export type Pool_filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
+  address_gt?: InputMaybe<Scalars['Bytes']>;
+  address_lt?: InputMaybe<Scalars['Bytes']>;
+  address_gte?: InputMaybe<Scalars['Bytes']>;
+  address_lte?: InputMaybe<Scalars['Bytes']>;
   address_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -931,12 +1052,21 @@ export type Pool_filter = {
   joins_?: InputMaybe<Join_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Pool_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Pool_filter>>>;
 };
 
 export type Pool_orderBy =
   | 'id'
   | 'address'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'sERC20IsToken0'
   | 'states'
   | 'swaps'
@@ -1346,6 +1476,10 @@ export type Sale_filter = {
   state_not_in?: InputMaybe<Array<SaleState>>;
   guardian?: InputMaybe<Scalars['Bytes']>;
   guardian_not?: InputMaybe<Scalars['Bytes']>;
+  guardian_gt?: InputMaybe<Scalars['Bytes']>;
+  guardian_lt?: InputMaybe<Scalars['Bytes']>;
+  guardian_gte?: InputMaybe<Scalars['Bytes']>;
+  guardian_lte?: InputMaybe<Scalars['Bytes']>;
   guardian_in?: InputMaybe<Array<Scalars['Bytes']>>;
   guardian_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   guardian_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1414,11 +1548,20 @@ export type Sale_filter = {
   buyout_?: InputMaybe<Buyout_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Sale_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Sale_filter>>>;
 };
 
 export type Sale_orderBy =
   | 'id'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'guardian'
   | 'reserve'
@@ -1428,7 +1571,13 @@ export type Sale_orderBy =
   | 'flash'
   | 'escape'
   | 'proposals'
-  | 'buyout';
+  | 'buyout'
+  | 'buyout__id'
+  | 'buyout__timestamp'
+  | 'buyout__buyer'
+  | 'buyout__value'
+  | 'buyout__collateral'
+  | 'buyout__stock';
 
 export type Spectre = {
   id: Scalars['ID'];
@@ -1502,12 +1651,20 @@ export type Spectre_filter = {
   state_not_in?: InputMaybe<Array<SpectreState>>;
   vault?: InputMaybe<Scalars['Bytes']>;
   vault_not?: InputMaybe<Scalars['Bytes']>;
+  vault_gt?: InputMaybe<Scalars['Bytes']>;
+  vault_lt?: InputMaybe<Scalars['Bytes']>;
+  vault_gte?: InputMaybe<Scalars['Bytes']>;
+  vault_lte?: InputMaybe<Scalars['Bytes']>;
   vault_in?: InputMaybe<Array<Scalars['Bytes']>>;
   vault_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   vault_contains?: InputMaybe<Scalars['Bytes']>;
   vault_not_contains?: InputMaybe<Scalars['Bytes']>;
   broker?: InputMaybe<Scalars['Bytes']>;
   broker_not?: InputMaybe<Scalars['Bytes']>;
+  broker_gt?: InputMaybe<Scalars['Bytes']>;
+  broker_lt?: InputMaybe<Scalars['Bytes']>;
+  broker_gte?: InputMaybe<Scalars['Bytes']>;
+  broker_lte?: InputMaybe<Scalars['Bytes']>;
   broker_in?: InputMaybe<Array<Scalars['Bytes']>>;
   broker_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   broker_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1522,12 +1679,26 @@ export type Spectre_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Spectre_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Spectre_filter>>>;
 };
 
 export type Spectre_orderBy =
   | 'id'
   | 'NFT'
+  | 'NFT__id'
+  | 'NFT__collection'
+  | 'NFT__tokenId'
+  | 'NFT__tokenURI'
+  | 'NFT__creator'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'vault'
   | 'broker'
@@ -1569,6 +1740,8 @@ export type SpectresCounter_filter = {
   count_not_in?: InputMaybe<Array<Scalars['Int']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<SpectresCounter_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<SpectresCounter_filter>>>;
 };
 
 export type SpectresCounter_orderBy =
@@ -1953,6 +2126,10 @@ export type Swap_filter = {
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from?: InputMaybe<Scalars['Bytes']>;
   from_not?: InputMaybe<Scalars['Bytes']>;
+  from_gt?: InputMaybe<Scalars['Bytes']>;
+  from_lt?: InputMaybe<Scalars['Bytes']>;
+  from_gte?: InputMaybe<Scalars['Bytes']>;
+  from_lte?: InputMaybe<Scalars['Bytes']>;
   from_in?: InputMaybe<Array<Scalars['Bytes']>>;
   from_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   from_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1965,11 +2142,16 @@ export type Swap_filter = {
   amounts_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Swap_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Swap_filter>>>;
 };
 
 export type Swap_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'from'
   | 'amounts';
@@ -2047,6 +2229,10 @@ export type sERC20Holder_filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
+  address_gt?: InputMaybe<Scalars['Bytes']>;
+  address_lt?: InputMaybe<Scalars['Bytes']>;
+  address_gte?: InputMaybe<Scalars['Bytes']>;
+  address_lte?: InputMaybe<Scalars['Bytes']>;
   address_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -2082,13 +2268,22 @@ export type sERC20Holder_filter = {
   sERC20_?: InputMaybe<sERC20_filter>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<sERC20Holder_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<sERC20Holder_filter>>>;
 };
 
 export type sERC20Holder_orderBy =
   | 'id'
   | 'address'
   | 'amount'
-  | 'sERC20';
+  | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price';
 
 export type sERC20_filter = {
   id?: InputMaybe<Scalars['ID']>;
@@ -2101,6 +2296,10 @@ export type sERC20_filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
+  address_gt?: InputMaybe<Scalars['Bytes']>;
+  address_lt?: InputMaybe<Scalars['Bytes']>;
+  address_gte?: InputMaybe<Scalars['Bytes']>;
+  address_lte?: InputMaybe<Scalars['Bytes']>;
   address_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -2256,19 +2455,47 @@ export type sERC20_filter = {
   price_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<sERC20_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<sERC20_filter>>>;
 };
 
 export type sERC20_orderBy =
   | 'id'
   | 'address'
   | 'spectre'
+  | 'spectre__id'
+  | 'spectre__state'
+  | 'spectre__vault'
+  | 'spectre__broker'
+  | 'spectre__timestamp'
   | 'name'
   | 'symbol'
   | 'cap'
   | 'minted'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'holders'
   | 'price';
 

@@ -127,6 +127,10 @@ export type BuyoutProposal_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly buyer?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_not?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lte?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -157,11 +161,22 @@ export type BuyoutProposal_filter = {
   readonly expiration_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<BuyoutProposal_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<BuyoutProposal_filter>>>;
 };
 
 export type BuyoutProposal_orderBy =
   | 'id'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'state'
   | 'timestamp'
   | 'buyer'
@@ -209,6 +224,10 @@ export type Buyout_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly buyer?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_not?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lte?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -240,11 +259,22 @@ export type Buyout_filter = {
   readonly claims_?: InputMaybe<Claim_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Buyout_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Buyout_filter>>>;
 };
 
 export type Buyout_orderBy =
   | 'id'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'timestamp'
   | 'buyer'
   | 'value'
@@ -301,6 +331,10 @@ export type Claim_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly holder?: InputMaybe<Scalars['Bytes']>;
   readonly holder_not?: InputMaybe<Scalars['Bytes']>;
+  readonly holder_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly holder_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly holder_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly holder_lte?: InputMaybe<Scalars['Bytes']>;
   readonly holder_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly holder_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly holder_contains?: InputMaybe<Scalars['Bytes']>;
@@ -323,11 +357,19 @@ export type Claim_filter = {
   readonly collateral_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Claim_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Claim_filter>>>;
 };
 
 export type Claim_orderBy =
   | 'id'
   | 'buyout'
+  | 'buyout__id'
+  | 'buyout__timestamp'
+  | 'buyout__buyer'
+  | 'buyout__value'
+  | 'buyout__collateral'
+  | 'buyout__stock'
   | 'timestamp'
   | 'holder'
   | 'value'
@@ -421,6 +463,10 @@ export type IssuanceProposal_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly buyer?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_not?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly buyer_lte?: InputMaybe<Scalars['Bytes']>;
   readonly buyer_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly buyer_contains?: InputMaybe<Scalars['Bytes']>;
@@ -451,11 +497,22 @@ export type IssuanceProposal_filter = {
   readonly expiration_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<IssuanceProposal_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<IssuanceProposal_filter>>>;
 };
 
 export type IssuanceProposal_orderBy =
   | 'id'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'state'
   | 'timestamp'
   | 'buyer'
@@ -504,18 +561,30 @@ export type Issuance_filter = {
   readonly state_not_in?: InputMaybe<ReadonlyArray<IssuanceState>>;
   readonly guardian?: InputMaybe<Scalars['Bytes']>;
   readonly guardian_not?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_lte?: InputMaybe<Scalars['Bytes']>;
   readonly guardian_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly guardian_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly guardian_contains?: InputMaybe<Scalars['Bytes']>;
   readonly guardian_not_contains?: InputMaybe<Scalars['Bytes']>;
   readonly pool?: InputMaybe<Scalars['Bytes']>;
   readonly pool_not?: InputMaybe<Scalars['Bytes']>;
+  readonly pool_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly pool_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly pool_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly pool_lte?: InputMaybe<Scalars['Bytes']>;
   readonly pool_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly pool_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly pool_contains?: InputMaybe<Scalars['Bytes']>;
   readonly pool_not_contains?: InputMaybe<Scalars['Bytes']>;
   readonly poolId?: InputMaybe<Scalars['Bytes']>;
   readonly poolId_not?: InputMaybe<Scalars['Bytes']>;
+  readonly poolId_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly poolId_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly poolId_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly poolId_lte?: InputMaybe<Scalars['Bytes']>;
   readonly poolId_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly poolId_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly poolId_contains?: InputMaybe<Scalars['Bytes']>;
@@ -552,11 +621,20 @@ export type Issuance_filter = {
   readonly proposals_?: InputMaybe<IssuanceProposal_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Issuance_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Issuance_filter>>>;
 };
 
 export type Issuance_orderBy =
   | 'id'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'guardian'
   | 'pool'
@@ -617,6 +695,10 @@ export type Issue_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly recipient?: InputMaybe<Scalars['Bytes']>;
   readonly recipient_not?: InputMaybe<Scalars['Bytes']>;
+  readonly recipient_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly recipient_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly recipient_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly recipient_lte?: InputMaybe<Scalars['Bytes']>;
   readonly recipient_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly recipient_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly recipient_contains?: InputMaybe<Scalars['Bytes']>;
@@ -639,11 +721,22 @@ export type Issue_filter = {
   readonly amount_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Issue_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Issue_filter>>>;
 };
 
 export type Issue_orderBy =
   | 'id'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'timestamp'
   | 'recipient'
   | 'value'
@@ -697,6 +790,10 @@ export type Join_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly from?: InputMaybe<Scalars['Bytes']>;
   readonly from_not?: InputMaybe<Scalars['Bytes']>;
+  readonly from_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly from_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly from_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly from_lte?: InputMaybe<Scalars['Bytes']>;
   readonly from_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly from_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly from_contains?: InputMaybe<Scalars['Bytes']>;
@@ -709,11 +806,16 @@ export type Join_filter = {
   readonly amounts_not_contains_nocase?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Join_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Join_filter>>>;
 };
 
 export type Join_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'from'
   | 'amounts';
@@ -737,6 +839,10 @@ export type NFT_filter = {
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly collection?: InputMaybe<Scalars['Bytes']>;
   readonly collection_not?: InputMaybe<Scalars['Bytes']>;
+  readonly collection_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly collection_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly collection_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly collection_lte?: InputMaybe<Scalars['Bytes']>;
   readonly collection_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly collection_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly collection_contains?: InputMaybe<Scalars['Bytes']>;
@@ -771,12 +877,18 @@ export type NFT_filter = {
   readonly tokenURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   readonly creator?: InputMaybe<Scalars['Bytes']>;
   readonly creator_not?: InputMaybe<Scalars['Bytes']>;
+  readonly creator_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly creator_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly creator_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly creator_lte?: InputMaybe<Scalars['Bytes']>;
   readonly creator_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly creator_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly creator_contains?: InputMaybe<Scalars['Bytes']>;
   readonly creator_not_contains?: InputMaybe<Scalars['Bytes']>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<NFT_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<NFT_filter>>>;
 };
 
 export type NFT_orderBy =
@@ -897,11 +1009,16 @@ export type PoolState_filter = {
   readonly price_not_in?: InputMaybe<ReadonlyArray<Scalars['BigDecimal']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<PoolState_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<PoolState_filter>>>;
 };
 
 export type PoolState_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'balances'
   | 'weights'
@@ -918,6 +1035,10 @@ export type Pool_filter = {
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly address?: InputMaybe<Scalars['Bytes']>;
   readonly address_not?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lte?: InputMaybe<Scalars['Bytes']>;
   readonly address_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -952,12 +1073,21 @@ export type Pool_filter = {
   readonly joins_?: InputMaybe<Join_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Pool_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Pool_filter>>>;
 };
 
 export type Pool_orderBy =
   | 'id'
   | 'address'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'sERC20IsToken0'
   | 'states'
   | 'swaps'
@@ -1367,6 +1497,10 @@ export type Sale_filter = {
   readonly state_not_in?: InputMaybe<ReadonlyArray<SaleState>>;
   readonly guardian?: InputMaybe<Scalars['Bytes']>;
   readonly guardian_not?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly guardian_lte?: InputMaybe<Scalars['Bytes']>;
   readonly guardian_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly guardian_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly guardian_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1435,11 +1569,20 @@ export type Sale_filter = {
   readonly buyout_?: InputMaybe<Buyout_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Sale_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Sale_filter>>>;
 };
 
 export type Sale_orderBy =
   | 'id'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'guardian'
   | 'reserve'
@@ -1449,7 +1592,13 @@ export type Sale_orderBy =
   | 'flash'
   | 'escape'
   | 'proposals'
-  | 'buyout';
+  | 'buyout'
+  | 'buyout__id'
+  | 'buyout__timestamp'
+  | 'buyout__buyer'
+  | 'buyout__value'
+  | 'buyout__collateral'
+  | 'buyout__stock';
 
 export type Spectre = {
   readonly id: Scalars['ID'];
@@ -1523,12 +1672,20 @@ export type Spectre_filter = {
   readonly state_not_in?: InputMaybe<ReadonlyArray<SpectreState>>;
   readonly vault?: InputMaybe<Scalars['Bytes']>;
   readonly vault_not?: InputMaybe<Scalars['Bytes']>;
+  readonly vault_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly vault_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly vault_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly vault_lte?: InputMaybe<Scalars['Bytes']>;
   readonly vault_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly vault_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly vault_contains?: InputMaybe<Scalars['Bytes']>;
   readonly vault_not_contains?: InputMaybe<Scalars['Bytes']>;
   readonly broker?: InputMaybe<Scalars['Bytes']>;
   readonly broker_not?: InputMaybe<Scalars['Bytes']>;
+  readonly broker_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly broker_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly broker_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly broker_lte?: InputMaybe<Scalars['Bytes']>;
   readonly broker_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly broker_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly broker_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1543,12 +1700,26 @@ export type Spectre_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Spectre_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Spectre_filter>>>;
 };
 
 export type Spectre_orderBy =
   | 'id'
   | 'NFT'
+  | 'NFT__id'
+  | 'NFT__collection'
+  | 'NFT__tokenId'
+  | 'NFT__tokenURI'
+  | 'NFT__creator'
   | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price'
   | 'state'
   | 'vault'
   | 'broker'
@@ -1590,6 +1761,8 @@ export type SpectresCounter_filter = {
   readonly count_not_in?: InputMaybe<ReadonlyArray<Scalars['Int']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<SpectresCounter_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<SpectresCounter_filter>>>;
 };
 
 export type SpectresCounter_orderBy =
@@ -1974,6 +2147,10 @@ export type Swap_filter = {
   readonly timestamp_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   readonly from?: InputMaybe<Scalars['Bytes']>;
   readonly from_not?: InputMaybe<Scalars['Bytes']>;
+  readonly from_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly from_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly from_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly from_lte?: InputMaybe<Scalars['Bytes']>;
   readonly from_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly from_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly from_contains?: InputMaybe<Scalars['Bytes']>;
@@ -1986,11 +2163,16 @@ export type Swap_filter = {
   readonly amounts_not_contains_nocase?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<Swap_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<Swap_filter>>>;
 };
 
 export type Swap_orderBy =
   | 'id'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'timestamp'
   | 'from'
   | 'amounts';
@@ -2068,6 +2250,10 @@ export type sERC20Holder_filter = {
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly address?: InputMaybe<Scalars['Bytes']>;
   readonly address_not?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lte?: InputMaybe<Scalars['Bytes']>;
   readonly address_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -2103,13 +2289,22 @@ export type sERC20Holder_filter = {
   readonly sERC20_?: InputMaybe<sERC20_filter>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<sERC20Holder_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<sERC20Holder_filter>>>;
 };
 
 export type sERC20Holder_orderBy =
   | 'id'
   | 'address'
   | 'amount'
-  | 'sERC20';
+  | 'sERC20'
+  | 'sERC20__id'
+  | 'sERC20__address'
+  | 'sERC20__name'
+  | 'sERC20__symbol'
+  | 'sERC20__cap'
+  | 'sERC20__minted'
+  | 'sERC20__price';
 
 export type sERC20_filter = {
   readonly id?: InputMaybe<Scalars['ID']>;
@@ -2122,6 +2317,10 @@ export type sERC20_filter = {
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly address?: InputMaybe<Scalars['Bytes']>;
   readonly address_not?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly address_gte?: InputMaybe<Scalars['Bytes']>;
+  readonly address_lte?: InputMaybe<Scalars['Bytes']>;
   readonly address_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
   readonly address_contains?: InputMaybe<Scalars['Bytes']>;
@@ -2277,19 +2476,47 @@ export type sERC20_filter = {
   readonly price_not_in?: InputMaybe<ReadonlyArray<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   readonly _change_block?: InputMaybe<BlockChangedFilter>;
+  readonly and?: InputMaybe<ReadonlyArray<InputMaybe<sERC20_filter>>>;
+  readonly or?: InputMaybe<ReadonlyArray<InputMaybe<sERC20_filter>>>;
 };
 
 export type sERC20_orderBy =
   | 'id'
   | 'address'
   | 'spectre'
+  | 'spectre__id'
+  | 'spectre__state'
+  | 'spectre__vault'
+  | 'spectre__broker'
+  | 'spectre__timestamp'
   | 'name'
   | 'symbol'
   | 'cap'
   | 'minted'
   | 'sale'
+  | 'sale__id'
+  | 'sale__state'
+  | 'sale__guardian'
+  | 'sale__reserve'
+  | 'sale__multiplier'
+  | 'sale__opening'
+  | 'sale__stock'
+  | 'sale__flash'
+  | 'sale__escape'
   | 'issuance'
+  | 'issuance__id'
+  | 'issuance__state'
+  | 'issuance__guardian'
+  | 'issuance__pool'
+  | 'issuance__poolId'
+  | 'issuance__reserve'
+  | 'issuance__allocation'
+  | 'issuance__fee'
+  | 'issuance__flash'
   | 'pool'
+  | 'pool__id'
+  | 'pool__address'
+  | 'pool__sERC20IsToken0'
   | 'holders'
   | 'price';
 
@@ -2865,7 +3092,7 @@ const spectreTransforms = [];
 const additionalTypeDefs = [] as any[];
 const spectreHandler = new GraphqlHandler({
               name: "spectre",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.9"},
+              config: {"endpoint":"https://api.studio.thegraph.com/query/33075/spectre-preview/0.0.11"},
               baseDir,
               cache,
               pubsub,
